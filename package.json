@@ -33,11 +33,11 @@
   "packageManager": "pnpm@8.14.1",
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "eslint .",
-      "prettier --check"
+      "eslint --fix",
+      "prettier --write"
     ],
     "*.{json,md}": [
-      "prettier --check"
+      "prettier --write"
     ]
   }
 }
