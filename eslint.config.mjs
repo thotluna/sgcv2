@@ -28,4 +28,10 @@ export default defineConfig([
   tseslint.configs.recommended,
   pluginReact.configs.flat.recommended,
   prettierPluginRecomended,
+  {
+    files: ['**/*.{jsx,tsx}'], // Aplica solo a archivos JSX/TSX
+    rules: {
+      'react/react-in-jsx-scope': 'off', // Desactiva la regla
+    },
+  },
 ])
