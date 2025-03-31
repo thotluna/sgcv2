@@ -6,6 +6,8 @@
   "scripts": {
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint:fix",
+    "format:all": "prettier --check .",
+    "format:all:fix": "prettier --write .",
     "format": "turbo run format",
     "format:check": "turbo run format:check",
     "dev": "turbo run dev",
