@@ -9,7 +9,8 @@
     "format": "turbo run format",
     "format:check": "turbo run format:check",
     "dev": "turbo run dev",
-    "build": "turbo run build"
+    "build": "turbo run build",
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "",
@@ -22,10 +23,21 @@
     "eslint-plugin-prettier": "^5.2.5",
     "eslint-plugin-react": "^7.37.4",
     "globals": "^16.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.0",
     "prettier": "^3.5.3",
     "turbo": "^2.4.4",
     "typescript": "5.8.2",
     "typescript-eslint": "^8.28.0"
   },
-  "packageManager": "pnpm@8.14.1"
+  "packageManager": "pnpm@8.14.1",
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint .",
+      "prettier --check"
+    ],
+    "*.{json,md}": [
+      "prettier --check"
+    ]
+  }
 }
