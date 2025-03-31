@@ -3,6 +3,7 @@ import globals from "globals";
 import js from "@eslint/js";
 import tseslint from "typescript-eslint";
 import pluginReact from "eslint-plugin-react";
+import prettierPluginRecomended from "eslint-plugin-prettier/recommended";
 
 
 export default defineConfig([
@@ -22,4 +23,5 @@ export default defineConfig([
   },
   tseslint.configs.recommended,
   pluginReact.configs.flat.recommended,
+  prettierPluginRecomended
 ]);
