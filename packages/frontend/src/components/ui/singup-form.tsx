@@ -11,9 +11,12 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
+
 import { Input } from '@/components/ui/input'
 import { z } from 'zod'
 import Link from 'next/link'
+import { useState } from 'react'
+import { Eye, EyeOff } from 'lucide-react'
 
 const formSchema = z
   .object({
@@ -42,6 +45,8 @@ const formSchema = z
   })
 
 export function SingUpForm() {
+  const [passwordVisible, setPasswordVisible] = useState(false)
+  const [passwordConfirmVisible, setPasswordConfirmVisible] = useState(false)
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -106,7 +111,22 @@ export function SingUpForm() {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="xxxxxxxx" {...field} />
+                    <div className="flex items-center">
+                      <Input
+                        type={passwordVisible ? 'text' : 'password'}
+                        placeholder="xxxxxxxx"
+                        {...field}
+                      />
+                      <Button
+                        onClick={event => {
+                          event.preventDefault()
+                          setPasswordVisible(!passwordVisible)
+                        }}
+                        size="icon"
+                      >
+                        {passwordVisible ? <EyeOff /> : <Eye />}
+                      </Button>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -119,7 +139,22 @@ export function SingUpForm() {
                 <FormItem>
                   <FormLabel>Confirma el password</FormLabel>
                   <FormControl>
-                    <Input placeholder="xxxxxxxx" {...field} />
+                    <div className="flex items-center">
+                      <Input
+                        type={passwordConfirmVisible ? 'text' : 'password'}
+                        placeholder="xxxxxxxx"
+                        {...field}
+                      />
+                      <Button
+                        onClick={event => {
+                          event.preventDefault()
+                          setPasswordConfirmVisible(!passwordConfirmVisible)
+                        }}
+                        size="icon"
+                      >
+                        {passwordConfirmVisible ? <EyeOff /> : <Eye />}
+                      </Button>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

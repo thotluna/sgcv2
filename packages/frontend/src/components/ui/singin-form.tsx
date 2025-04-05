@@ -14,8 +14,9 @@ import {
 import { Input } from '@/components/ui/input'
 import { z } from 'zod'
 import Link from 'next/link'
-import { Linkedin } from 'lucide-react'
+import { Eye, EyeOff, Linkedin } from 'lucide-react'
 import { GoogleIcon } from './google-icon'
+import { useState } from 'react'
 
 const formSchema = z.object({
   email: z.string().email('El email no es valido'),
@@ -26,6 +27,7 @@ const formSchema = z.object({
 })
 
 export function SingInForm() {
+  const [passwordVisible, setPasswordVisible] = useState(false)
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -72,7 +74,22 @@ export function SingInForm() {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input placeholder="xxxxxxxx" {...field} />
+                    <div className="flex items-center">
+                      <Input
+                        type={passwordVisible ? 'text' : 'password'}
+                        placeholder="xxxxxxxx"
+                        {...field}
+                      />
+                      <Button
+                        onClick={event => {
+                          event.preventDefault()
+                          setPasswordVisible(!passwordVisible)
+                        }}
+                        size="icon"
+                      >
+                        {passwordVisible ? <EyeOff /> : <Eye />}
+                      </Button>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
