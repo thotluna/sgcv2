@@ -18,6 +18,8 @@ export default function ThemeSwitch() {
     <div className="flex items-center space-x-2">
       <Sun className="w-4 h-4" />
       <Switch
+        aria-label="toggle theme"
+        aria-live="polite"
         checked={checked}
         onCheckedChange={isChecked => {
           if (isChecked) {

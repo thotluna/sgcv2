@@ -59,6 +59,7 @@ export function SingInForm() {
                   <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input
+                      autoComplete="username"
                       placeholder="escribe aqui tu nombre de usuario"
                       {...field}
                     />
@@ -76,11 +77,14 @@ export function SingInForm() {
                   <FormControl>
                     <div className="flex items-center">
                       <Input
+                        autoComplete="current-password"
                         type={passwordVisible ? 'text' : 'password'}
                         placeholder="xxxxxxxx"
                         {...field}
                       />
                       <Button
+                        aria-label="toggle password visibility"
+                        variant="outline"
                         onClick={event => {
                           event.preventDefault()
                           setPasswordVisible(!passwordVisible)
