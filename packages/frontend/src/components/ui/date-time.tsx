@@ -3,21 +3,26 @@
 import { useEffect, useState } from 'react'
 
 export function DateTime() {
-  const [time, setTime] = useState(new Date())
-
-  const dateTime = new Intl.DateTimeFormat('es-ES', {
-    dateStyle: 'long',
-    timeStyle: 'long',
-    hour12: true,
-  })
-    .format(time)
-    .split('GMT')[0]
+  const [time, setTime] = useState('cargando...')
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setTime(new Date())
-    }, 1000)
+    const updateDateTime = () => {
+      const now = new Date()
+      const formattedDateTime = new Intl.DateTimeFormat('es-ES', {
+        dateStyle: 'long',
+        timeStyle: 'long',
+        hour12: true,
+      })
+        .format(now)
+        .split('GMT')[0]
+      setTime(formattedDateTime)
+    }
+
+    updateDateTime()
+
+    const interval = setInterval(updateDateTime, 1000)
+
     return () => clearInterval(interval)
   }, [])
-  return <p className="text-xs">{dateTime}</p>
+  return <p className="text-xs">{time}</p>
 }
