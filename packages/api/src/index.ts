@@ -11,6 +11,7 @@ app.get('/', (_req, res) => {
 
 app.post('/v1/client/validate', async (req, res) => {
   const { clientCode } = req.body
+
   const data = {
     status: 'fail',
     message: 'El codigo de cliente no es valido',
