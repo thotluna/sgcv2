@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { Switch } from '@/components/ui/switch'
 import { useTheme } from 'next-themes'
+import { Moon, Sun } from 'lucide-react'
 
 export default function ThemeSwitch() {
   const { systemTheme, setTheme } = useTheme()
@@ -15,6 +16,7 @@ export default function ThemeSwitch() {
 
   return (
     <div className="flex items-center space-x-2">
+      <Sun className="w-4 h-4" />
       <Switch
         checked={checked}
         onCheckedChange={isChecked => {
@@ -27,6 +29,7 @@ export default function ThemeSwitch() {
           }
         }}
       />
+      <Moon className="w-4 h-4" />
     </div>
   )
 }
