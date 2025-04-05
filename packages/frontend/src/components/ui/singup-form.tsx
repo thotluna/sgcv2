@@ -18,12 +18,34 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { Eye, EyeOff } from 'lucide-react'
 
+async function validateClientCode(clientCode: string) {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_URL_API}/v1/client/validate`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        clientCode,
+      }),
+    },
+  )
+  const data = await response.json()
+  return data
+}
+
 const formSchema = z
   .object({
     clientCode: z
       .string()
-      .min(16, 'El codigo debe tener al menos 16 caracteres')
-      .max(16, 'El codigo no puede tener más de 16 caracteres'),
+      .regex(
+        /^[a-zA-z0-9!@#&*]{8}-[a-zA-z0-9!@#&*]{8}-[a-zA-z0-9!@#&*]{8}-[a-zA-z0-9!@#&*]{8}$/,
+        {
+          message:
+            'Formato invalido, ingrese 4 grupos de 8 caracteres alfanuméricos y especiales separados por guiones.',
+        },
+      ),
     email: z.string().email('El email no es valido'),
     password: z
       .string()
@@ -33,6 +55,24 @@ const formSchema = z
       .string()
       .min(8, 'La contraseña debe tener al menos 8 caracteres')
       .max(50, 'La contraseña no puede tener más de 50 caracteres'),
+  })
+  .superRefine(async ({ clientCode }, ctx) => {
+    try {
+      const data = await validateClientCode(clientCode)
+      if (data.status !== 'ok') {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: data.message,
+          path: ['clientCode'],
+        })
+      }
+    } catch {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Error al validar el codigo de cliente',
+        path: ['clientCode'],
+      })
+    }
   })
   .superRefine((data, ctx) => {
     if (data.password !== data.confirmPassword) {
@@ -80,7 +120,8 @@ export function SingUpForm() {
                   <FormLabel>Codigo de cliente</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="escribe aqui el codigo de tu empresa"
+                      autoComplete="off"
+                      placeholder="xxxxxxxx-xxxxxxxxx-xxxxxxxxxx-xxxxxxxxxx"
                       {...field}
                     />
                   </FormControl>
@@ -113,6 +154,7 @@ export function SingUpForm() {
                   <FormControl>
                     <div className="flex items-center">
                       <Input
+                        autoComplete="off"
                         type={passwordVisible ? 'text' : 'password'}
                         placeholder="xxxxxxxx"
                         {...field}
@@ -141,6 +183,7 @@ export function SingUpForm() {
                   <FormControl>
                     <div className="flex items-center">
                       <Input
+                        autoComplete="off"
                         type={passwordConfirmVisible ? 'text' : 'password'}
                         placeholder="xxxxxxxx"
                         {...field}
