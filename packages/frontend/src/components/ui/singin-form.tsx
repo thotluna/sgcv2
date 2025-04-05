@@ -1,0 +1,118 @@
+'use client'
+
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { Button } from '@/components/ui/button'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { z } from 'zod'
+import Link from 'next/link'
+import { Linkedin } from 'lucide-react'
+import { GoogleIcon } from './google-icon'
+
+const formSchema = z.object({
+  email: z.string().email('El email no es valido'),
+  password: z
+    .string()
+    .min(8, 'La contraseña debe tener al menos 8 caracteres')
+    .max(50, 'La contraseña no puede tener más de 50 caracteres'),
+})
+
+export function SingInForm() {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  })
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values)
+  }
+
+  return (
+    <section className="w-full h-full flex items-center justify-center">
+      <div className="max-w-sm w-full  flex flex-col gap-1">
+        <h1 className="font-funnel text-4xl text-primary font-bold mb-8">
+          Ingresa
+        </h1>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-8 w-full"
+          >
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="escribe aqui tu nombre de usuario"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input placeholder="xxxxxxxx" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="flex justify-between flex-row-reverse">
+              <Button type="submit">Submit</Button>
+              <Button
+                variant="outline"
+                type="reset"
+                onClick={() => form.reset()}
+              >
+                Reset
+              </Button>
+            </div>
+          </form>
+        </Form>
+        <div className="flex flex-col gap-4">
+          <div className="h-[1px] border-b-2 border-primary opacity-20 mt-6"></div>
+          <p className="text-sm">Tambien puedes ingresar con:</p>
+          <div className="flex justify-center gap-4">
+            <Button variant="outline" size="sm">
+              <Linkedin />
+              Linkedin
+            </Button>
+            <Button variant="outline" size="sm">
+              <GoogleIcon /> Google
+            </Button>
+          </div>
+        </div>
+        <div>
+          <p className="text-sm opacity-80 mt-8 text-center">
+            Si aún no tienes una cuenta, registrate{' '}
+            <Link href="/?singUp=true" className="text-primary">
+              aquí
+            </Link>
+          </p>
+        </div>
+      </div>
+    </section>
+  )
+}
