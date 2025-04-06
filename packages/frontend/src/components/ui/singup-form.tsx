@@ -20,7 +20,7 @@ import { Eye, EyeOff } from 'lucide-react'
 
 async function validateClientCode(clientCode: string) {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_URL_API}/v1/client/validate`,
+    `${process.env.NEXT_PUBLIC_URL_API}/v1/auth/code/validate`,
     {
       method: 'POST',
       headers: {
@@ -41,10 +41,7 @@ const formSchema = z
       .string()
       .regex(
         /^[a-zA-z0-9!@#&*]{8}-[a-zA-z0-9!@#&*]{8}-[a-zA-z0-9!@#&*]{8}-[a-zA-z0-9!@#&*]{8}$/,
-        {
-          message:
-            'Formato invalido, ingrese 4 grupos de 8 caracteres alfanuméricos y especiales separados por guiones.',
-        },
+        { message: 'Formato invalido' },
       ),
     email: z.string().email('El email no es valido'),
     password: z
@@ -87,6 +84,7 @@ const formSchema = z
 export function SingUpForm() {
   const [passwordVisible, setPasswordVisible] = useState(false)
   const [passwordConfirmVisible, setPasswordConfirmVisible] = useState(false)
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
