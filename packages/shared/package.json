@@ -10,7 +10,8 @@
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
     "format": "prettier --write src/**/*.ts",
-    "format:check": "prettier --check src/**/*.ts"
+    "format:check": "prettier --check src/**/*.ts",
+    "gen:types:supabase": "npx supabase gen types typescript --project-id 'rzfvzqhceahqpjzjswxz' --schema public > src/types/database.types.ts"
   },
   "dependencies": {
     "@types/node": "^22.13.14",

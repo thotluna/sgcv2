@@ -1,9 +1,9 @@
+import { type Database } from '@sgcv2/shared'
 import {
   createClient,
   PostgrestError,
   SupabaseClient,
 } from '@supabase/supabase-js'
-import { Database } from '../types/database.types'
 
 export class AuthRepository {
   private client: SupabaseClient = createClient<Database>(
