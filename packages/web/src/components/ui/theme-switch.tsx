@@ -9,8 +9,16 @@ export default function ThemeSwitch() {
   const [checked, setChecked] = useState(false)
 
   useEffect(() => {
-    if (systemTheme === 'dark') {
-      setChecked(true)
+    const storedTheme = localStorage.getItem('theme')
+    if (systemTheme && !storedTheme) {
+      setChecked(systemTheme === 'dark')
+    }
+    if (storedTheme) {
+      if (storedTheme === 'system') {
+        setChecked(systemTheme === 'dark')
+      } else {
+        setChecked(storedTheme === 'dark')
+      }
     }
   }, [systemTheme])
 
