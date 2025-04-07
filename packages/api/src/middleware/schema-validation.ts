@@ -12,7 +12,7 @@ export const schemaValidation =
       if (error instanceof ZodError) {
         res.status(400).send({
           status: 'fail',
-          message: 'Error de validación del codigo de cliente',
+          message: error.issues.map(issue => issue.message).join(', '),
           error: error.issues,
         })
         return
