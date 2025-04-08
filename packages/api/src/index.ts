@@ -4,7 +4,12 @@ import authRouter from './auth/auth.routes'
 
 const app = express()
 const PORT = process.env.PORT || 3001
-app.use(cors())
+app.use(
+  cors({
+    origin: 'http://localhost:3000', // Reemplaza con el dominio de tu aplicación Next.js
+    credentials: true, // Habilita el envío de cookies
+  }),
+)
 app.use(express.json())
 
 app.get('/', (_req, res) => {
