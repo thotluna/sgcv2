@@ -1,7 +1,7 @@
 'use client'
 import { DateTime } from '@/components/ui/date-time'
 import { SingInForm } from '@/components/ui/singin-form'
-import { SingUpForm } from '@/components/ui/singup-form'
+import { SingUpForm } from '@/app/_auth/singup-form'
 import ThemeSwitch from '@/components/ui/theme-switch'
 import { useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'

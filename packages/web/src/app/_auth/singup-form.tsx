@@ -17,69 +17,8 @@ import { z } from 'zod'
 import Link from 'next/link'
 import { useState } from 'react'
 import { Eye, EyeOff } from 'lucide-react'
-
-async function validateClientCode(clientCode: string) {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_URL_API}/v1/auth/code/validate`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        clientCode,
-      }),
-    },
-  )
-  const data = await response.json()
-  return data
-}
-
-const formSchema = z
-  .object({
-    clientCode: z
-      .string()
-      .regex(
-        /^[a-zA-z0-9!@#&*]{8}-[a-zA-z0-9!@#&*]{8}-[a-zA-z0-9!@#&*]{8}-[a-zA-z0-9!@#&*]{8}$/,
-        { message: 'Formato invalido' },
-      ),
-    email: z.string().email('El email no es valido'),
-    password: z
-      .string()
-      .min(8, 'La contraseña debe tener al menos 8 caracteres')
-      .max(50, 'La contraseña no puede tener más de 50 caracteres'),
-    confirmPassword: z
-      .string()
-      .min(8, 'La contraseña debe tener al menos 8 caracteres')
-      .max(50, 'La contraseña no puede tener más de 50 caracteres'),
-  })
-  .superRefine(async ({ clientCode }, ctx) => {
-    try {
-      const data = await validateClientCode(clientCode)
-      if (data.status !== 'ok') {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: data.message,
-          path: ['clientCode'],
-        })
-      }
-    } catch {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'Error al validar el codigo de cliente',
-        path: ['clientCode'],
-      })
-    }
-  })
-  .superRefine((data, ctx) => {
-    if (data.password !== data.confirmPassword) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'Las contraseñas no coinciden',
-        path: ['confirmPassword'],
-      })
-    }
-  })
+import { formSchema } from './auth.schemas'
+import { singUpSubmitHandler } from './auth.handlers'
 
 export function SingUpForm() {
   const [passwordVisible, setPasswordVisible] = useState(false)
@@ -87,6 +26,7 @@ export function SingUpForm() {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    reValidateMode: 'onBlur',
     defaultValues: {
       clientCode: '',
       email: '',
@@ -94,10 +34,6 @@ export function SingUpForm() {
       confirmPassword: '',
     },
   })
-
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
-  }
 
   return (
     <section className="w-full h-full flex items-center justify-center">
@@ -107,7 +43,7 @@ export function SingUpForm() {
         </h1>
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={form.handleSubmit(singUpSubmitHandler)}
             className="space-y-8 w-full"
           >
             <FormField
