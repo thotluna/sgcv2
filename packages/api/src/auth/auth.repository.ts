@@ -36,4 +36,33 @@ export class AuthRepository {
 
     return true
   }
+
+  singUp = async (email: string, password: string) => {
+    const { error, data } = await this.client.auth.signUp({
+      email,
+      password,
+    })
+
+    if (error) {
+      throw new Error(error.message)
+    }
+
+    return data
+  }
+
+  closeCodeClient = async (codeClient: string) => {
+    const { error, data } = await this.client
+      .from('client-code')
+      .update({ claimed: false })
+      .eq('code', codeClient)
+      .single()
+
+    if (data) {
+      console.log({ data }, 'repository delete code client')
+    }
+
+    if (error) {
+      throw new Error(error.message)
+    }
+  }
 }

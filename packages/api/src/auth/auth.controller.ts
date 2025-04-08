@@ -39,4 +39,11 @@ export class AuthController {
       }
     }
   }
+
+  static singUp = async (req: Request, res: Response) => {
+    const { email, password, clientCode } = req.body
+
+    console.log({ email, password, clientCode })
+    res.send({ email, password, clientCode })
+  }
 }
