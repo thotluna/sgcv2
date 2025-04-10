@@ -66,7 +66,26 @@ export class AuthController {
   }
 
   static singIn = async (req: Request, res: Response) => {
-    console.log({ req, res })
+    const { email, password } = req.body
+
+    const repository = new AuthRepository()
+    try {
+      const data = await repository.singIn(email, password)
+
+      res.send({ status: 'ok', message: 'ok', data })
+    } catch (error) {
+      if (error instanceof AuthError) {
+        res.status(400).send({
+          status: 'fail',
+          message: error.message,
+        })
+        return
+      }
+      res.status(500).send({
+        status: 'fail',
+        message: 'error en la conexion. por favor intentelo mas tarde',
+      })
+    }
   }
 
   static checkSession = async (req: Request, res: Response) => {

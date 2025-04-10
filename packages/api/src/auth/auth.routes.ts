@@ -1,7 +1,11 @@
 import { Router } from 'express'
 import { AuthController } from './auth.controller'
 import { schemaValidation } from '../middleware/schema-validation'
-import { httpClientCodeSchema, httpSingUpSchema } from './auth.schema'
+import {
+  httpClientCodeSchema,
+  httpSingInSchema,
+  httpSingUpSchema,
+} from './auth.schema'
 
 const router: Router = Router()
 
@@ -18,7 +22,7 @@ router.post(
 router.get('/check-session', AuthController.checkSession)
 router.post(
   '/signin',
-  schemaValidation(httpSingUpSchema),
+  schemaValidation(httpSingInSchema),
   AuthController.singIn,
 )
 

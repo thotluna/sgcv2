@@ -1,9 +1,6 @@
 import { type Database } from '@sgcv2/shared'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { AuthError, DBErrorConexion } from './errors'
-import bcrypt from 'bcrypt'
-
-const SALT_ROUNDS = 10
 
 export class AuthRepository {
   private client: SupabaseClient = createClient<Database>(
@@ -40,7 +37,7 @@ export class AuthRepository {
   singUp = async (email: string, password: string) => {
     const singUpData = {
       email,
-      password: bcrypt.hashSync(password, SALT_ROUNDS),
+      password,
     }
 
     const { error, data } = await this.client.auth.signUp(singUpData)
@@ -48,6 +45,24 @@ export class AuthRepository {
     if (error) {
       if (error.status === 422) {
         throw new AuthError('El email ya esta registrado')
+      }
+    }
+
+    return data
+  }
+
+  singIn = async (email: string, password: string) => {
+    const singInData = {
+      email,
+      password,
+    }
+
+    const { error, data } =
+      await this.client.auth.signInWithPassword(singInData)
+
+    if (error) {
+      if (error.status === 401) {
+        throw new AuthError('El email o la contraseña no son validos')
       }
     }
 
