@@ -1,30 +1,8 @@
-'use client'
-import { DateTime } from '@/components/ui/date-time'
-import { SingInForm } from '@/components/ui/singin-form'
-import { SingUpForm } from '@/app/_auth/singup-form'
-import ThemeSwitch from '@/components/ui/theme-switch'
-import { redirect, useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
-import { singUpSubmitHandler } from './_auth/singupSubmitServerAction'
-import { toast } from 'sonner'
-import { SingUpDTO } from './_auth/types'
+import ThemeSwitch from '@/components/ui/theme-switch'
 
-function FormSing() {
-  const isSingUp = useSearchParams().get('singUp') === 'true'
-
-  const handlerSubmit = async (data: SingUpDTO) => {
-    const response = await singUpSubmitHandler(data)
-    if (response?.status === 'ok') {
-      toast.success('Registro exitoso')
-      redirect('/auth')
-    }
-    if (response?.status === 'fail') {
-      toast.error(response.message)
-    }
-  }
-
-  return isSingUp ? <SingUpForm onSubmit={handlerSubmit} /> : <SingInForm />
-}
+import { DateTime } from '@/components/ui/date-time'
+import { FormSing } from '@/app/_auth/components/form-sing'
 
 export default function Home() {
   return (

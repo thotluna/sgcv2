@@ -17,8 +17,8 @@ import { z } from 'zod'
 import Link from 'next/link'
 import { useState } from 'react'
 import { Eye, EyeOff } from 'lucide-react'
-import { formSchema } from './auth.schemas'
-import { SingUpDTO } from './types'
+import { SingUpFormSchema } from '../auth.schemas'
+import { SingUpDTO } from '../types'
 
 export function SingUpForm({
   onSubmit,
@@ -28,14 +28,14 @@ export function SingUpForm({
   const [passwordVisible, setPasswordVisible] = useState(false)
   const [passwordConfirmVisible, setPasswordConfirmVisible] = useState(false)
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof SingUpFormSchema>>({
+    resolver: zodResolver(SingUpFormSchema),
     reValidateMode: 'onBlur',
     defaultValues: {
-      clientCode: 'aB9!#*2z-C@dE8fG1-hI7jKlM6-nOpQ5rSt',
-      email: 'b1@gmail.com.ve',
-      password: '123123123',
-      confirmPassword: '123123123',
+      clientCode: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
     },
   })
 
@@ -142,7 +142,9 @@ export function SingUpForm({
               )}
             />
             <div className="flex justify-between flex-row-reverse">
-              <Button type="submit">Submit</Button>
+              <Button disabled={form.formState.isLoading} type="submit">
+                Submit
+              </Button>
               <Button
                 variant="outline"
                 type="reset"

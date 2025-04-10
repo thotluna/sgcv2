@@ -1,6 +1,22 @@
 import { z } from 'zod'
 import { validateClientCode } from './auth.handlers'
 
+export const SingformSchemaBase = z.object({
+  email: z.string().email('El email no es valido'),
+  password: z
+    .string()
+    .min(8, 'La contraseña debe tener al menos 8 caracteres')
+    .max(50, 'La contraseña no puede tener más de 50 caracteres'),
+  confirmPassword: z
+    .string()
+    .min(8, 'La contraseña debe tener al menos 8 caracteres')
+    .max(50, 'La contraseña no puede tener más de 50 caracteres'),
+})
+
+export const SingInFormSchema = SingformSchemaBase.omit({
+  confirmPassword: true,
+})
+
 export const formSchemaBase = z.object({
   clientCode: z
     .string()
@@ -19,7 +35,7 @@ export const formSchemaBase = z.object({
     .max(50, 'La contraseña no puede tener más de 50 caracteres'),
 })
 
-export const formSchema = formSchemaBase
+export const SingUpFormSchema = formSchemaBase
   .superRefine(async ({ clientCode }, ctx) => {
     const data = await validateClientCode(clientCode)
     if (data.status !== 'ok') {

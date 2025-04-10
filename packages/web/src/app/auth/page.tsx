@@ -1,25 +1,7 @@
-import { cookies } from 'next/headers'
+'use client'
+import { useStoreState } from '../store/store'
 
 export default function Auth() {
-  const validateCredentials = async () => {
-    'use server'
-
-    const cookieStore = await cookies()
-    const accessToken = cookieStore.get('accessToken')
-
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_URL_API}/v1/auth/check-session`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Autorization: `Bearer ${accessToken?.value}`,
-        },
-      },
-    )
-    const data = await response.json()
-    console.log(data)
-  }
-
-  validateCredentials()
+  const user = useStoreState(state => state.user)
+  return <h1>Dashboard {user.email}</h1>
 }

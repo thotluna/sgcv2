@@ -15,8 +15,9 @@ import { Input } from '@/components/ui/input'
 import { z } from 'zod'
 import Link from 'next/link'
 import { Eye, EyeOff, Linkedin } from 'lucide-react'
-import { GoogleIcon } from './google-icon'
+import { GoogleIcon } from '../../../components/ui/google-icon'
 import { useState } from 'react'
+import { SingInDTO } from '../types'
 
 const formSchema = z.object({
   email: z.string().email('El email no es valido'),
@@ -26,19 +27,19 @@ const formSchema = z.object({
     .max(50, 'La contraseña no puede tener más de 50 caracteres'),
 })
 
-export function SingInForm() {
+export function SingInForm({
+  onSubmit,
+}: {
+  onSubmit: (dataform: SingInDTO) => Promise<void>
+}) {
   const [passwordVisible, setPasswordVisible] = useState(false)
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<SingInDTO>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: '',
       password: '',
     },
   })
-
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
-  }
 
   return (
     <section className="w-full h-full flex items-center justify-center">
@@ -101,7 +102,9 @@ export function SingInForm() {
             />
 
             <div className="flex justify-between flex-row-reverse">
-              <Button type="submit">Submit</Button>
+              <Button disabled={form.formState.isLoading} type="submit">
+                Submit
+              </Button>
               <Button
                 variant="outline"
                 type="reset"

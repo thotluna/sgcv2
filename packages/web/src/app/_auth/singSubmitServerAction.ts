@@ -1,13 +1,24 @@
 'use server'
 
 import { cookies } from 'next/headers'
-import { SingUpDTO } from './types'
+import { Result, SingInDTO, SingUpDTO } from './types'
 
-export async function singUpSubmitHandler(data: SingUpDTO) {
-  const URL_API = `${process.env.NEXT_PUBLIC_URL_API}/v1/auth/singup`
+const URL_API = {
+  SIGN_IN: `${process.env.NEXT_PUBLIC_URL_API}/v1/auth/signin`,
+  SIGN_UP: `${process.env.NEXT_PUBLIC_URL_API}/v1/auth/singup`,
+} as const
 
+export async function singInSubmitHandler(data: SingInDTO): Promise<Result> {
+  return sendSing(data, URL_API.SIGN_IN)
+}
+
+export async function singUpSubmitHandler(data: SingUpDTO): Promise<Result> {
+  return sendSing(data, URL_API.SIGN_IN)
+}
+
+async function sendSing<TData>(data: TData, url: string): Promise<Result> {
   try {
-    const res = await fetch(URL_API, {
+    const res = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -25,31 +36,40 @@ export async function singUpSubmitHandler(data: SingUpDTO) {
     }
 
     const { data: result } = await res.json()
-    const { user, session } = result
+    const { session } = result
     const {
       access_token: accessToken,
       expires_in: expiresIn,
       expires_at: expiresAt,
       refresh_token: refreshToken,
+      user,
     } = session
 
     const cookieStore = await cookies()
-    cookieStore.set('accessToken', accessToken, {
+    cookieStore.set('access-token', accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       path: '/',
       maxAge: expiresIn * 1000,
       expires: expiresAt,
     })
-    cookieStore.set('refreshToken', refreshToken, {
+    cookieStore.set('refresh-token', refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       path: '/',
       maxAge: 7 * 24 * 60 * 60 * 1000,
     })
 
+    const { role, email } = user
+
+    cookieStore.set('user', JSON.stringify({ role, email }))
+
     return { status: 'ok', message: 'ok', data: user }
   } catch (error) {
-    console.log(error, 'este es en el catch del submit')
+    console.error(error, 'error en action singin')
+    return {
+      status: 'fail',
+      message: 'error en la conexion. por favor intentelo mas tarde',
+    }
   }
 }
