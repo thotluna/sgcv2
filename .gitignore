@@ -5,3 +5,5 @@ pnpm-lock.yaml
 .turbo
 .env
 .env.*
+
+.vscode
