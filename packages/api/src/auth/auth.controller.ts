@@ -20,7 +20,7 @@ export class AuthController {
       }
       res.send({
         status: 'ok',
-        code: clientCode,
+        message: clientCode,
       })
     } catch (error) {
       if (error instanceof AuthError) {
@@ -43,7 +43,56 @@ export class AuthController {
   static singUp = async (req: Request, res: Response) => {
     const { email, password, clientCode } = req.body
 
-    console.log({ email, password, clientCode })
-    res.send({ email, password, clientCode })
+    const repository = new AuthRepository()
+    try {
+      const data = await repository.singUp(email, password)
+      if (data) {
+        await repository.closeCodeClient(clientCode)
+      }
+      res.send({ status: 'ok', message: 'ok', data })
+    } catch (error) {
+      if (error instanceof AuthError) {
+        res.status(400).send({
+          status: 'fail',
+          message: error.message,
+        })
+        return
+      }
+      res.status(500).send({
+        status: 'fail',
+        message: 'error en la conexion. por favor intentelo mas tarde',
+      })
+    }
+  }
+
+  static singIn = async (req: Request, res: Response) => {
+    console.log({ req, res })
+  }
+
+  static checkSession = async (req: Request, res: Response) => {
+    const authorizationHeader = req.headers.autorization || ''
+
+    if (authorizationHeader) {
+      const token = (authorizationHeader as string).split(' ')[1]
+      const repository = new AuthRepository()
+      const data = await repository.checkSession(token)
+      if (data?.user !== null) {
+        res.send({
+          status: 'ok',
+          data,
+        })
+        return
+      } else {
+        res.status(401).send({
+          status: 'fail',
+          message: 'Token no valido',
+        })
+        return
+      }
+    }
+    res.status(401).send({
+      status: 'fail',
+      message: 'Token no valido',
+    })
   }
 }

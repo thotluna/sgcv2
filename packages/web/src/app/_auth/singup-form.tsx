@@ -18,9 +18,13 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { Eye, EyeOff } from 'lucide-react'
 import { formSchema } from './auth.schemas'
-import { singUpSubmitHandler } from './auth.handlers'
+import { SingUpDTO } from './types'
 
-export function SingUpForm() {
+export function SingUpForm({
+  onSubmit,
+}: {
+  onSubmit: (dataform: SingUpDTO) => Promise<void>
+}) {
   const [passwordVisible, setPasswordVisible] = useState(false)
   const [passwordConfirmVisible, setPasswordConfirmVisible] = useState(false)
 
@@ -28,10 +32,10 @@ export function SingUpForm() {
     resolver: zodResolver(formSchema),
     reValidateMode: 'onBlur',
     defaultValues: {
-      clientCode: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
+      clientCode: 'aB9!#*2z-C@dE8fG1-hI7jKlM6-nOpQ5rSt',
+      email: 'b1@gmail.com.ve',
+      password: '123123123',
+      confirmPassword: '123123123',
     },
   })
 
@@ -43,7 +47,7 @@ export function SingUpForm() {
         </h1>
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(singUpSubmitHandler)}
+            onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-8 w-full"
           >
             <FormField

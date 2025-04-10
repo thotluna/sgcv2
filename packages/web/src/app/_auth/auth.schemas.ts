@@ -20,18 +20,9 @@ export const formSchemaBase = z.object({
 })
 
 export const formSchema = formSchemaBase
-formSchemaBase
   .superRefine(async ({ clientCode }, ctx) => {
-    try {
-      const data = await validateClientCode(clientCode)
-      if (data.status !== 'ok') {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: data.message,
-          path: ['clientCode'],
-        })
-      }
-    } catch {
+    const data = await validateClientCode(clientCode)
+    if (data.status !== 'ok') {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: 'Error al validar el codigo de cliente',

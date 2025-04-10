@@ -1,6 +1,9 @@
 import { type Database } from '@sgcv2/shared'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { AuthError, DBErrorConexion } from './errors'
+import bcrypt from 'bcrypt'
+
+const SALT_ROUNDS = 10
 
 export class AuthRepository {
   private client: SupabaseClient = createClient<Database>(
@@ -9,21 +12,18 @@ export class AuthRepository {
   )
 
   validateCodeClient = async (codeClient: string): Promise<boolean> => {
-    const beforeTime = new Date(Date.now() - 48 * 60 * 60 * 1000)
+    const beforeTime = new Date(Date.now() - 72 * 60 * 60 * 1000)
 
-    const { error, data } = await this.client
-      .from('client-code')
+    const { error } = await this.client
+      .from('clientcode')
       .select('created_at, claimed')
       .eq('code', codeClient)
       .eq('claimed', false)
       .gte('created_at', beforeTime.toISOString())
       .single()
 
-    console.log({ error, data })
-
     if (error) {
       if (error.code === 'PGRST116') {
-        console.log('entrando a PGRST116')
         throw new AuthError('Codigo de cliente no válido')
       }
 
@@ -38,31 +38,43 @@ export class AuthRepository {
   }
 
   singUp = async (email: string, password: string) => {
-    const { error, data } = await this.client.auth.signUp({
+    const singUpData = {
       email,
-      password,
-    })
+      password: bcrypt.hashSync(password, SALT_ROUNDS),
+    }
+
+    const { error, data } = await this.client.auth.signUp(singUpData)
 
     if (error) {
-      throw new Error(error.message)
+      if (error.status === 422) {
+        throw new AuthError('El email ya esta registrado')
+      }
     }
 
     return data
   }
 
   closeCodeClient = async (codeClient: string) => {
-    const { error, data } = await this.client
-      .from('client-code')
-      .update({ claimed: false })
+    const { error } = await this.client
+      .from('clientcode')
+      .update({ claimed: true })
       .eq('code', codeClient)
+      .eq('claimed', false)
       .single()
 
-    if (data) {
-      console.log({ data }, 'repository delete code client')
-    }
+    return error === null
+  }
+
+  async checkSession(token: string) {
+    const { error, data } = await this.client.auth.getUser(token)
 
     if (error) {
-      throw new Error(error.message)
+      console.error(error, 'error repository')
+      if (error.status === 403) {
+        throw new AuthError('Token no valido')
+      }
     }
+
+    return data
   }
 }
