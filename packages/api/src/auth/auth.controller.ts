@@ -1,6 +1,7 @@
 import { Response, Request } from 'express'
-import { AuthRepository } from './auth.repository'
+import { AuthRepository, SUPABASE_URLs } from './auth.repository'
 import { AuthError, DBErrorConexion } from './errors'
+import { generatePKCEParams } from './oauth'
 
 export class AuthController {
   static validationClientCode = async (req: Request, res: Response) => {
@@ -113,5 +114,81 @@ export class AuthController {
       status: 'fail',
       message: 'Token no valido',
     })
+  }
+
+  static async authorize(req: Request, res: Response) {
+    const provider = req.query.provider as string
+    const PKCEPparams = await generatePKCEParams()
+
+    try {
+      const conf: Record<string, string> = {
+        provider,
+        redirect_to: 'http://localhost:3001/v1/auth/callback',
+        code_challenge: PKCEPparams.codeChallenge,
+        code_challenge_method: 'S256',
+      }
+
+      const url = new URL(SUPABASE_URLs.AUTHORIZATION)
+
+      Object.keys(conf).forEach(key => {
+        url.searchParams.append(key, conf[key])
+      })
+
+      res.send({
+        data: {
+          url,
+          codeVerifier: PKCEPparams.codeVerifier,
+        },
+      })
+    } catch {
+      res.status(500).send({
+        status: 'fail',
+        message: 'error en la conexion. por favor intentelo mas tarde',
+      })
+    }
+  }
+
+  static callback = async (req: Request, res: Response) => {
+    const { 'code-verify': codeVerifier } = req.cookies
+    const { code } = req.query
+    if (!code) {
+      res.status(401).send({
+        status: 'fail',
+        message: 'Codigo de cliente no válido',
+      })
+      return
+    }
+    const repository = new AuthRepository()
+    try {
+      const { data } = await repository.callback(code as string, codeVerifier)
+      if (data) {
+        res.send({
+          status: 'ok',
+          data,
+        })
+        return
+      } else {
+        res.status(401).send({
+          status: 'fail',
+          message: 'Codigo de cliente no válido',
+        })
+        return
+      }
+    } catch (error) {
+      if (error instanceof AuthError) {
+        res.status(401).send({
+          status: 'fail',
+          message: error.message,
+        })
+        return
+      }
+      if (error instanceof DBErrorConexion) {
+        res.status(401).send({
+          status: 'fail',
+          message: 'error en la conexion. por favor intentelo mas tarde',
+        })
+        return
+      }
+    }
   }
 }

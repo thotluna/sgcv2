@@ -1,6 +1,16 @@
 import { type Database } from '@sgcv2/shared'
-import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import {
+  AuthTokenResponsePassword,
+  createClient,
+  SupabaseClient,
+} from '@supabase/supabase-js'
 import { AuthError, DBErrorConexion } from './errors'
+import { generatePKCEParams } from './oauth'
+
+export const SUPABASE_URLs = {
+  AUTHORIZATION: `${process.env.SUPABASE_URL}/auth/v1/authorize`,
+  EXGHANGE: `${process.env.SUPABASE_URL}/auth/v1//token?grant_type=pkce`,
+} as const
 
 export class AuthRepository {
   private client: SupabaseClient = createClient<Database>(
@@ -91,5 +101,46 @@ export class AuthRepository {
     }
 
     return data
+  }
+
+  async authorize() {
+    const conf: Record<string, string> = {
+      provider: 'google',
+      redirect_to: 'http://localhost:3000',
+      code_challenge: (await generatePKCEParams()).codeChallenge,
+      code_challenge_method: 'S256',
+    }
+
+    const uri = new URL(SUPABASE_URLs.AUTHORIZATION)
+
+    Object.keys(conf).forEach(key => {
+      uri.searchParams.append(key, conf[key])
+    })
+
+    return uri.toString()
+  }
+
+  async callback(code: string, codeVerifier: string) {
+    const { SUPABASE_ANON_KEY } = process.env
+
+    const headers = new Headers()
+    headers.append('api-key', SUPABASE_ANON_KEY!)
+    headers.append('Authorization', `Bearer ${SUPABASE_ANON_KEY!}`)
+    headers.append('Content-Type', 'application/json')
+
+    console.log({ headers })
+
+    const res = await fetch(SUPABASE_URLs.EXGHANGE, {
+      method: 'POST',
+      headers: headers,
+      body: JSON.stringify({
+        auth_code: code,
+        code_verifier: codeVerifier,
+      }),
+    }).then(response => response.json())
+
+    const { data, error } = res as AuthTokenResponsePassword
+
+    return { data, error }
   }
 }

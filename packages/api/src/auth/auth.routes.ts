@@ -26,4 +26,7 @@ router.post(
   AuthController.singIn,
 )
 
+router.get('/authorize', AuthController.authorize)
+router.get('/callback', AuthController.callback)
+
 export default router
