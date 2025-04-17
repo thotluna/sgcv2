@@ -1,3 +1,6 @@
-import { createClient } from './server'
+import { createBrowserClient } from '@supabase/ssr'
 
-export const supabase = await createClient()
+export const supabase = await createBrowserClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+)

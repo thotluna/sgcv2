@@ -18,6 +18,7 @@ import { Eye, EyeOff, Linkedin } from 'lucide-react'
 import { GoogleIcon } from '../../../components/ui/google-icon'
 import { useState } from 'react'
 import { SingInDTO } from '../types'
+import { signInWithGoogle, signInWithLinkedin } from '../oauth.actions'
 
 const formSchema = z.object({
   email: z.string().email('El email no es valido'),
@@ -119,11 +120,11 @@ export function SingInForm({
           <div className="h-[1px] border-b-2 border-primary opacity-20 mt-6"></div>
           <p className="text-sm">Tambien puedes ingresar con:</p>
           <div className="flex justify-center gap-4">
-            <Button variant="outline" size="sm">
+            <Button onClick={signInWithLinkedin} variant="outline" size="sm">
               <Linkedin />
               Linkedin
             </Button>
-            <Button variant="outline" size="sm">
+            <Button onClick={signInWithGoogle} variant="outline" size="sm">
               <GoogleIcon /> Google
             </Button>
           </div>

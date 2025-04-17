@@ -15,8 +15,6 @@ export async function validateClientCode(clientCode: string) {
 
     const data = await response.json()
 
-    console.log({ data }, 'authHandler validateClientCode')
-
     return data
   } catch (error) {
     return {
