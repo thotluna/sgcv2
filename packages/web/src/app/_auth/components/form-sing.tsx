@@ -10,6 +10,7 @@ import {
 } from '../singSubmitServerAction'
 import cookies from 'js-cookie'
 import { useStoreState } from '@/app/store/store'
+
 export function FormSing() {
   const setUser = useStoreState(state => state.setUser)
   const isSingUp = useSearchParams().get('singUp') === 'true'

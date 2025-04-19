@@ -3,6 +3,7 @@ import ThemeSwitch from '@/components/ui/theme-switch'
 
 import { DateTime } from '@/components/ui/date-time'
 import { FormSing } from '@/app/_auth/components/form-sing'
+import { ErrorUrl } from './_auth/components/error-url'
 
 export default function Home() {
   return (
@@ -18,6 +19,7 @@ export default function Home() {
         </header>
         <Suspense>
           <FormSing />
+          <ErrorUrl />
         </Suspense>
       </div>
     </section>

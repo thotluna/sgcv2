@@ -96,8 +96,9 @@ export class AuthRepository {
     const { error, data } =
       await this.client.auth.signInWithPassword(singInData)
 
+    console.error({ data, error })
     if (error) {
-      if (error.status === 401) {
+      if (error.status === 400) {
         throw new AuthError('El email o la contraseña no son validos')
       }
     }
