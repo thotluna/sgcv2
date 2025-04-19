@@ -14,14 +14,11 @@ export async function GET() {
 
   cookieStore.delete('sb-rzfvzqhceahqpjzjswxz-auth-code-verify')
 
-  const client = createClient()
-  const result = await (
-    await client
-  ).auth.setSession({
+  const client = await createClient()
+  await client.auth.setSession({
     access_token: accessToken!.value,
     refresh_token: refreshToken!.value,
   })
-  console.log(result.data.user)
 
   return NextResponse.redirect('http://localhost:3000/private')
 }

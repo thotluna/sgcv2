@@ -13,7 +13,7 @@ export async function singInSubmitHandler(data: SingInDTO): Promise<Result> {
 }
 
 export async function singUpSubmitHandler(data: SingUpDTO): Promise<Result> {
-  return sendSing(data, URL_API.SIGN_IN)
+  return sendSing(data, URL_API.SIGN_UP)
 }
 
 async function sendSing<TData>(data: TData, url: string): Promise<Result> {
@@ -64,7 +64,8 @@ async function sendSing<TData>(data: TData, url: string): Promise<Result> {
     cookieStore.set('user', JSON.stringify({ role, email }))
 
     return { status: 'ok', message: 'ok', data: user }
-  } catch {
+  } catch (error) {
+    console.error(error)
     return {
       status: 'fail',
       message: 'error en la conexion. por favor intentelo mas tarde',

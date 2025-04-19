@@ -64,14 +64,19 @@ export class AuthRepository {
       password,
     }
 
-    const { error, data } = await this.client.auth.signUp(singUpData)
+    const { data, error } = await this.client.auth.signUp(singUpData)
 
     if (error) {
+      if (
+        error.name === 'AuthApiError' &&
+        error.message === 'Database error saving new user'
+      ) {
+        throw new AuthError('error en el codigo del cliente')
+      }
       if (error.status === 422) {
         throw new AuthError('El email ya esta registrado')
       }
     }
-
     return data
   }
 
