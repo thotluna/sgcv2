@@ -7,18 +7,10 @@ export class AuthController {
   static validationClientCode = async (req: Request, res: Response) => {
     const { clientCode } = req.body
 
-    const repository = new AuthRepository()
-
     try {
-      const hasCode = await repository.validateCodeClient(clientCode)
+      const repository = new AuthRepository()
+      await repository.validateCodeClient(clientCode)
 
-      if (!hasCode) {
-        res.status(401).send({
-          status: 'fail',
-          message: 'codigo no valido',
-        })
-        return
-      }
       res.send({
         status: 'ok',
         message: clientCode,
@@ -44,8 +36,9 @@ export class AuthController {
   static singUp = async (req: Request, res: Response) => {
     const { email, password, clientCode } = req.body
 
-    const repository = new AuthRepository()
     try {
+      const repository = new AuthRepository()
+      await repository.validateCodeClient(clientCode)
       const data = await repository.singUp(email, password)
       if (data) {
         await repository.closeCodeClient(clientCode)
@@ -69,8 +62,8 @@ export class AuthController {
   static singIn = async (req: Request, res: Response) => {
     const { email, password } = req.body
 
-    const repository = new AuthRepository()
     try {
+      const repository = new AuthRepository()
       const data = await repository.singIn(email, password)
 
       res.send({ status: 'ok', message: 'ok', data })
@@ -90,7 +83,7 @@ export class AuthController {
   }
 
   static checkSession = async (req: Request, res: Response) => {
-    const authorizationHeader = req.headers.autorization || ''
+    const authorizationHeader = req.headers.autorization
 
     if (authorizationHeader) {
       const token = (authorizationHeader as string).split(' ')[1]
@@ -149,31 +142,42 @@ export class AuthController {
   }
 
   static callback = async (req: Request, res: Response) => {
-    const { 'code-verify': codeVerifier } = req.cookies
+    const { 'sb-rzfvzqhceahqpjzjswxz-auth-code-verify': codeVerifier } =
+      req.cookies
     const { code } = req.query
     if (!code) {
       res.status(401).send({
         status: 'fail',
-        message: 'Codigo de cliente no válido',
+        message: 'Se requiere codigo de autorizacion',
       })
       return
     }
     const repository = new AuthRepository()
     try {
-      const { data } = await repository.callback(code as string, codeVerifier)
-      if (data) {
-        res.send({
-          status: 'ok',
-          data,
+      const result = await repository.callback(code as string, codeVerifier)
+      const {
+        access_token: accessToken,
+        expires_at: expiresAt,
+        refresh_token: refreshToken,
+      } = result
+
+      res
+        .cookie('sr-sb-access_token', accessToken, {
+          expires: new Date(expiresAt * 1000),
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          maxAge: 60 * 60 * 1000,
         })
-        return
-      } else {
-        res.status(401).send({
-          status: 'fail',
-          message: 'Codigo de cliente no válido',
+        .cookie('sr-sb-refresh_token', refreshToken, {
+          expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          maxAge: 7 * 24 * 60 * 60 * 1000,
         })
-        return
-      }
+        .redirect(`${process.env.FRONTEND_URL}/auth/callback`)
+      return
     } catch (error) {
       if (error instanceof AuthError) {
         res.status(401).send({

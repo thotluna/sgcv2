@@ -19,7 +19,7 @@ router.post(
   schemaValidation(httpSingUpSchema),
   AuthController.singUp,
 )
-router.get('/check-session', AuthController.checkSession)
+// router.get('/check-session', AuthController.checkSession)
 router.post(
   '/signin',
   schemaValidation(httpSingInSchema),

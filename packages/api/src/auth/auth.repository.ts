@@ -1,16 +1,17 @@
 import { type Database } from '@sgcv2/shared'
-import {
-  AuthTokenResponsePassword,
-  createClient,
-  SupabaseClient,
-} from '@supabase/supabase-js'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { AuthError, DBErrorConexion } from './errors'
-import { generatePKCEParams } from './oauth'
 
 export const SUPABASE_URLs = {
   AUTHORIZATION: `${process.env.SUPABASE_URL}/auth/v1/authorize`,
-  EXGHANGE: `${process.env.SUPABASE_URL}/auth/v1//token?grant_type=pkce`,
+  EXGHANGE: `${process.env.SUPABASE_URL}/auth/v1/token?grant_type=pkce`,
 } as const
+
+interface CallbackResult {
+  access_token: string
+  expires_at: number
+  refresh_token: string
+}
 
 export class AuthRepository {
   private client: SupabaseClient = createClient<Database>(
@@ -18,6 +19,12 @@ export class AuthRepository {
     process.env.SUPABASE_SERVICE_ROL!,
   )
 
+  /**
+   * Check if the code client is valid
+   *
+   * @param codeClient string
+   * @returns Promise<boolean>
+   */
   validateCodeClient = async (codeClient: string): Promise<boolean> => {
     const beforeTime = new Date(Date.now() - 72 * 60 * 60 * 1000)
 
@@ -44,6 +51,13 @@ export class AuthRepository {
     return true
   }
 
+  /**
+   * Sign up the user
+   *
+   * @param email Email of the user
+   * @param password Password of the user
+   * @returns Promise<boolean>
+   */
   singUp = async (email: string, password: string) => {
     const singUpData = {
       email,
@@ -61,6 +75,13 @@ export class AuthRepository {
     return data
   }
 
+  /**
+   * Sign in the user
+   *
+   * @param email Email of the user
+   * @param password Password of the user
+   * @returns Promise<boolean>
+   */
   singIn = async (email: string, password: string) => {
     const singInData = {
       email,
@@ -79,6 +100,12 @@ export class AuthRepository {
     return data
   }
 
+  /**
+   * Borrar el codigo de cliente del sistema
+   *
+   * @param codeClient Code client
+   * @returns Promise<boolean>
+   */
   closeCodeClient = async (codeClient: string) => {
     const { error } = await this.client
       .from('clientcode')
@@ -90,11 +117,16 @@ export class AuthRepository {
     return error === null
   }
 
+  /**
+   * Check if the token is valid
+   *
+   * @param token Token
+   * @returns Promise<boolean>
+   */
   async checkSession(token: string) {
     const { error, data } = await this.client.auth.getUser(token)
 
     if (error) {
-      console.error(error, 'error repository')
       if (error.status === 403) {
         throw new AuthError('Token no valido')
       }
@@ -103,44 +135,37 @@ export class AuthRepository {
     return data
   }
 
-  async authorize() {
-    const conf: Record<string, string> = {
-      provider: 'google',
-      redirect_to: 'http://localhost:3000',
-      code_challenge: (await generatePKCEParams()).codeChallenge,
-      code_challenge_method: 'S256',
+  /**
+   * Get the authorization URL
+   *
+   * @param code string code authentification
+   * @param codeVerifier string code original of code challenge
+   * @returns Promise<string>
+   */
+  async callback(code: string, codeVerifier: string): Promise<CallbackResult> {
+    const { SUPABASE_ANON_KEY: apiKey } = process.env
+
+    if (apiKey === undefined) {
+      throw new AuthError('No se ha encontrado la clave anonima')
     }
 
-    const uri = new URL(SUPABASE_URLs.AUTHORIZATION)
+    try {
+      const request = await fetch(SUPABASE_URLs.EXGHANGE, {
+        method: 'POST',
+        headers: {
+          apiKey: apiKey,
+          Authorization: `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          auth_code: code,
+          code_verifier: codeVerifier,
+        }),
+      }).then(result => result.json())
 
-    Object.keys(conf).forEach(key => {
-      uri.searchParams.append(key, conf[key])
-    })
-
-    return uri.toString()
-  }
-
-  async callback(code: string, codeVerifier: string) {
-    const { SUPABASE_ANON_KEY } = process.env
-
-    const headers = new Headers()
-    headers.append('api-key', SUPABASE_ANON_KEY!)
-    headers.append('Authorization', `Bearer ${SUPABASE_ANON_KEY!}`)
-    headers.append('Content-Type', 'application/json')
-
-    console.log({ headers })
-
-    const res = await fetch(SUPABASE_URLs.EXGHANGE, {
-      method: 'POST',
-      headers: headers,
-      body: JSON.stringify({
-        auth_code: code,
-        code_verifier: codeVerifier,
-      }),
-    }).then(response => response.json())
-
-    const { data, error } = res as AuthTokenResponsePassword
-
-    return { data, error }
+      return request as CallbackResult
+    } catch (error) {
+      throw new AuthError(error as string)
+    }
   }
 }
