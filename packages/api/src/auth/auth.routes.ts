@@ -9,6 +9,7 @@ import {
 } from './auth.schema'
 import { SupabaseAuthRepository } from './auth.repository'
 import { AuthSercice as AuthService } from './auth.service'
+import { AuthsRepository } from './types'
 
 class AuthRouter {
   private router: Router
@@ -50,9 +51,9 @@ class AuthRouter {
 }
 
 export const getAuthRouter = () => {
-  const repository = new SupabaseAuthRepository()
-  const authService = new AuthService(repository)
-  const authController = new AuthController(authService)
+  const repository: AuthsRepository = new SupabaseAuthRepository()
+  const service = new AuthService(repository)
+  const authController = new AuthController(service)
   const authRouter = new AuthRouter(authController)
   authRouter.initializeRoutes()
   return authRouter.getRouter()

@@ -107,14 +107,12 @@ export class AuthController {
     })
   }
 
-  async authorize(req: Request, res: Response) {
+  authorize = async (req: Request, res: Response) => {
     const provider = req.query.provider as string
 
-    console.log('provider', provider)
-
     try {
-      const { data, codeVerifier } = await this.service.authorization(provider)
-
+      const resp = await this.service.authorization(provider)
+      const { data, codeVerifier } = resp
       const url = new URL(SUPABASE_URLs.AUTHORIZATION)
 
       Object.keys(data).forEach(key => {

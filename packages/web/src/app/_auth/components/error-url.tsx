@@ -14,6 +14,10 @@ export function ErrorUrl() {
     if (message) {
       toast.error(`Error: se requiere codigo de cliente`)
     }
+
+    if (searchParams.get('error_description')) {
+      toast.error(`Error: ${searchParams.get('error_description')}`)
+    }
   }, [router, searchParams])
 
   return <div></div>

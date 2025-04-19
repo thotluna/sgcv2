@@ -7,7 +7,7 @@ import { getAuthRouter } from './auth/auth.routes'
 
 const app = express()
 const PORT = process.env.PORT || 3001
-app.use(morgan('combined'))
+app.use(morgan('dev'))
 app.use(cookieParser())
 app.use(
   cors({

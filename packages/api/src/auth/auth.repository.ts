@@ -1,14 +1,14 @@
 import { type Database } from '@sgcv2/shared'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { AuthError, DBErrorConexion } from './errors'
-import { AuthsRepository, CallbackResult } from './types'
+import { AuthsRepository as AuthRepository, CallbackResult } from './types'
 
 export const SUPABASE_URLs = {
   AUTHORIZATION: `${process.env.SUPABASE_URL}/auth/v1/authorize`,
   EXGHANGE: `${process.env.SUPABASE_URL}/auth/v1/token?grant_type=pkce`,
 } as const
 
-export class SupabaseAuthRepository implements AuthsRepository {
+export class SupabaseAuthRepository implements AuthRepository {
   private client: SupabaseClient = createClient<Database>(
     process.env.SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROL!,

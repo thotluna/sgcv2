@@ -34,6 +34,7 @@ export class AuthSercice {
   }
 
   async authorization(provider: string) {
+    console.info('authorization', provider)
     const PKCEPparams = await generatePKCEParams()
 
     const data: Record<string, string> = {
