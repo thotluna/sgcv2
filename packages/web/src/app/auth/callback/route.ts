@@ -1,31 +1,27 @@
 import { NextResponse } from 'next/server'
-// The client you created from the Server-Side Auth instructions
+import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
 
-export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url)
-  const code = searchParams.get('code')
-  // if "next" is in param, use it as the redirect URL
-  const next = searchParams.get('next') ?? '/private'
+export async function GET() {
+  const cookieStore = await cookies()
 
-  if (code) {
-    const supabase = await createClient()
-    const { error } = await supabase.auth.exchangeCodeForSession(code)
+  const accessToken = cookieStore.get('sr-sb-access_token')
+  const refreshToken = cookieStore.get('sr-sb-refresh_token')
 
-    if (!error) {
-      const forwardedHost = request.headers.get('x-forwarded-host') // original origin before load balancer
-      const isLocalEnv = process.env.NODE_ENV === 'development'
-      if (isLocalEnv) {
-        // we can be sure that there is no load balancer in between, so no need to watch for X-Forwarded-Host
-        return NextResponse.redirect(`${origin}${next}`)
-      } else if (forwardedHost) {
-        return NextResponse.redirect(`https://${forwardedHost}${next}`)
-      } else {
-        return NextResponse.redirect(`${origin}${next}`)
-      }
-    }
+  if (!accessToken || !refreshToken) {
+    return NextResponse.redirect('http://localhost:3000')
   }
 
-  // return the user to an error page with instructions
-  return NextResponse.redirect(`${origin}/auth/auth-code-error`)
+  cookieStore.delete('sb-rzfvzqhceahqpjzjswxz-auth-code-verify')
+
+  const client = createClient()
+  const result = await (
+    await client
+  ).auth.setSession({
+    access_token: accessToken!.value,
+    refresh_token: refreshToken!.value,
+  })
+  console.log(result.data.user)
+
+  return NextResponse.redirect('http://localhost:3000/private')
 }

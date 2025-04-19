@@ -28,7 +28,6 @@ async function sendSing<TData>(data: TData, url: string): Promise<Result> {
 
     if (res.status !== 200) {
       const error = await res.json()
-      console.warn(res.status, res.statusText, error.message)
       return {
         status: error.status,
         message: error.message,
@@ -65,8 +64,7 @@ async function sendSing<TData>(data: TData, url: string): Promise<Result> {
     cookieStore.set('user', JSON.stringify({ role, email }))
 
     return { status: 'ok', message: 'ok', data: user }
-  } catch (error) {
-    console.error(error, 'error en action singin')
+  } catch {
     return {
       status: 'fail',
       message: 'error en la conexion. por favor intentelo mas tarde',
