@@ -133,7 +133,8 @@ export class AuthController {
           codeVerifier: PKCEPparams.codeVerifier,
         },
       })
-    } catch {
+    } catch (error) {
+      console.error(error)
       res.status(500).send({
         status: 'fail',
         message: 'error en la conexion. por favor intentelo mas tarde',
@@ -145,6 +146,12 @@ export class AuthController {
     const { 'sb-rzfvzqhceahqpjzjswxz-auth-code-verify': codeVerifier } =
       req.cookies
     const { code } = req.query
+
+    const { error, error_description } = req.query
+    if (error && error_description === 'Database error saving new user') {
+      res.redirect('http://localhost:3000/?singUp=true')
+      return
+    }
     if (!code) {
       res.status(401).send({
         status: 'fail',
