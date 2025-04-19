@@ -34,8 +34,7 @@ async function sendSing<TData>(data: TData, url: string): Promise<Result> {
       }
     }
 
-    const { data: result, error } = await res.json()
-    console.log({ result, error })
+    const { data: result } = await res.json()
     const { session } = result
     const {
       access_token: accessToken,
