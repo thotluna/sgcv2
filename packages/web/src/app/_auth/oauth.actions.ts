@@ -24,10 +24,15 @@ import { redirect } from 'next/navigation'
 const signInWith = (provider: Provider) => async () => {
   const url = new URL(`${process.env.NEXT_PUBLIC_URL_API}/v1/auth/authorize`)
   url.searchParams.append('provider', provider)
+  // url.searchParams.append('provider', 'cosa')
 
   const response = await fetch(url.toString())
 
   const body = await response.json()
+
+  if (response.status === 400) {
+    redirect('/?#error')
+  }
   const { data } = body
 
   if (data.codeVerifier) {

@@ -1,19 +1,14 @@
 import { type Database } from '@sgcv2/shared'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { AuthError, DBErrorConexion } from './errors'
+import { AuthsRepository, CallbackResult } from './types'
 
 export const SUPABASE_URLs = {
   AUTHORIZATION: `${process.env.SUPABASE_URL}/auth/v1/authorize`,
   EXGHANGE: `${process.env.SUPABASE_URL}/auth/v1/token?grant_type=pkce`,
 } as const
 
-interface CallbackResult {
-  access_token: string
-  expires_at: number
-  refresh_token: string
-}
-
-export class AuthRepository {
+export class SupabaseAuthRepository implements AuthsRepository {
   private client: SupabaseClient = createClient<Database>(
     process.env.SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROL!,
@@ -25,7 +20,7 @@ export class AuthRepository {
    * @param codeClient string
    * @returns Promise<boolean>
    */
-  validateCodeClient = async (codeClient: string): Promise<boolean> => {
+  validateCodeClient = async (codeClient: string) => {
     const beforeTime = new Date(Date.now() - 72 * 60 * 60 * 1000)
 
     const { error } = await this.client
@@ -134,6 +129,9 @@ export class AuthRepository {
     if (error) {
       if (error.status === 403) {
         throw new AuthError('Token no valido')
+      } else {
+        console.error(error)
+        throw new Error(error.message)
       }
     }
 
@@ -147,7 +145,7 @@ export class AuthRepository {
    * @param codeVerifier string code original of code challenge
    * @returns Promise<string>
    */
-  async callback(code: string, codeVerifier: string): Promise<CallbackResult> {
+  async callback(code: string, codeVerifier: string) {
     const { SUPABASE_ANON_KEY: apiKey } = process.env
 
     if (apiKey === undefined) {

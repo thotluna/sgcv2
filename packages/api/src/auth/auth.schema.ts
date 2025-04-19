@@ -30,3 +30,18 @@ export const singUpSchema = singInSchema.merge(clientCodeSchema)
 export const httpSingUpSchema = z.object({
   body: singUpSchema,
 })
+
+export const authorizeSchema = z.object({
+  query: z.object({
+    provider: z.enum(['google', 'github'], {
+      errorMap: (issue, ctx) => {
+        if (issue.code === z.ZodIssueCode.invalid_enum_value) {
+          return {
+            message: `El provider debe ser 'google' o 'github'. Se recibió: '${ctx.data}'.`,
+          }
+        }
+        return { message: ctx.defaultError }
+      },
+    }),
+  }),
+})
