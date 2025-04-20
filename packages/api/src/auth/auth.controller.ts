@@ -1,15 +1,20 @@
 import { Response, Request } from 'express'
-import { AuthRepository, SUPABASE_URLs } from './auth.repository'
+import { SUPABASE_URLs } from './auth.repository'
 import { AuthError, DBErrorConexion } from './errors'
-import { generatePKCEParams } from './oauth'
+import { AuthSercice as AuthService } from './auth.service'
 
 export class AuthController {
-  static validationClientCode = async (req: Request, res: Response) => {
+  private service: AuthService
+
+  constructor(service: AuthService) {
+    this.service = service
+  }
+
+  validationClientCode = async (req: Request, res: Response) => {
     const { clientCode } = req.body
 
     try {
-      const repository = new AuthRepository()
-      await repository.validateCodeClient(clientCode)
+      await this.service.validateCodeClient(clientCode)
 
       res.send({
         status: 'ok',
@@ -33,16 +38,11 @@ export class AuthController {
     }
   }
 
-  static singUp = async (req: Request, res: Response) => {
+  singUp = async (req: Request, res: Response) => {
     const { email, password, clientCode } = req.body
 
     try {
-      const repository = new AuthRepository()
-      await repository.validateCodeClient(clientCode)
-      const data = await repository.singUp(email, password)
-      if (data) {
-        await repository.closeCodeClient(clientCode)
-      }
+      const data = await this.service.singUp(email, password, clientCode)
       res.send({ status: 'ok', message: 'ok', data })
     } catch (error) {
       if (error instanceof AuthError) {
@@ -59,12 +59,11 @@ export class AuthController {
     }
   }
 
-  static singIn = async (req: Request, res: Response) => {
+  singIn = async (req: Request, res: Response) => {
     const { email, password } = req.body
 
     try {
-      const repository = new AuthRepository()
-      const data = await repository.singIn(email, password)
+      const data = await this.service.singIn(email, password)
 
       res.send({ status: 'ok', message: 'ok', data })
     } catch (error) {
@@ -82,13 +81,12 @@ export class AuthController {
     }
   }
 
-  static checkSession = async (req: Request, res: Response) => {
+  checkSession = async (req: Request, res: Response) => {
     const authorizationHeader = req.headers.autorization
 
     if (authorizationHeader) {
       const token = (authorizationHeader as string).split(' ')[1]
-      const repository = new AuthRepository()
-      const data = await repository.checkSession(token)
+      const data = await this.service.checkSession(token)
       if (data?.user !== null) {
         res.send({
           status: 'ok',
@@ -109,28 +107,22 @@ export class AuthController {
     })
   }
 
-  static async authorize(req: Request, res: Response) {
+  authorize = async (req: Request, res: Response) => {
     const provider = req.query.provider as string
-    const PKCEPparams = await generatePKCEParams()
 
     try {
-      const conf: Record<string, string> = {
-        provider,
-        redirect_to: 'http://localhost:3001/v1/auth/callback',
-        code_challenge: PKCEPparams.codeChallenge,
-        code_challenge_method: 'S256',
-      }
-
+      const resp = await this.service.authorization(provider)
+      const { data, codeVerifier } = resp
       const url = new URL(SUPABASE_URLs.AUTHORIZATION)
 
-      Object.keys(conf).forEach(key => {
-        url.searchParams.append(key, conf[key])
+      Object.keys(data).forEach(key => {
+        url.searchParams.append(key, data[key])
       })
 
       res.send({
         data: {
           url,
-          codeVerifier: PKCEPparams.codeVerifier,
+          codeVerifier,
         },
       })
     } catch (error) {
@@ -142,7 +134,7 @@ export class AuthController {
     }
   }
 
-  static callback = async (req: Request, res: Response) => {
+  callback = async (req: Request, res: Response) => {
     const { 'sb-rzfvzqhceahqpjzjswxz-auth-code-verify': codeVerifier } =
       req.cookies
     const { code } = req.query
@@ -159,14 +151,13 @@ export class AuthController {
       })
       return
     }
-    const repository = new AuthRepository()
+
     try {
-      const result = await repository.callback(code as string, codeVerifier)
       const {
         access_token: accessToken,
         expires_at: expiresAt,
         refresh_token: refreshToken,
-      } = result
+      } = await this.service.callback(code as string, codeVerifier)
 
       res
         .cookie('sr-sb-access_token', accessToken, {
