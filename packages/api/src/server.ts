@@ -2,6 +2,7 @@ import express, { Application, Router } from 'express'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import morgan from 'morgan'
+import { errorHandler } from './middleware/error-handler'
 
 const { ALLOWED_HOSTS, PORT } = process.env
 
@@ -39,6 +40,7 @@ export class ServerApi {
   }
 
   public start() {
+    this.app.use(errorHandler)
     const server = this.app.listen(PORT, () => {
       console.log(`Server listening on port ${PORT}!`)
     })
