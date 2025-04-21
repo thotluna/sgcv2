@@ -1,7 +1,9 @@
 import { Response, Request } from 'express'
 import { SUPABASE_URLs } from './auth.repository'
 import { AuthError, DBErrorConexion } from './errors'
-import { AuthSercice as AuthService } from './auth.service'
+import { AuthService as AuthService } from './auth.service'
+import { ApiResponse, ClientCodeType } from '@sgcv2/shared'
+import { AuthResponseBuilder } from './__tests__/auth.configtest'
 
 export class AuthController {
   private service: AuthService
@@ -16,23 +18,36 @@ export class AuthController {
     try {
       await this.service.validateCodeClient(clientCode)
 
-      res.send({
-        status: 'ok',
-        message: clientCode,
-      })
+      const response: ApiResponse<ClientCodeType> = {
+        status: 'success',
+        data: clientCode,
+        code: 200,
+      }
+
+      res.send(response)
     } catch (error) {
       if (error instanceof AuthError) {
-        res.status(401).send({
-          status: 'fail',
-          message: error.message,
-        })
+        res
+          .status(401)
+          .send(
+            new AuthResponseBuilder()
+              .status('error')
+              .code(401)
+              .message(error.message)
+              .build(),
+          )
         return
       }
       if (error instanceof DBErrorConexion) {
-        res.status(401).send({
-          status: 'fail',
-          message: 'error en la conexion. por favor intentelo mas tarde',
-        })
+        res
+          .status(500)
+          .send(
+            new AuthResponseBuilder()
+              .status('error')
+              .code(500)
+              .message('error en la conexion. por favor intentelo mas tarde')
+              .build(),
+          )
         return
       }
     }
@@ -46,7 +61,7 @@ export class AuthController {
       res.send({ status: 'ok', message: 'ok', data })
     } catch (error) {
       if (error instanceof AuthError) {
-        res.status(400).send({
+        res.status(401).send({
           status: 'fail',
           message: error.message,
         })
@@ -54,7 +69,8 @@ export class AuthController {
       }
       res.status(500).send({
         status: 'fail',
-        message: 'error en la conexion. por favor intentelo mas tarde',
+        message:
+          'Disculpe, hemos tenido un problema. Por favor inténtelo más tarde',
       })
     }
   }

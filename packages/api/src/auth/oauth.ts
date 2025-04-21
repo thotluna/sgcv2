@@ -14,7 +14,7 @@ function generateCodeVerifier() {
 }
 
 // Función para calcular el code_challenge (SHA256)
-async function generateCodeChallenge(codeVerifier: string) {
+export async function generateCodeChallenge(codeVerifier: string) {
   const encoder = new TextEncoder()
   const data = encoder.encode(codeVerifier)
   const hash = crypto.createHash('sha256')

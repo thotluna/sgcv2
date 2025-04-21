@@ -1,5 +1,6 @@
 import { ZodError, type AnyZodObject } from 'zod'
 import { Request, Response, NextFunction } from 'express'
+import { AuthResponseBuilder } from '../auth/__tests__/auth.configtest'
 
 export const schemaValidation =
   (schema: AnyZodObject) =>
@@ -9,11 +10,13 @@ export const schemaValidation =
       next()
     } catch (error) {
       if (error instanceof ZodError) {
-        res.status(400).send({
-          status: 'fail',
-          message: error.issues.map(issue => issue.message).join(', '),
-          error: error.issues,
-        })
+        res.status(400).send(
+          new AuthResponseBuilder()
+            .code(400)
+            .status('error')
+            .message(error.issues.map(issue => issue.message).join(', '))
+            .build(),
+        )
         return
       }
 

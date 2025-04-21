@@ -1,7 +1,7 @@
 import { generatePKCEParams } from './oauth'
 import { AuthsRepository } from './types'
 
-export class AuthSercice {
+export class AuthService {
   private repository: AuthsRepository
 
   constructor(repository: AuthsRepository) {

@@ -1,27 +1,52 @@
-import express from 'express'
+import express, { Application, Router } from 'express'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
-
 import morgan from 'morgan'
-import { getAuthRouter } from './auth/auth.routes'
 
-const app = express()
-const PORT = process.env.PORT || 3001
-app.use(morgan('dev'))
-app.use(cookieParser())
-app.use(
-  cors({
-    origin: 'http://localhost:3000',
-    credentials: true,
-  }),
-)
-app.use(express.json())
+const { ALLOWED_HOSTS, PORT } = process.env
 
-const routerV1 = express.Router()
+export class ServerApi {
+  private static instance: ServerApi
+  private app: Application
+  private router: Router
 
-routerV1.use('/auth', getAuthRouter())
-app.use('/v1', routerV1)
+  private constructor() {
+    this.app = express()
+    this.app.use(morgan('dev'))
+    this.app.use(cookieParser())
+    this.app.use(
+      cors({
+        origin: ALLOWED_HOSTS!,
+        credentials: true,
+      }),
+    )
+    this.app.use(express.json())
 
-app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}!`)
-})
+    this.router = Router()
+    this.app.use('/v1', this.router)
+  }
+
+  public static getInstance(): ServerApi {
+    if (!ServerApi.instance) {
+      ServerApi.instance = new ServerApi()
+    }
+    return ServerApi.instance
+  }
+
+  public addRoute(path: string, router: Router) {
+    this.router.use(path, router)
+    this.app.use('/v1', this.router)
+  }
+
+  public start() {
+    const server = this.app.listen(PORT, () => {
+      console.log(`Server listening on port ${PORT}!`)
+    })
+
+    return server
+  }
+
+  public getApp() {
+    return this.app
+  }
+}

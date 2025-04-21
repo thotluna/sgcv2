@@ -7,11 +7,8 @@ import {
   httpSingInSchema,
   httpSingUpSchema,
 } from './auth.schema'
-import { SupabaseAuthRepository } from './auth.repository'
-import { AuthSercice as AuthService } from './auth.service'
-import { AuthsRepository } from './types'
 
-class AuthRouter {
+export class AuthRouter {
   private router: Router
   private authController: AuthController
 
@@ -48,13 +45,4 @@ class AuthRouter {
 
     this.router.get('/callback', this.authController.callback)
   }
-}
-
-export const getAuthRouter = () => {
-  const repository: AuthsRepository = new SupabaseAuthRepository()
-  const service = new AuthService(repository)
-  const authController = new AuthController(service)
-  const authRouter = new AuthRouter(authController)
-  authRouter.initializeRoutes()
-  return authRouter.getRouter()
 }
