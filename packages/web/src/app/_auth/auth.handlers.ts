@@ -14,11 +14,10 @@ export async function validateClientCode(clientCode: string) {
     })
 
     const data = await response.json()
-
     return data
   } catch (error) {
     return {
-      status: 'fail',
+      status: 'error',
       message: error,
     }
   }
