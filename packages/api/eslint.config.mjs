@@ -13,6 +13,9 @@ export default defineConfig([
   ]),
   {
     files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'],
+    env: {
+      jest: true,
+    },
   },
   {
     files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'],
