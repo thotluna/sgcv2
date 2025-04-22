@@ -1,4 +1,5 @@
 {
+  "plugins": ["prettier-plugin-import-sort"],
   "semi": false,
   "singleQuote": true,
   "arrowParens": "avoid"

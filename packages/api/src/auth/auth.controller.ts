@@ -1,9 +1,10 @@
-import { Response, Request, NextFunction } from 'express'
 import { ApiResponse, ClientCodeType } from '@sgcv2/shared'
+import { NextFunction, Request, Response } from 'express'
+
 import { AuthResponseBuilder } from '../utils/auth-response-builder'
-import { AuthError, DBErrorConexion } from './errors'
-import { AuthService as AuthService } from './auth.service'
 import { SUPABASE_URLs } from './auth.repository'
+import { AuthService } from './auth.service'
+import { AuthError, DBErrorConexion } from './errors'
 
 export class AuthController {
   private service: AuthService
@@ -75,6 +76,7 @@ export class AuthController {
               .message(error.message)
               .build(),
           )
+        return
       }
       next(error)
     }
@@ -98,6 +100,7 @@ export class AuthController {
               .message(error.message)
               .build(),
           )
+        return
       }
       next(error)
     }
@@ -189,7 +192,6 @@ export class AuthController {
         })
         return
       }
-
       next(error)
     }
   }

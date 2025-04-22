@@ -1,5 +1,7 @@
-import { Request, Response, NextFunction } from 'express'
-import { ZodError, type AnyZodObject } from 'zod'
+import { NextFunction, Request, Response } from 'express'
+import { ZodError } from 'zod'
+import type { AnyZodObject } from 'zod'
+
 import { AuthResponseBuilder } from '../utils/auth-response-builder'
 
 export const schemaValidation =

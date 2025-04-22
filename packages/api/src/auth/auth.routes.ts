@@ -1,6 +1,7 @@
 import { Router } from 'express'
-import { AuthController } from './auth.controller'
+
 import { schemaValidation } from '../middleware/schema-validation'
+import { AuthController } from './auth.controller'
 import {
   authorizeSchema,
   callbackSchema,
