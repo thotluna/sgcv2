@@ -87,10 +87,11 @@ export function SingUpForm({
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel htmlFor="password">Password</FormLabel>
                   <FormControl>
                     <div className="flex items-center">
                       <Input
+                        id="password"
                         autoComplete="off"
                         type={passwordVisible ? 'text' : 'password'}
                         placeholder="xxxxxxxx"
@@ -116,16 +117,20 @@ export function SingUpForm({
               name="confirmPassword"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Confirma el password</FormLabel>
+                  <FormLabel htmlFor="confirmPassword">
+                    Confirma la Contraseña
+                  </FormLabel>
                   <FormControl>
                     <div className="flex items-center">
                       <Input
+                        id="confirmPassword"
                         autoComplete="off"
                         type={passwordConfirmVisible ? 'text' : 'password'}
                         placeholder="xxxxxxxx"
                         {...field}
                       />
                       <Button
+                        name="submit"
                         onClick={event => {
                           event.preventDefault()
                           setPasswordConfirmVisible(!passwordConfirmVisible)
