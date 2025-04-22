@@ -1,6 +1,6 @@
-import { ZodError, type AnyZodObject } from 'zod'
 import { Request, Response, NextFunction } from 'express'
-import { AuthResponseBuilder } from '../auth/__tests__/auth.configtest'
+import { ZodError, type AnyZodObject } from 'zod'
+import { AuthResponseBuilder } from '../utils/auth-response-builder'
 
 export const schemaValidation =
   (schema: AnyZodObject) =>
@@ -20,9 +20,6 @@ export const schemaValidation =
         return
       }
 
-      res.status(500).send({
-        status: 'fail',
-        message: 'internal server error',
-      })
+      next(error)
     }
   }

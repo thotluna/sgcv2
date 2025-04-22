@@ -45,3 +45,9 @@ export const authorizeSchema = z.object({
     }),
   }),
 })
+
+export const callbackSchema = z.object({
+  query: z.object({
+    code: z.string(),
+  }),
+})

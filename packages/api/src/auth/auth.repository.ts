@@ -119,27 +119,6 @@ export class SupabaseAuthRepository implements AuthRepository {
   }
 
   /**
-   * Check if the token is valid
-   *
-   * @param token Token
-   * @returns Promise<boolean>
-   */
-  async checkSession(token: string) {
-    const { error, data } = await this.client.auth.getUser(token)
-
-    if (error) {
-      if (error.status === 403) {
-        throw new AuthError('Token no valido')
-      } else {
-        console.error(error)
-        throw new Error(error.message)
-      }
-    }
-
-    return data
-  }
-
-  /**
    * Get the authorization URL
    *
    * @param code string code authentification

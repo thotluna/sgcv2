@@ -1,5 +1,5 @@
-import { JwtPayload, verify } from 'jsonwebtoken'
 import { NextFunction, Request, Response } from 'express'
+import { JwtPayload, verify } from 'jsonwebtoken'
 
 export interface CustomRequest extends Request {
   token: string | JwtPayload

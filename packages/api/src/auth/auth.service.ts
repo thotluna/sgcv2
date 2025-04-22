@@ -29,12 +29,7 @@ export class AuthService {
     return await this.repository.closeCodeClient(codeClient)
   }
 
-  async checkSession(token: string) {
-    return await this.repository.checkSession(token)
-  }
-
   async authorization(provider: string) {
-    console.info('authorization', provider)
     const PKCEPparams = await generatePKCEParams()
 
     const data: Record<string, string> = {

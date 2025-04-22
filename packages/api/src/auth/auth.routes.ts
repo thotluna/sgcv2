@@ -3,6 +3,7 @@ import { AuthController } from './auth.controller'
 import { schemaValidation } from '../middleware/schema-validation'
 import {
   authorizeSchema,
+  callbackSchema,
   httpClientCodeSchema,
   httpSingInSchema,
   httpSingUpSchema,
@@ -43,6 +44,10 @@ export class AuthRouter {
       this.authController.authorize,
     )
 
-    this.router.get('/callback', this.authController.callback)
+    this.router.get(
+      '/callback',
+      schemaValidation(callbackSchema),
+      this.authController.callback,
+    )
   }
 }

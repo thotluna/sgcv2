@@ -1,9 +1,9 @@
-import { Response, Request } from 'express'
-import { SUPABASE_URLs } from './auth.repository'
+import { Response, Request, NextFunction } from 'express'
+import { ApiResponse, ClientCodeType } from '@sgcv2/shared'
+import { AuthResponseBuilder } from '../utils/auth-response-builder'
 import { AuthError, DBErrorConexion } from './errors'
 import { AuthService as AuthService } from './auth.service'
-import { ApiResponse, ClientCodeType } from '@sgcv2/shared'
-import { AuthResponseBuilder } from './__tests__/auth.configtest'
+import { SUPABASE_URLs } from './auth.repository'
 
 export class AuthController {
   private service: AuthService
@@ -12,7 +12,11 @@ export class AuthController {
     this.service = service
   }
 
-  validationClientCode = async (req: Request, res: Response) => {
+  validationClientCode = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
     const { clientCode } = req.body
 
     try {
@@ -50,80 +54,56 @@ export class AuthController {
           )
         return
       }
+      next(error)
     }
   }
 
-  singUp = async (req: Request, res: Response) => {
+  singUp = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password, clientCode } = req.body
 
     try {
       const data = await this.service.singUp(email, password, clientCode)
-      res.send({ status: 'ok', message: 'ok', data })
+      res.send(new AuthResponseBuilder().data(data).build())
     } catch (error) {
       if (error instanceof AuthError) {
-        res.status(401).send({
-          status: 'fail',
-          message: error.message,
-        })
-        return
+        res
+          .status(400)
+          .send(
+            new AuthResponseBuilder()
+              .status('error')
+              .code(400)
+              .message(error.message)
+              .build(),
+          )
       }
-      res.status(500).send({
-        status: 'fail',
-        message:
-          'Disculpe, hemos tenido un problema. Por favor inténtelo más tarde',
-      })
+      next(error)
     }
   }
 
-  singIn = async (req: Request, res: Response) => {
+  singIn = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body
 
     try {
       const data = await this.service.singIn(email, password)
 
-      res.send({ status: 'ok', message: 'ok', data })
+      res.send(new AuthResponseBuilder().data(data).build())
     } catch (error) {
       if (error instanceof AuthError) {
-        res.status(400).send({
-          status: 'fail',
-          message: error.message,
-        })
-        return
+        res
+          .status(400)
+          .send(
+            new AuthResponseBuilder()
+              .status('error')
+              .code(400)
+              .message(error.message)
+              .build(),
+          )
       }
-      res.status(500).send({
-        status: 'fail',
-        message: 'error en la conexion. por favor intentelo mas tarde',
-      })
+      next(error)
     }
   }
 
-  checkSession = async (req: Request, res: Response) => {
-    const authorizationHeader = req.headers.autorization
-
-    if (authorizationHeader) {
-      const token = (authorizationHeader as string).split(' ')[1]
-      const data = await this.service.checkSession(token)
-      if (data?.user !== null) {
-        res.send({
-          status: 'ok',
-          data,
-        })
-        return
-      } else {
-        res.status(401).send({
-          status: 'fail',
-          message: 'Token no valido',
-        })
-        return
-      }
-    }
-    res.status(401).send({
-      status: 'fail',
-      message: 'Token no valido',
-    })
-  }
-
-  authorize = async (req: Request, res: Response) => {
+  authorize = async (req: Request, res: Response, next: NextFunction) => {
     const provider = req.query.provider as string
 
     try {
@@ -135,27 +115,22 @@ export class AuthController {
         url.searchParams.append(key, data[key])
       })
 
-      res.send({
-        data: {
-          url,
-          codeVerifier,
-        },
-      })
+      res.send(
+        new AuthResponseBuilder()
+          .data({
+            url,
+            codeVerifier,
+          })
+          .build(),
+      )
     } catch (error) {
-      console.error(error)
-      res.status(500).send({
-        status: 'fail',
-        message: 'error en la conexion. por favor intentelo mas tarde',
-      })
+      next(error)
     }
   }
 
-  callback = async (req: Request, res: Response) => {
-    const { 'sb-rzfvzqhceahqpjzjswxz-auth-code-verify': codeVerifier } =
-      req.cookies
-    const { code } = req.query
+  callback = async (req: Request, res: Response, next: NextFunction) => {
+    const { code, error, error_description } = req.query
 
-    const { error, error_description } = req.query
     if (error && error_description === 'Database error saving new user') {
       res.redirect('http://localhost:3000/?singUp=true')
       return
@@ -168,6 +143,8 @@ export class AuthController {
       return
     }
 
+    const { 'sb-rzfvzqhceahqpjzjswxz-auth-code-verify': codeVerifier } =
+      req.cookies
     try {
       const {
         access_token: accessToken,
@@ -194,10 +171,15 @@ export class AuthController {
       return
     } catch (error) {
       if (error instanceof AuthError) {
-        res.status(401).send({
-          status: 'fail',
-          message: error.message,
-        })
+        res
+          .status(401)
+          .send(
+            new AuthResponseBuilder()
+              .status('error')
+              .code(401)
+              .message(error.message)
+              .build(),
+          )
         return
       }
       if (error instanceof DBErrorConexion) {
@@ -207,6 +189,8 @@ export class AuthController {
         })
         return
       }
+
+      next(error)
     }
   }
 }

@@ -3,6 +3,7 @@ import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import morgan from 'morgan'
 import { errorHandler } from './middleware/error-handler'
+import { Server } from 'http'
 
 const { ALLOWED_HOSTS, PORT } = process.env
 
@@ -10,6 +11,8 @@ export class ServerApi {
   private static instance: ServerApi
   private app: Application
   private router: Router
+  private port: number = Number(PORT) || 3000
+  private server?: Server
 
   private constructor() {
     this.app = express()
@@ -39,13 +42,25 @@ export class ServerApi {
     this.app.use('/v1', this.router)
   }
 
+  setPort(port: number) {
+    this.port = port
+  }
+
   public start() {
     this.app.use(errorHandler)
-    const server = this.app.listen(PORT, () => {
-      console.log(`Server listening on port ${PORT}!`)
-    })
 
-    return server
+    while (this.port >= 3000 || this.port <= 4000) {
+      try {
+        this.port = Math.floor(Math.random() * (4000 - 3000 + 1)) + 3000
+        this.server = this.app.listen(this.port, () => {
+          console.log(`Server listening on port ${this.port}!`)
+        })
+        return this.server
+      } catch {
+        continue
+      }
+    }
+    return null
   }
 
   public getApp() {
