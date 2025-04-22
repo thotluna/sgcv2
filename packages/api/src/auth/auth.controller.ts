@@ -133,7 +133,10 @@ export class AuthController {
   callback = async (req: Request, res: Response, next: NextFunction) => {
     const { code, error, error_description } = req.query
 
-    if (error && error_description === 'Database error saving new user') {
+    if (
+      !code ||
+      (error && error_description === 'Database error saving new user')
+    ) {
       res.redirect('http://localhost:3000/?singUp=true')
       return
     }

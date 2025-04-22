@@ -1,9 +1,9 @@
 import { AuthResponseBuilder } from '../../utils/auth-response-builder'
 import { AuthError } from '../errors'
+import { repositoryCallback, authRoute } from './auth.configtest'
 import './auth.test-base'
 import { app } from './auth.test-base'
 import request from 'supertest'
-import { repositoryCallback, authRoute } from './auth.configtest'
 
 describe('GET /callback', () => {
   test('happy past', () => {
@@ -19,6 +19,19 @@ describe('GET /callback', () => {
         const [access, refresh] = response.headers['set-cookie']
         expect(access).toBeDefined()
         expect(refresh).toBeDefined()
+      })
+  })
+
+  test('without code', () => {
+    repositoryCallback.resolve()
+
+    return request(app)
+      .get(authRoute.CALLBACK)
+      .set('Accept', 'application/json')
+      .expect(302)
+      .then(response => {
+        const location = response.headers.location
+        expect(location).toEqual('http://localhost:3000/?singUp=true')
       })
   })
 
