@@ -18,4 +18,4 @@ const app = ServerApi.getInstance()
 app.setPort(3001)
 app.addRoute('/auth', getAuthRouter())
 
-app.start()
+app.start(3001)

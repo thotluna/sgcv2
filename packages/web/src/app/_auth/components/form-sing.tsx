@@ -29,7 +29,7 @@ export function FormSing() {
         }
 
         redirect('/auth')
-      } else if (response.status === 'fail') {
+      } else if (response.status === 'error') {
         toast.error(response.message || 'Ocurrió un error desconocido.')
       } else {
         toast.warning(`Estado de respuesta inesperado: ${response.status}`)

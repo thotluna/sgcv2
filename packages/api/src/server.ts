@@ -1,11 +1,9 @@
-import { Server } from 'http'
-
+import { errorHandler } from './middleware/error-handler'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import express, { Application, Router } from 'express'
+import { Server } from 'http'
 import morgan from 'morgan'
-
-import { errorHandler } from './middleware/error-handler'
 
 const { ALLOWED_HOSTS, PORT } = process.env
 
@@ -48,8 +46,14 @@ export class ServerApi {
     this.port = port
   }
 
-  public start() {
+  public start(portForce?: number) {
     this.app.use(errorHandler)
+    if (portForce) {
+      this.server = this.app.listen(portForce, () => {
+        console.log(`Server listening on port ${portForce}!`)
+      })
+      return this.server
+    }
 
     while (this.port >= 3000 || this.port <= 4000) {
       try {
