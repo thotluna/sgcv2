@@ -1,8 +1,9 @@
 'use client'
-import { useEffect, useState } from 'react'
+
 import { Switch } from '@/components/ui/switch'
-import { useTheme } from 'next-themes'
 import { Moon, Sun } from 'lucide-react'
+import { useTheme } from 'next-themes'
+import { useEffect, useState } from 'react'
 
 export default function ThemeSwitch() {
   const { systemTheme, setTheme } = useTheme()

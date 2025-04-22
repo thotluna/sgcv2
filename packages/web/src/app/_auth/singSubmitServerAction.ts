@@ -1,7 +1,7 @@
 'use server'
 
-import { cookies } from 'next/headers'
 import { Result, SingInDTO, SingUpDTO } from './types'
+import { cookies } from 'next/headers'
 
 const URL_API = {
   SIGN_IN: `${process.env.NEXT_PUBLIC_URL_API}/v1/auth/signin`,
@@ -64,8 +64,7 @@ async function sendSing<TData>(data: TData, url: string): Promise<Result> {
     cookieStore.set('user', JSON.stringify({ role, email }))
 
     return { status: 'ok', message: 'ok', data: user }
-  } catch (error) {
-    console.error(error)
+  } catch {
     return {
       status: 'fail',
       message: 'error en la conexion. por favor intentelo mas tarde',

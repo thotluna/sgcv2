@@ -1,9 +1,8 @@
-import { Suspense } from 'react'
-import ThemeSwitch from '@/components/ui/theme-switch'
-
-import { DateTime } from '@/components/ui/date-time'
-import { FormSing } from '@/app/_auth/components/form-sing'
 import { ErrorUrl } from './_auth/components/error-url'
+import { FormSing } from '@/app/_auth/components/form-sing'
+import { DateTime } from '@/components/ui/date-time'
+import ThemeSwitch from '@/components/ui/theme-switch'
+import { Suspense } from 'react'
 
 export default function Home() {
   return (

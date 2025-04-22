@@ -1,4 +1,5 @@
 'use client'
+
 import { useStoreState } from '../store/store'
 
 export default function Auth() {

@@ -32,11 +32,15 @@ export interface CallbackResult {
   refresh_token: string
 }
 
+export interface authorizeDataType {
+  codeVerifier: string
+  url: string
+}
+
 export interface AuthsRepository {
   validateCodeClient(codeClient: string): Promise<boolean>
   singUp(email: string, password: string): Promise<AuthResponse>
   singIn(email: string, password: string): Promise<AuthResponse>
   closeCodeClient(codeClient: string): Promise<boolean>
-  checkSession(token: string): Promise<{ user: User | null }>
   callback(code: string, codeVerifier: string): Promise<CallbackResult>
 }

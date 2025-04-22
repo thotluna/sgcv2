@@ -10,6 +10,7 @@ export default defineConfig([
     'node_modules/**',
     '**/node_modules/**',
     '**/dist/**',
+    'playwright-report/**',
   ]),
   {
     files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'],

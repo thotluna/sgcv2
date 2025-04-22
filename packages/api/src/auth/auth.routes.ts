@@ -1,17 +1,14 @@
-import { Router } from 'express'
-import { AuthController } from './auth.controller'
 import { schemaValidation } from '../middleware/schema-validation'
+import { AuthController } from './auth.controller'
 import {
   authorizeSchema,
   httpClientCodeSchema,
   httpSingInSchema,
   httpSingUpSchema,
 } from './auth.schema'
-import { SupabaseAuthRepository } from './auth.repository'
-import { AuthSercice as AuthService } from './auth.service'
-import { AuthsRepository } from './types'
+import { Router } from 'express'
 
-class AuthRouter {
+export class AuthRouter {
   private router: Router
   private authController: AuthController
 
@@ -46,15 +43,10 @@ class AuthRouter {
       this.authController.authorize,
     )
 
-    this.router.get('/callback', this.authController.callback)
-  }
-}
+    this.router.get(
+      '/callback',
 
-export const getAuthRouter = () => {
-  const repository: AuthsRepository = new SupabaseAuthRepository()
-  const service = new AuthService(repository)
-  const authController = new AuthController(service)
-  const authRouter = new AuthRouter(authController)
-  authRouter.initializeRoutes()
-  return authRouter.getRouter()
+      this.authController.callback,
+    )
+  }
 }

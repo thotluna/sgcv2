@@ -1,7 +1,7 @@
 'use client'
 
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { SingUpFormSchema } from '../auth.schemas'
+import { SingUpDTO } from '../types'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -11,14 +11,13 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-
 import { Input } from '@/components/ui/input'
-import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Eye, EyeOff } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
-import { Eye, EyeOff } from 'lucide-react'
-import { SingUpFormSchema } from '../auth.schemas'
-import { SingUpDTO } from '../types'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
 export function SingUpForm({
   onSubmit,
@@ -88,10 +87,11 @@ export function SingUpForm({
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel htmlFor="password">Password</FormLabel>
                   <FormControl>
                     <div className="flex items-center">
                       <Input
+                        id="password"
                         autoComplete="off"
                         type={passwordVisible ? 'text' : 'password'}
                         placeholder="xxxxxxxx"
@@ -117,16 +117,20 @@ export function SingUpForm({
               name="confirmPassword"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Confirma el password</FormLabel>
+                  <FormLabel htmlFor="confirmPassword">
+                    Confirma la Contraseña
+                  </FormLabel>
                   <FormControl>
                     <div className="flex items-center">
                       <Input
+                        id="confirmPassword"
                         autoComplete="off"
                         type={passwordConfirmVisible ? 'text' : 'password'}
                         placeholder="xxxxxxxx"
                         {...field}
                       />
                       <Button
+                        name="submit"
                         onClick={event => {
                           event.preventDefault()
                           setPasswordConfirmVisible(!passwordConfirmVisible)

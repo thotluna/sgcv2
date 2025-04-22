@@ -1,7 +1,8 @@
 'use client'
 
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { GoogleIcon } from '../../../components/ui/google-icon'
+import { signInWithGoogle, signInWithLinkedin } from '../oauth.actions'
+import { SingInDTO } from '../types'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -12,13 +13,12 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { z } from 'zod'
-import Link from 'next/link'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Eye, EyeOff, Linkedin } from 'lucide-react'
-import { GoogleIcon } from '../../../components/ui/google-icon'
+import Link from 'next/link'
 import { useState } from 'react'
-import { SingInDTO } from '../types'
-import { signInWithGoogle, signInWithLinkedin } from '../oauth.actions'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
 const formSchema = z.object({
   email: z.string().email('El email no es valido'),

@@ -1,5 +1,5 @@
-import { z } from 'zod'
 import { validateClientCode } from './auth.handlers'
+import { z } from 'zod'
 
 export const SingformSchemaBase = z.object({
   email: z.string().email('El email no es valido'),
@@ -22,7 +22,7 @@ export const formSchemaBase = z.object({
     .string()
     .regex(
       /^[a-zA-z0-9!@#&*]{8}-[a-zA-z0-9!@#&*]{8}-[a-zA-z0-9!@#&*]{8}-[a-zA-z0-9!@#&*]{8}$/,
-      { message: 'Formato invalido' },
+      { message: 'Codigo de cliente tiene un formato invalido' },
     ),
   email: z.string().email('El email no es valido'),
   password: z
@@ -38,7 +38,7 @@ export const formSchemaBase = z.object({
 export const SingUpFormSchema = formSchemaBase
   .superRefine(async ({ clientCode }, ctx) => {
     const data = await validateClientCode(clientCode)
-    if (data.status !== 'ok') {
+    if (data.status !== 'success') {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: 'Error al validar el codigo de cliente',

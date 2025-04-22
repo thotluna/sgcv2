@@ -1,7 +1,7 @@
 import { generatePKCEParams } from './oauth'
 import { AuthsRepository } from './types'
 
-export class AuthSercice {
+export class AuthService {
   private repository: AuthsRepository
 
   constructor(repository: AuthsRepository) {
@@ -29,12 +29,7 @@ export class AuthSercice {
     return await this.repository.closeCodeClient(codeClient)
   }
 
-  async checkSession(token: string) {
-    return await this.repository.checkSession(token)
-  }
-
   async authorization(provider: string) {
-    console.info('authorization', provider)
     const PKCEPparams = await generatePKCEParams()
 
     const data: Record<string, string> = {
