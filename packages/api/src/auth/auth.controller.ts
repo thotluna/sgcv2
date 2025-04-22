@@ -1,10 +1,9 @@
-import { ApiResponse, ClientCodeType } from '@sgcv2/shared'
-import { NextFunction, Request, Response } from 'express'
-
 import { AuthResponseBuilder } from '../utils/auth-response-builder'
 import { SUPABASE_URLs } from './auth.repository'
 import { AuthService } from './auth.service'
 import { AuthError, DBErrorConexion } from './errors'
+import { ApiResponse, ClientCodeType } from '@sgcv2/shared'
+import { NextFunction, Request, Response } from 'express'
 
 export class AuthController {
   private service: AuthService

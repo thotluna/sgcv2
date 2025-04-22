@@ -1,5 +1,5 @@
-import { z } from 'zod'
 import { validateClientCode } from './auth.handlers'
+import { z } from 'zod'
 
 export const SingformSchemaBase = z.object({
   email: z.string().email('El email no es valido'),

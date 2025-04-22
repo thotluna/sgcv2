@@ -1,5 +1,3 @@
-import { Router } from 'express'
-
 import { schemaValidation } from '../middleware/schema-validation'
 import { AuthController } from './auth.controller'
 import {
@@ -9,6 +7,7 @@ import {
   httpSingInSchema,
   httpSingUpSchema,
 } from './auth.schema'
+import { Router } from 'express'
 
 export class AuthRouter {
   private router: Router

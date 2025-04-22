@@ -1,15 +1,16 @@
 'use client'
-import { SingInForm } from './singin-form'
-import { SingUpForm } from './singup-form'
-import { redirect, useSearchParams } from 'next/navigation'
-import { toast } from 'sonner'
-import { Result, SingInDTO, SingUpDTO } from '../types'
+
 import {
   singInSubmitHandler,
   singUpSubmitHandler,
 } from '../singSubmitServerAction'
-import cookies from 'js-cookie'
+import { Result, SingInDTO, SingUpDTO } from '../types'
+import { SingInForm } from './singin-form'
+import { SingUpForm } from './singup-form'
 import { useStoreState } from '@/app/store/store'
+import cookies from 'js-cookie'
+import { redirect, useSearchParams } from 'next/navigation'
+import { toast } from 'sonner'
 
 export function FormSing() {
   const setUser = useStoreState(state => state.setUser)

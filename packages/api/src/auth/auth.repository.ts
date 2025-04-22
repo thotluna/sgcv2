@@ -1,8 +1,7 @@
-import { Database } from '@sgcv2/shared'
-import { SupabaseClient, createClient } from '@supabase/supabase-js'
-
 import { AuthError, DBErrorConexion } from './errors'
 import { AuthsRepository as AuthRepository, CallbackResult } from './types'
+import { Database } from '@sgcv2/shared'
+import { SupabaseClient, createClient } from '@supabase/supabase-js'
 
 export const SUPABASE_URLs = {
   AUTHORIZATION: `${process.env.SUPABASE_URL}/auth/v1/authorize`,

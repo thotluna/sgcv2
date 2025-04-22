@@ -1,8 +1,7 @@
 'use server'
 
-import { cookies } from 'next/headers'
-
 import { Result, SingInDTO, SingUpDTO } from './types'
+import { cookies } from 'next/headers'
 
 const URL_API = {
   SIGN_IN: `${process.env.NEXT_PUBLIC_URL_API}/v1/auth/signin`,

@@ -1,6 +1,5 @@
-import { NextFunction, Request, Response } from 'express'
-
 import { AuthResponseBuilder } from '../utils/auth-response-builder'
+import { NextFunction, Request, Response } from 'express'
 
 export function errorHandler(
   err: Error,
