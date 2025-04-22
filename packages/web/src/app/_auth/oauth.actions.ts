@@ -1,5 +1,6 @@
 'use server'
-import { type Provider } from '@supabase/supabase-js'
+
+import type { Provider } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
@@ -11,7 +12,6 @@ const signInWith = (provider: Provider) => async () => {
 
   const body = await response.json()
   if (response.status === 400) {
-    console.error(body.message)
     redirect(`/?error_description=${body.message}`)
     // return
   }

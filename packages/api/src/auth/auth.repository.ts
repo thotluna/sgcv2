@@ -1,5 +1,6 @@
-import { type Database } from '@sgcv2/shared'
-import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { Database } from '@sgcv2/shared'
+import { SupabaseClient, createClient } from '@supabase/supabase-js'
+
 import { AuthError, DBErrorConexion } from './errors'
 import { AuthsRepository as AuthRepository, CallbackResult } from './types'
 
@@ -91,7 +92,6 @@ export class SupabaseAuthRepository implements AuthRepository {
     const { error, data } =
       await this.client.auth.signInWithPassword(singInData)
 
-    console.error({ data, error })
     if (error) {
       if (error.status === 400) {
         throw new AuthError('El email o la contraseña no son validos')
