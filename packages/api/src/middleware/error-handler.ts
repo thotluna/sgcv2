@@ -1,9 +1,23 @@
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
+
 import { AuthResponseBuilder } from '../utils/auth-response-builder'
 
-export function errorHandler(_err: Error, _req: Request, res: Response) {
-  const statusCode = res.statusCode === 200 ? 500 : res.statusCode
+export function errorHandler(
+  err: Error,
+  _req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  if (res.headersSent) {
+    // Si los headers ya fueron enviados, delega al handler por defecto de Express
+    return next(err)
+  }
+
+  const statusCode =
+    res.statusCode && res.statusCode !== 200 ? res.statusCode : 500
+
   res.status(statusCode)
+  res.type('application/json')
 
   res.send(
     new AuthResponseBuilder()
