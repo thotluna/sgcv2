@@ -9,7 +9,10 @@
     "lint": "next lint",
     "lint:fix": "next lint --fix",
     "format": "prettier --ignore-path .prettierignore --write .",
-    "format:check": "prettier --ignore-path .prettierignore --check ."
+    "format:check": "prettier --ignore-path .prettierignore --check .",
+    "test": "npx playwright test",
+    "test:ui": "npx playwright test --ui",
+    "test:debug": "npx playwright test --debug"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
@@ -33,6 +36,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@playwright/test": "^1.52.0",
     "@tailwindcss/postcss": "^4",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
