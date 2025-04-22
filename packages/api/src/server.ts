@@ -1,9 +1,11 @@
-import express, { Application, Router } from 'express'
+import { Server } from 'http'
+
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
+import express, { Application, Router } from 'express'
 import morgan from 'morgan'
+
 import { errorHandler } from './middleware/error-handler'
-import { Server } from 'http'
 
 const { ALLOWED_HOSTS, PORT } = process.env
 
@@ -16,15 +18,15 @@ export class ServerApi {
 
   private constructor() {
     this.app = express()
-    this.app.use(morgan('dev'))
     this.app.use(cookieParser())
+    this.app.use(express.json())
+    this.app.use(morgan('dev'))
     this.app.use(
       cors({
         origin: ALLOWED_HOSTS!,
         credentials: true,
       }),
     )
-    this.app.use(express.json())
 
     this.router = Router()
     this.app.use('/v1', this.router)
