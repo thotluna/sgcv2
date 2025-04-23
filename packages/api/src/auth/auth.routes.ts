@@ -50,6 +50,6 @@ export class AuthRouter {
     )
 
     this.router.get('/user', this.authController.getUser)
-    this.router.get('/session', this.authController.session)
+    // this.router.get('/session', this.authController.session)
   }
 }
