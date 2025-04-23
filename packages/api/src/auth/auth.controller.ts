@@ -110,6 +110,7 @@ export class AuthController {
 
     try {
       const resp = await this.service.authorization(provider)
+
       const { data, codeVerifier } = resp
       const url = new URL(SUPABASE_URLs.AUTHORIZATION)
 
@@ -117,14 +118,7 @@ export class AuthController {
         url.searchParams.append(key, data[key])
       })
 
-      res.send(
-        new AuthResponseBuilder()
-          .data({
-            url,
-            codeVerifier,
-          })
-          .build(),
-      )
+      res.send(new AuthResponseBuilder().data({ url, codeVerifier }).build())
     } catch (error) {
       next(error)
     }
@@ -148,8 +142,7 @@ export class AuthController {
       return
     }
 
-    const { 'sb-rzfvzqhceahqpjzjswxz-auth-code-verify': codeVerifier } =
-      req.cookies
+    const { 'code-verify': codeVerifier } = req.cookies
     try {
       const {
         access_token: accessToken,
@@ -158,14 +151,14 @@ export class AuthController {
       } = await this.service.callback(code as string, codeVerifier)
 
       res
-        .cookie('sr-sb-access_token', accessToken, {
+        .cookie('access_token', accessToken, {
           expires: new Date(expiresAt * 1000),
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
           sameSite: 'lax',
           maxAge: 60 * 60 * 1000,
         })
-        .cookie('sr-sb-refresh_token', refreshToken, {
+        .cookie('refresh_token', refreshToken, {
           expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
@@ -192,6 +185,31 @@ export class AuthController {
           status: 'fail',
           message: 'error en la conexion. por favor intentelo mas tarde',
         })
+        return
+      }
+      next(error)
+    }
+  }
+
+  // session = (_req: Request, _res: Response, _next: NextFunction) => {
+  //   throw new Error('Method not implemented.')
+  // }
+  getUser = (req: Request, res: Response, next: NextFunction) => {
+    const { access_token } = req.cookies
+
+    try {
+      this.service.getUser(access_token)
+    } catch (error) {
+      if (error instanceof AuthError) {
+        res
+          .status(401)
+          .send(
+            new AuthResponseBuilder()
+              .status('error')
+              .code(401)
+              .message(error.message)
+              .build(),
+          )
         return
       }
       next(error)

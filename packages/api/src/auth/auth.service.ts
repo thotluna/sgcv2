@@ -45,4 +45,8 @@ export class AuthService {
   async callback(code: string, codeVerifier: string) {
     return await this.repository.callback(code, codeVerifier)
   }
+
+  getUser(access_token: string) {
+    return this.repository.getUser(access_token)
+  }
 }

@@ -1,5 +1,9 @@
 import { AuthError, DBErrorConexion } from './errors'
-import { AuthsRepository as AuthRepository, CallbackResult } from './types'
+import {
+  AuthsRepository as AuthRepository,
+  CallbackResult,
+  UserResponse,
+} from './types'
 import { Database } from '@sgcv2/shared'
 import { SupabaseClient, createClient } from '@supabase/supabase-js'
 
@@ -149,5 +153,12 @@ export class SupabaseAuthRepository implements AuthRepository {
     } catch (error) {
       throw new AuthError(error as string)
     }
+  }
+
+  async getUser(access_token: string) {
+    const { data, error } = await this.client.auth.getUser(access_token)
+    if (error) throw new AuthError(error.message)
+
+    return data as unknown as UserResponse
   }
 }
