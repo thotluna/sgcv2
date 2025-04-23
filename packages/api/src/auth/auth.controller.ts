@@ -194,11 +194,29 @@ export class AuthController {
   // session = (_req: Request, _res: Response, _next: NextFunction) => {
   //   throw new Error('Method not implemented.')
   // }
-  getUser = (req: Request, res: Response, next: NextFunction) => {
-    const { access_token } = req.cookies
+  getUser = async (req: Request, res: Response, next: NextFunction) => {
+    const tok = req.headers['authorization']
+
+    if (!tok) {
+      res.status(401).send({
+        status: 'fail',
+        message: 'Se requiere token token token de acceso',
+      })
+      return
+    }
+
+    const token = tok!.split(' ')[1]
 
     try {
-      this.service.getUser(access_token)
+      const user = await this.service.getUser(token)
+      if (!user) {
+        res.status(401).send({
+          status: 'fail',
+          message: 'token no retorna user',
+        })
+        return
+      }
+      res.send(new AuthResponseBuilder().data(user).build())
     } catch (error) {
       if (error instanceof AuthError) {
         res

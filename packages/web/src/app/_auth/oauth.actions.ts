@@ -1,6 +1,6 @@
 'use server'
 
-import type { Provider } from '@supabase/supabase-js'
+import type { Provider } from '../_auth/types'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 

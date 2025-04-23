@@ -1,8 +1,8 @@
-import { updateSession } from '@/lib/supabase/middleware'
+import { updateAuthSession } from './lib/auth'
 import { type NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
-  return await updateSession(request)
+  return await updateAuthSession(request)
 }
 export const config = {
   matcher: [

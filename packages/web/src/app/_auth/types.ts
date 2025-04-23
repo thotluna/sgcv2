@@ -9,3 +9,5 @@ export type Result = {
   message: string
   data?: unknown
 }
+
+export type Provider = 'google' | 'github' | 'linkedin'

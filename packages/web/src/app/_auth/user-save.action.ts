@@ -1,20 +1,19 @@
 'use server'
 
-import { User } from '../store/store'
-import { supabase } from '@/lib/supabase/client'
+import { getUser } from '@/lib/auth'
 import { cookies } from 'next/headers'
 
 export async function userSaveAction() {
   const cookieStore = await cookies()
-  const token = cookieStore.get('access_token')
-  if (!token) {
-    return
+  const accessToken = cookieStore.get('access_token')
+
+  if (!accessToken) {
+    return null
   }
 
-  const client = await supabase
-  const { data, error } = await client.auth.getUser(token.value)
-  if (error || data?.user === null) {
-    return
+  try {
+    return await getUser(accessToken.value)
+  } catch {
+    return null
   }
-  return data.user as User
 }
