@@ -19,16 +19,12 @@ const signInWith = (provider: Provider) => async () => {
 
   if (data.codeVerifier) {
     const cookieStore = await cookies()
-    cookieStore.set(
-      'sb-rzfvzqhceahqpjzjswxz-auth-code-verify',
-      data.codeVerifier,
-      {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        path: '/',
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-      },
-    )
+    cookieStore.set('code-verify', data.codeVerifier, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      path: '/',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    })
   }
 
   if (data.url) {
