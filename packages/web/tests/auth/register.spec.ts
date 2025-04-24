@@ -1,7 +1,7 @@
 import test, { expect } from '@playwright/test'
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('http://localhost:3000/signUp=true')
+  await page.goto('http:/localhost:3000/register')
 })
 
 test('has title', async ({ page }) => {
@@ -77,7 +77,7 @@ test.describe('has error validation', () => {
     await page.getByRole('button', { name: 'submit' }).click()
 
     await expect(
-      page.getByText('La contraseña debe tener al menos 8 caracteres', {}),
+      page.getByText('Las contraseñas no coinciden', {}),
     ).toBeVisible()
   })
 })

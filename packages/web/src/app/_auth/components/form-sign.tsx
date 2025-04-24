@@ -7,12 +7,10 @@ import {
 import { Result, SingInDTO, SingUpDTO } from '../types'
 import { SingInForm } from './signin-form'
 import { SingUpForm } from './signup-form'
-import { redirect, useSearchParams } from 'next/navigation'
+import { redirect } from 'next/navigation'
 import { toast } from 'sonner'
 
-export function FormSing() {
-  const isSingUp = useSearchParams().get('singUp') === 'true'
-
+export function FormSing({ isSingUp }: { isSingUp?: boolean | undefined }) {
   const generateSubmitHandler =
     <TData,>(specificSubmitHandler: (data: TData) => Promise<Result>) =>
     async (data: TData): Promise<void> => {

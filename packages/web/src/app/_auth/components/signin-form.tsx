@@ -33,6 +33,7 @@ export function SingInForm({
 }: {
   onSubmit: (dataform: SingInDTO) => Promise<void>
 }) {
+  console.log('sing in form')
   const [passwordVisible, setPasswordVisible] = useState(false)
   const form = useForm<SingInDTO>({
     resolver: zodResolver(formSchema),
