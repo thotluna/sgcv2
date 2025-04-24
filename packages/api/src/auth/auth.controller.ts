@@ -37,7 +37,7 @@ export class AuthController {
             new AuthResponseBuilder()
               .status('error')
               .code(401)
-              .message(error.message)
+              .message(req.t(error.message))
               .build(),
           )
         return

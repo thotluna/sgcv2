@@ -5,7 +5,7 @@ export const clientCodeSchema = z.object({
     .string()
     .regex(
       /^[a-zA-z0-9!@#&*]{8}-[a-zA-z0-9!@#&*]{8}-[a-zA-z0-9!@#&*]{8}-[a-zA-z0-9!@#&*]{8}$/,
-      { message: 'Codigo de cliente tiene un formato invalido' },
+      { message: 'auth_error_invalid_client_code' },
     ),
 })
 

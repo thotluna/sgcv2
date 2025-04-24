@@ -3,12 +3,11 @@ import { NextFunction, Request, Response } from 'express'
 
 export function errorHandler(
   err: Error,
-  _req: Request,
+  req: Request,
   res: Response,
   next: NextFunction,
 ) {
   if (res.headersSent) {
-    // Si los headers ya fueron enviados, delega al handler por defecto de Express
     return next(err)
   }
 
@@ -22,7 +21,7 @@ export function errorHandler(
     new AuthResponseBuilder()
       .status('error')
       .code(statusCode)
-      .message('¡Ups! Algo salió mal.')
+      .message(req.t(err.message))
       .build(),
   )
 }

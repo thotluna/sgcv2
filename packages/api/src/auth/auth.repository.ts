@@ -37,7 +37,7 @@ export class SupabaseAuthRepository implements AuthRepository {
 
     if (error) {
       if (error.code === 'PGRST116') {
-        throw new AuthError('Codigo de cliente no válido')
+        throw new AuthError('auth_error_invalid_client_code')
       }
 
       if (error.message === 'TypeError: fetch failed') {
