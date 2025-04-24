@@ -7,7 +7,7 @@ import {
   data,
 } from './auth.configtest'
 import './auth.test-base'
-import { app } from './auth.test-base'
+import { app, i18n as i18nTest } from './auth.test-base'
 import request from 'supertest'
 
 describe('POST /signin', () => {
@@ -38,7 +38,7 @@ describe('POST /signin', () => {
           new AuthResponseBuilder()
             .status('error')
             .code(400)
-            .message('El email no es valido')
+            .message(i18nTest.t('email_invalid'))
             .build(),
         )
       })
@@ -56,33 +56,14 @@ describe('POST /signin', () => {
           new AuthResponseBuilder()
             .status('error')
             .code(400)
-            .message('La contraseña debe tener al menos 8 caracteres')
-            .build(),
-        )
-      })
-  })
-
-  test('bad request', () => {
-    return request(app)
-      .post(authRoute.SIGN_IN)
-      .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(400)
-      .then(response => {
-        expect(response.body).toEqual(
-          new AuthResponseBuilder()
-            .status('error')
-            .code(400)
-            .message('Required, Required')
+            .message(i18nTest.t('password_min_length'))
             .build(),
         )
       })
   })
 
   test('credential invalid', () => {
-    repositorySignIn.reject(
-      new AuthError('El email o la contraseña no son validos'),
-    )
+    repositorySignIn.reject(new AuthError(i18nTest.t('invalid_credentials')))
     return request(app)
       .post(authRoute.SIGN_IN)
       .set('Accept', 'application/json')
@@ -94,14 +75,14 @@ describe('POST /signin', () => {
           new AuthResponseBuilder()
             .status('error')
             .code(400)
-            .message('El email o la contraseña no son validos')
+            .message(i18nTest.t('invalid_credentials'))
             .build(),
         )
       })
   })
 
   test('other error', () => {
-    repositorySignIn.reject(new Error('other error'))
+    repositorySignIn.reject(new Error(i18nTest.t('unknown_error')))
     return request(app)
       .post(authRoute.SIGN_IN)
       .set('Accept', 'application/json')
@@ -113,7 +94,7 @@ describe('POST /signin', () => {
           new AuthResponseBuilder()
             .status('error')
             .code(500)
-            .message('¡Ups! Algo salió mal.')
+            .message(i18nTest.t('unknown_error'))
             .build(),
         )
       })

@@ -1,28 +1,34 @@
-import 'dotenv/config'
-import { AuthService } from '../auth.service'
+import { ServerApi } from '../../server'
 import { AuthController } from '../auth.controller'
 import { AuthRouter } from '../auth.routes'
-import { ServerApi } from '../../server'
-import { Server } from 'http'
-import { Application } from 'express'
+import { AuthService } from '../auth.service'
 import { AuthsRepository } from '../types'
 import { authRepository } from './auth.configtest'
+import 'dotenv/config'
+import { Application } from 'express'
+import { Server } from 'http'
+import i18next from 'i18next'
 
 export let app: Application
-let server: Server | null
+let server!: Server
 let repository: AuthsRepository
+export let i18n: typeof i18next
 
-beforeAll(() => {
+beforeAll(async () => {
   repository = authRepository
 
   const serverApp = ServerApi.getInstance()
+  i18n = serverApp.getI18nextInstance()
+  await i18n.changeLanguage('es')
+  jest.spyOn(console, 'warn').mockImplementation(() => {})
+  jest.spyOn(console, 'log').mockImplementation(() => {})
   serverApp.addRoute('/auth', getAuthRouter())
-  server = serverApp.start()
+  server = serverApp.start()!
   app = serverApp.getApp()
 })
 
 afterAll(() => {
-  server?.close()
+  server.close()
 })
 
 function getAuthRouter() {

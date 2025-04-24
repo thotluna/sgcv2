@@ -1,10 +1,10 @@
-import { ApiResponse } from '@sgcv2/shared'
-import request from 'supertest'
 import { AuthResponseBuilder } from '../../utils/auth-response-builder'
 import { authorizeDataType } from '../types'
+import { repositorySignIn } from './auth.configtest'
 import './auth.test-base'
 import { app } from './auth.test-base'
-import { repositorySignIn } from './auth.configtest'
+import { ApiResponse } from '@sgcv2/shared'
+import request from 'supertest'
 
 describe('GET /authorize', () => {
   test('happy past', () => {

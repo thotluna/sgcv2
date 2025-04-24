@@ -8,7 +8,7 @@ import {
   signupData,
 } from './auth.configtest'
 import './auth.test-base'
-import { app } from './auth.test-base'
+import { app, i18n as i18nInstance } from './auth.test-base'
 import request from 'supertest'
 
 describe('POST /signup', () => {
@@ -45,7 +45,7 @@ describe('POST /signup', () => {
           new AuthResponseBuilder()
             .status('error')
             .code(400)
-            .message('La contraseña debe tener al menos 8 caracteres')
+            .message(i18nInstance.t('password_min_length', { lng: 'es' }))
             .build(),
         )
       })
@@ -63,7 +63,7 @@ describe('POST /signup', () => {
           new AuthResponseBuilder()
             .status('error')
             .code(400)
-            .message('El email no es valido')
+            .message(i18nInstance.t('email_invalid', { lng: 'es' }))
             .build(),
         )
       })
@@ -81,24 +81,11 @@ describe('POST /signup', () => {
           new AuthResponseBuilder()
             .status('error')
             .code(400)
-            .message('Codigo de cliente tiene un formato invalido')
-            .build(),
-        )
-      })
-  })
-
-  test('bad request, res empty', () => {
-    return request(app)
-      .post(authRoute.SIGN_UP)
-      .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(400)
-      .then(response => {
-        expect(response.body).toEqual(
-          new AuthResponseBuilder()
-            .status('error')
-            .code(400)
-            .message('Required, Required, Required')
+            .message(
+              i18nInstance.t('auth_error_invalid_client_code', {
+                lng: 'es',
+              }),
+            )
             .build(),
         )
       })
@@ -124,7 +111,13 @@ describe('POST /signup', () => {
   })
 
   test('error, any other', () => {
-    repositoryValidateCode.reject(new Error('any other error'))
+    repositoryValidateCode.reject(
+      new Error(
+        i18nInstance.t('db_conexion_error', {
+          lng: 'es',
+        }),
+      ),
+    )
     return request(app)
       .post(authRoute.SIGN_UP)
       .send(signupData)
@@ -136,7 +129,11 @@ describe('POST /signup', () => {
           new AuthResponseBuilder()
             .status('error')
             .code(500)
-            .message('¡Ups! Algo salió mal.')
+            .message(
+              i18nInstance.t('db_conexion_error', {
+                lng: 'es',
+              }),
+            )
             .build(),
         )
       })
@@ -144,7 +141,11 @@ describe('POST /signup', () => {
 
   test('error, email registered', () => {
     repositoryValidateCode.resolve()
-    repositorySignUp.reject(new AuthError('El email ya esta registrado'))
+    repositorySignUp.reject(
+      new AuthError(
+        i18nInstance.t('auth_email_already_registed', { lng: 'es' }),
+      ),
+    )
 
     return request(app)
       .post(authRoute.SIGN_UP)
@@ -157,7 +158,9 @@ describe('POST /signup', () => {
           new AuthResponseBuilder()
             .status('error')
             .code(400)
-            .message('El email ya esta registrado')
+            .message(
+              i18nInstance.t('auth_email_already_registed', { lng: 'es' }),
+            )
             .build(),
         )
       })

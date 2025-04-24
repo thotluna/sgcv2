@@ -1,4 +1,4 @@
-import { AuthsRepository } from '../types'
+import { AuthsRepository, UserResponse } from '../types'
 
 export const authRepository: AuthsRepository = {
   validateCodeClient: jest.fn(),
@@ -21,6 +21,7 @@ export const authRoute = {
   SIGN_IN: '/v1/auth/signin',
   AUTHORIZE: '/v1/auth/authorize',
   CALLBACK: '/v1/auth/callback',
+  USER: '/v1/auth/user',
 }
 
 export const clientCode = {
@@ -80,4 +81,35 @@ export const repositoryCallback = {
     }),
   reject: (error: Error) =>
     (authRepository.callback as jest.Mock).mockRejectedValue(error),
+}
+
+export const dataUser: UserResponse = {
+  user: {
+    id: '123456789',
+    email: signupData.email,
+    created_at: Date.now() + '',
+    role: 'authenticated',
+  },
+  session: {
+    access_token: '123456789',
+    expires_at: Date.now(),
+    expires_in: 3600,
+    refresh_token: '123456789',
+    token_type: 'Bearer',
+    user: {
+      id: '123456789',
+      email: signupData.email,
+      created_at: Date.now() + '',
+      role: 'authenticated',
+    },
+  },
+}
+
+export const repositoryUser = {
+  resolve: (data?: UserResponse | undefined) =>
+    (authRepository.getUser as jest.Mock).mockResolvedValue(
+      data ? data : dataUser,
+    ),
+  reject: (error: Error) =>
+    (authRepository.getUser as jest.Mock).mockRejectedValue(error),
 }
