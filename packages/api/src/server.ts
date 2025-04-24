@@ -56,6 +56,9 @@ export class ServerApi {
     )
 
     this.router = Router()
+    this.router.get('/', (_req, res) => {
+      res.send('Hello World!')
+    })
     this.app.use('/v1', this.router)
   }
 
@@ -84,7 +87,7 @@ export class ServerApi {
         console.log(`Server listening on port ${portForce}!`)
       })
       // allow process to exit if this is the only handle
-      this.server.unref()
+      // this.server.unref()
       return this.server
     }
 
@@ -95,7 +98,7 @@ export class ServerApi {
           console.log(`Server listening on port ${this.port}!`)
         })
         // allow process to exit if this is the only handle
-        this.server.unref()
+        // this.server.unref()
         return this.server
       } catch {
         continue
