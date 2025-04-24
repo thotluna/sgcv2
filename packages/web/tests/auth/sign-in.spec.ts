@@ -51,7 +51,7 @@ test.describe('has error', () => {
     await page.getByRole('button', { name: 'submit' }).click()
 
     await expect(
-      page.getByText('El email o la contraseña no son validos', {}),
+      page.getByText('El email o la contraseña no son validos'),
     ).toBeVisible()
   })
 })
