@@ -1,0 +1,19 @@
+{
+  "No se ha encontrado la clave anonima": "No se ha encontrado la clave anonima",
+  "Codigo de cliente no válido": "Codigo de cliente no válido",
+  "error en la conexion": {
+    " por favor intentelo mas tarde": "error en la conexion. por favor intentelo mas tarde"
+  },
+  "El email ya esta registrado": "El email ya esta registrado",
+  "El provider debe ser 'google' o 'github'": {
+    " Se recibió: 'invalid'": {
+      "": "El provider debe ser 'google' o 'github'. Se recibió: 'invalid'."
+    }
+  },
+  "Required": "Required",
+  "El email o la contraseña no son validos": "El email o la contraseña no son validos",
+  "¡Ups! Algo salió mal": {
+    "": "¡Ups! Algo salió mal."
+  },
+  "Se requiere token de acceso": "Se requiere token de acceso"
+}

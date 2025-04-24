@@ -14,11 +14,11 @@ export const httpClientCodeSchema = z.object({
 })
 
 export const signInSchema = z.object({
-  email: z.string().email('El email no es valido'),
+  email: z.string().email('email_invalid'),
   password: z
     .string()
-    .min(8, 'La contraseña debe tener al menos 8 caracteres')
-    .max(36, 'La contraseña no puede tener más de 36 caracteres'),
+    .min(8, 'password_min_length')
+    .max(36, 'password_max_length'),
 })
 
 export const httpSingInSchema = z.object({

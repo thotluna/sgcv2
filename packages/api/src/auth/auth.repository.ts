@@ -18,12 +18,6 @@ export class SupabaseAuthRepository implements AuthRepository {
     process.env.SUPABASE_SERVICE_ROL!,
   )
 
-  /**
-   * Check if the code client is valid
-   *
-   * @param codeClient string
-   * @returns Promise<boolean>
-   */
   validateCodeClient = async (codeClient: string) => {
     const beforeTime = new Date(Date.now() - 72 * 60 * 60 * 1000)
 
@@ -41,22 +35,13 @@ export class SupabaseAuthRepository implements AuthRepository {
       }
 
       if (error.message === 'TypeError: fetch failed') {
-        throw new DBErrorConexion(
-          'Ups... hemos tenido un problema. Por favor inténtelo más tarde',
-        )
+        throw new DBErrorConexion('db_conexion_error')
       }
     }
 
     return true
   }
 
-  /**
-   * Sign up the user
-   *
-   * @param email Email of the user
-   * @param password Password of the user
-   * @returns Promise<boolean>
-   */
   signUp = async (email: string, password: string) => {
     const signUpData = {
       email,
@@ -70,22 +55,15 @@ export class SupabaseAuthRepository implements AuthRepository {
         error.name === 'AuthApiError' &&
         error.message === 'Database error saving new user'
       ) {
-        throw new AuthError('error en el codigo del cliente')
+        throw new AuthError('auth_error_invalid_client_code')
       }
       if (error.status === 422) {
-        throw new AuthError('El email ya esta registrado')
+        throw new AuthError('auth_email_already_registed')
       }
     }
     return data
   }
 
-  /**
-   * Sign in the user
-   *
-   * @param email Email of the user
-   * @param password Password of the user
-   * @returns Promise<boolean>
-   */
   signIn = async (email: string, password: string) => {
     const signInData = {
       email,
@@ -104,12 +82,6 @@ export class SupabaseAuthRepository implements AuthRepository {
     return data
   }
 
-  /**
-   * Borrar el codigo de cliente del sistema
-   *
-   * @param codeClient Code client
-   * @returns Promise<boolean>
-   */
   closeCodeClient = async (codeClient: string) => {
     const { error } = await this.client
       .from('clientcode')
@@ -121,18 +93,11 @@ export class SupabaseAuthRepository implements AuthRepository {
     return error === null
   }
 
-  /**
-   * Get the authorization URL
-   *
-   * @param code string code authentification
-   * @param codeVerifier string code original of code challenge
-   * @returns Promise<string>
-   */
   async callback(code: string, codeVerifier: string) {
     const { SUPABASE_ANON_KEY: apiKey } = process.env
 
     if (apiKey === undefined) {
-      throw new AuthError('No se ha encontrado la clave anonima')
+      throw new AuthError('not_found_anonymous_key')
     }
 
     try {
