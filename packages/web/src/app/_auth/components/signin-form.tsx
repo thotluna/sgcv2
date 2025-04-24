@@ -75,10 +75,11 @@ export function SingInForm({
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel htmlFor="password">Password</FormLabel>
                   <FormControl>
                     <div className="flex items-center">
                       <Input
+                        id="password"
                         autoComplete="current-password"
                         type={passwordVisible ? 'text' : 'password'}
                         placeholder="xxxxxxxx"
@@ -103,7 +104,11 @@ export function SingInForm({
             />
 
             <div className="flex justify-between flex-row-reverse">
-              <Button disabled={form.formState.isLoading} type="submit">
+              <Button
+                name="submit"
+                disabled={form.formState.isLoading}
+                type="submit"
+              >
                 Submit
               </Button>
               <Button
