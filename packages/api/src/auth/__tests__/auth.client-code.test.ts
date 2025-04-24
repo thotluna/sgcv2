@@ -40,7 +40,7 @@ describe('auth /code/validate test', () => {
           new AuthResponseBuilder()
             .status('error')
             .code(400)
-            .message('Required')
+            .message(i18nInstance.t('client_code_required'))
             .build(),
         )
       })
@@ -71,7 +71,9 @@ describe('auth /code/validate test', () => {
   })
 
   test('code refused', () => {
-    repositoryValidateCode.reject(new AuthError('Codigo de cliente no válido'))
+    repositoryValidateCode.reject(
+      new AuthError('auth_error_invalid_client_code'),
+    )
     return request(app)
       .post(authRoute.VALIDATE_CODE)
       .send({ clientCode: clientCode.correct })
@@ -83,16 +85,14 @@ describe('auth /code/validate test', () => {
           new AuthResponseBuilder()
             .status('error')
             .code(401)
-            .message('Codigo de cliente no válido')
+            .message(i18nInstance.t('auth_error_invalid_client_code'))
             .build(),
         )
       })
   })
 
   test('error db', () => {
-    repositoryValidateCode.reject(
-      new DBErrorConexion(i18nInstance.t('db_conexion_error', { lng: 'es' })),
-    )
+    repositoryValidateCode.reject(new DBErrorConexion('db_conexion_error'))
     return request(app)
       .post(authRoute.VALIDATE_CODE)
       .send({ clientCode: clientCode.correct })

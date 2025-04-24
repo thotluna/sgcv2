@@ -36,9 +36,7 @@ describe('GET /callback', () => {
   })
 
   test('happy past', () => {
-    repositoryCallback.reject(
-      new AuthError(i18nTest.t('not_found_anonymous_key')),
-    )
+    repositoryCallback.reject(new AuthError('not_found_anonymous_key'))
 
     return request(app)
       .get(authRoute.CALLBACK + '?code=123456789')

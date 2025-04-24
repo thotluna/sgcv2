@@ -2,7 +2,7 @@ import { AuthResponseBuilder } from '../../utils/auth-response-builder'
 import { authorizeDataType } from '../types'
 import { repositorySignIn } from './auth.configtest'
 import './auth.test-base'
-import { app } from './auth.test-base'
+import { app, i18n as i18nInstance } from './auth.test-base'
 import { ApiResponse } from '@sgcv2/shared'
 import request from 'supertest'
 
@@ -53,9 +53,7 @@ describe('GET /authorize', () => {
           new AuthResponseBuilder()
             .status('error')
             .code(400)
-            .message(
-              "El provider debe ser 'google' o 'github'. Se recibió: 'invalid'.",
-            )
+            .message(i18nInstance.t('provider_invalid'))
             .build(),
         )
       })

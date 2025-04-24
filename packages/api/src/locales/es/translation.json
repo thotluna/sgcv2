@@ -1,5 +1,6 @@
 {
   "auth_error_invalid_client_code": "Codigo de cliente no válido.",
+  "client_code_required": "Se requiere codigo de cliente",
   "unknown_error": "¡Ups! Algo salió mal.",
   "db_conexion_error": "error en la conexion. por favor intentelo mas tarde",
   "auth_email_already_registed": "El email ya esta registrado",
@@ -9,5 +10,6 @@
   "invalid_credentials": "El email o la contraseña no son validos",
   "not_found_anonymous_key": "No se ha encontrado la clave anonima",
   "token_required": "Se requiere token de acceso",
-  "token_without_user": "Token no retorna user"
+  "token_without_user": "Token no retorna user",
+  "provider_invalid": "El provider debe ser 'google' o 'github'"
 }

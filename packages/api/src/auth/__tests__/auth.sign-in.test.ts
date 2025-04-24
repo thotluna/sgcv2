@@ -63,7 +63,7 @@ describe('POST /signin', () => {
   })
 
   test('credential invalid', () => {
-    repositorySignIn.reject(new AuthError(i18nTest.t('invalid_credentials')))
+    repositorySignIn.reject(new AuthError('invalid_credentials'))
     return request(app)
       .post(authRoute.SIGN_IN)
       .set('Accept', 'application/json')
@@ -82,7 +82,7 @@ describe('POST /signin', () => {
   })
 
   test('other error', () => {
-    repositorySignIn.reject(new Error(i18nTest.t('unknown_error')))
+    repositorySignIn.reject(new Error('unknown_error'))
     return request(app)
       .post(authRoute.SIGN_IN)
       .set('Accept', 'application/json')

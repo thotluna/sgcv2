@@ -75,7 +75,7 @@ export class SupabaseAuthRepository implements AuthRepository {
 
     if (error) {
       if (error.status === 400) {
-        throw new AuthError('El email o la contraseña no son validos')
+        throw new AuthError('invalid_credentials')
       }
     }
 
@@ -116,7 +116,7 @@ export class SupabaseAuthRepository implements AuthRepository {
 
       return request as CallbackResult
     } catch (error) {
-      throw new AuthError(error as string)
+      throw new AuthError((error as Error).message)
     }
   }
 

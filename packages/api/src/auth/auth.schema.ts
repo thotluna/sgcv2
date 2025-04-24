@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 export const clientCodeSchema = z.object({
   clientCode: z
-    .string()
+    .string({ required_error: 'client_code_required' })
     .regex(
       /^[a-zA-z0-9!@#&*]{8}-[a-zA-z0-9!@#&*]{8}-[a-zA-z0-9!@#&*]{8}-[a-zA-z0-9!@#&*]{8}$/,
       { message: 'auth_error_invalid_client_code' },
@@ -37,7 +37,7 @@ export const authorizeSchema = z.object({
       errorMap: (issue, ctx) => {
         if (issue.code === z.ZodIssueCode.invalid_enum_value) {
           return {
-            message: `El provider debe ser 'google' o 'github'. Se recibió: '${ctx.data}'.`,
+            message: 'provider_invalid',
           }
         }
         return { message: ctx.defaultError }

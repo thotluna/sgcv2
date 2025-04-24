@@ -92,7 +92,9 @@ describe('POST /signup', () => {
   })
 
   test('error, code client refused', () => {
-    repositoryValidateCode.reject(new AuthError('Codigo de cliente no válido'))
+    repositoryValidateCode.reject(
+      new AuthError('auth_error_invalid_client_code'),
+    )
     return request(app)
       .post(authRoute.SIGN_UP)
       .send(signupData)
@@ -104,20 +106,16 @@ describe('POST /signup', () => {
           new AuthResponseBuilder()
             .status('error')
             .code(400)
-            .message('Codigo de cliente no válido')
+            .message(
+              i18nInstance.t('auth_error_invalid_client_code', { lng: 'es' }),
+            )
             .build(),
         )
       })
   })
 
   test('error, any other', () => {
-    repositoryValidateCode.reject(
-      new Error(
-        i18nInstance.t('db_conexion_error', {
-          lng: 'es',
-        }),
-      ),
-    )
+    repositoryValidateCode.reject(new Error('db_conexion_error'))
     return request(app)
       .post(authRoute.SIGN_UP)
       .send(signupData)
@@ -141,11 +139,7 @@ describe('POST /signup', () => {
 
   test('error, email registered', () => {
     repositoryValidateCode.resolve()
-    repositorySignUp.reject(
-      new AuthError(
-        i18nInstance.t('auth_email_already_registed', { lng: 'es' }),
-      ),
-    )
+    repositorySignUp.reject(new AuthError('auth_email_already_registed'))
 
     return request(app)
       .post(authRoute.SIGN_UP)

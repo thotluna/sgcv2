@@ -60,7 +60,7 @@ describe('GET /user', () => {
   })
 
   test('token error', () => {
-    repositoryUser.reject(new AuthError(i18nTest.t('token_required')))
+    repositoryUser.reject(new AuthError('token_required'))
     return request(app)
       .get(authRoute.USER)
       .send()
