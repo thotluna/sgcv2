@@ -8,6 +8,7 @@ import { Result, SingInDTO, SingUpDTO } from '../types'
 import { SingInForm } from './signin-form'
 import { SingUpForm } from './signup-form'
 import { redirect, useSearchParams } from 'next/navigation'
+import { toast } from 'sonner'
 
 export function FormSing() {
   const isSingUp = useSearchParams().get('singUp') === 'true'
@@ -15,7 +16,12 @@ export function FormSing() {
   const generateSubmitHandler =
     <TData,>(specificSubmitHandler: (data: TData) => Promise<Result>) =>
     async (data: TData): Promise<void> => {
-      await specificSubmitHandler(data)
+      const res = await specificSubmitHandler(data)
+
+      if (res.status === 'error') {
+        toast.error(res.message)
+      }
+
       redirect('/')
     }
 
