@@ -11,7 +11,7 @@
     "lint:fix": "eslint src/**/*.ts --fix",
     "format": "prettier --write src/**/*.ts",
     "format:check": "prettier --check src/**/*.ts",
-    "test": " jest --silent",
+    "test": " jest --silent --detectOpenHandles",
     "test:watch": "pnpm test -- --watchAll",
     "test:coverage": "jest --coverage"
   },

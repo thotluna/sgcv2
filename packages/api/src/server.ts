@@ -11,24 +11,26 @@ import morgan from 'morgan'
 const { ALLOWED_HOSTS, PORT } = process.env
 
 export class ServerApi {
-  private static instance: ServerApi
   private app: Application
   private router: Router
   private port: number = Number(PORT) || 3000
   private server?: Server
+  public i18nextInstance: typeof i18next
 
-  private constructor() {
-    i18next
+  constructor() {
+    this.i18nextInstance = i18next
+    this.i18nextInstance
       .use(i18nextFsBackend)
       .use(middleware.LanguageDetector)
       .init({
-        debug: true,
+        debug: false,
         backend: {
           loadPath: __dirname + '/locales/{{lng}}/{{ns}}.json',
           addPath: __dirname + '/locales/{{lng}}/{{ns}}.missing.json',
+          reloadInterval: 0, // disable file watch to avoid open handles
         },
-        fallbackLng: 'en',
-        preload: ['en'],
+        fallbackLng: 'es',
+        preload: ['en', 'es'],
         detection: {
           order: ['querystring', 'cookie', 'header'],
           caches: ['cookie'],
@@ -38,7 +40,7 @@ export class ServerApi {
       })
     this.app = express()
     this.app.use(
-      middleware.handle(i18next, {
+      middleware.handle(this.i18nextInstance, {
         ignoreRoutes: ['/foo'], // or function(req, res, options, i18next) { /* return true to ignore */ }
         removeLngFromUrl: false, // removes the language from the url when language detected in path
       }),
@@ -58,10 +60,12 @@ export class ServerApi {
   }
 
   public static getInstance(): ServerApi {
-    if (!ServerApi.instance) {
-      ServerApi.instance = new ServerApi()
-    }
-    return ServerApi.instance
+    const instance = new ServerApi()
+    return instance
+  }
+
+  public getI18nextInstance(): typeof i18next {
+    return this.i18nextInstance
   }
 
   public addRoute(path: string, router: Router) {
@@ -79,6 +83,8 @@ export class ServerApi {
       this.server = this.app.listen(portForce, () => {
         console.log(`Server listening on port ${portForce}!`)
       })
+      // allow process to exit if this is the only handle
+      this.server.unref()
       return this.server
     }
 
@@ -88,6 +94,8 @@ export class ServerApi {
         this.server = this.app.listen(this.port, () => {
           console.log(`Server listening on port ${this.port}!`)
         })
+        // allow process to exit if this is the only handle
+        this.server.unref()
         return this.server
       } catch {
         continue
