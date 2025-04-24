@@ -33,10 +33,7 @@ export class SupabaseAuthRepository implements AuthRepository {
       if (error.code === 'PGRST116') {
         throw new AuthError('auth_error_invalid_client_code')
       }
-
-      if (error.message === 'TypeError: fetch failed') {
-        throw new DBErrorConexion('db_conexion_error')
-      }
+      throw new DBErrorConexion('db_conexion_error')
     }
 
     return true
