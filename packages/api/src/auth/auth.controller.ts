@@ -127,18 +127,12 @@ export class AuthController {
   callback = async (req: Request, res: Response, next: NextFunction) => {
     const { code, error, error_description } = req.query
 
-    if (
-      !code ||
-      (error && error_description === 'Database error saving new user')
-    ) {
+    if (error && error_description === 'Database error saving new user') {
       res.redirect('http://localhost:3000/?singUp=true')
       return
     }
     if (!code) {
-      res.status(401).send({
-        status: 'fail',
-        message: 'Se requiere codigo de autorizacion',
-      })
+      res.redirect('http://localhost:3000/?singUp=true')
       return
     }
 
@@ -165,6 +159,7 @@ export class AuthController {
           sameSite: 'lax',
           maxAge: 7 * 24 * 60 * 60 * 1000,
         })
+
         .redirect(`${process.env.FRONTEND_URL}/auth/callback`)
       return
     } catch (error) {

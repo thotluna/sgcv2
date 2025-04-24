@@ -6,6 +6,7 @@ export const authRepository: AuthsRepository = {
   singIn: jest.fn(),
   closeCodeClient: jest.fn(),
   callback: jest.fn(),
+  getUser: jest.fn(),
 }
 export const repositoryValidateCode = {
   resolve: () =>

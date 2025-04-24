@@ -8,10 +8,13 @@ export async function GET(request: NextRequest) {
   const accessToken = cookieStore.get('access_token')
 
   if (!accessToken) {
-    return NextResponse.redirect('http://localhost:3000')
+    const url = request.nextUrl.clone()
+    url.pathname = '/?singUp=true'
+    return NextResponse.redirect(url)
   }
 
   cookieStore.delete('code-verify')
-
-  return NextResponse.redirect('http://localhost:3000/private')
+  const url = request.nextUrl.clone()
+  url.pathname = '/private'
+  return NextResponse.redirect(url)
 }

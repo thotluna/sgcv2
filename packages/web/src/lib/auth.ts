@@ -33,13 +33,6 @@ export async function updateAuthSession(request: NextRequest) {
 
   const user = await getUser(accessToken?.value)
 
-  console.log({
-    user: !user,
-    login: !request.nextUrl.pathname.startsWith('/login'),
-    auth: !request.nextUrl.pathname.startsWith('/auth'),
-    root: request.nextUrl.pathname !== '/',
-  })
-
   if (
     !user &&
     !request.nextUrl.pathname.startsWith('/login') &&
