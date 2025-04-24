@@ -3,6 +3,9 @@ import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import express, { Application, Router } from 'express'
 import { Server } from 'http'
+import i18next from 'i18next'
+import i18nextFsBackend from 'i18next-fs-backend'
+import middleware from 'i18next-http-middleware'
 import morgan from 'morgan'
 
 const { ALLOWED_HOSTS, PORT } = process.env
@@ -15,7 +18,31 @@ export class ServerApi {
   private server?: Server
 
   private constructor() {
+    i18next
+      .use(i18nextFsBackend)
+      .use(middleware.LanguageDetector)
+      .init({
+        debug: true,
+        backend: {
+          loadPath: __dirname + '/locales/{{lng}}/{{ns}}.json',
+          addPath: __dirname + '/locales/{{lng}}/{{ns}}.missing.json',
+        },
+        fallbackLng: 'en',
+        preload: ['en'],
+        detection: {
+          order: ['querystring', 'cookie', 'header'],
+          caches: ['cookie'],
+        },
+        load: 'languageOnly',
+        saveMissing: true,
+      })
     this.app = express()
+    this.app.use(
+      middleware.handle(i18next, {
+        ignoreRoutes: ['/foo'], // or function(req, res, options, i18next) { /* return true to ignore */ }
+        removeLngFromUrl: false, // removes the language from the url when language detected in path
+      }),
+    )
     this.app.use(cookieParser())
     this.app.use(express.json())
     this.app.use(morgan('dev'))
