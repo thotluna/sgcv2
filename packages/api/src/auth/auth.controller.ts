@@ -58,11 +58,11 @@ export class AuthController {
     }
   }
 
-  singUp = async (req: Request, res: Response, next: NextFunction) => {
+  signUp = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password, clientCode } = req.body
 
     try {
-      const data = await this.service.singUp(email, password, clientCode)
+      const data = await this.service.signUp(email, password, clientCode)
       res.send(new AuthResponseBuilder().data(data).build())
     } catch (error) {
       if (error instanceof AuthError) {
@@ -81,11 +81,11 @@ export class AuthController {
     }
   }
 
-  singIn = async (req: Request, res: Response, next: NextFunction) => {
+  signIn = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body
 
     try {
-      const data = await this.service.singIn(email, password)
+      const data = await this.service.signIn(email, password)
 
       res.send(new AuthResponseBuilder().data(data).build())
     } catch (error) {
@@ -110,6 +110,7 @@ export class AuthController {
 
     try {
       const resp = await this.service.authorization(provider)
+
       const { data, codeVerifier } = resp
       const url = new URL(SUPABASE_URLs.AUTHORIZATION)
 
@@ -117,14 +118,7 @@ export class AuthController {
         url.searchParams.append(key, data[key])
       })
 
-      res.send(
-        new AuthResponseBuilder()
-          .data({
-            url,
-            codeVerifier,
-          })
-          .build(),
-      )
+      res.send(new AuthResponseBuilder().data({ url, codeVerifier }).build())
     } catch (error) {
       next(error)
     }
@@ -133,23 +127,16 @@ export class AuthController {
   callback = async (req: Request, res: Response, next: NextFunction) => {
     const { code, error, error_description } = req.query
 
-    if (
-      !code ||
-      (error && error_description === 'Database error saving new user')
-    ) {
-      res.redirect('http://localhost:3000/?singUp=true')
+    if (error && error_description === 'Database error saving new user') {
+      res.redirect('http://localhost:3000/?signUp=true')
       return
     }
     if (!code) {
-      res.status(401).send({
-        status: 'fail',
-        message: 'Se requiere codigo de autorizacion',
-      })
+      res.redirect('http://localhost:3000/?signUp=true')
       return
     }
 
-    const { 'sb-rzfvzqhceahqpjzjswxz-auth-code-verify': codeVerifier } =
-      req.cookies
+    const { 'code-verify': codeVerifier } = req.cookies
     try {
       const {
         access_token: accessToken,
@@ -158,20 +145,21 @@ export class AuthController {
       } = await this.service.callback(code as string, codeVerifier)
 
       res
-        .cookie('sr-sb-access_token', accessToken, {
+        .cookie('access_token', accessToken, {
           expires: new Date(expiresAt * 1000),
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
           sameSite: 'lax',
           maxAge: 60 * 60 * 1000,
         })
-        .cookie('sr-sb-refresh_token', refreshToken, {
+        .cookie('refresh_token', refreshToken, {
           expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
           sameSite: 'lax',
           maxAge: 7 * 24 * 60 * 60 * 1000,
         })
+
         .redirect(`${process.env.FRONTEND_URL}/auth/callback`)
       return
     } catch (error) {
@@ -192,6 +180,49 @@ export class AuthController {
           status: 'fail',
           message: 'error en la conexion. por favor intentelo mas tarde',
         })
+        return
+      }
+      next(error)
+    }
+  }
+
+  // session = (_req: Request, _res: Response, _next: NextFunction) => {
+  //   throw new Error('Method not implemented.')
+  // }
+  getUser = async (req: Request, res: Response, next: NextFunction) => {
+    const tok = req.headers['authorization']
+
+    if (!tok) {
+      res.status(401).send({
+        status: 'fail',
+        message: 'Se requiere token token token de acceso',
+      })
+      return
+    }
+
+    const token = tok!.split(' ')[1]
+
+    try {
+      const user = await this.service.getUser(token)
+      if (!user) {
+        res.status(401).send({
+          status: 'fail',
+          message: 'token no retorna user',
+        })
+        return
+      }
+      res.send(new AuthResponseBuilder().data(user).build())
+    } catch (error) {
+      if (error instanceof AuthError) {
+        res
+          .status(401)
+          .send(
+            new AuthResponseBuilder()
+              .status('error')
+              .code(401)
+              .message(error.message)
+              .build(),
+          )
         return
       }
       next(error)

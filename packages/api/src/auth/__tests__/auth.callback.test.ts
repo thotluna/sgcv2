@@ -31,7 +31,7 @@ describe('GET /callback', () => {
       .expect(302)
       .then(response => {
         const location = response.headers.location
-        expect(location).toEqual('http://localhost:3000/?singUp=true')
+        expect(location).toEqual('http://localhost:3000/?signUp=true')
       })
   })
 

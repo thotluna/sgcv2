@@ -2,10 +2,11 @@ import { AuthsRepository } from '../types'
 
 export const authRepository: AuthsRepository = {
   validateCodeClient: jest.fn(),
-  singUp: jest.fn(),
-  singIn: jest.fn(),
+  signUp: jest.fn(),
+  signIn: jest.fn(),
   closeCodeClient: jest.fn(),
   callback: jest.fn(),
+  getUser: jest.fn(),
 }
 export const repositoryValidateCode = {
   resolve: () =>
@@ -16,8 +17,8 @@ export const repositoryValidateCode = {
 
 export const authRoute = {
   VALIDATE_CODE: '/v1/auth/code/validate',
-  SING_UP: '/v1/auth/singup',
-  SING_IN: '/v1/auth/signin',
+  SIGN_UP: '/v1/auth/SIGNup',
+  SIGN_IN: '/v1/auth/signin',
   AUTHORIZE: '/v1/auth/authorize',
   CALLBACK: '/v1/auth/callback',
 }
@@ -47,12 +48,12 @@ export const data = {
 
 export const repositorySignUp = {
   resolve: () =>
-    (authRepository.singUp as jest.Mock).mockResolvedValue({
+    (authRepository.signUp as jest.Mock).mockResolvedValue({
       data,
       error: null,
     }),
   reject: (error: Error) =>
-    (authRepository.singUp as jest.Mock).mockRejectedValue(error),
+    (authRepository.signUp as jest.Mock).mockRejectedValue(error),
 }
 
 export const signInData = {
@@ -62,12 +63,12 @@ export const signInData = {
 
 export const repositorySignIn = {
   resolve: () =>
-    (authRepository.singIn as jest.Mock).mockResolvedValue({
+    (authRepository.signIn as jest.Mock).mockResolvedValue({
       data,
       error: null,
     }),
   reject: (error: Error) =>
-    (authRepository.singIn as jest.Mock).mockRejectedValue(error),
+    (authRepository.signIn as jest.Mock).mockRejectedValue(error),
 }
 
 export const repositoryCallback = {

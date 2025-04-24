@@ -1,20 +1,20 @@
 import { AuthResponseBuilder } from '../../utils/auth-response-builder'
-import request from 'supertest'
 import { AuthError } from '../errors'
-import './auth.test-base'
-import { app } from './auth.test-base'
 import {
   repositorySignIn,
   authRoute,
   signInData,
   data,
 } from './auth.configtest'
+import './auth.test-base'
+import { app } from './auth.test-base'
+import request from 'supertest'
 
-describe('POST /singin', () => {
+describe('POST /signin', () => {
   test('happy past', () => {
     repositorySignIn.resolve()
     return request(app)
-      .post(authRoute.SING_IN)
+      .post(authRoute.SIGN_IN)
       .send(signInData)
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
@@ -28,7 +28,7 @@ describe('POST /singin', () => {
 
   test('email invalid', () => {
     return request(app)
-      .post(authRoute.SING_IN)
+      .post(authRoute.SIGN_IN)
       .send({ ...signInData, email: 'alan.com' })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
@@ -46,7 +46,7 @@ describe('POST /singin', () => {
 
   test('password invalid', () => {
     return request(app)
-      .post(authRoute.SING_IN)
+      .post(authRoute.SIGN_IN)
       .send({ ...signInData, password: '123' })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
@@ -64,7 +64,7 @@ describe('POST /singin', () => {
 
   test('bad request', () => {
     return request(app)
-      .post(authRoute.SING_IN)
+      .post(authRoute.SIGN_IN)
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(400)
@@ -84,7 +84,7 @@ describe('POST /singin', () => {
       new AuthError('El email o la contraseña no son validos'),
     )
     return request(app)
-      .post(authRoute.SING_IN)
+      .post(authRoute.SIGN_IN)
       .set('Accept', 'application/json')
       .send(signInData)
       .expect('Content-Type', /json/)
@@ -103,7 +103,7 @@ describe('POST /singin', () => {
   test('other error', () => {
     repositorySignIn.reject(new Error('other error'))
     return request(app)
-      .post(authRoute.SING_IN)
+      .post(authRoute.SIGN_IN)
       .set('Accept', 'application/json')
       .send(signInData)
       .expect('Content-Type', /json/)

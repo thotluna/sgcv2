@@ -1,5 +1,9 @@
 import { AuthError, DBErrorConexion } from './errors'
-import { AuthsRepository as AuthRepository, CallbackResult } from './types'
+import {
+  AuthsRepository as AuthRepository,
+  CallbackResult,
+  UserResponse,
+} from './types'
 import { Database } from '@sgcv2/shared'
 import { SupabaseClient, createClient } from '@supabase/supabase-js'
 
@@ -53,13 +57,13 @@ export class SupabaseAuthRepository implements AuthRepository {
    * @param password Password of the user
    * @returns Promise<boolean>
    */
-  singUp = async (email: string, password: string) => {
-    const singUpData = {
+  signUp = async (email: string, password: string) => {
+    const signUpData = {
       email,
       password,
     }
 
-    const { data, error } = await this.client.auth.signUp(singUpData)
+    const { data, error } = await this.client.auth.signUp(signUpData)
 
     if (error) {
       if (
@@ -82,14 +86,14 @@ export class SupabaseAuthRepository implements AuthRepository {
    * @param password Password of the user
    * @returns Promise<boolean>
    */
-  singIn = async (email: string, password: string) => {
-    const singInData = {
+  signIn = async (email: string, password: string) => {
+    const signInData = {
       email,
       password,
     }
 
     const { error, data } =
-      await this.client.auth.signInWithPassword(singInData)
+      await this.client.auth.signInWithPassword(signInData)
 
     if (error) {
       if (error.status === 400) {
@@ -149,5 +153,12 @@ export class SupabaseAuthRepository implements AuthRepository {
     } catch (error) {
       throw new AuthError(error as string)
     }
+  }
+
+  async getUser(access_token: string) {
+    const { data, error } = await this.client.auth.getUser(access_token)
+    if (error) throw new AuthError(error.message)
+
+    return data as unknown as UserResponse
   }
 }

@@ -1,11 +1,10 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+import { userSaveAction } from '../_auth/user-save.action'
+import { LoadUserStore } from './dashboard/loadUserStore'
 
 export default async function PrivatePage() {
-  const supabase = await createClient()
-  const { data, error } = await supabase.auth.getUser()
-  if (error || !data?.user) {
-    redirect('/')
-  }
-  return <p>Hello {data.user.email}</p>
+  const user = await userSaveAction()
+
+  console.log({ user }, 'private')
+
+  return user && <LoadUserStore user={user!} />
 }

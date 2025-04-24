@@ -1,24 +1,20 @@
-import { createClient } from '@/lib/supabase/server'
 import { cookies } from 'next/headers'
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  console.log({ request })
+
   const cookieStore = await cookies()
+  const accessToken = cookieStore.get('access_token')
 
-  const accessToken = cookieStore.get('sr-sb-access_token')
-  const refreshToken = cookieStore.get('sr-sb-refresh_token')
-
-  if (!accessToken || !refreshToken) {
-    return NextResponse.redirect('http://localhost:3000')
+  if (!accessToken) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/?signUp=true'
+    return NextResponse.redirect(url)
   }
 
-  cookieStore.delete('sb-rzfvzqhceahqpjzjswxz-auth-code-verify')
-
-  const client = await createClient()
-  await client.auth.setSession({
-    access_token: accessToken!.value,
-    refresh_token: refreshToken!.value,
-  })
-
-  return NextResponse.redirect('http://localhost:3000/private')
+  cookieStore.delete('code-verify')
+  const url = request.nextUrl.clone()
+  url.pathname = '/private'
+  return NextResponse.redirect(url)
 }
