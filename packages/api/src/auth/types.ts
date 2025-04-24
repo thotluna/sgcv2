@@ -40,8 +40,8 @@ export interface authorizeDataType {
 export interface AuthsRepository {
   getUser(access_token: string): Promise<UserResponse>
   validateCodeClient(codeClient: string): Promise<boolean>
-  singUp(email: string, password: string): Promise<UserResponse>
-  singIn(email: string, password: string): Promise<UserResponse>
+  signUp(email: string, password: string): Promise<UserResponse>
+  signIn(email: string, password: string): Promise<UserResponse>
   closeCodeClient(codeClient: string): Promise<boolean>
   callback(code: string, codeVerifier: string): Promise<CallbackResult>
 }

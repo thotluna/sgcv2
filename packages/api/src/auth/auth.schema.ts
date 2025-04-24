@@ -13,7 +13,7 @@ export const httpClientCodeSchema = z.object({
   body: clientCodeSchema,
 })
 
-export const singInSchema = z.object({
+export const signInSchema = z.object({
   email: z.string().email('El email no es valido'),
   password: z
     .string()
@@ -22,13 +22,13 @@ export const singInSchema = z.object({
 })
 
 export const httpSingInSchema = z.object({
-  body: singInSchema,
+  body: signInSchema,
 })
 
-export const singUpSchema = singInSchema.merge(clientCodeSchema)
+export const signUpSchema = signInSchema.merge(clientCodeSchema)
 
-export const httpSingUpSchema = z.object({
-  body: singUpSchema,
+export const httpSignUpSchema = z.object({
+  body: signUpSchema,
 })
 
 export const authorizeSchema = z.object({

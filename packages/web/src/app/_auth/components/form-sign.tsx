@@ -3,10 +3,10 @@
 import {
   singInSubmitHandler,
   singUpSubmitHandler,
-} from '../singSubmitServerAction'
+} from '../signSubmitServerAction'
 import { Result, SingInDTO, SingUpDTO } from '../types'
-import { SingInForm } from './singin-form'
-import { SingUpForm } from './singup-form'
+import { SingInForm } from './signin-form'
+import { SingUpForm } from './signup-form'
 import { redirect, useSearchParams } from 'next/navigation'
 
 export function FormSing() {

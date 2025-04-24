@@ -57,13 +57,13 @@ export class SupabaseAuthRepository implements AuthRepository {
    * @param password Password of the user
    * @returns Promise<boolean>
    */
-  singUp = async (email: string, password: string) => {
-    const singUpData = {
+  signUp = async (email: string, password: string) => {
+    const signUpData = {
       email,
       password,
     }
 
-    const { data, error } = await this.client.auth.signUp(singUpData)
+    const { data, error } = await this.client.auth.signUp(signUpData)
 
     if (error) {
       if (
@@ -86,14 +86,14 @@ export class SupabaseAuthRepository implements AuthRepository {
    * @param password Password of the user
    * @returns Promise<boolean>
    */
-  singIn = async (email: string, password: string) => {
-    const singInData = {
+  signIn = async (email: string, password: string) => {
+    const signInData = {
       email,
       password,
     }
 
     const { error, data } =
-      await this.client.auth.signInWithPassword(singInData)
+      await this.client.auth.signInWithPassword(signInData)
 
     if (error) {
       if (error.status === 400) {

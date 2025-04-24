@@ -1,5 +1,5 @@
 import { ErrorUrl } from './_auth/components/error-url'
-import { FormSing } from '@/app/_auth/components/form-sing'
+import { FormSing } from '@/app/_auth/components/form-sign'
 import { DateTime } from '@/components/ui/date-time'
 import ThemeSwitch from '@/components/ui/theme-switch'
 import { Suspense } from 'react'

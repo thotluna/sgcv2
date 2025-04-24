@@ -1,8 +1,5 @@
-import request from 'supertest'
 import { AuthResponseBuilder } from '../../utils/auth-response-builder'
 import { AuthError } from '../errors'
-import './auth.test-base'
-import { app } from './auth.test-base'
 import {
   authRoute,
   data,
@@ -10,13 +7,16 @@ import {
   repositoryValidateCode,
   signupData,
 } from './auth.configtest'
+import './auth.test-base'
+import { app } from './auth.test-base'
+import request from 'supertest'
 
-describe('POST /singup', () => {
+describe('POST /signup', () => {
   test('happy past', () => {
     repositoryValidateCode.resolve()
     repositorySignUp.resolve()
     return request(app)
-      .post(authRoute.SING_UP)
+      .post(authRoute.SIGN_UP)
       .send(signupData)
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
@@ -35,7 +35,7 @@ describe('POST /singup', () => {
 
   test('bad request, password invalid format', () => {
     return request(app)
-      .post(authRoute.SING_UP)
+      .post(authRoute.SIGN_UP)
       .send({ ...signupData, password: '123' })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
@@ -53,7 +53,7 @@ describe('POST /singup', () => {
 
   test('bad request, email invalid format', () => {
     return request(app)
-      .post('/v1/auth/singup')
+      .post('/v1/auth/signup')
       .send({ ...signupData, email: 'alan.com' })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
@@ -71,7 +71,7 @@ describe('POST /singup', () => {
 
   test('bad request, code client invalid format', () => {
     return request(app)
-      .post(authRoute.SING_UP)
+      .post(authRoute.SIGN_UP)
       .send({ ...signupData, clientCode: '123' })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
@@ -89,7 +89,7 @@ describe('POST /singup', () => {
 
   test('bad request, res empty', () => {
     return request(app)
-      .post(authRoute.SING_UP)
+      .post(authRoute.SIGN_UP)
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(400)
@@ -107,7 +107,7 @@ describe('POST /singup', () => {
   test('error, code client refused', () => {
     repositoryValidateCode.reject(new AuthError('Codigo de cliente no válido'))
     return request(app)
-      .post(authRoute.SING_UP)
+      .post(authRoute.SIGN_UP)
       .send(signupData)
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
@@ -126,7 +126,7 @@ describe('POST /singup', () => {
   test('error, any other', () => {
     repositoryValidateCode.reject(new Error('any other error'))
     return request(app)
-      .post(authRoute.SING_UP)
+      .post(authRoute.SIGN_UP)
       .send(signupData)
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
@@ -147,7 +147,7 @@ describe('POST /singup', () => {
     repositorySignUp.reject(new AuthError('El email ya esta registrado'))
 
     return request(app)
-      .post(authRoute.SING_UP)
+      .post(authRoute.SIGN_UP)
       .send(signupData)
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)

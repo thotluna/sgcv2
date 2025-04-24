@@ -58,11 +58,11 @@ export class AuthController {
     }
   }
 
-  singUp = async (req: Request, res: Response, next: NextFunction) => {
+  signUp = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password, clientCode } = req.body
 
     try {
-      const data = await this.service.singUp(email, password, clientCode)
+      const data = await this.service.signUp(email, password, clientCode)
       res.send(new AuthResponseBuilder().data(data).build())
     } catch (error) {
       if (error instanceof AuthError) {
@@ -81,11 +81,11 @@ export class AuthController {
     }
   }
 
-  singIn = async (req: Request, res: Response, next: NextFunction) => {
+  signIn = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body
 
     try {
-      const data = await this.service.singIn(email, password)
+      const data = await this.service.signIn(email, password)
 
       res.send(new AuthResponseBuilder().data(data).build())
     } catch (error) {
@@ -128,11 +128,11 @@ export class AuthController {
     const { code, error, error_description } = req.query
 
     if (error && error_description === 'Database error saving new user') {
-      res.redirect('http://localhost:3000/?singUp=true')
+      res.redirect('http://localhost:3000/?signUp=true')
       return
     }
     if (!code) {
-      res.redirect('http://localhost:3000/?singUp=true')
+      res.redirect('http://localhost:3000/?signUp=true')
       return
     }
 

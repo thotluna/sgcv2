@@ -1,7 +1,7 @@
 import test, { expect } from '@playwright/test'
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('http://localhost:3000/?singUp=true')
+  await page.goto('http://localhost:3000/signUp=true')
 })
 
 test('has title', async ({ page }) => {

@@ -12,17 +12,17 @@ export class AuthService {
     return await this.repository.validateCodeClient(codeClient)
   }
 
-  async singUp(email: string, password: string, clientCode: string) {
+  async signUp(email: string, password: string, clientCode: string) {
     await this.repository.validateCodeClient(clientCode)
-    const data = await this.repository.singUp(email, password)
+    const data = await this.repository.signUp(email, password)
     if (data) {
       await this.closeCodeClient(clientCode)
     }
     return data
   }
 
-  async singIn(email: string, password: string) {
-    return await this.repository.singIn(email, password)
+  async signIn(email: string, password: string) {
+    return await this.repository.signIn(email, password)
   }
 
   async closeCodeClient(codeClient: string) {
