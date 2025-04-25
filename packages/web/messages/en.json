@@ -14,7 +14,11 @@
   "validation": {
     "email_invalid": "The email is invalid",
     "password_min_length": "The password must have at least 8 characters",
-    "password_max_length": "The password must have less than 36 characters"
+    "password_max_length": "The password must have less than 36 characters",
+    "client_code_invalid_format": "Client code has an invalid format",
+    "client_code_required": "Client code is required",
+    "client_code_invalid_validation": "Client code invalid validation",
+    "password_not_match": "Passwords do not match"
   },
   "SignInPage": {
     "title": "Sign In",
@@ -27,12 +31,8 @@
   "RegisterPage": {
     "title": "Register",
     "client_code": "Client code",
-    "client_code_invalid_format": "Client code has an invalid format",
-    "client_code_required": "Client code is required",
-    "client_code_invalid_validation": "Client code invalid validation",
     "confirm_password": "Confirm password",
-    "password_not_match": "Passwords do not match",
-    "phase_sign": "If you already have an account, sign in",
+    "phase_sign": "If you already have an account, sign in ",
     "phase_link": "here"
   },
   "ErrorPage": {

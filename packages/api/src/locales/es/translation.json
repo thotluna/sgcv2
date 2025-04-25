@@ -1,6 +1,8 @@
 {
   "auth_error_invalid_client_code": "Codigo de cliente no válido.",
-  "client_code_required": "Se requiere codigo de cliente",
+  "client_code_required": "Se requiere codigo de cliente ***",
+  "email_required": "Se requiere email",
+  "customer_code_required": "Se requiere codigo de cliente",
   "unknown_error": "¡Ups! Algo salió mal.",
   "db_conexion_error": "error en la conexion. por favor intentelo mas tarde",
   "auth_email_already_registed": "El email ya esta registrado",

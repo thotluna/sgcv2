@@ -11,6 +11,7 @@ export const schemaValidation =
       next()
     } catch (error) {
       if (error instanceof ZodError) {
+        console.log({ error: error.issues[0].message }, 'middleware')
         res.status(400).send(
           new AuthResponseBuilder()
             .code(400)
