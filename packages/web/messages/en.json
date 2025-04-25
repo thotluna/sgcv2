@@ -1,5 +1,45 @@
 {
   "HomePage": {
-    "title": "Hello world!"
+    "title": "Management and Control System"
+  },
+  "SignPages": {
+    "email": "E-mail",
+    "email_placeholder": "write here email address",
+    "password": "Password",
+    "toggle_password_visibility": "Toggle password visibility",
+    "clear": "Clear",
+    "submit": "Submit",
+    "error_submit": "Error in connection. please try again later"
+  },
+  "validation": {
+    "email_invalid": "The email is invalid",
+    "password_min_length": "The password must have at least 8 characters",
+    "password_max_length": "The password must have less than 36 characters"
+  },
+  "SignInPage": {
+    "title": "Sign In",
+    "title_social": "Or sign in with:",
+    "google": "Google",
+    "linkedin": "Linkedin",
+    "phase_register": "If you don't have an account, register ",
+    "phase_link": "here"
+  },
+  "RegisterPage": {
+    "title": "Register",
+    "client_code": "Client code",
+    "client_code_invalid_format": "Client code has an invalid format",
+    "client_code_required": "Client code is required",
+    "client_code_invalid_validation": "Client code invalid validation",
+    "confirm_password": "Confirm password",
+    "password_not_match": "Passwords do not match",
+    "phase_sign": "If you already have an account, sign in",
+    "phase_link": "here"
+  },
+  "ErrorPage": {
+    "title": "Error",
+    "description": "Something went wrong. Please try again later."
+  },
+  "GetUserError": {
+    "user_not_found": "User not found"
   }
 }

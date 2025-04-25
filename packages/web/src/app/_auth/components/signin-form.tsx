@@ -1,6 +1,7 @@
 'use client'
 
 import { GoogleIcon } from '../../../components/ui/google-icon'
+import { getSignInFormSchema } from '../auth.schemas'
 import { signInWithGoogle, signInWithLinkedin } from '../oauth.actions'
 import { SingInDTO } from '../types'
 import { Button } from '@/components/ui/button'
@@ -15,39 +16,34 @@ import {
 import { Input } from '@/components/ui/input'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Eye, EyeOff, Linkedin } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
-
-const formSchema = z.object({
-  email: z.string().email('El email no es valido'),
-  password: z
-    .string()
-    .min(8, 'La contraseña debe tener al menos 8 caracteres')
-    .max(50, 'La contraseña no puede tener más de 50 caracteres'),
-})
 
 export function SingInForm({
   onSubmit,
 }: {
   onSubmit: (dataform: SingInDTO) => Promise<void>
 }) {
-  console.log('sing in form')
   const [passwordVisible, setPasswordVisible] = useState(false)
+  const traslateValidation = useTranslations('validation')
+
   const form = useForm<SingInDTO>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(getSignInFormSchema(traslateValidation)),
     defaultValues: {
       email: '',
       password: '',
     },
   })
+  const traslateSignIn = useTranslations('SignInPage')
+  const traslateShared = useTranslations('SignPages')
 
   return (
     <section className="w-full h-full flex items-center justify-center">
       <div className="max-w-sm w-full  flex flex-col gap-1">
         <h1 className="font-funnel text-4xl text-primary font-bold mb-8">
-          Ingresa
+          {traslateSignIn('title')}
         </h1>
         <Form {...form}>
           <form
@@ -59,11 +55,11 @@ export function SingInForm({
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>{traslateShared('email')}</FormLabel>
                   <FormControl>
                     <Input
                       autoComplete="username"
-                      placeholder="escribe aqui tu nombre de usuario"
+                      placeholder={traslateShared('email_placeholder')}
                       {...field}
                     />
                   </FormControl>
@@ -76,7 +72,9 @@ export function SingInForm({
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="password">Password</FormLabel>
+                  <FormLabel htmlFor="password">
+                    {traslateShared('password')}
+                  </FormLabel>
                   <FormControl>
                     <div className="flex items-center">
                       <Input
@@ -87,7 +85,9 @@ export function SingInForm({
                         {...field}
                       />
                       <Button
-                        aria-label="toggle password visibility"
+                        aria-label={traslateShared(
+                          'toggle_password_visibility',
+                        )}
                         variant="outline"
                         onClick={event => {
                           event.preventDefault()
@@ -110,36 +110,36 @@ export function SingInForm({
                 disabled={form.formState.isLoading}
                 type="submit"
               >
-                Submit
+                {traslateShared('submit')}
               </Button>
               <Button
                 variant="outline"
                 type="reset"
                 onClick={() => form.reset()}
               >
-                Reset
+                {traslateShared('clear')}
               </Button>
             </div>
           </form>
         </Form>
         <div className="flex flex-col gap-4">
           <div className="h-[1px] border-b-2 border-primary opacity-20 mt-6"></div>
-          <p className="text-sm">Tambien puedes ingresar con:</p>
+          <p className="text-sm">{traslateSignIn('title_social')}</p>
           <div className="flex justify-center gap-4">
             <Button onClick={signInWithLinkedin} variant="outline" size="sm">
               <Linkedin />
-              Linkedin
+              {traslateSignIn('linkedin')}
             </Button>
             <Button onClick={signInWithGoogle} variant="outline" size="sm">
-              <GoogleIcon /> Google
+              <GoogleIcon /> {traslateSignIn('google')}
             </Button>
           </div>
         </div>
         <div>
           <p className="text-sm opacity-80 mt-8 text-center">
-            Si aún no tienes una cuenta, registrate{' '}
-            <Link href="/?singUp=true" className="text-primary">
-              aquí
+            {traslateSignIn('phase_register')}
+            <Link href="/register" className="text-primary">
+              {traslateSignIn('phase_link')}
             </Link>
           </p>
         </div>

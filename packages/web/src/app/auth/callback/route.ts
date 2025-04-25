@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
 
   if (!accessToken) {
     const url = request.nextUrl.clone()
-    url.pathname = '/?signUp=true'
+    url.pathname = '/register'
     return NextResponse.redirect(url)
   }
 
