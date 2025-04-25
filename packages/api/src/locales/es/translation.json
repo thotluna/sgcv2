@@ -1,5 +1,7 @@
 {
   "auth_error_invalid_client_code": "Codigo de cliente no válido.",
+  "code_not_found": "Codigo no encontrado.",
+  "jwt malformed": "Error en el formato jwt",
   "client_code_required": "Se requiere codigo de cliente ***",
   "email_required": "Se requiere email",
   "customer_code_required": "Se requiere codigo de cliente",

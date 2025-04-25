@@ -16,7 +16,7 @@ describe('auth /code/validate test', () => {
     repositoryValidateCode.resolve()
     return request(app)
       .post(authRoute.VALIDATE_CODE)
-      .send({ clientCode: clientCode.correct })
+      .send({ code: clientCode.correct })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(200)
@@ -47,13 +47,9 @@ describe('auth /code/validate test', () => {
   })
 
   test('code invalid', () => {
-    const message = i18nInstance.t('auth_error_invalid_client_code', {
-      lng: 'es',
-    })
-
     return request(app)
       .post(authRoute.VALIDATE_CODE)
-      .send({ clientCode: clientCode.incorrect })
+      .send({ code: clientCode.incorrect })
       .set('Accept', 'application/json')
       .set('Accept-Language', 'es')
       .expect('Content-Type', /json/)
@@ -63,7 +59,7 @@ describe('auth /code/validate test', () => {
           new AuthResponseBuilder()
             .status('error')
             .code(400)
-            .message(message)
+            .message(i18nInstance.t('jwt malformed'))
             .build(),
         )
       })
@@ -75,7 +71,7 @@ describe('auth /code/validate test', () => {
     )
     return request(app)
       .post(authRoute.VALIDATE_CODE)
-      .send({ clientCode: clientCode.correct })
+      .send({ code: clientCode.correct })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(401)
@@ -94,7 +90,7 @@ describe('auth /code/validate test', () => {
     repositoryValidateCode.reject(new DBErrorConexion('db_conexion_error'))
     return request(app)
       .post(authRoute.VALIDATE_CODE)
-      .send({ clientCode: clientCode.correct })
+      .send({ code: clientCode.correct })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(500)

@@ -42,7 +42,7 @@ export class SupabaseAuthRepository implements AuthRepository {
 
     if (error) {
       if (error.code === 'PGRST116') {
-        throw new AuthError('auth_error_invalid_client_code')
+        throw new AuthError('code_not_found')
       }
       throw new DBErrorConexion('db_conexion_error')
     }

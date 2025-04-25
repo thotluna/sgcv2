@@ -1,5 +1,7 @@
 {
   "auth_error_invalid_client_code": "Invalid client code.",
+  "code_not_found": "Codigo no encontrado.",
+  "jwt malformed": "jwt malformed",
   "client_code_required": "Client code is required",
   "unknown_error": "Oops! Something went wrong.",
   "db_conexion_error": "Oops! We had a problem. Please try again later.",

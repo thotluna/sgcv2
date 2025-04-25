@@ -1,4 +1,5 @@
 import { AuthResponseBuilder } from '../utils/auth-response-builder'
+import { CustomerCodeTokeError } from '../utils/jwt-customer-code'
 import { SUPABASE_URLs } from './auth.repository'
 import { AuthService } from './auth.service'
 import { AuthError, DBErrorConexion } from './errors'
@@ -55,6 +56,18 @@ export class AuthController {
           )
         return
       }
+      if (error instanceof CustomerCodeTokeError) {
+        res
+          .status(400)
+          .send(
+            new AuthResponseBuilder()
+              .status('error')
+              .code(400)
+              .message(req.t(error.message))
+              .build(),
+          )
+        return
+      }
       if (error instanceof DBErrorConexion) {
         res
           .status(500)
@@ -79,6 +92,18 @@ export class AuthController {
       res.send(new AuthResponseBuilder().data(data).build())
     } catch (error) {
       if (error instanceof AuthError) {
+        res
+          .status(400)
+          .send(
+            new AuthResponseBuilder()
+              .status('error')
+              .code(400)
+              .message(req.t(error.message))
+              .build(),
+          )
+        return
+      }
+      if (error instanceof CustomerCodeTokeError) {
         res
           .status(400)
           .send(

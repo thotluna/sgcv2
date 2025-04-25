@@ -19,16 +19,8 @@ export class AuthService {
   }
 
   async validateCustomerCode(code: string) {
-    try {
-      new CustomerCodeJwtHelper().verificarToken(code)
-
-      return await this.repository.validateCustomerCode(code)
-    } catch (error) {
-      if ((error as Error).name === 'JsonWebTokenError') {
-        throw new AuthError('Invalid_code')
-      }
-      throw error
-    }
+    new CustomerCodeJwtHelper().verificarToken(code)
+    return await this.repository.validateCustomerCode(code)
   }
 
   async signUp(email: string, password: string, code: string) {

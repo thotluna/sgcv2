@@ -13,11 +13,12 @@ import request from 'supertest'
 
 describe('POST /signup', () => {
   test('happy past', () => {
+    const dataI = signupData
     repositoryValidateCode.resolve()
     repositorySignUp.resolve()
     return request(app)
       .post(authRoute.SIGN_UP)
-      .send(signupData)
+      .send(dataI)
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(200)
@@ -72,7 +73,7 @@ describe('POST /signup', () => {
   test('bad request, code client invalid format', () => {
     return request(app)
       .post(authRoute.SIGN_UP)
-      .send({ ...signupData, clientCode: '123' })
+      .send({ ...signupData, code: '123' })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(400)
@@ -82,7 +83,7 @@ describe('POST /signup', () => {
             .status('error')
             .code(400)
             .message(
-              i18nInstance.t('auth_error_invalid_client_code', {
+              i18nInstance.t('jwt malformed', {
                 lng: 'es',
               }),
             )
@@ -92,9 +93,7 @@ describe('POST /signup', () => {
   })
 
   test('error, code client refused', () => {
-    repositoryValidateCode.reject(
-      new AuthError('auth_error_invalid_client_code'),
-    )
+    repositoryValidateCode.reject(new AuthError('code_not_found'))
     return request(app)
       .post(authRoute.SIGN_UP)
       .send(signupData)
@@ -106,9 +105,7 @@ describe('POST /signup', () => {
           new AuthResponseBuilder()
             .status('error')
             .code(400)
-            .message(
-              i18nInstance.t('auth_error_invalid_client_code', { lng: 'es' }),
-            )
+            .message(i18nInstance.t('code_not_found'))
             .build(),
         )
       })

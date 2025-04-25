@@ -1,3 +1,4 @@
+import { CustomerCodeJwtHelper } from '../../utils/jwt-customer-code'
 import { AuthsRepository, UserResponse } from '../types'
 
 export const authRepository: AuthsRepository = {
@@ -18,7 +19,7 @@ export const repositoryValidateCode = {
 
 export const authRoute = {
   VALIDATE_CODE: '/v1/auth/code/validate',
-  SIGN_UP: '/v1/auth/SIGNup',
+  SIGN_UP: '/v1/auth/signup',
   SIGN_IN: '/v1/auth/signin',
   AUTHORIZE: '/v1/auth/authorize',
   CALLBACK: '/v1/auth/callback',
@@ -26,14 +27,14 @@ export const authRoute = {
 }
 
 export const clientCode = {
-  correct: '123!@#&*-456789aB-cDeFgHiJ-kLmNoPqR',
+  correct: new CustomerCodeJwtHelper().crearToken('qw@qw.co'),
   incorrect: 'code invalid',
 }
 
 export const signupData = {
   email: 'alan@gmail.com',
   password: '12345678',
-  clientCode: '123!@#&*-456789aB-cDeFgHiJ-kLmNoPqR',
+  code: new CustomerCodeJwtHelper().crearToken('alan@gmail.com'),
 }
 
 export const data = {

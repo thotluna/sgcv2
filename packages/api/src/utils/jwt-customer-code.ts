@@ -26,8 +26,7 @@ export class CustomerCodeJwtHelper {
         expiresIn: EXPIRATION_TIME,
       })
       return token
-    } catch (error) {
-      console.error('Error al crear el token:', error)
+    } catch {
       throw new CustomerCodeTokeError('Falló la creación del token.')
     }
   }
@@ -37,16 +36,15 @@ export class CustomerCodeJwtHelper {
 
     try {
       const decode = jwt.verify(token, this.SECRET!) as VerifiedTokenPayload
-
       return decode
     } catch (error) {
       if (error instanceof jwt.JsonWebTokenError) {
-        throw new CustomerCodeTokeError('Invalid_code')
-      } else if (error instanceof jwt.TokenExpiredError) {
+        throw new CustomerCodeTokeError(error.message)
+      }
+      if (error instanceof jwt.TokenExpiredError) {
         throw new CustomerCodeTokeError('Expired_code')
       }
-      console.error('Error, intent verifier token', (error as Error).message)
-      throw new CustomerCodeTokeError('Invalid_code')
+      throw new CustomerCodeTokeError((error as Error).message)
     }
   }
 
