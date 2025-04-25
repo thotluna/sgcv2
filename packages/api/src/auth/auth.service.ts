@@ -1,12 +1,8 @@
+import { CustomerCodeJwtHelper } from '../utils/jwt-customer-code'
 import { AuthError } from './errors'
 import { generatePKCEParams } from './oauth'
 import { AuthsRepository } from './types'
 import jwt from 'jsonwebtoken'
-
-type TokenPayload = {
-  email: string
-  exp: number
-}
 
 export class AuthService {
   private repository: AuthsRepository
@@ -24,7 +20,7 @@ export class AuthService {
 
   async validateCustomerCode(code: string) {
     try {
-      this.validateJwt(code)
+      new CustomerCodeJwtHelper().verificarToken(code)
 
       return await this.repository.validateCustomerCode(code)
     } catch (error) {
@@ -35,26 +31,11 @@ export class AuthService {
     }
   }
 
-  private validateJwt(code: string, email?: string | undefined) {
-    const { SECRET } = process.env
-    const decoded = jwt.verify(code, SECRET!)
-    if (!decoded) {
-      throw new AuthError('Invalid_code')
-    }
-
-    const { exp, email: decodedEmail } = decoded as TokenPayload
-
-    if (exp < Date.now() / 1000) {
-      throw new AuthError('Expired_code')
-    }
-
-    if (email && decodedEmail !== email) {
-      throw new AuthError('Invalid_code')
-    }
-  }
-
   async signUp(email: string, password: string, code: string) {
-    this.validateJwt(code, email)
+    const payload = new CustomerCodeJwtHelper().verificarToken(code)
+    if (payload.email !== email) {
+      throw new AuthError('Invalid_code')
+    }
 
     await this.repository.validateCustomerCode(code)
     const data = await this.repository.signUp(email, password)
