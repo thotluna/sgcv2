@@ -18,19 +18,34 @@ export class SupabaseAuthRepository implements AuthRepository {
     process.env.SUPABASE_SERVICE_ROL!,
   )
 
-  validateCodeClient = async (codeClient: string) => {
-    const beforeTime = new Date(Date.now() - 72 * 60 * 60 * 1000)
+  saveCustomerCode = async (token: string, email: string) => {
+    const { data, error } = await this.client
+      .from('clientcode')
+      .insert([{ code: token, email }])
+      .select()
+
+    console.log({ data, error })
+
+    return data
+  }
+
+  validateCustomerCode = async (code: string) => {
+    // const beforeTime = new Date(Date.now() - 72 * 60 * 60 * 1000)
+    console.log('Validating client code', code)
 
     const { error } = await this.client
       .from('clientcode')
       .select('created_at, claimed')
-      .eq('code', codeClient)
+      .eq('code', code)
       .eq('claimed', false)
-      .gte('created_at', beforeTime.toISOString())
+      // .gte('created_at', beforeTime.toISOString())
       .single()
+
+    console.log({ error }, 'select')
 
     if (error) {
       if (error.code === 'PGRST116') {
+        console.log('Client code not found PGREST')
         throw new AuthError('auth_error_invalid_client_code')
       }
       throw new DBErrorConexion('db_conexion_error')
@@ -79,11 +94,11 @@ export class SupabaseAuthRepository implements AuthRepository {
     return data
   }
 
-  closeCodeClient = async (codeClient: string) => {
+  closeCustomerCode = async (code: string) => {
     const { error } = await this.client
       .from('clientcode')
       .update({ claimed: true })
-      .eq('code', codeClient)
+      .eq('code', code)
       .eq('claimed', false)
       .single()
 

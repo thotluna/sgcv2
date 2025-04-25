@@ -1,18 +1,19 @@
 import { AuthsRepository, UserResponse } from '../types'
 
 export const authRepository: AuthsRepository = {
-  validateCodeClient: jest.fn(),
+  saveCustomerCode: jest.fn(),
+  validateCustomerCode: jest.fn(),
   signUp: jest.fn(),
   signIn: jest.fn(),
-  closeCodeClient: jest.fn(),
+  closeCustomerCode: jest.fn(),
   callback: jest.fn(),
   getUser: jest.fn(),
 }
 export const repositoryValidateCode = {
   resolve: () =>
-    (authRepository.validateCodeClient as jest.Mock).mockResolvedValue(true),
+    (authRepository.validateCustomerCode as jest.Mock).mockResolvedValue(true),
   reject: (error: Error) =>
-    (authRepository.validateCodeClient as jest.Mock).mockRejectedValue(error),
+    (authRepository.validateCustomerCode as jest.Mock).mockRejectedValue(error),
 }
 
 export const authRoute = {

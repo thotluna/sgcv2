@@ -28,12 +28,12 @@ describe('SupabaseAuthRepository.validateCodeClient', () => {
 
   it('resuelve true cuando no hay error', async () => {
     mockClient.single.mockResolvedValue({ error: null })
-    await expect(repo.validateCodeClient('test')).resolves.toBe(true)
+    await expect(repo.validateCustomerCode('test')).resolves.toBe(true)
   })
 
   it('lanza DBErrorConexion("db_conexion_error") en caso de error genérico', async () => {
     mockClient.single.mockResolvedValue({ error: { message: 'otra falla' } })
-    await expect(repo.validateCodeClient('test')).rejects.toThrow(
+    await expect(repo.validateCustomerCode('test')).rejects.toThrow(
       new DBErrorConexion('db_conexion_error'),
     )
   })

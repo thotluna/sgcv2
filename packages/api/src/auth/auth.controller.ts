@@ -12,19 +12,32 @@ export class AuthController {
     this.service = service
   }
 
-  validationClientCode = async (
+  customerCode = async (req: Request, res: Response, next: NextFunction) => {
+    const { email } = req.body
+
+    try {
+      const token = await this.service.customerCode(email)
+      res.send(
+        new AuthResponseBuilder().status('success').data({ token }).build(),
+      )
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  validationCustomerCode = async (
     req: Request,
     res: Response,
     next: NextFunction,
   ) => {
-    const { clientCode } = req.body
+    const { code } = req.body
 
     try {
-      await this.service.validateCodeClient(clientCode)
+      await this.service.validateCodeClient(code)
 
       const response: ApiResponse<ClientCodeType> = {
         status: 'success',
-        data: clientCode,
+        data: code,
         code: 200,
       }
 
@@ -59,10 +72,10 @@ export class AuthController {
   }
 
   signUp = async (req: Request, res: Response, next: NextFunction) => {
-    const { email, password, clientCode } = req.body
+    const { email, password, code } = req.body
 
     try {
-      const data = await this.service.signUp(email, password, clientCode)
+      const data = await this.service.signUp(email, password, code)
       res.send(new AuthResponseBuilder().data(data).build())
     } catch (error) {
       if (error instanceof AuthError) {

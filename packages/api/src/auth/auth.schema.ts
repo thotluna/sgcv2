@@ -1,16 +1,32 @@
 import { z } from 'zod'
 
-export const clientCodeSchema = z.object({
-  clientCode: z
-    .string({ required_error: 'client_code_required' })
-    .regex(
-      /^[a-zA-z0-9!@#&*]{8}-[a-zA-z0-9!@#&*]{8}-[a-zA-z0-9!@#&*]{8}-[a-zA-z0-9!@#&*]{8}$/,
-      { message: 'auth_error_invalid_client_code' },
-    ),
+// export const clientCodeSchema = z.object({
+//   clientCode: z
+//     .string({ required_error: 'client_code_required' })
+//     .regex(
+//       /^[a-zA-z0-9!@#&*]{8}-[a-zA-z0-9!@#&*]{8}-[a-zA-z0-9!@#&*]{8}-[a-zA-z0-9!@#&*]{8}$/,
+//       { message: 'auth_error_invalid_client_code' },
+//     ),
+// })
+
+// export const httpClientCodeSchema = z.object({
+//   body: clientCodeSchema,
+// })
+
+export const customerCodeSchema = z.object({
+  code: z.string({ required_error: 'client_code_required' }),
 })
 
-export const httpClientCodeSchema = z.object({
-  body: clientCodeSchema,
+export const httpCustomerCodeSchema = z.object({
+  body: customerCodeSchema,
+})
+
+export const httpEmailCodeSchema = z.object({
+  body: z.object({
+    email: z
+      .string({ required_error: 'email_required' })
+      .email('email_invalid'),
+  }),
 })
 
 export const signInSchema = z.object({
@@ -25,7 +41,7 @@ export const httpSingInSchema = z.object({
   body: signInSchema,
 })
 
-export const signUpSchema = signInSchema.merge(clientCodeSchema)
+export const signUpSchema = signInSchema.merge(customerCodeSchema)
 
 export const httpSignUpSchema = z.object({
   body: signUpSchema,
