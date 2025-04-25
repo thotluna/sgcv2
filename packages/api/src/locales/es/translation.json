@@ -13,5 +13,7 @@
   "not_found_anonymous_key": "No se ha encontrado la clave anonima",
   "token_required": "Se requiere token de acceso",
   "token_without_user": "Token no retorna user",
-  "provider_invalid": "El provider debe ser 'google' o 'github'"
+  "Invalid_code": "Codigo invalido",
+  "provider_invalid": "El provider debe ser 'google' o 'github'",
+  "Expired_code": "Codigo expirado"
 }

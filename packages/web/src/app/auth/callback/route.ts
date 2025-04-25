@@ -2,8 +2,6 @@ import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest) {
-  console.log({ request })
-
   const cookieStore = await cookies()
   const accessToken = cookieStore.get('access_token')
 

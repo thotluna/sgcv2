@@ -11,5 +11,7 @@
   "not_found_anonymous_key": "Not found anonymous key",
   "token_required": "Access token required",
   "token_without_user": "Token without user",
-  "provider_invalid": "The provider must be 'google' or 'github'"
+  "Invalid_code": "Invalid code",
+  "provider_invalid": "The provider must be 'google' or 'github'",
+  "Expired_code": "Expired code"
 }

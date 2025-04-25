@@ -15,9 +15,9 @@
     "email_invalid": "El email no es valido",
     "password_min_length": "La contraseña debe tener al menos 8 caracteres",
     "password_max_length": "La contraseña no puede tener más de 36 caracteres",
-    "client_code_invalid_format": "Codigo de cliente tiene un formato invalido",
-    "client_code_required": "Se requiere codigo de cliente",
-    "client_code_invalid_validation": "Error al validar el codigo de cliente",
+    "customer_code_invalid_format": "Codigo de cliente tiene un formato invalido",
+    "customer_code_required": "Se requiere codigo de cliente",
+    "customer_code_invalid_validation": "Error al validar el codigo de cliente",
     "password_not_match": "Las contraseñas no coinciden"
   },
   "SignInPage": {
@@ -30,7 +30,7 @@
   },
   "RegisterPage": {
     "title": "Regístrate",
-    "client_code": "Código de cliente",
+    "customer_code": "Código de cliente",
     "confirm_password": "Confirmar contraseña",
     "phase_sign": "Si ya tienes una cuenta, ingresa ",
     "phase_link": "aquí"

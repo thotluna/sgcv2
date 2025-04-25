@@ -6,8 +6,6 @@ import ThemeSwitch from '@/components/ui/theme-switch'
 import { Suspense } from 'react'
 
 export default function Register() {
-  console.log('register pages')
-
   return (
     <section className="w-screen h-screen grid grid-cols-2">
       <div className="bg-[url(/images/bg.avif)] bg-cover bg-center bg-no-repeat flex flex-col items-center justify-center h-full text-emerald-50 font-funnel">

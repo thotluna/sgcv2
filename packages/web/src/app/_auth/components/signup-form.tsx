@@ -1,6 +1,6 @@
 'use client'
 
-import { getSignUpFormSchema, SingUpFormSchema } from '../auth.schemas'
+import { getSignUpFormSchema } from '../auth.schemas'
 import { SingUpDTO } from '../types'
 import { Button } from '@/components/ui/button'
 import {
@@ -18,7 +18,6 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
 
 export function SingUpForm({
   onSubmit,
@@ -31,11 +30,11 @@ export function SingUpForm({
   const traslateRegisterPage = useTranslations('RegisterPage')
   const traslateShared = useTranslations('SignPages')
 
-  const form = useForm<z.infer<typeof SingUpFormSchema>>({
+  const form = useForm<SingUpDTO>({
     resolver: zodResolver(getSignUpFormSchema(traslateValidation)),
     reValidateMode: 'onBlur',
     defaultValues: {
-      clientCode: '',
+      code: '',
       email: '',
       password: '',
       confirmPassword: '',
@@ -55,10 +54,10 @@ export function SingUpForm({
           >
             <FormField
               control={form.control}
-              name="clientCode"
+              name="code"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{traslateRegisterPage('client_code')}</FormLabel>
+                  <FormLabel>{traslateRegisterPage('customer_code')}</FormLabel>
                   <FormControl>
                     <Input
                       autoComplete="off"

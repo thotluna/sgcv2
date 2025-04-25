@@ -1,4 +1,4 @@
-import { AuthError, DBErrorConexion } from './errors'
+import { AuthError, DBError, DBErrorConexion } from './errors'
 import {
   AuthsRepository as AuthRepository,
   CallbackResult,
@@ -24,28 +24,24 @@ export class SupabaseAuthRepository implements AuthRepository {
       .insert([{ code: token, email }])
       .select()
 
-    console.log({ data, error })
+    if (error) {
+      throw new DBError(error.message)
+    }
 
     return data
   }
 
+  // Deprecated
   validateCustomerCode = async (code: string) => {
-    // const beforeTime = new Date(Date.now() - 72 * 60 * 60 * 1000)
-    console.log('Validating client code', code)
-
     const { error } = await this.client
       .from('clientcode')
       .select('created_at, claimed')
       .eq('code', code)
       .eq('claimed', false)
-      // .gte('created_at', beforeTime.toISOString())
       .single()
-
-    console.log({ error }, 'select')
 
     if (error) {
       if (error.code === 'PGRST116') {
-        console.log('Client code not found PGREST')
         throw new AuthError('auth_error_invalid_client_code')
       }
       throw new DBErrorConexion('db_conexion_error')

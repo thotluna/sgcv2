@@ -33,7 +33,7 @@ export class AuthController {
     const { code } = req.body
 
     try {
-      await this.service.validateCodeClient(code)
+      await this.service.validateCustomerCode(code)
 
       const response: ApiResponse<ClientCodeType> = {
         status: 'success',

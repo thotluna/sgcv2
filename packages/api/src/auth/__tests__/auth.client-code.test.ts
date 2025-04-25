@@ -50,7 +50,6 @@ describe('auth /code/validate test', () => {
     const message = i18nInstance.t('auth_error_invalid_client_code', {
       lng: 'es',
     })
-    // console.log(message)
 
     return request(app)
       .post(authRoute.VALIDATE_CODE)
