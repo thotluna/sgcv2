@@ -3,35 +3,39 @@
     "title": "Management and Control System"
   },
   "SignPages": {
-    "email": "E-mail",
-    "email_placeholder": "write here email address",
+    "email": "Email",
+    "email_placeholder": "Enter your email address",
     "password": "Password",
-    "toggle_password_visibility": "Toggle password visibility",
+    "toggle_password_visibility": "Show password",
     "clear": "Clear",
     "submit": "Submit",
-    "error_submit": "Error in connection. please try again later"
+    "error_submit": "Connection error. Please try again later"
   },
   "validation": {
-    "email_invalid": "The email is invalid",
-    "password_min_length": "The password must have at least 8 characters",
-    "password_max_length": "The password must have less than 36 characters",
-    "customer_code_invalid_format": "Customer Code has an invalid format",
-    "customer_code_required": "Customer Code is required",
-    "customer_code_invalid_validation": "Customer Code invalid validation",
-    "password_not_match": "Passwords do not match"
+    "email_invalid": "Email is not valid",
+    "password_min_length": "Password must have at least 8 characters",
+    "password_max_length": "Password cannot have more than 36 characters",
+    "customer_code_invalid_format": "Customer code has an invalid format",
+    "customer_code_required": "Customer code is required",
+    "customer_code_invalid_validation": "Error validating customer code",
+    "password_not_match": "Passwords do not match",
+    "jwt malformed": "Malformed JWT",
+    "credential_invalid": "Email or password is not valid"
   },
   "SignInPage": {
     "title": "Sign In",
-    "title_social": "Or sign in with:",
+    "title_social": "Or sign in with",
     "google": "Google",
-    "linkedin": "Linkedin",
-    "phase_register": "If you don't have an account, register ",
+    "linkedin": "LinkedIn",
+    "phase_register": "If you don't have an account, sign up ",
     "phase_link": "here"
   },
   "RegisterPage": {
     "title": "Register",
     "customer_code": "Customer Code",
-    "confirm_password": "Confirm password",
+    "code_not_found": "Code not found.",
+    "jwt malformed": "Malformed JWT",
+    "confirm_password": "Confirm Password",
     "phase_sign": "If you already have an account, sign in ",
     "phase_link": "here"
   },
