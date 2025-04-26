@@ -18,7 +18,9 @@ export type SignInFormSchemaType = z.infer<
 export function getSignUpFormSchema(t?: (key: string) => string) {
   return z
     .object({
-      code: z.string(),
+      code: z
+        .string()
+        .min(1, t?.('customer_code_required') || 'customer_code_required'),
       email: z.string().email(t?.('email_invalid') || 'email_invalid'),
       password: z
         .string()

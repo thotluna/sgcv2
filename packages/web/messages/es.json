@@ -31,6 +31,8 @@
   "RegisterPage": {
     "title": "Regístrate",
     "customer_code": "Código de cliente",
+    "code_not_found": "Codigo no encontrado.",
+    "jwt malformed": "Error en el formato jwt",
     "confirm_password": "Confirmar contraseña",
     "phase_sign": "Si ya tienes una cuenta, ingresa ",
     "phase_link": "aquí"

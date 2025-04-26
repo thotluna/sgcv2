@@ -66,9 +66,7 @@ describe('auth /code/validate test', () => {
   })
 
   test('code refused', () => {
-    repositoryValidateCode.reject(
-      new AuthError('auth_error_invalid_client_code'),
-    )
+    repositoryValidateCode.reject(new AuthError('code_not_found'))
     return request(app)
       .post(authRoute.VALIDATE_CODE)
       .send({ code: clientCode.correct })
@@ -80,7 +78,7 @@ describe('auth /code/validate test', () => {
           new AuthResponseBuilder()
             .status('error')
             .code(401)
-            .message(i18nInstance.t('auth_error_invalid_client_code'))
+            .message(i18nInstance.t('code_not_found'))
             .build(),
         )
       })
