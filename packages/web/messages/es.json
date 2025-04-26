@@ -18,7 +18,9 @@
     "customer_code_invalid_format": "Codigo de cliente tiene un formato invalido",
     "customer_code_required": "Se requiere codigo de cliente",
     "customer_code_invalid_validation": "Error al validar el codigo de cliente",
-    "password_not_match": "Las contraseñas no coinciden"
+    "password_not_match": "Las contraseñas no coinciden",
+    "jwt malformed": "Error en el formato jwt",
+    "credential_invalid": "El email o la contraseña no son validos"
   },
   "SignInPage": {
     "title": "Ingresa",
@@ -26,8 +28,7 @@
     "google": "Google",
     "linkedin": "Linkedin",
     "phase_register": "Si aún no tienes una cuenta, registrate ",
-    "phase_link": "aquí",
-    "credential_invalid": "El email o la contraseña no son validos"
+    "phase_link": "aquí"
   },
   "RegisterPage": {
     "title": "Regístrate",

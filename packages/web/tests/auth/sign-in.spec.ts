@@ -1,71 +1,58 @@
-import { factory } from '../utils'
-import test, { expect } from '@playwright/test'
+import { SignInPage } from './sign-in.pom'
+import { test } from '@playwright/test'
 
 const unregisteredCredentials = {
   email: 'test@sample.com',
   password: '123456789',
 }
 
-const transCommon = factory('SignPages')
-const transSignIn = factory('SignInPage')
-const transValidation = factory('validation')
-
 test.beforeEach(async ({ page }) => {
-  await page.goto('http://localhost:3000')
+  const signIn = new SignInPage(page)
+  await signIn.goto()
 })
 
 test.describe('Sign-in form validation errors', () => {
   test('should show invalid email error for malformed email', async ({
     page,
   }) => {
-    await page.getByLabel(transCommon('email')).fill('test@')
-    await page.getByRole('button', { name: transCommon('submit') }).click()
-
-    await expect(page.getByText(transValidation('email_invalid'))).toBeVisible()
+    const signIn = new SignInPage(page)
+    await signIn.fillEmail('test@')
+    await signIn.submit()
+    await signIn.expectErrorValidation('email_invalid')
   })
 
   test('should show email required error when email is empty', async ({
     page,
   }) => {
-    await page.getByRole('button', { name: transCommon('submit') }).click()
-
-    await expect(page.getByText(transValidation('email_invalid'))).toBeVisible()
+    const signIn = new SignInPage(page)
+    await signIn.submit()
+    await signIn.expectErrorValidation('email_invalid')
   })
 
   test('should show password invalid error for short password', async ({
     page,
   }) => {
-    await page.getByLabel(transCommon('password'), { exact: true }).fill('123')
-    await page.getByRole('button', { name: transCommon('submit') }).click()
-
-    await expect(
-      page.getByText(transValidation('password_min_length')),
-    ).toBeVisible()
+    const signIn = new SignInPage(page)
+    await signIn.fillPassword('123')
+    await signIn.submit()
+    await signIn.expectErrorValidation('password_min_length')
   })
 
   test('should show password required error when password is empty', async ({
     page,
   }) => {
-    await page.getByRole('button', { name: transCommon('submit') }).click()
-
-    await expect(
-      page.getByText(transValidation('password_min_length')),
-    ).toBeVisible()
+    const signIn = new SignInPage(page)
+    await signIn.submit()
+    await signIn.expectErrorValidation('password_min_length')
   })
 
   test('should show invalid credentials error for unregistered user', async ({
     page,
   }) => {
-    await page
-      .getByLabel(transCommon('email'))
-      .fill(unregisteredCredentials.email)
-    await page
-      .getByLabel(transCommon('password'), { exact: true })
-      .fill(unregisteredCredentials.password)
-    await page.getByRole('button', { name: transCommon('submit') }).click()
-
-    await expect(
-      page.getByText(transSignIn('credential_invalid')),
-    ).toBeVisible()
+    const signIn = new SignInPage(page)
+    await signIn.fillEmail(unregisteredCredentials.email)
+    await signIn.fillPassword(unregisteredCredentials.password)
+    await signIn.submit()
+    await signIn.expectErrorValidation('credential_invalid')
   })
 })
