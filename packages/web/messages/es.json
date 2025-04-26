@@ -26,7 +26,8 @@
     "google": "Google",
     "linkedin": "Linkedin",
     "phase_register": "Si aún no tienes una cuenta, registrate ",
-    "phase_link": "aquí"
+    "phase_link": "aquí",
+    "credential_invalid": "El email o la contraseña no son validos"
   },
   "RegisterPage": {
     "title": "Regístrate",

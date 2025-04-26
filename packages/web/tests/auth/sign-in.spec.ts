@@ -1,3 +1,4 @@
+import { factory } from '../utils'
 import test, { expect } from '@playwright/test'
 
 const unregisteredCredentials = {
@@ -5,62 +6,66 @@ const unregisteredCredentials = {
   password: '123456789',
 }
 
+const transCommon = factory('SignPages')
+const transSignIn = factory('SignInPage')
+const transValidation = factory('validation')
+
 test.beforeEach(async ({ page }) => {
   await page.goto('http://localhost:3000')
 })
 
-test.describe('has error', () => {
-  test('Given a bandly format email, then it returns error email invalid', async ({
+test.describe('Sign-in form validation errors', () => {
+  test('should show invalid email error for malformed email', async ({
     page,
   }) => {
-    await page.getByLabel('Correo electrónico').fill('test@')
-    await page.getByRole('button', { name: 'Enviar' }).click()
+    await page.getByLabel(transCommon('email')).fill('test@')
+    await page.getByRole('button', { name: transCommon('submit') }).click()
 
-    await expect(page.getByText('El email no es valido')).toBeVisible()
+    await expect(page.getByText(transValidation('email_invalid'))).toBeVisible()
   })
 
-  test('given an empty email, then return error email required', async ({
+  test('should show email required error when email is empty', async ({
     page,
   }) => {
-    await page.getByRole('button', { name: 'Enviar' }).click()
+    await page.getByRole('button', { name: transCommon('submit') }).click()
 
-    await expect(page.getByText('El email no es valido')).toBeVisible()
+    await expect(page.getByText(transValidation('email_invalid'))).toBeVisible()
   })
 
-  test('Given a bandly format password, then it returns error password invalid', async ({
+  test('should show password invalid error for short password', async ({
     page,
   }) => {
-    await page.getByLabel('Contraseña', { exact: true }).fill('123')
-    await page.getByRole('button', { name: 'Enviar' }).click()
+    await page.getByLabel(transCommon('password'), { exact: true }).fill('123')
+    await page.getByRole('button', { name: transCommon('submit') }).click()
 
     await expect(
-      page.getByText('La contraseña debe tener al menos 8 caracteres', {}),
+      page.getByText(transValidation('password_min_length')),
     ).toBeVisible()
   })
 
-  test('given an empty password, then return error password required', async ({
+  test('should show password required error when password is empty', async ({
     page,
   }) => {
-    await page.getByRole('button', { name: 'Enviar' }).click()
+    await page.getByRole('button', { name: transCommon('submit') }).click()
 
     await expect(
-      page.getByText('La contraseña debe tener al menos 8 caracteres', {}),
+      page.getByText(transValidation('password_min_length')),
     ).toBeVisible()
   })
 
-  test('Given email and password not registered, then returns invalid credentials', async ({
+  test('should show invalid credentials error for unregistered user', async ({
     page,
   }) => {
     await page
-      .getByLabel('Correo electrónico')
+      .getByLabel(transCommon('email'))
       .fill(unregisteredCredentials.email)
     await page
-      .getByLabel('Contraseña', { exact: true })
+      .getByLabel(transCommon('password'), { exact: true })
       .fill(unregisteredCredentials.password)
-    await page.getByRole('button', { name: 'Enviar' }).click()
+    await page.getByRole('button', { name: transCommon('submit') }).click()
 
     await expect(
-      page.getByText('El email o la contraseña no son validos'),
+      page.getByText(transSignIn('credential_invalid')),
     ).toBeVisible()
   })
 })
