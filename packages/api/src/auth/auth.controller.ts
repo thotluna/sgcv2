@@ -1,4 +1,5 @@
 import { AuthResponseBuilder } from '../utils/auth-response-builder'
+import { CustomerCodeTokeError } from '../utils/jwt-customer-code'
 import { SUPABASE_URLs } from './auth.repository'
 import { AuthService } from './auth.service'
 import { AuthError, DBErrorConexion } from './errors'
@@ -12,19 +13,32 @@ export class AuthController {
     this.service = service
   }
 
-  validationClientCode = async (
+  customerCode = async (req: Request, res: Response, next: NextFunction) => {
+    const { email } = req.body
+
+    try {
+      const token = await this.service.customerCode(email)
+      res.send(
+        new AuthResponseBuilder().status('success').data({ token }).build(),
+      )
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  validationCustomerCode = async (
     req: Request,
     res: Response,
     next: NextFunction,
   ) => {
-    const { clientCode } = req.body
+    const { code } = req.body
 
     try {
-      await this.service.validateCodeClient(clientCode)
+      await this.service.validateCustomerCode(code)
 
       const response: ApiResponse<ClientCodeType> = {
         status: 'success',
-        data: clientCode,
+        data: code,
         code: 200,
       }
 
@@ -37,7 +51,19 @@ export class AuthController {
             new AuthResponseBuilder()
               .status('error')
               .code(401)
-              .message(error.message)
+              .message(req.t(error.message))
+              .build(),
+          )
+        return
+      }
+      if (error instanceof CustomerCodeTokeError) {
+        res
+          .status(400)
+          .send(
+            new AuthResponseBuilder()
+              .status('error')
+              .code(400)
+              .message(req.t(error.message))
               .build(),
           )
         return
@@ -49,7 +75,7 @@ export class AuthController {
             new AuthResponseBuilder()
               .status('error')
               .code(500)
-              .message('error en la conexion. por favor intentelo mas tarde')
+              .message(req.t(error.message))
               .build(),
           )
         return
@@ -59,10 +85,10 @@ export class AuthController {
   }
 
   signUp = async (req: Request, res: Response, next: NextFunction) => {
-    const { email, password, clientCode } = req.body
+    const { email, password, code } = req.body
 
     try {
-      const data = await this.service.signUp(email, password, clientCode)
+      const data = await this.service.signUp(email, password, code)
       res.send(new AuthResponseBuilder().data(data).build())
     } catch (error) {
       if (error instanceof AuthError) {
@@ -72,7 +98,19 @@ export class AuthController {
             new AuthResponseBuilder()
               .status('error')
               .code(400)
-              .message(error.message)
+              .message(req.t(error.message))
+              .build(),
+          )
+        return
+      }
+      if (error instanceof CustomerCodeTokeError) {
+        res
+          .status(400)
+          .send(
+            new AuthResponseBuilder()
+              .status('error')
+              .code(400)
+              .message(req.t(error.message))
               .build(),
           )
         return
@@ -96,7 +134,7 @@ export class AuthController {
             new AuthResponseBuilder()
               .status('error')
               .code(400)
-              .message(error.message)
+              .message(req.t(error.message))
               .build(),
           )
         return
@@ -170,7 +208,7 @@ export class AuthController {
             new AuthResponseBuilder()
               .status('error')
               .code(401)
-              .message(error.message)
+              .message(req.t(error.message))
               .build(),
           )
         return
@@ -178,7 +216,7 @@ export class AuthController {
       if (error instanceof DBErrorConexion) {
         res.status(401).send({
           status: 'fail',
-          message: 'error en la conexion. por favor intentelo mas tarde',
+          message: req.t('db_conexion_error'),
         })
         return
       }
@@ -193,10 +231,15 @@ export class AuthController {
     const tok = req.headers['authorization']
 
     if (!tok) {
-      res.status(401).send({
-        status: 'fail',
-        message: 'Se requiere token token token de acceso',
-      })
+      res
+        .status(401)
+        .send(
+          new AuthResponseBuilder()
+            .status('error')
+            .code(401)
+            .message(req.t('token_required'))
+            .build(),
+        )
       return
     }
 
@@ -204,11 +247,16 @@ export class AuthController {
 
     try {
       const user = await this.service.getUser(token)
-      if (!user) {
-        res.status(401).send({
-          status: 'fail',
-          message: 'token no retorna user',
-        })
+      if (!user.user) {
+        res
+          .status(401)
+          .send(
+            new AuthResponseBuilder()
+              .status('error')
+              .code(401)
+              .message(req.t('token_without_user'))
+              .build(),
+          )
         return
       }
       res.send(new AuthResponseBuilder().data(user).build())
@@ -220,7 +268,7 @@ export class AuthController {
             new AuthResponseBuilder()
               .status('error')
               .code(401)
-              .message(error.message)
+              .message(req.t(error.message))
               .build(),
           )
         return

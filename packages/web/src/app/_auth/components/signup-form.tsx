@@ -1,6 +1,6 @@
 'use client'
 
-import { SingUpFormSchema } from '../auth.schemas'
+import { getSignUpFormSchema } from '../auth.schemas'
 import { SingUpDTO } from '../types'
 import { Button } from '@/components/ui/button'
 import {
@@ -14,10 +14,10 @@ import {
 import { Input } from '@/components/ui/input'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Eye, EyeOff } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
 
 export function SingUpForm({
   onSubmit,
@@ -26,12 +26,15 @@ export function SingUpForm({
 }) {
   const [passwordVisible, setPasswordVisible] = useState(false)
   const [passwordConfirmVisible, setPasswordConfirmVisible] = useState(false)
+  const traslateValidation = useTranslations('validation')
+  const traslateRegisterPage = useTranslations('RegisterPage')
+  const traslateShared = useTranslations('SignPages')
 
-  const form = useForm<z.infer<typeof SingUpFormSchema>>({
-    resolver: zodResolver(SingUpFormSchema),
+  const form = useForm<SingUpDTO>({
+    resolver: zodResolver(getSignUpFormSchema(traslateValidation)),
     reValidateMode: 'onBlur',
     defaultValues: {
-      clientCode: '',
+      code: '',
       email: '',
       password: '',
       confirmPassword: '',
@@ -42,7 +45,7 @@ export function SingUpForm({
     <section className="w-full h-full flex items-center justify-center">
       <div className="max-w-sm w-full  flex flex-col gap-1">
         <h1 className="font-funnel text-4xl text-primary font-bold mb-8">
-          Registro
+          {traslateRegisterPage('title')}
         </h1>
         <Form {...form}>
           <form
@@ -51,10 +54,10 @@ export function SingUpForm({
           >
             <FormField
               control={form.control}
-              name="clientCode"
+              name="code"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Codigo de cliente</FormLabel>
+                  <FormLabel>{traslateRegisterPage('customer_code')}</FormLabel>
                   <FormControl>
                     <Input
                       autoComplete="off"
@@ -71,10 +74,10 @@ export function SingUpForm({
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>{traslateShared('email')}</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="escribe aqui tu nombre de usuario"
+                      placeholder={traslateShared('email_placeholder')}
                       {...field}
                     />
                   </FormControl>
@@ -87,7 +90,9 @@ export function SingUpForm({
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="password">Password</FormLabel>
+                  <FormLabel htmlFor="password">
+                    {traslateShared('password')}
+                  </FormLabel>
                   <FormControl>
                     <div className="flex items-center">
                       <Input
@@ -118,7 +123,7 @@ export function SingUpForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel htmlFor="confirmPassword">
-                    Confirma la Contraseña
+                    {traslateRegisterPage('confirm_password')}
                   </FormLabel>
                   <FormControl>
                     <div className="flex items-center">
@@ -147,23 +152,23 @@ export function SingUpForm({
             />
             <div className="flex justify-between flex-row-reverse">
               <Button disabled={form.formState.isLoading} type="submit">
-                Submit
+                {traslateShared('submit')}
               </Button>
               <Button
                 variant="outline"
                 type="reset"
                 onClick={() => form.reset()}
               >
-                Reset
+                {traslateShared('clear')}
               </Button>
             </div>
           </form>
         </Form>
         <div>
           <p className="text-sm opacity-80 mt-8 text-center">
-            Si ya tienes cuenta, ingresa{' '}
+            {traslateRegisterPage('phase_sign')}
             <Link href="/" className="text-primary">
-              aquí
+              {traslateRegisterPage('phase_link')}
             </Link>
           </p>
         </div>

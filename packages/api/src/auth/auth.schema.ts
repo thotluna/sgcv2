@@ -1,31 +1,34 @@
 import { z } from 'zod'
 
-export const clientCodeSchema = z.object({
-  clientCode: z
-    .string()
-    .regex(
-      /^[a-zA-z0-9!@#&*]{8}-[a-zA-z0-9!@#&*]{8}-[a-zA-z0-9!@#&*]{8}-[a-zA-z0-9!@#&*]{8}$/,
-      { message: 'Codigo de cliente tiene un formato invalido' },
-    ),
+export const customerCodeSchema = z.object({
+  code: z.string({ required_error: 'client_code_required' }),
 })
 
-export const httpClientCodeSchema = z.object({
-  body: clientCodeSchema,
+export const httpCustomerCodeSchema = z.object({
+  body: customerCodeSchema,
+})
+
+export const httpEmailCodeSchema = z.object({
+  body: z.object({
+    email: z
+      .string({ required_error: 'email_required' })
+      .email('email_invalid'),
+  }),
 })
 
 export const signInSchema = z.object({
-  email: z.string().email('El email no es valido'),
+  email: z.string().email('email_invalid'),
   password: z
     .string()
-    .min(8, 'La contraseña debe tener al menos 8 caracteres')
-    .max(36, 'La contraseña no puede tener más de 36 caracteres'),
+    .min(8, 'password_min_length')
+    .max(36, 'password_max_length'),
 })
 
 export const httpSingInSchema = z.object({
   body: signInSchema,
 })
 
-export const signUpSchema = signInSchema.merge(clientCodeSchema)
+export const signUpSchema = signInSchema.merge(customerCodeSchema)
 
 export const httpSignUpSchema = z.object({
   body: signUpSchema,
@@ -37,7 +40,7 @@ export const authorizeSchema = z.object({
       errorMap: (issue, ctx) => {
         if (issue.code === z.ZodIssueCode.invalid_enum_value) {
           return {
-            message: `El provider debe ser 'google' o 'github'. Se recibió: '${ctx.data}'.`,
+            message: 'provider_invalid',
           }
         }
         return { message: ctx.defaultError }

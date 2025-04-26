@@ -1,0 +1,19 @@
+{
+  "auth_error_invalid_client_code": "Invalid client code.",
+  "code_not_found": "Codigo no encontrado.",
+  "jwt malformed": "jwt malformed",
+  "client_code_required": "Client code is required",
+  "unknown_error": "Oops! Something went wrong.",
+  "db_conexion_error": "Oops! We had a problem. Please try again later.",
+  "auth_email_already_registed": "The email is already registered",
+  "password_min_length": "the password must have at least 8 characters",
+  "password_max_length": "the password must not have more than 36 characters",
+  "email_invalid": "Email is invalid",
+  "invalid_credentials": "Email or password is invalid",
+  "not_found_anonymous_key": "Not found anonymous key",
+  "token_required": "Access token required",
+  "token_without_user": "Token without user",
+  "Invalid_code": "Invalid code",
+  "provider_invalid": "The provider must be 'google' or 'github'",
+  "Expired_code": "Expired code"
+}

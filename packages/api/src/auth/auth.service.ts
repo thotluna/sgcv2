@@ -1,5 +1,8 @@
+import { CustomerCodeJwtHelper } from '../utils/jwt-customer-code'
+import { AuthError } from './errors'
 import { generatePKCEParams } from './oauth'
 import { AuthsRepository } from './types'
+import jwt from 'jsonwebtoken'
 
 export class AuthService {
   private repository: AuthsRepository
@@ -8,15 +11,28 @@ export class AuthService {
     this.repository = repository
   }
 
-  async validateCodeClient(codeClient: string) {
-    return await this.repository.validateCodeClient(codeClient)
+  async customerCode(email: string) {
+    const { SECRET } = process.env
+    const token = jwt.sign({ email }, SECRET!, { expiresIn: '24h' })
+
+    return await this.repository.saveCustomerCode(token, email)
   }
 
-  async signUp(email: string, password: string, clientCode: string) {
-    await this.repository.validateCodeClient(clientCode)
+  async validateCustomerCode(code: string) {
+    new CustomerCodeJwtHelper().verificarToken(code)
+    return await this.repository.validateCustomerCode(code)
+  }
+
+  async signUp(email: string, password: string, code: string) {
+    const payload = new CustomerCodeJwtHelper().verificarToken(code)
+    if (payload.email !== email) {
+      throw new AuthError('Invalid_code')
+    }
+
+    await this.repository.validateCustomerCode(code)
     const data = await this.repository.signUp(email, password)
     if (data) {
-      await this.closeCodeClient(clientCode)
+      await this.closeCodeClient(code)
     }
     return data
   }
@@ -26,7 +42,7 @@ export class AuthService {
   }
 
   async closeCodeClient(codeClient: string) {
-    return await this.repository.closeCodeClient(codeClient)
+    return await this.repository.closeCustomerCode(codeClient)
   }
 
   async authorization(provider: string) {

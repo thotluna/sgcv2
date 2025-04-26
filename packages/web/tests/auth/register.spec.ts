@@ -1,7 +1,18 @@
+import { CUSTOMER_CODE } from '../mocks/handlers/auth'
+import { server } from '../mocks/server'
 import test, { expect } from '@playwright/test'
 
+test.beforeAll(() => {
+  server.listen()
+})
+
+test.afterAll(() => {
+  server.close()
+})
+
 test.beforeEach(async ({ page }) => {
-  await page.goto('http://localhost:3000/signUp=true')
+  server.resetHandlers()
+  await page.goto('http:/localhost:3000/register')
 })
 
 test('has title', async ({ page }) => {
@@ -10,74 +21,86 @@ test('has title', async ({ page }) => {
 })
 
 test.describe('has error validation', () => {
-  test('has error client code', async ({ page }) => {
-    await page.getByLabel('Codigo de cliente').fill('12345678')
-    await page.getByRole('button', { name: 'submit' }).click()
+  test('Given a badly formatted code, then it returns error JWT malformed', async ({
+    page,
+  }) => {
+    await page
+      .getByLabel('Código de cliente')
+      .fill(CUSTOMER_CODE.CODE_NOT_FORMATTED)
+    await page.getByRole('button', { name: 'Enviar' }).click()
 
-    await expect(
-      page.getByText('Codigo de cliente tiene un formato invalido'),
-    ).toBeVisible()
+    await expect(page.getByText('Error en el formato jwt')).toBeVisible()
   })
 
-  test('has error client code empty', async ({ page }) => {
-    await page.getByRole('button', { name: 'submit' }).click()
+  test('given an empty code, then return error code required', async ({
+    page,
+  }) => {
+    await page.getByRole('button', { name: 'Enviar' }).click()
 
-    await expect(
-      page.getByText('Codigo de cliente tiene un formato invalido'),
-    ).toBeVisible()
+    await expect(page.getByText('Se requiere codigo de cliente')).toBeVisible()
   })
 
-  test('has error email', async ({ page }) => {
-    await page.getByLabel('Email').fill('test@')
-    await page.getByRole('button', { name: 'submit' }).click()
+  test('Given a bandly format email, then it returns error email invalid', async ({
+    page,
+  }) => {
+    await page.getByLabel('Correo electrónico').fill('test@')
+    await page.getByRole('button', { name: 'Enviar' }).click()
 
     await expect(page.getByText('El email no es valido')).toBeVisible()
   })
 
-  test('has error email empty', async ({ page }) => {
-    await page.getByRole('button', { name: 'submit' }).click()
+  test('given an empty email, then return error email required', async ({
+    page,
+  }) => {
+    await page.getByRole('button', { name: 'Enviar' }).click()
 
     await expect(page.getByText('El email no es valido')).toBeVisible()
   })
 
-  test('has error password', async ({ page }) => {
-    // await page.locator('input[name="password"]').fill('123');
-    await page.getByLabel('password').fill('123')
-    await page.getByLabel('Confirma la Contraseña').fill('123456789')
-    await page.getByRole('button', { name: 'submit' }).click()
+  test('Given a bandly format password, then it returns error password invalid', async ({
+    page,
+  }) => {
+    await page.getByLabel('Contraseña', { exact: true }).fill('123')
+    await page.getByLabel('Confirmar contraseña').fill('123456789')
+    await page.getByRole('button', { name: 'Enviar' }).click()
 
     await expect(
       page.getByText('La contraseña debe tener al menos 8 caracteres', {}),
     ).toBeVisible()
   })
 
-  test('has error password empty', async ({ page }) => {
-    await page.getByLabel('Confirma la Contraseña').fill('123456789')
-    await page.getByRole('button', { name: 'submit' }).click()
+  test('given an empty password, then return error password required', async ({
+    page,
+  }) => {
+    await page.getByLabel('Confirmar contraseña').fill('123456789')
+    await page.getByRole('button', { name: 'Enviar' }).click()
 
     await expect(
       page.getByText('La contraseña debe tener al menos 8 caracteres', {}),
     ).toBeVisible()
   })
 
-  test('has error confirm password', async ({ page }) => {
-    // await page.locator('input[name="password"]').fill('123');
-    await page.getByLabel('password').fill('123456789')
-    await page.getByLabel('Confirma la Contraseña').fill('123')
-    await page.getByRole('button', { name: 'submit' }).click()
+  test('Given a bandly format confirm password, then it returns error confirm password invalid', async ({
+    page,
+  }) => {
+    await page.getByLabel('Contraseña', { exact: true }).fill('123456789')
+    await page.getByLabel('Confirmar contraseña').fill('123')
+    await page.getByRole('button', { name: 'Enviar' }).click()
 
     await expect(
       page.getByText('La contraseña debe tener al menos 8 caracteres', {}),
     ).toBeVisible()
   })
 
-  test('has error confirm password empty', async ({ page }) => {
-    await page.getByLabel('password').fill('12345678')
-    await page.getByLabel('Confirma la Contraseña').fill('123456789')
-    await page.getByRole('button', { name: 'submit' }).click()
+  test('given an empty confirm password, then return error confirm password required', async ({
+    page,
+  }) => {
+    await page.getByLabel('Contraseña', { exact: true }).fill('12345678')
+    await page.getByLabel('Confirmar contraseña').fill('123456789')
+    await page.getByRole('button', { name: 'Enviar' }).click()
 
     await expect(
-      page.getByText('La contraseña debe tener al menos 8 caracteres', {}),
+      page.getByText('Las contraseñas no coinciden', {}),
     ).toBeVisible()
   })
 })

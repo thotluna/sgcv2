@@ -1,8 +1,7 @@
-import { SingInFormSchema, SingUpFormEntity } from './auth.schemas'
-import { z } from 'zod'
+import { SignInFormSchemaType, SignUpFormSchemaType } from './auth.schemas'
 
-export type SingUpDTO = z.infer<typeof SingUpFormEntity>
-export type SingInDTO = z.infer<typeof SingInFormSchema>
+export type SingUpDTO = SignUpFormSchemaType
+export type SingInDTO = SignInFormSchemaType
 
 export type Result = {
   status: string

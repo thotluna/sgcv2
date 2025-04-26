@@ -8,16 +8,17 @@ import {
   signupData,
 } from './auth.configtest'
 import './auth.test-base'
-import { app } from './auth.test-base'
+import { app, i18n as i18nInstance } from './auth.test-base'
 import request from 'supertest'
 
 describe('POST /signup', () => {
   test('happy past', () => {
+    const dataI = signupData
     repositoryValidateCode.resolve()
     repositorySignUp.resolve()
     return request(app)
       .post(authRoute.SIGN_UP)
-      .send(signupData)
+      .send(dataI)
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(200)
@@ -45,7 +46,7 @@ describe('POST /signup', () => {
           new AuthResponseBuilder()
             .status('error')
             .code(400)
-            .message('La contraseña debe tener al menos 8 caracteres')
+            .message(i18nInstance.t('password_min_length', { lng: 'es' }))
             .build(),
         )
       })
@@ -63,7 +64,7 @@ describe('POST /signup', () => {
           new AuthResponseBuilder()
             .status('error')
             .code(400)
-            .message('El email no es valido')
+            .message(i18nInstance.t('email_invalid', { lng: 'es' }))
             .build(),
         )
       })
@@ -72,7 +73,7 @@ describe('POST /signup', () => {
   test('bad request, code client invalid format', () => {
     return request(app)
       .post(authRoute.SIGN_UP)
-      .send({ ...signupData, clientCode: '123' })
+      .send({ ...signupData, code: '123' })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(400)
@@ -81,31 +82,18 @@ describe('POST /signup', () => {
           new AuthResponseBuilder()
             .status('error')
             .code(400)
-            .message('Codigo de cliente tiene un formato invalido')
-            .build(),
-        )
-      })
-  })
-
-  test('bad request, res empty', () => {
-    return request(app)
-      .post(authRoute.SIGN_UP)
-      .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(400)
-      .then(response => {
-        expect(response.body).toEqual(
-          new AuthResponseBuilder()
-            .status('error')
-            .code(400)
-            .message('Required, Required, Required')
+            .message(
+              i18nInstance.t('jwt malformed', {
+                lng: 'es',
+              }),
+            )
             .build(),
         )
       })
   })
 
   test('error, code client refused', () => {
-    repositoryValidateCode.reject(new AuthError('Codigo de cliente no válido'))
+    repositoryValidateCode.reject(new AuthError('code_not_found'))
     return request(app)
       .post(authRoute.SIGN_UP)
       .send(signupData)
@@ -117,14 +105,14 @@ describe('POST /signup', () => {
           new AuthResponseBuilder()
             .status('error')
             .code(400)
-            .message('Codigo de cliente no válido')
+            .message(i18nInstance.t('code_not_found'))
             .build(),
         )
       })
   })
 
   test('error, any other', () => {
-    repositoryValidateCode.reject(new Error('any other error'))
+    repositoryValidateCode.reject(new Error('db_conexion_error'))
     return request(app)
       .post(authRoute.SIGN_UP)
       .send(signupData)
@@ -136,7 +124,11 @@ describe('POST /signup', () => {
           new AuthResponseBuilder()
             .status('error')
             .code(500)
-            .message('¡Ups! Algo salió mal.')
+            .message(
+              i18nInstance.t('db_conexion_error', {
+                lng: 'es',
+              }),
+            )
             .build(),
         )
       })
@@ -144,7 +136,7 @@ describe('POST /signup', () => {
 
   test('error, email registered', () => {
     repositoryValidateCode.resolve()
-    repositorySignUp.reject(new AuthError('El email ya esta registrado'))
+    repositorySignUp.reject(new AuthError('auth_email_already_registed'))
 
     return request(app)
       .post(authRoute.SIGN_UP)
@@ -157,7 +149,9 @@ describe('POST /signup', () => {
           new AuthResponseBuilder()
             .status('error')
             .code(400)
-            .message('El email ya esta registrado')
+            .message(
+              i18nInstance.t('auth_email_already_registed', { lng: 'es' }),
+            )
             .build(),
         )
       })

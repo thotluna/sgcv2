@@ -3,19 +3,48 @@ import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import express, { Application, Router } from 'express'
 import { Server } from 'http'
+import i18next from 'i18next'
+import i18nextFsBackend from 'i18next-fs-backend'
+import middleware from 'i18next-http-middleware'
 import morgan from 'morgan'
 
 const { ALLOWED_HOSTS, PORT } = process.env
 
 export class ServerApi {
-  private static instance: ServerApi
   private app: Application
   private router: Router
   private port: number = Number(PORT) || 3000
   private server?: Server
+  public i18nextInstance: typeof i18next
 
-  private constructor() {
+  constructor() {
+    this.i18nextInstance = i18next
+    this.i18nextInstance
+      .use(i18nextFsBackend)
+      .use(middleware.LanguageDetector)
+      .init({
+        debug: false,
+        backend: {
+          loadPath: __dirname + '/locales/{{lng}}/{{ns}}.json',
+          addPath: __dirname + '/locales/{{lng}}/{{ns}}.missing.json',
+          reloadInterval: 0, // disable file watch to avoid open handles
+        },
+        fallbackLng: 'es',
+        preload: ['en', 'es'],
+        detection: {
+          order: ['querystring', 'cookie', 'header'],
+          caches: ['cookie'],
+        },
+        load: 'languageOnly',
+        saveMissing: true,
+      })
     this.app = express()
+    this.app.use(
+      middleware.handle(this.i18nextInstance, {
+        ignoreRoutes: ['/foo'], // or function(req, res, options, i18next) { /* return true to ignore */ }
+        removeLngFromUrl: false, // removes the language from the url when language detected in path
+      }),
+    )
     this.app.use(cookieParser())
     this.app.use(express.json())
     this.app.use(morgan('dev'))
@@ -27,14 +56,19 @@ export class ServerApi {
     )
 
     this.router = Router()
+    this.router.get('/', (_req, res) => {
+      res.send('Hello World!')
+    })
     this.app.use('/v1', this.router)
   }
 
   public static getInstance(): ServerApi {
-    if (!ServerApi.instance) {
-      ServerApi.instance = new ServerApi()
-    }
-    return ServerApi.instance
+    const instance = new ServerApi()
+    return instance
+  }
+
+  public getI18nextInstance(): typeof i18next {
+    return this.i18nextInstance
   }
 
   public addRoute(path: string, router: Router) {
@@ -52,6 +86,8 @@ export class ServerApi {
       this.server = this.app.listen(portForce, () => {
         console.log(`Server listening on port ${portForce}!`)
       })
+      // allow process to exit if this is the only handle
+      // this.server.unref()
       return this.server
     }
 
@@ -61,6 +97,8 @@ export class ServerApi {
         this.server = this.app.listen(this.port, () => {
           console.log(`Server listening on port ${this.port}!`)
         })
+        // allow process to exit if this is the only handle
+        // this.server.unref()
         return this.server
       } catch {
         continue

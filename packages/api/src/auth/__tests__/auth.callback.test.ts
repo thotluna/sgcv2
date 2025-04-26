@@ -2,7 +2,7 @@ import { AuthResponseBuilder } from '../../utils/auth-response-builder'
 import { AuthError } from '../errors'
 import { repositoryCallback, authRoute } from './auth.configtest'
 import './auth.test-base'
-import { app } from './auth.test-base'
+import { app, i18n as i18nTest } from './auth.test-base'
 import request from 'supertest'
 
 describe('GET /callback', () => {
@@ -36,7 +36,7 @@ describe('GET /callback', () => {
   })
 
   test('happy past', () => {
-    repositoryCallback.reject(new AuthError('error'))
+    repositoryCallback.reject(new AuthError('not_found_anonymous_key'))
 
     return request(app)
       .get(authRoute.CALLBACK + '?code=123456789')
@@ -47,7 +47,7 @@ describe('GET /callback', () => {
           new AuthResponseBuilder()
             .status('error')
             .code(401)
-            .message('error')
+            .message(i18nTest.t('not_found_anonymous_key'))
             .build(),
         )
       })

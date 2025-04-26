@@ -2,7 +2,8 @@ import { schemaValidation } from '../middleware/schema-validation'
 import { AuthController } from './auth.controller'
 import {
   authorizeSchema,
-  httpClientCodeSchema,
+  httpCustomerCodeSchema,
+  httpEmailCodeSchema,
   httpSignUpSchema,
   httpSingInSchema,
 } from './auth.schema'
@@ -23,9 +24,14 @@ export class AuthRouter {
 
   initializeRoutes() {
     this.router.post(
+      '/customer-code',
+      schemaValidation(httpEmailCodeSchema),
+      this.authController.customerCode,
+    )
+    this.router.post(
       '/code/validate',
-      schemaValidation(httpClientCodeSchema),
-      this.authController.validationClientCode,
+      schemaValidation(httpCustomerCodeSchema),
+      this.authController.validationCustomerCode,
     )
     this.router.post(
       '/signup',

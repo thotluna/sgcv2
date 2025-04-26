@@ -13,7 +13,7 @@ export function ErrorUrl() {
     const params = new URLSearchParams(hash.substring(1))
     const message = params.get('error_description')
     if (message) {
-      toast.error(`Error: se requiere codigo de cliente`)
+      toast.error(message)
     }
 
     if (searchParams.get('error_description')) {

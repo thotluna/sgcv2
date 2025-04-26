@@ -1,23 +1,22 @@
-import 'dotenv/config'
-import request from 'supertest'
-import { ClientCodeType } from '@sgcv2/shared'
+import { AuthResponseBuilder } from '../../utils/auth-response-builder'
 import { AuthError, DBErrorConexion } from '../errors'
 import {
   authRoute,
   clientCode,
   repositoryValidateCode,
 } from './auth.configtest'
-import { AuthResponseBuilder } from '../../utils/auth-response-builder'
-
 import './auth.test-base'
-import { app } from './auth.test-base'
+import { app, i18n as i18nInstance } from './auth.test-base'
+import { ClientCodeType } from '@sgcv2/shared'
+import 'dotenv/config'
+import request from 'supertest'
 
 describe('auth /code/validate test', () => {
   test('happy past', () => {
     repositoryValidateCode.resolve()
     return request(app)
       .post(authRoute.VALIDATE_CODE)
-      .send({ clientCode: clientCode.correct })
+      .send({ code: clientCode.correct })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(200)
@@ -41,7 +40,7 @@ describe('auth /code/validate test', () => {
           new AuthResponseBuilder()
             .status('error')
             .code(400)
-            .message('Required')
+            .message(i18nInstance.t('client_code_required'))
             .build(),
         )
       })
@@ -50,8 +49,9 @@ describe('auth /code/validate test', () => {
   test('code invalid', () => {
     return request(app)
       .post(authRoute.VALIDATE_CODE)
-      .send({ clientCode: clientCode.incorrect })
+      .send({ code: clientCode.incorrect })
       .set('Accept', 'application/json')
+      .set('Accept-Language', 'es')
       .expect('Content-Type', /json/)
       .expect(400)
       .then(response => {
@@ -59,17 +59,17 @@ describe('auth /code/validate test', () => {
           new AuthResponseBuilder()
             .status('error')
             .code(400)
-            .message('Codigo de cliente tiene un formato invalido')
+            .message(i18nInstance.t('jwt malformed'))
             .build(),
         )
       })
   })
 
   test('code refused', () => {
-    repositoryValidateCode.reject(new AuthError('Codigo de cliente no válido'))
+    repositoryValidateCode.reject(new AuthError('code_not_found'))
     return request(app)
       .post(authRoute.VALIDATE_CODE)
-      .send({ clientCode: clientCode.correct })
+      .send({ code: clientCode.correct })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(401)
@@ -78,21 +78,17 @@ describe('auth /code/validate test', () => {
           new AuthResponseBuilder()
             .status('error')
             .code(401)
-            .message('Codigo de cliente no válido')
+            .message(i18nInstance.t('code_not_found'))
             .build(),
         )
       })
   })
 
   test('error db', () => {
-    repositoryValidateCode.reject(
-      new DBErrorConexion(
-        'Ups... hemos tenido un problema. Por favor inténtelo más tarde',
-      ),
-    )
+    repositoryValidateCode.reject(new DBErrorConexion('db_conexion_error'))
     return request(app)
       .post(authRoute.VALIDATE_CODE)
-      .send({ clientCode: clientCode.correct })
+      .send({ code: clientCode.correct })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(500)
@@ -102,7 +98,7 @@ describe('auth /code/validate test', () => {
           new AuthResponseBuilder()
             .status('error')
             .code(500)
-            .message('error en la conexion. por favor intentelo mas tarde')
+            .message(i18nInstance.t('db_conexion_error', { lng: 'es' }))
             .build(),
         )
       })

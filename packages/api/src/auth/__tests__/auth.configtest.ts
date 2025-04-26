@@ -1,37 +1,40 @@
-import { AuthsRepository } from '../types'
+import { CustomerCodeJwtHelper } from '../../utils/jwt-customer-code'
+import { AuthsRepository, UserResponse } from '../types'
 
 export const authRepository: AuthsRepository = {
-  validateCodeClient: jest.fn(),
+  saveCustomerCode: jest.fn(),
+  validateCustomerCode: jest.fn(),
   signUp: jest.fn(),
   signIn: jest.fn(),
-  closeCodeClient: jest.fn(),
+  closeCustomerCode: jest.fn(),
   callback: jest.fn(),
   getUser: jest.fn(),
 }
 export const repositoryValidateCode = {
   resolve: () =>
-    (authRepository.validateCodeClient as jest.Mock).mockResolvedValue(true),
+    (authRepository.validateCustomerCode as jest.Mock).mockResolvedValue(true),
   reject: (error: Error) =>
-    (authRepository.validateCodeClient as jest.Mock).mockRejectedValue(error),
+    (authRepository.validateCustomerCode as jest.Mock).mockRejectedValue(error),
 }
 
 export const authRoute = {
   VALIDATE_CODE: '/v1/auth/code/validate',
-  SIGN_UP: '/v1/auth/SIGNup',
+  SIGN_UP: '/v1/auth/signup',
   SIGN_IN: '/v1/auth/signin',
   AUTHORIZE: '/v1/auth/authorize',
   CALLBACK: '/v1/auth/callback',
+  USER: '/v1/auth/user',
 }
 
 export const clientCode = {
-  correct: '123!@#&*-456789aB-cDeFgHiJ-kLmNoPqR',
+  correct: new CustomerCodeJwtHelper().crearToken('qw@qw.co'),
   incorrect: 'code invalid',
 }
 
 export const signupData = {
   email: 'alan@gmail.com',
   password: '12345678',
-  clientCode: '123!@#&*-456789aB-cDeFgHiJ-kLmNoPqR',
+  code: new CustomerCodeJwtHelper().crearToken('alan@gmail.com'),
 }
 
 export const data = {
@@ -80,4 +83,35 @@ export const repositoryCallback = {
     }),
   reject: (error: Error) =>
     (authRepository.callback as jest.Mock).mockRejectedValue(error),
+}
+
+export const dataUser: UserResponse = {
+  user: {
+    id: '123456789',
+    email: signupData.email,
+    created_at: Date.now() + '',
+    role: 'authenticated',
+  },
+  session: {
+    access_token: '123456789',
+    expires_at: Date.now(),
+    expires_in: 3600,
+    refresh_token: '123456789',
+    token_type: 'Bearer',
+    user: {
+      id: '123456789',
+      email: signupData.email,
+      created_at: Date.now() + '',
+      role: 'authenticated',
+    },
+  },
+}
+
+export const repositoryUser = {
+  resolve: (data?: UserResponse | undefined) =>
+    (authRepository.getUser as jest.Mock).mockResolvedValue(
+      data ? data : dataUser,
+    ),
+  reject: (error: Error) =>
+    (authRepository.getUser as jest.Mock).mockRejectedValue(error),
 }

@@ -8,6 +8,8 @@ const URL_API = {
   SIGN_UP: `${process.env.NEXT_PUBLIC_URL_API}/v1/auth/singup`,
 } as const
 
+const NEXT_LOCALE = 'NEXT_LOCALE'
+
 export async function singInSubmitHandler(data: SingInDTO): Promise<Result> {
   return sendSing(data, URL_API.SIGN_IN)
 }
@@ -17,11 +19,14 @@ export async function singUpSubmitHandler(data: SingUpDTO): Promise<Result> {
 }
 
 async function sendSing<TData>(data: TData, url: string): Promise<Result> {
+  const cookieStore = await cookies()
+  const lang = cookieStore.get(NEXT_LOCALE)?.value || 'es'
   try {
     const res = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Accept-Language': lang,
       },
       body: JSON.stringify(data),
     })
@@ -46,7 +51,6 @@ async function sendSing<TData>(data: TData, url: string): Promise<Result> {
       user,
     } = session
 
-    const cookieStore = await cookies()
     cookieStore.delete('access_token')
     cookieStore.delete('refresh_token')
 
