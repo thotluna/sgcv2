@@ -7,7 +7,6 @@ const unregisteredCredentials = {
 }
 
 const transCommon = factory('SignPages')
-const transSignIn = factory('SignInPage')
 const transValidation = factory('validation')
 
 test.beforeEach(async ({ page }) => {
@@ -65,7 +64,7 @@ test.describe('Sign-in form validation errors', () => {
     await page.getByRole('button', { name: transCommon('submit') }).click()
 
     await expect(
-      page.getByText(transSignIn('credential_invalid')),
+      page.getByText(transValidation('credential_invalid')),
     ).toBeVisible()
   })
 })
