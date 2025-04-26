@@ -24,5 +24,5 @@ export function DateTime() {
 
     return () => clearInterval(interval)
   }, [])
-  return <p className="text-xs">{time}</p>
+  return <p className="text-xs text-pretty">{time}</p>
 }
