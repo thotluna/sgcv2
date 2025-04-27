@@ -37,7 +37,7 @@ export default async function RootLayout({
         >
           <NextIntlClientProvider>
             {children}
-            <Toaster richColors />
+            <Toaster richColors closeButton />
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>

@@ -10,11 +10,17 @@ import { SingUpForm } from './signup-form'
 import { redirect } from 'next/navigation'
 import { toast } from 'sonner'
 
-export function FormSing({ isSingUp }: { isSingUp?: boolean | undefined }) {
+interface Prop {
+  isSingUp?: boolean | undefined
+}
+
+export type SubmitHandler<TData> = (data: TData) => Promise<Result>
+
+export function FormSign({ isSingUp }: Prop) {
   const generateSubmitHandler =
-    <TData,>(specificSubmitHandler: (data: TData) => Promise<Result>) =>
+    <TData,>(submitHandler: SubmitHandler<TData>) =>
     async (data: TData): Promise<void> => {
-      const res = await specificSubmitHandler(data)
+      const res = await submitHandler(data)
 
       if (res.status === 'error') {
         toast.error(res.message)
