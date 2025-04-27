@@ -5,13 +5,16 @@ import { ReactNode } from 'react'
 // Suppress React act environment warnings
 const _origConsoleError = console.error
 console.error = (...args) => {
-  if (
-    typeof args[0] === 'string' &&
-    args[0].includes(
-      'The current testing environment is not configured to support act',
-    )
-  ) {
-    return
+  if (typeof args[0] === 'string') {
+    const msg: string = args[0]
+    if (
+      msg.includes(
+        'The current testing environment is not configured to support act',
+      ) ||
+      msg.includes('not wrapped in act')
+    ) {
+      return
+    }
   }
   _origConsoleError(...args)
 }

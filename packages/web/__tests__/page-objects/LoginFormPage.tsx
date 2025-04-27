@@ -1,17 +1,25 @@
 import { SingInForm } from '../../src/app/_auth/components/signin-form'
 import { SingInDTO } from '../../src/app/_auth/types'
-import { render, screen } from '@testing-library/react'
+import { render, screen, RenderResult, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { Toaster } from 'sonner'
 
 export class LoginFormPage {
-  container: Element
+  element!: RenderResult<
+    typeof import('/home/thot/projects/sgcv2/node_modules/.pnpm/@testing-library+dom@10.4.0/node_modules/@testing-library/dom/types/queries'),
+    HTMLElement,
+    HTMLElement
+  >
 
-  constructor(
-    private mockOnSubmit: (data: SingInDTO, event?: unknown) => Promise<void>,
-  ) {
-    this.container = render(
-      <SingInForm onSubmit={this.mockOnSubmit} />,
-    ).container
+  constructor(private mockOnSubmit: (data: SingInDTO) => Promise<void>) {
+    waitFor(() => {
+      this.element = render(
+        <article>
+          <SingInForm onSubmit={this.mockOnSubmit} />
+          <Toaster richColors />
+        </article>,
+      )
+    })
   }
 
   get emailInput(): HTMLInputElement {
@@ -22,7 +30,7 @@ export class LoginFormPage {
     return screen.getByLabelText(/password/i, { selector: 'input' })
   }
 
-  get submitButton() {
+  get submitButton(): HTMLButtonElement {
     return screen.getByRole('button', { name: /submit/i })
   }
 
@@ -46,5 +54,13 @@ export class LoginFormPage {
 
   getPasswordError() {
     return screen.findByText('password_min_length')
+  }
+
+  getCredentialInvalid() {
+    return screen.findByText('credential_invalid')
+  }
+
+  getDebugElement(el: Element | undefined) {
+    this.element.debug(el, 10000)
   }
 }
