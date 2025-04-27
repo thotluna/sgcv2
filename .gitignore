@@ -23,4 +23,4 @@ yarn-error.log*
 .next
 .vscode
 **/coverage
-**/mocks
+

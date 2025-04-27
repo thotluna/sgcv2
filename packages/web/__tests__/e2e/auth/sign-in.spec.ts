@@ -1,4 +1,4 @@
-import { SignInPage } from './sign-in.pom'
+import { SignInPage } from './page-objects/sign-in.pom'
 import { test } from '@playwright/test'
 
 const unregisteredCredentials = {

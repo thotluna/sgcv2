@@ -1,5 +1,5 @@
-import { SingUpForm } from '../../src/app/_auth/components/signup-form'
-import { SingUpDTO } from '../../src/app/_auth/types'
+import { SingUpForm } from '../../../../src/app/_auth/components/signup-form'
+import { SingUpDTO } from '../../../../src/app/_auth/types'
 import { render, screen, RenderResult } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Toaster } from 'sonner'

@@ -1,5 +1,5 @@
-import { CUSTOMER_CODE } from '../mocks/handlers/auth'
-import { SignUpPage } from './register.pom'
+import { CUSTOMER_CODE } from '../../msw/handlers'
+import { SignUpPage } from './page-objects/register.pom'
 import test from '@playwright/test'
 
 test.describe('Registration form validation errors', () => {

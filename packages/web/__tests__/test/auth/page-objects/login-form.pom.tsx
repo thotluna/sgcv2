@@ -1,5 +1,5 @@
-import { SingInForm } from '../../src/app/_auth/components/signin-form'
-import { SingInDTO } from '../../src/app/_auth/types'
+import { SingInForm } from '../../../../src/app/_auth/components/signin-form'
+import { SingInDTO } from '../../../../src/app/_auth/types'
 import { render, screen, RenderResult } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Toaster } from 'sonner'

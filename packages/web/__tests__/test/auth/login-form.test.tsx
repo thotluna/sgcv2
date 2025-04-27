@@ -1,4 +1,4 @@
-import { LoginFormPage } from './page-objects/LoginFormPage'
+import { LoginFormPage } from './page-objects/login-form.pom'
 import { cleanup } from '@testing-library/react'
 import { waitFor } from '@testing-library/react'
 import { axe, toHaveNoViolations } from 'jest-axe'

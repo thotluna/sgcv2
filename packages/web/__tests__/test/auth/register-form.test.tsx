@@ -1,5 +1,5 @@
-import { server } from './msw/server'
-import { RegisterFormPage } from './page-objects/RegisterFormPage'
+import { server } from '../../msw/server'
+import { RegisterFormPage } from './page-objects/register-form.pom'
 import { cleanup, screen } from '@testing-library/react'
 import { waitFor } from '@testing-library/react'
 import { axe, toHaveNoViolations } from 'jest-axe'
