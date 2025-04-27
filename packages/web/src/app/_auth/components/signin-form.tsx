@@ -106,8 +106,9 @@ export function SingInForm({
 
             <div className="flex justify-between flex-row-reverse">
               <Button
+                className="  dark:text-emerald-50 dark:disabled:text-emerald-400/50 dark:disabled:bg-emerald-900 disabled:cursor-not-allowed"
                 name="submit"
-                disabled={form.formState.isLoading}
+                disabled={form.formState.isSubmitting}
                 type="submit"
               >
                 {traslateShared('submit')}
