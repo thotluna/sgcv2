@@ -1,12 +1,10 @@
 import { LoginFormPage } from './page-objects/LoginFormPage'
 import { cleanup } from '@testing-library/react'
-import { act, waitFor } from '@testing-library/react'
+import { waitFor } from '@testing-library/react'
 import { axe, toHaveNoViolations } from 'jest-axe'
 
-// Register jest-axe matcher
 expect.extend(toHaveNoViolations)
 
-// Mock translations
 jest.mock('next-intl', () => ({ useTranslations: () => (key: string) => key }))
 
 afterEach(() => {
@@ -25,27 +23,75 @@ describe('Login Form Component', () => {
   })
 
   it('calls onSubmit with valid email and password', async () => {
-    const mockOnSubmit = jest.fn().mockResolvedValue(undefined)
+    const mockOnSubmit: jest.Mock<
+      Promise<void>,
+      [{ email: string; password: string }]
+    > = jest.fn().mockResolvedValue(undefined)
     const page = new LoginFormPage(mockOnSubmit)
 
     // Fill fields and submit within act
-    await act(async () => {
+    await waitFor(async () => {
       await page.fillAndSubmit('test@example.com', 'password123')
     })
     // Wait for onSubmit to be called
     await waitFor(() => expect(mockOnSubmit).toHaveBeenCalledTimes(1))
-    expect(mockOnSubmit).toHaveBeenCalledWith(
-      { email: 'test@example.com', password: 'password123' },
-      expect.anything(),
+    expect(mockOnSubmit.mock.calls[0][0]).toEqual(
+      expect.objectContaining({
+        email: 'test@example.com',
+        password: 'password123',
+      }),
     )
   })
 
-  it('calls onSubmit with valid email and password', async () => {
+  it('renders with no accessibility violations', async () => {
     const mockOnSubmit = jest.fn().mockResolvedValue(undefined)
     const page = new LoginFormPage(mockOnSubmit)
 
     await waitFor(async () =>
-      expect(await axe(page.container)).toHaveNoViolations(),
+      expect(await axe(page.element.container)).toHaveNoViolations(),
+    )
+  })
+
+  it('shows error for invalid email format', async () => {
+    const mockOnSubmit = jest.fn()
+    const page = new LoginFormPage(mockOnSubmit)
+    await waitFor(async () => {
+      await page.fillAndSubmit('foo', 'password123')
+    })
+    expect(await page.getEmailError()).toBeInTheDocument()
+    expect(mockOnSubmit).not.toHaveBeenCalled()
+  })
+
+  it('shows error for too short password', async () => {
+    const mockOnSubmit = jest.fn()
+    const page = new LoginFormPage(mockOnSubmit)
+    await waitFor(async () => {
+      await page.fillAndSubmit('test@example.com', '123')
+    })
+    expect(await page.getPasswordError()).toBeInTheDocument()
+    expect(mockOnSubmit).not.toHaveBeenCalled()
+  })
+
+  it('disables submit button while onSubmit is pending', async () => {
+    let resolvePromise: () => void
+    const mockOnSubmit = jest.fn(
+      () =>
+        new Promise<void>(res => {
+          resolvePromise = res
+        }),
+    )
+    const page = new LoginFormPage(mockOnSubmit)
+    // Trigger form submission
+    await waitFor(async () => {
+      await page.fillAndSubmit('test@example.com', 'password123')
+    })
+    // Button disabled while pending
+    await waitFor(() => expect(page.submitButton).toHaveAttribute('disabled'))
+    // Resolve onSubmit
+    await waitFor(async () => resolvePromise!())
+    // Button enabled after resolution
+    await waitFor(() =>
+      expect(page.submitButton).not.toHaveAttribute('disabled'),
     )
   })
 })

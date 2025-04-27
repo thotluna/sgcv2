@@ -18,7 +18,10 @@ export async function singUpSubmitHandler(data: SingUpDTO): Promise<Result> {
   return sendSing(data, URL_API.SIGN_UP)
 }
 
-async function sendSing<TData>(data: TData, url: string): Promise<Result> {
+export async function sendSing<TData>(
+  data: TData,
+  url: string,
+): Promise<Result> {
   const cookieStore = await cookies()
   const lang = cookieStore.get(NEXT_LOCALE)?.value || 'es'
   try {
