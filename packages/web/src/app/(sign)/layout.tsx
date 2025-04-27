@@ -1,5 +1,5 @@
-import { ErrorUrl } from '../_auth/components/error-url'
-import Title from './title'
+import { ErrorUrl } from './components/error-url'
+import Title from './components/title'
 import { DateTime } from '@/components/ui/date-time'
 import LangSwitch from '@/components/ui/lang-switch'
 import ThemeSwitch from '@/components/ui/theme-switch'

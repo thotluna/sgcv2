@@ -1,7 +1,7 @@
 'use client'
 
 import { useSubmitHandler } from '../useSubmitHandler'
-import { SingInForm } from '@/app/_auth/components/signin-form'
+import { SingInForm } from '@/app/(sign)/login/signin-form'
 import { SingInDTO } from '@/app/_auth/types'
 
 const URL_API = {
