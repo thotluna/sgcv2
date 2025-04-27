@@ -75,6 +75,6 @@ export class RegisterFormPage {
   }
 
   getConfirmPasswordError() {
-    return screen.queryByText('passwords_do_not_match')
+    return screen.queryByText('password_not_match')
   }
 }
