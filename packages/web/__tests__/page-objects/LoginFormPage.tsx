@@ -1,6 +1,6 @@
 import { SingInForm } from '../../src/app/_auth/components/signin-form'
 import { SingInDTO } from '../../src/app/_auth/types'
-import { render, screen, RenderResult, waitFor } from '@testing-library/react'
+import { render, screen, RenderResult } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Toaster } from 'sonner'
 
@@ -12,14 +12,12 @@ export class LoginFormPage {
   >
 
   constructor(private mockOnSubmit: (data: SingInDTO) => Promise<void>) {
-    waitFor(() => {
-      this.element = render(
-        <article>
-          <SingInForm onSubmit={this.mockOnSubmit} />
-          <Toaster richColors />
-        </article>,
-      )
-    })
+    this.element = render(
+      <article>
+        <SingInForm onSubmit={this.mockOnSubmit} />
+        <Toaster richColors />
+      </article>,
+    )
   }
 
   get emailInput(): HTMLInputElement {
@@ -36,7 +34,7 @@ export class LoginFormPage {
 
   async submitEmpty(): Promise<void> {
     const user = userEvent.setup()
-    await user.click(this.submitButton)
+    user.click(this.submitButton)
   }
 
   async fillAndSubmit(email: string, password: string): Promise<void> {
@@ -58,9 +56,5 @@ export class LoginFormPage {
 
   getCredentialInvalid() {
     return screen.findByText('credential_invalid')
-  }
-
-  getDebugElement(el: Element | undefined) {
-    this.element.debug(el, 10000)
   }
 }

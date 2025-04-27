@@ -32,7 +32,7 @@ describe('Register Form Component', () => {
     expect(mockOnSubmit).not.toHaveBeenCalled()
   })
 
-  it.only('calls onSubmit with valid data', async () => {
+  it('calls onSubmit with valid data', async () => {
     const mockOnSubmit: jest.Mock<
       Promise<void>,
       [
@@ -88,6 +88,7 @@ describe('Register Form Component', () => {
         'different',
       )
     })
+
     expect(await page.getConfirmPasswordError()).toBeInTheDocument()
     expect(mockOnSubmit).not.toHaveBeenCalled()
   })

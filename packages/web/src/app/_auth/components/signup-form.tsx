@@ -103,6 +103,9 @@ export function SingUpForm({
                         {...field}
                       />
                       <Button
+                        aria-label={traslateShared(
+                          'toggle_password_visibility',
+                        )}
                         onClick={event => {
                           event.preventDefault()
                           setPasswordVisible(!passwordVisible)
@@ -135,6 +138,9 @@ export function SingUpForm({
                         {...field}
                       />
                       <Button
+                        aria-label={traslateShared(
+                          'toggle_password_visibility',
+                        )}
                         name="submit"
                         onClick={event => {
                           event.preventDefault()
