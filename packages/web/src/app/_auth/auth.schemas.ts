@@ -32,7 +32,6 @@ export function getSignUpFormSchema(t?: (key: string) => string) {
         .max(50, t?.('password_max_length') || 'password_max_length'),
     })
     .superRefine(async ({ code }, ctx) => {
-      if (!code) return
       const data = await validateCustomerCode(code)
       if (data.status !== 'success') {
         ctx.addIssue({

@@ -1,9 +1,9 @@
-import { defineConfig, globalIgnores } from 'eslint/config'
-import globals from 'globals'
 import js from '@eslint/js'
 import tsPlugin from '@typescript-eslint/eslint-plugin'
 import tsParser from '@typescript-eslint/parser'
 import prettierPluginRecomended from 'eslint-plugin-prettier/recommended'
+import { defineConfig, globalIgnores } from 'eslint/config'
+import globals from 'globals'
 
 export default defineConfig([
   globalIgnores([
@@ -15,7 +15,9 @@ export default defineConfig([
   ]),
   {
     files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'],
-    languageOptions: { globals: { ...globals.browser, ...globals.node, ...globals.jest } },
+    languageOptions: {
+      globals: { ...globals.browser, ...globals.node, ...globals.jest },
+    },
   },
   {
     files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'],

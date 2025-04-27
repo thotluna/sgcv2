@@ -13,7 +13,7 @@ module.exports = {
   },
   // Load environment config for React act support
   setupFiles: ['<rootDir>/jest.env.ts'],
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   transform: {
     '^.+\\.[tj]sx?$': ['ts-jest', { tsconfig: 'tsconfig.jest.json' }],
   },
