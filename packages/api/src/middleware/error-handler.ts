@@ -1,4 +1,5 @@
 import { AuthResponseBuilder } from '../utils/auth-response-builder'
+import type { BusinessErrorShape } from '@sgcv2/shared'
 import { NextFunction, Request, Response } from 'express'
 
 export function errorHandler(
@@ -17,11 +18,13 @@ export function errorHandler(
   res.status(statusCode)
   res.type('application/json')
 
+  const customError = err as Partial<BusinessErrorShape>
+
   res.send(
     new AuthResponseBuilder()
       .status('error')
-      .code(statusCode)
-      .message(req.t(err.message))
+      .code(customError.code || statusCode)
+      .message(customError.code ? req.t(customError.code) : req.t(err.message))
       .build(),
   )
 }

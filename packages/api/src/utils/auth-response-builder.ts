@@ -18,7 +18,7 @@ export class AuthResponseBuilder<T> {
     this.response.message = message
     return this
   }
-  code(code: number) {
+  code(code: number | string) {
     this.response.code = code
     return this
   }

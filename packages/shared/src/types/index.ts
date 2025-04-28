@@ -2,7 +2,7 @@ export interface ApiResponse<T> {
   data?: T
   status: 'success' | 'error'
   message?: string | null
-  code: number | null
+  code: number | string | null
   metadata?: object | null
 }
 
