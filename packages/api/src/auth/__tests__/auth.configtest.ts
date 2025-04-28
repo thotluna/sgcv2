@@ -1,7 +1,8 @@
 import { CustomerCodeJwtHelper } from '../../utils/jwt-customer-code'
-import { AuthsRepository, UserResponse } from '../types'
+import { AuthRepository } from '../auth.repository'
+import { UserResponse } from '../types'
 
-export const authRepository: AuthsRepository = {
+export const authRepository: AuthRepository = {
   saveCustomerCode: jest.fn(),
   validateCustomerCode: jest.fn(),
   signUp: jest.fn(),

@@ -1,8 +1,8 @@
 import { ServerApi } from '../../server'
 import { AuthController } from '../auth.controller'
+import { AuthRepository } from '../auth.repository'
 import { AuthRouter } from '../auth.routes'
 import { AuthService } from '../auth.service'
-import { AuthsRepository } from '../types'
 import { authRepository } from './auth.configtest'
 import 'dotenv/config'
 import { Application } from 'express'
@@ -11,7 +11,7 @@ import i18next from 'i18next'
 
 export let app: Application
 let server!: Server
-let repository: AuthsRepository
+let repository: AuthRepository
 export let i18n: typeof i18next
 
 beforeAll(async () => {

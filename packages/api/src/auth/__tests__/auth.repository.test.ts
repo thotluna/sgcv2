@@ -1,4 +1,4 @@
-import { SupabaseAuthRepository } from '../auth.repository'
+import { SupabaseAuthRepository } from '../auth.supabase.repository'
 import { DBErrorConexion } from '../errors'
 import { createClient } from '@supabase/supabase-js'
 
