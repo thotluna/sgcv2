@@ -15,7 +15,6 @@ export const schemaValidation =
           new AuthResponseBuilder()
             .code(400)
             .status('error')
-            // translate Zod issue messages using req.t
             .message(error.issues.map(issue => req.t(issue.message)).join(', '))
             .build(),
         )

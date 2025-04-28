@@ -12,6 +12,9 @@ export const VALIDATION_ERROR_CODES = {
 export const AUTH_ERROR_CODES = {
   EMAIL_ALREADY_REGISTERED: 'auth_email_already_registed',
   TOKEN_REQUIRED: 'token_required',
+  TOKEN_EXPIRED: 'token_expired',
+  TOKEN_INVALID: 'token_invalid',
+  TOKEN_MALFORMED: 'jwt_malformed',
   INVALID_CREDENTIALS: 'invalid_credentials',
   NOT_FOUND_ANONYMOUS_KEY: 'not_found_anonymous_key',
   INVALID_CODE: 'Invalid_code',

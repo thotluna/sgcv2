@@ -2,8 +2,35 @@ import { authRepositoryMock } from './auth.configtest'
 import { API_HOST, API_PORT } from './test-env'
 import { buildUserMock } from './test-utils'
 import { AuthRouter } from '@auth'
+import { CustomerCodeJwtHelper } from '@utils'
 
 export const API_USER = AuthRouter.getAbsoluteRoutes().user
+
+export const TypeTokens = {
+  OK: 'OK',
+  EXPIRED: 'EXPIRED',
+  MAL_FORMAT: 'MAL_FORMAT',
+  EMPTY: 'EMPTY',
+} as const
+
+export type TypeTokenKey = keyof typeof TypeTokens
+
+export const getToken = (type: TypeTokenKey) => {
+  const { JWT_SECRET } = process.env
+  if (type === TypeTokens.OK) {
+    const token = new CustomerCodeJwtHelper(JWT_SECRET!).crearToken('xc@xc.xc')
+    console.log({ token })
+    return token
+  }
+  if (type === TypeTokens.EXPIRED)
+    return new CustomerCodeJwtHelper(JWT_SECRET!).crearToken('xc@xc.xc', 1)
+
+  if (type === TypeTokens.MAL_FORMAT) return '12asd123asd32asd'
+
+  if (type === TypeTokens.EMPTY) return ''
+
+  return ''
+}
 
 export function apiUserUrl(params: { [key: string]: any } = {}) {
   const url = new URL(`${API_HOST}:${API_PORT}${API_USER}`)

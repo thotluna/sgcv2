@@ -6,7 +6,7 @@ import {
   httpSignUpSchema,
   httpSingInSchema,
 } from '@auth'
-import { schemaValidation } from '@middleware'
+import { schemaValidation, verificarToken } from '@middleware'
 import { Router } from 'express'
 
 export class AuthRouter {
@@ -82,7 +82,7 @@ export class AuthRouter {
       this.authController.callback,
     )
 
-    this.router.get(routes.user, this.authController.getUser)
+    this.router.get(routes.user, verificarToken, this.authController.getUser)
     // this.router.get('/session', this.authController.session)
   }
 }

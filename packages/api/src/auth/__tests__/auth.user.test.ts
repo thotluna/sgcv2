@@ -1,7 +1,7 @@
 import { dataUser, repositoryUser } from './auth.configtest'
 import { app, i18n as i18nTest } from './auth.test-base'
-import { apiUserUrl } from './auth.user.test-helper'
-import { AuthError } from '@auth'
+import { apiUserUrl, getToken, TypeTokens } from './auth.user.test-helper'
+import { AUTH_ERROR_CODES } from '@auth'
 import { AuthResponseBuilder } from '@utils'
 import request from 'supertest'
 
@@ -12,11 +12,11 @@ describe('GET /user', () => {
       .get(apiUserUrl())
       .send()
       .set('Accept', 'application/json')
-      .set('Authorization', `Bearer ${dataUser.session?.access_token}`)
-    expect(response.status).toBe(200)
+      .set('Authorization', `Beare ${getToken(TypeTokens.OK)}`)
     expect(response.body).toEqual(
       new AuthResponseBuilder().data(dataUser).build(),
     )
+    expect(response.status).toBe(200)
   })
 
   test('without token', async () => {
@@ -27,9 +27,27 @@ describe('GET /user', () => {
     expect(response.status).toBe(401)
     expect(response.body).toEqual(
       new AuthResponseBuilder()
-        .code(401)
         .status('error')
-        .message(i18nTest.t('token_required'))
+        .code(AUTH_ERROR_CODES.TOKEN_REQUIRED)
+        .httpCode(401)
+        .message(i18nTest.t(AUTH_ERROR_CODES.TOKEN_REQUIRED))
+        .build(),
+    )
+  })
+
+  test('with empty bearer', async () => {
+    const response = await request(app)
+      .get(apiUserUrl())
+      .send()
+      .set('Accept', 'application/json')
+      .set('Authorization', `Beare ${getToken(TypeTokens.EMPTY)}`)
+    expect(response.status).toBe(401)
+    expect(response.body).toEqual(
+      new AuthResponseBuilder()
+        .status('error')
+        .code(AUTH_ERROR_CODES.TOKEN_INVALID)
+        .httpCode(401)
+        .message(i18nTest.t(AUTH_ERROR_CODES.TOKEN_MALFORMED))
         .build(),
     )
   })
@@ -40,7 +58,7 @@ describe('GET /user', () => {
       .get(apiUserUrl())
       .send()
       .set('Accept', 'application/json')
-      .set('Authorization', `Bearer ${dataUser.session?.access_token}`)
+      .set('Authorization', `Beare ${getToken(TypeTokens.OK)}`)
     expect(response.status).toBe(401)
     expect(response.body).toEqual(
       new AuthResponseBuilder()
@@ -51,19 +69,19 @@ describe('GET /user', () => {
     )
   })
 
-  test('token error', async () => {
-    repositoryUser.reject(new AuthError('token_required'))
+  test('token malformed', async () => {
     const response = await request(app)
       .get(apiUserUrl())
       .send()
       .set('Accept', 'application/json')
-      .set('Authorization', `Bearer ${dataUser.session?.access_token}`)
+      .set('Authorization', `Bearer ${getToken(TypeTokens.MAL_FORMAT)}`)
     expect(response.status).toBe(401)
     expect(response.body).toEqual(
       new AuthResponseBuilder()
-        .code(401)
+        .code(AUTH_ERROR_CODES.TOKEN_INVALID)
+        .httpCode(401)
         .status('error')
-        .message(i18nTest.t('token_required'))
+        .message(i18nTest.t(AUTH_ERROR_CODES.TOKEN_MALFORMED))
         .build(),
     )
   })

@@ -1,7 +1,7 @@
 import { apiClientCodeUrl } from './auth.client-code.test-helper'
 import { clientCode, repositoryValidateCode } from './auth.configtest'
 import { app, i18n as i18nInstance } from './auth.test-base'
-import { AuthError, DBErrorConexion } from '@auth'
+import { AUTH_ERROR_CODES, AuthError, DBErrorConexion } from '@auth'
 import { ClientCodeType } from '@sgcv2/shared'
 import { AuthResponseBuilder } from '@utils'
 import 'dotenv/config'
@@ -50,7 +50,7 @@ describe('auth /code/validate test', () => {
       new AuthResponseBuilder()
         .status('error')
         .code(400)
-        .message(i18nInstance.t('jwt malformed'))
+        .message(AUTH_ERROR_CODES.TOKEN_MALFORMED)
         .build(),
     )
   })

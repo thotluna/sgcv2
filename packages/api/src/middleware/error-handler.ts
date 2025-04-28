@@ -12,19 +12,25 @@ export function errorHandler(
     return next(err)
   }
 
-  const statusCode =
-    res.statusCode && res.statusCode !== 200 ? res.statusCode : 500
+  const customError = err as Partial<BusinessErrorShape>
+  const httpCode =
+    typeof customError.httpCode === 'number'
+      ? customError.httpCode
+      : res.statusCode && res.statusCode !== 200
+        ? res.statusCode
+        : 500
 
-  res.status(statusCode)
+  res.status(httpCode)
   res.type('application/json')
 
-  const customError = err as Partial<BusinessErrorShape>
+  const builder = new AuthResponseBuilder()
+    .status('error')
+    .code(customError.code || httpCode)
+    .message(req.t(customError.message || customError.code || err.message))
 
-  res.send(
-    new AuthResponseBuilder()
-      .status('error')
-      .code(customError.code || statusCode)
-      .message(customError.code ? req.t(customError.code) : req.t(err.message))
-      .build(),
-  )
+  if (typeof customError.httpCode === 'number') {
+    builder.httpCode(customError.httpCode)
+  }
+
+  res.send(builder.build())
 }

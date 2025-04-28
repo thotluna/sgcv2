@@ -6,7 +6,7 @@ import {
 import { apiSignUpUrl, signUpMock } from './auth.sign-up.test-helper'
 import { app, i18n as i18nInstance } from './auth.test-base'
 import { buildUserMock } from './test-utils'
-import { AuthError } from '@auth'
+import { AUTH_ERROR_CODES, AuthError } from '@auth'
 import { AuthResponseBuilder } from '@utils'
 import request from 'supertest'
 
@@ -64,11 +64,7 @@ describe('POST /signup', () => {
       new AuthResponseBuilder()
         .status('error')
         .code(400)
-        .message(
-          i18nInstance.t('jwt malformed', {
-            lng: 'es',
-          }),
-        )
+        .message(AUTH_ERROR_CODES.TOKEN_MALFORMED)
         .build(),
     )
   })

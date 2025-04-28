@@ -22,15 +22,16 @@ export const repositoryValidateCode = {
     ),
 }
 
+const { SECRET } = process.env
 export const clientCode = {
-  correct: new CustomerCodeJwtHelper().crearToken('qw@qw.co'),
+  correct: new CustomerCodeJwtHelper(SECRET!).crearToken('qw@qw.co'),
   incorrect: 'code invalid',
 }
 
 export const signupData = {
   email: 'alan@gmail.com',
   password: '12345678',
-  code: new CustomerCodeJwtHelper().crearToken('alan@gmail.com'),
+  code: new CustomerCodeJwtHelper(SECRET!).crearToken('alan@gmail.com'),
 }
 
 export const data = {
@@ -89,7 +90,8 @@ export const dataUser: UserResponse = {
     role: 'authenticated',
   },
   session: {
-    access_token: '123456789',
+    access_token:
+      'eyJhbGciOiJIUzI1NiIsImtpZCI6Im1YWlA5N3FRSkhPRkI4ckMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3J6ZnZ6cWhjZWFocXBqempzd3h6LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiIzY2RmOGY3MC0yNjc2LTQ5ZGMtOWZkYS0xNTFkNTg5YTkxNWEiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzQ1ODkxNDg3LCJpYXQiOjE3NDU4ODc4ODcsImVtYWlsIjoidGhvdGx1bmFAZ21haWwuY29tIiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbCI6InRob3RsdW5hQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaG9uZV92ZXJpZmllZCI6ZmFsc2UsInN1YiI6IjNjZGY4ZjcwLTI2NzYtNDlkYy05ZmRhLTE1MWQ1ODlhOTE1YSJ9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzQ1ODg3ODg3fV0sInNlc3Npb25faWQiOiJjYzkxZGFiOC04YzI3LTRlYTUtYTRhOS01NDBhMTYzNTkwMGQiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.aYuZrgqRcdTfuaZjtQm7S-vzPzuqmV3OvCXoBKb_KLE',
     expires_at: Date.now(),
     expires_in: 3600,
     refresh_token: '123456789',
