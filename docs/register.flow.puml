@@ -1,0 +1,20 @@
+@startuml
+actor Usuario as U
+participant "Frontend\n(Next.js)" as F
+participant "Backend\n(API)" as B
+participant "Supabase" as S
+
+U -> F : Abre /register y llena el formulario
+F -> B : Valida código de cliente\n(POST /code/validate)
+B -> B : Valida código en base de datos
+B --> F : Respuesta validación código
+
+U -> F : Envía formulario (email, password, code)
+F -> B : POST /v1/auth/signup
+B -> S : Crea usuario en Supabase
+S --> B : Devuelve usuario y tokens de sesión
+B --> F : Responde con usuario y tokens
+
+F -> F : Guarda tokens en cookies
+F -> U : Redirige a /private (zona autenticada)
+@enduml
