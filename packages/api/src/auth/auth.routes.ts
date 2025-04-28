@@ -10,6 +10,31 @@ import { schemaValidation } from '@middleware'
 import { Router } from 'express'
 
 export class AuthRouter {
+  private static readonly routes = {
+    customerCode: '/customer-code',
+    validateCode: '/code/validate',
+    signUp: '/signup',
+    signIn: '/signin',
+    authorize: '/authorize',
+    callback: '/callback',
+    user: '/user',
+  } as const
+
+  static apiPrefix = '/v1/auth'
+
+  // Método estático para uso en tests: rutas absolutas
+  static getAbsoluteRoutes() {
+    const prefix = AuthRouter.apiPrefix
+    return Object.fromEntries(
+      Object.entries(AuthRouter.routes).map(([k, v]) => [k, `${prefix}${v}`]),
+    ) as typeof AuthRouter.routes
+  }
+
+  // Método de instancia para uso en el router: rutas relativas
+  getRelativeRoutes() {
+    return AuthRouter.routes
+  }
+
   private router: Router
   private authController: AuthController
 
@@ -23,39 +48,41 @@ export class AuthRouter {
   }
 
   initializeRoutes() {
+    const routes = this.getRelativeRoutes()
     this.router.post(
-      '/customer-code',
+      routes.customerCode,
       schemaValidation(httpEmailCodeSchema),
       this.authController.customerCode,
     )
+    //'/code/validate'
     this.router.post(
-      '/code/validate',
+      routes.validateCode,
       schemaValidation(httpCustomerCodeSchema),
       this.authController.validationCustomerCode,
     )
     this.router.post(
-      '/signup',
+      routes.signUp,
       schemaValidation(httpSignUpSchema),
       this.authController.signUp,
     )
     this.router.post(
-      '/signin',
+      routes.signIn,
       schemaValidation(httpSingInSchema),
       this.authController.signIn,
     )
     this.router.get(
-      '/authorize',
+      routes.authorize,
       schemaValidation(authorizeSchema),
       this.authController.authorize,
     )
 
     this.router.get(
-      '/callback',
+      routes.callback,
 
       this.authController.callback,
     )
 
-    this.router.get('/user', this.authController.getUser)
+    this.router.get(routes.user, this.authController.getUser)
     // this.router.get('/session', this.authController.session)
   }
 }

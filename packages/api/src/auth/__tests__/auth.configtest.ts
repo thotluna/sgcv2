@@ -21,15 +21,6 @@ export const repositoryValidateCode = {
     ),
 }
 
-export const authRoute = {
-  VALIDATE_CODE: '/v1/auth/code/validate',
-  SIGN_UP: '/v1/auth/signup',
-  SIGN_IN: '/v1/auth/signin',
-  AUTHORIZE: '/v1/auth/authorize',
-  CALLBACK: '/v1/auth/callback',
-  USER: '/v1/auth/user',
-}
-
 export const clientCode = {
   correct: new CustomerCodeJwtHelper().crearToken('qw@qw.co'),
   incorrect: 'code invalid',

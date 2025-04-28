@@ -1,12 +1,11 @@
 import {
-  authRoute,
   data,
   repositorySignUp,
   repositoryValidateCode,
   signupData,
 } from './auth.configtest'
 import { app, i18n as i18nInstance } from './auth.test-base'
-import { AuthError } from '@auth'
+import { AuthError, AuthRouter } from '@auth'
 import { AuthResponseBuilder } from '@utils'
 import request from 'supertest'
 
@@ -16,7 +15,7 @@ describe('POST /signup', () => {
     repositoryValidateCode.resolve()
     repositorySignUp.resolve()
     return request(app)
-      .post(authRoute.SIGN_UP)
+      .post(AuthRouter.getAbsoluteRoutes().signUp)
       .send(dataI)
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
@@ -35,7 +34,7 @@ describe('POST /signup', () => {
 
   test('bad request, password invalid format', () => {
     return request(app)
-      .post(authRoute.SIGN_UP)
+      .post(AuthRouter.getAbsoluteRoutes().signUp)
       .send({ ...signupData, password: '123' })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
@@ -71,7 +70,7 @@ describe('POST /signup', () => {
 
   test('bad request, code client invalid format', () => {
     return request(app)
-      .post(authRoute.SIGN_UP)
+      .post(AuthRouter.getAbsoluteRoutes().signUp)
       .send({ ...signupData, code: '123' })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
@@ -94,7 +93,7 @@ describe('POST /signup', () => {
   test('error, code client refused', () => {
     repositoryValidateCode.reject(new AuthError('code_not_found'))
     return request(app)
-      .post(authRoute.SIGN_UP)
+      .post(AuthRouter.getAbsoluteRoutes().signUp)
       .send(signupData)
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
@@ -113,7 +112,7 @@ describe('POST /signup', () => {
   test('error, any other', () => {
     repositoryValidateCode.reject(new Error('db_conexion_error'))
     return request(app)
-      .post(authRoute.SIGN_UP)
+      .post(AuthRouter.getAbsoluteRoutes().signUp)
       .send(signupData)
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
@@ -138,7 +137,7 @@ describe('POST /signup', () => {
     repositorySignUp.reject(new AuthError('auth_email_already_registed'))
 
     return request(app)
-      .post(authRoute.SIGN_UP)
+      .post(AuthRouter.getAbsoluteRoutes().signUp)
       .send(signupData)
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)

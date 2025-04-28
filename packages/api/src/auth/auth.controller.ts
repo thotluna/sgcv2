@@ -195,7 +195,9 @@ export class AuthController {
           maxAge: 7 * 24 * 60 * 60 * 1000,
         })
 
-        .redirect(`${process.env.FRONTEND_URL}/auth/callback`)
+        .redirect(
+          `${process.env.FRONTEND_URL}:${process.env.PORT_FRONTEND}/auth/callback`,
+        )
       return
     } catch (error) {
       if (error instanceof AuthError) {

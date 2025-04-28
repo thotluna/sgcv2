@@ -1,10 +1,6 @@
-import {
-  authRoute,
-  clientCode,
-  repositoryValidateCode,
-} from './auth.configtest'
+import { clientCode, repositoryValidateCode } from './auth.configtest'
 import { app, i18n as i18nInstance } from './auth.test-base'
-import { AuthError, DBErrorConexion } from '@auth'
+import { AuthError, AuthRouter, DBErrorConexion } from '@auth'
 import { ClientCodeType } from '@sgcv2/shared'
 import { AuthResponseBuilder } from '@utils'
 import 'dotenv/config'
@@ -14,7 +10,7 @@ describe('auth /code/validate test', () => {
   test('happy past', () => {
     repositoryValidateCode.resolve()
     return request(app)
-      .post(authRoute.VALIDATE_CODE)
+      .post(AuthRouter.getAbsoluteRoutes().validateCode)
       .send({ code: clientCode.correct })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
@@ -30,7 +26,7 @@ describe('auth /code/validate test', () => {
 
   test('bad request', () => {
     return request(app)
-      .post(authRoute.VALIDATE_CODE)
+      .post(AuthRouter.getAbsoluteRoutes().validateCode)
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(400)
@@ -47,7 +43,7 @@ describe('auth /code/validate test', () => {
 
   test('code invalid', () => {
     return request(app)
-      .post(authRoute.VALIDATE_CODE)
+      .post(AuthRouter.getAbsoluteRoutes().validateCode)
       .send({ code: clientCode.incorrect })
       .set('Accept', 'application/json')
       .set('Accept-Language', 'es')
@@ -67,7 +63,7 @@ describe('auth /code/validate test', () => {
   test('code refused', () => {
     repositoryValidateCode.reject(new AuthError('code_not_found'))
     return request(app)
-      .post(authRoute.VALIDATE_CODE)
+      .post(AuthRouter.getAbsoluteRoutes().validateCode)
       .send({ code: clientCode.correct })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
@@ -86,7 +82,7 @@ describe('auth /code/validate test', () => {
   test('error db', () => {
     repositoryValidateCode.reject(new DBErrorConexion('db_conexion_error'))
     return request(app)
-      .post(authRoute.VALIDATE_CODE)
+      .post(AuthRouter.getAbsoluteRoutes().validateCode)
       .send({ code: clientCode.correct })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)

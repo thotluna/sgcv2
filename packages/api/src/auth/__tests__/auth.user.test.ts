@@ -1,6 +1,6 @@
-import { authRoute, dataUser, repositoryUser } from './auth.configtest'
+import { dataUser, repositoryUser } from './auth.configtest'
 import { app, i18n as i18nTest } from './auth.test-base'
-import { AuthError } from '@auth'
+import { AuthError, AuthRouter } from '@auth'
 import { AuthResponseBuilder } from '@utils'
 import request from 'supertest'
 
@@ -8,7 +8,7 @@ describe('GET /user', () => {
   test('happy past', () => {
     repositoryUser.resolve()
     return request(app)
-      .get(authRoute.USER)
+      .get(AuthRouter.getAbsoluteRoutes().user)
       .send()
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer ${dataUser.session?.access_token}`)
@@ -23,7 +23,7 @@ describe('GET /user', () => {
 
   test('without token', () => {
     return request(app)
-      .get(authRoute.USER)
+      .get(AuthRouter.getAbsoluteRoutes().user)
       .send()
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
@@ -42,7 +42,7 @@ describe('GET /user', () => {
   test('token do not return user', () => {
     repositoryUser.resolve({ user: null, session: null })
     return request(app)
-      .get(authRoute.USER)
+      .get(AuthRouter.getAbsoluteRoutes().user)
       .send()
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer ${dataUser.session?.access_token}`)
@@ -62,7 +62,7 @@ describe('GET /user', () => {
   test('token error', () => {
     repositoryUser.reject(new AuthError('token_required'))
     return request(app)
-      .get(authRoute.USER)
+      .get(AuthRouter.getAbsoluteRoutes().user)
       .send()
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer ${dataUser.session?.access_token}`)

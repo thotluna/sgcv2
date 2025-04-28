@@ -1,6 +1,6 @@
-import { repositoryCallback, authRoute } from './auth.configtest'
+import { repositoryCallback } from './auth.configtest'
 import { app, i18n as i18nTest } from './auth.test-base'
-import { AuthError } from '@auth'
+import { AuthError, AuthRouter } from '@auth'
 import { AuthResponseBuilder } from '@utils'
 import request from 'supertest'
 
@@ -9,7 +9,7 @@ describe('GET /callback', () => {
     repositoryCallback.resolve()
 
     return request(app)
-      .get(authRoute.CALLBACK + '?code=123456789')
+      .get(AuthRouter.getAbsoluteRoutes().callback + '?code=123456789')
       .set('Accept', 'application/json')
       .expect(302)
       .then(response => {
@@ -25,7 +25,7 @@ describe('GET /callback', () => {
     repositoryCallback.resolve()
 
     return request(app)
-      .get(authRoute.CALLBACK)
+      .get(AuthRouter.getAbsoluteRoutes().callback)
       .set('Accept', 'application/json')
       .expect(302)
       .then(response => {
@@ -38,7 +38,7 @@ describe('GET /callback', () => {
     repositoryCallback.reject(new AuthError('not_found_anonymous_key'))
 
     return request(app)
-      .get(authRoute.CALLBACK + '?code=123456789')
+      .get(AuthRouter.getAbsoluteRoutes().callback + '?code=123456789')
       .set('Accept', 'application/json')
       .expect(401)
       .then(response => {

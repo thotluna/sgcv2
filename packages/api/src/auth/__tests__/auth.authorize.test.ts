@@ -1,3 +1,4 @@
+import { AuthRouter } from '../auth.routes'
 import { repositorySignIn } from './auth.configtest'
 import { app, i18n as i18nInstance } from './auth.test-base'
 import { authorizeDataType } from '@auth'
@@ -9,7 +10,7 @@ describe('GET /authorize', () => {
   test('happy past', () => {
     repositorySignIn.resolve()
     return request(app)
-      .get('/v1/auth/authorize?provider=google')
+      .get(AuthRouter.getAbsoluteRoutes().authorize + '?provider=google')
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(200)
@@ -25,7 +26,7 @@ describe('GET /authorize', () => {
   test('return url', () => {
     repositorySignIn.resolve()
     return request(app)
-      .get('/v1/auth/authorize?provider=google')
+      .get(AuthRouter.getAbsoluteRoutes().authorize + '?provider=google')
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(200)
@@ -43,7 +44,7 @@ describe('GET /authorize', () => {
 
   test('bad request, provider invalid', () => {
     return request(app)
-      .get('/v1/auth/authorize?provider=invalid')
+      .get(AuthRouter.getAbsoluteRoutes().authorize + '?provider=invalid')
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(400)
