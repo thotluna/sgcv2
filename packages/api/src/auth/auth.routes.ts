@@ -1,12 +1,12 @@
-import { schemaValidation } from '../middleware/schema-validation'
-import { AuthController } from './auth.controller'
 import {
+  AuthController,
   authorizeSchema,
   httpCustomerCodeSchema,
   httpEmailCodeSchema,
   httpSignUpSchema,
   httpSingInSchema,
-} from './auth.schema'
+} from '@auth'
+import { schemaValidation } from '@middleware'
 import { Router } from 'express'
 
 export class AuthRouter {

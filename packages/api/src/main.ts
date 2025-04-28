@@ -1,6 +1,6 @@
 import { ServerApi } from './server'
 import {
-  AuthRepository,
+  AuthRespository,
   SupabaseAuthRepository,
   AuthController,
   AuthRouter,
@@ -9,7 +9,7 @@ import {
 import 'dotenv/config'
 
 export const getAuthRouter = () => {
-  const repository: AuthRepository = new SupabaseAuthRepository()
+  const repository: AuthRespository = new SupabaseAuthRepository()
   const service = new AuthService(repository)
   const authController = new AuthController(service)
   const authRouter = new AuthRouter(authController)

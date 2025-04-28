@@ -1,5 +1,4 @@
-import { SupabaseAuthRepository } from '../auth.supabase.repository'
-import { DBErrorConexion } from '../errors'
+import { DBErrorConexion, SupabaseAuthRepository } from '@auth'
 import { createClient } from '@supabase/supabase-js'
 
 jest.mock('@supabase/supabase-js', () => ({

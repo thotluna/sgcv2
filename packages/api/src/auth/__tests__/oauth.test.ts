@@ -1,4 +1,4 @@
-import { generateCodeChallenge, generatePKCEParams } from '../oauth'
+import { generateCodeChallenge, generatePKCEParams } from '@utils'
 
 describe('oauth functions test', () => {
   test('should be return codeVerifier with length between 43 and 128', async () => {

@@ -1,9 +1,8 @@
-import { AuthResponseBuilder } from '../../utils/auth-response-builder'
-import { authorizeDataType } from '../types'
 import { repositorySignIn } from './auth.configtest'
-import './auth.test-base'
 import { app, i18n as i18nInstance } from './auth.test-base'
+import { authorizeDataType } from '@auth'
 import { ApiResponse } from '@sgcv2/shared'
+import { AuthResponseBuilder } from '@utils'
 import request from 'supertest'
 
 describe('GET /authorize', () => {

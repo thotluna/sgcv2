@@ -1,8 +1,7 @@
-import { CustomerCodeJwtHelper } from '../../utils/jwt-customer-code'
-import { AuthRepository } from '../auth.repository'
-import { UserResponse } from '../types'
+import { AuthRespository, UserResponse } from '@auth'
+import { CustomerCodeJwtHelper } from '@utils'
 
-export const authRepository: AuthRepository = {
+export const authRepositoryMock: AuthRespository = {
   saveCustomerCode: jest.fn(),
   validateCustomerCode: jest.fn(),
   signUp: jest.fn(),
@@ -13,9 +12,13 @@ export const authRepository: AuthRepository = {
 }
 export const repositoryValidateCode = {
   resolve: () =>
-    (authRepository.validateCustomerCode as jest.Mock).mockResolvedValue(true),
+    (authRepositoryMock.validateCustomerCode as jest.Mock).mockResolvedValue(
+      true,
+    ),
   reject: (error: Error) =>
-    (authRepository.validateCustomerCode as jest.Mock).mockRejectedValue(error),
+    (authRepositoryMock.validateCustomerCode as jest.Mock).mockRejectedValue(
+      error,
+    ),
 }
 
 export const authRoute = {
@@ -52,12 +55,12 @@ export const data = {
 
 export const repositorySignUp = {
   resolve: () =>
-    (authRepository.signUp as jest.Mock).mockResolvedValue({
+    (authRepositoryMock.signUp as jest.Mock).mockResolvedValue({
       data,
       error: null,
     }),
   reject: (error: Error) =>
-    (authRepository.signUp as jest.Mock).mockRejectedValue(error),
+    (authRepositoryMock.signUp as jest.Mock).mockRejectedValue(error),
 }
 
 export const signInData = {
@@ -67,23 +70,23 @@ export const signInData = {
 
 export const repositorySignIn = {
   resolve: () =>
-    (authRepository.signIn as jest.Mock).mockResolvedValue({
+    (authRepositoryMock.signIn as jest.Mock).mockResolvedValue({
       data,
       error: null,
     }),
   reject: (error: Error) =>
-    (authRepository.signIn as jest.Mock).mockRejectedValue(error),
+    (authRepositoryMock.signIn as jest.Mock).mockRejectedValue(error),
 }
 
 export const repositoryCallback = {
   resolve: () =>
-    (authRepository.callback as jest.Mock).mockResolvedValue({
+    (authRepositoryMock.callback as jest.Mock).mockResolvedValue({
       access_token: '123456789',
       expires_at: Date.now(),
       refresh_token: '123456789',
     }),
   reject: (error: Error) =>
-    (authRepository.callback as jest.Mock).mockRejectedValue(error),
+    (authRepositoryMock.callback as jest.Mock).mockRejectedValue(error),
 }
 
 export const dataUser: UserResponse = {
@@ -110,9 +113,9 @@ export const dataUser: UserResponse = {
 
 export const repositoryUser = {
   resolve: (data?: UserResponse | undefined) =>
-    (authRepository.getUser as jest.Mock).mockResolvedValue(
+    (authRepositoryMock.getUser as jest.Mock).mockResolvedValue(
       data ? data : dataUser,
     ),
   reject: (error: Error) =>
-    (authRepository.getUser as jest.Mock).mockRejectedValue(error),
+    (authRepositoryMock.getUser as jest.Mock).mockRejectedValue(error),
 }

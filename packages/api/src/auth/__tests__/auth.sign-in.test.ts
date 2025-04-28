@@ -1,13 +1,12 @@
-import { AuthResponseBuilder } from '../../utils/auth-response-builder'
-import { AuthError } from '../errors'
 import {
   repositorySignIn,
   authRoute,
   signInData,
   data,
 } from './auth.configtest'
-import './auth.test-base'
 import { app, i18n as i18nTest } from './auth.test-base'
+import { AuthError } from '@auth'
+import { AuthResponseBuilder } from '@utils'
 import request from 'supertest'
 
 describe('POST /signin', () => {

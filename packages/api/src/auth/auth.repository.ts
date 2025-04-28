@@ -1,6 +1,6 @@
-import { UserResponse, CallbackResult } from './types'
+import { UserResponse, CallbackResult } from '@auth'
 
-export interface AuthRepository {
+export interface AuthRespository {
   saveCustomerCode(token: string, email: string): unknown
   getUser(access_token: string): Promise<UserResponse>
   validateCustomerCode(code: string): Promise<boolean>

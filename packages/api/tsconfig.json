@@ -8,7 +8,10 @@
     "paths": {
       "@auth": ["auth/index.ts"],
       "@auth/*": ["auth/*"],
+      "@utils": ["utils/index.ts"],
       "@utils/*": ["utils/*"],
+      "@middleware": ["middleware/index.ts"],
+      "@middleware/*": ["middleware/*"],
       "@api/*": ["*"],
       "@sgcv2/*": ["../../*/src"]
     }

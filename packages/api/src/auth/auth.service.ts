@@ -1,13 +1,11 @@
-import { CustomerCodeJwtHelper } from '../utils/jwt-customer-code'
-import { AuthRepository } from './auth.repository'
-import { AuthError } from './errors'
-import { generatePKCEParams } from './oauth'
+import { AuthRespository, AuthError } from '@auth'
+import { generatePKCEParams, CustomerCodeJwtHelper } from '@utils'
 import jwt from 'jsonwebtoken'
 
 export class AuthService {
-  private repository: AuthRepository
+  private repository: AuthRespository
 
-  constructor(repository: AuthRepository) {
+  constructor(repository: AuthRespository) {
     this.repository = repository
   }
 

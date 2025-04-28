@@ -1,8 +1,8 @@
-import { AuthRepository } from '../auth.repository'
+import { AuthRespository } from '../auth.repository'
 import { UserResponse, CallbackResult } from '../types'
 import { assert } from 'console'
 
-export class AuthMockRepository implements AuthRepository {
+export class AuthMockRepository implements AuthRespository {
   saveCustomerCode(token: string, email: string): unknown {
     assert(token, email)
     throw new Error('Method not implemented.')

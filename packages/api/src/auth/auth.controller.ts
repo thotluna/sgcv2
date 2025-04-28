@@ -1,9 +1,6 @@
-import { AuthResponseBuilder } from '../utils/auth-response-builder'
-import { CustomerCodeTokeError } from '../utils/jwt-customer-code'
-import { AuthService } from './auth.service'
-import { SUPABASE_URLs } from './constants'
-import { AuthError, DBErrorConexion } from './errors'
+import { AuthService, SUPABASE_URLs, AuthError, DBErrorConexion } from '@auth'
 import { ApiResponse, ClientCodeType } from '@sgcv2/shared'
+import { CustomerCodeTokeError, AuthResponseBuilder } from '@utils'
 import { NextFunction, Request, Response } from 'express'
 
 export class AuthController {

@@ -1,11 +1,15 @@
-import { AuthRepository } from './auth.repository'
-import { AuthError, DBError, DBErrorConexion } from './errors'
-import { CallbackResult, UserResponse } from './types'
-import { SUPABASE_URLs } from '@auth'
+import type { CallbackResult, UserResponse } from '@auth'
+import {
+  SUPABASE_URLs,
+  AuthError,
+  DBError,
+  DBErrorConexion,
+  AuthRespository,
+} from '@auth'
 import { Database } from '@sgcv2/shared'
 import { SupabaseClient, createClient } from '@supabase/supabase-js'
 
-export class SupabaseAuthRepository implements AuthRepository {
+export class SupabaseAuthRepository implements AuthRespository {
   private client: SupabaseClient = createClient<Database>(
     process.env.SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROL!,
