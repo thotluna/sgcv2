@@ -1,3 +1,4 @@
+import { UserResponse } from '@/app/_auth/types'
 import { rest } from 'msw'
 
 const BASE_URL = `${process.env.NEXT_PUBLIC_URL_API}/v1/auth`
@@ -57,12 +58,60 @@ export const handlers = [
       )
     }
 
-    // console.log('correcto msw')
+    console.log('correcto msw')
 
     return res(
       ctx.status(200),
       ctx.json({
         data: code,
+        status: 'success',
+        code: 200,
+      }),
+    )
+  }),
+
+  rest.post(`${BASE_URL}/sign-up`, async (req, res, ctx) => {
+    const body = await req.json()
+    const { email, password, code } = body
+
+    if (!code || !email || !password) {
+      return res(
+        ctx.status(400),
+        ctx.json({
+          status: 'error',
+          message: 'Se requieren email, password y codigo de cliente',
+          code: 400,
+          metadata: null,
+        }),
+      )
+    }
+
+    const data: UserResponse = {
+      user: {
+        id: '1',
+        email,
+        created_at: new Date().toISOString(),
+        role: 'user',
+      },
+      session: {
+        access_token: '123456789',
+        refresh_token: '123456789',
+        expires_in: 3600,
+        expires_at: new Date().getTime() + 3600000,
+        token_type: 'Bearer',
+        user: {
+          id: '1',
+          email,
+          created_at: new Date().toISOString(),
+          role: 'user',
+        },
+      },
+    }
+
+    return res(
+      ctx.status(200),
+      ctx.json({
+        data,
         status: 'success',
         code: 200,
       }),
