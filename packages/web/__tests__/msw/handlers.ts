@@ -3,8 +3,8 @@ import { rest } from 'msw'
 const BASE_URL = `${process.env.NEXT_PUBLIC_URL_API}/v1/auth`
 
 export const CUSTOMER_CODE = {
-  CODE_NOT_FORMATTED: '123456',
-  CODE_NOT_FOUND: '123456',
+  CODE_NOT_FORMATTED: 'no_format',
+  CODE_NOT_FOUND: 'not_found',
 } as const
 
 export const handlers = [

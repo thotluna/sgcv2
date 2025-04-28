@@ -1,3 +1,5 @@
+'use client'
+
 import { useSubmitHandler } from '../useSubmitHandler'
 import { SingUpForm } from '@/app/(sign)/register/signup-form'
 import { SingUpDTO } from '@/app/_auth/types'
