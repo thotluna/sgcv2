@@ -5,11 +5,7 @@ module.exports = {
   roots: ['<rootDir>'],
   // Only pick up .test.ts and .test.tsx files under __tests__
   testMatch: ['**/__tests__/**/*.test.@(ts|tsx)'],
-  testPathIgnorePatterns: [
-    '**/__tests__/**/*spect.test.@(ts|tsx)',
-    '/__tests__/page-objects/',
-    '/node_modules/',
-  ],
+  testPathIgnorePatterns: ['/__tests__/page-objects/', '/node_modules/'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',

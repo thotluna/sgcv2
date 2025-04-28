@@ -1,15 +1,10 @@
 import { LoginFormPage } from './page-objects/login-form.pom'
-import { cleanup } from '@testing-library/react'
 import { waitFor } from '@testing-library/react'
 import { axe, toHaveNoViolations } from 'jest-axe'
 
 expect.extend(toHaveNoViolations)
 
 jest.mock('next-intl', () => ({ useTranslations: () => (key: string) => key }))
-
-afterEach(() => {
-  cleanup()
-})
 
 describe('Login Form Component', () => {
   it('displays validation errors when fields are empty', async () => {

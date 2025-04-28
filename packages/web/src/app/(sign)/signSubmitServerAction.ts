@@ -1,22 +1,9 @@
 'use server'
 
-import { Result, SingInDTO, SingUpDTO } from './types'
+import { Result } from '../_auth/types'
 import { cookies } from 'next/headers'
 
-const URL_API = {
-  SIGN_IN: `${process.env.NEXT_PUBLIC_URL_API}/v1/auth/signin`,
-  SIGN_UP: `${process.env.NEXT_PUBLIC_URL_API}/v1/auth/singup`,
-} as const
-
 const NEXT_LOCALE = 'NEXT_LOCALE'
-
-export async function singInSubmitHandler(data: SingInDTO): Promise<Result> {
-  return sendSing(data, URL_API.SIGN_IN)
-}
-
-export async function singUpSubmitHandler(data: SingUpDTO): Promise<Result> {
-  return sendSing(data, URL_API.SIGN_UP)
-}
 
 export async function sendSing<TData>(
   data: TData,

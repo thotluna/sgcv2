@@ -1,4 +1,4 @@
-import { sendSing } from '../_auth/signSubmitServerAction'
+import { sendSing } from './signSubmitServerAction'
 import { redirect } from 'next/navigation'
 import { toast } from 'sonner'
 

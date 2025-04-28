@@ -1,6 +1,19 @@
 import { CUSTOMER_CODE } from '../../msw/handlers'
+import { server } from '../../msw/server'
 import { SignUpPage } from './page-objects/register.pom'
 import test from '@playwright/test'
+
+test.beforeAll(() => {
+  server.listen()
+})
+
+test.beforeEach(() => {
+  server.resetHandlers()
+})
+
+test.afterAll(() => {
+  server.close()
+})
 
 test.describe('Registration form validation errors', () => {
   test('should show JWT malformed error for badly formatted customer code', async ({
