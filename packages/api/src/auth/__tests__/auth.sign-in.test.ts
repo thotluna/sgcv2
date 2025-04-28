@@ -1,96 +1,90 @@
-import { repositorySignIn, signInData, data } from './auth.configtest'
+import { repositorySignIn, signInData } from './auth.configtest'
+import { apiSignInUrl, signInMock } from './auth.sign-in.test-helper'
 import { app, i18n as i18nTest } from './auth.test-base'
-import { AuthError, AuthRouter } from '@auth'
+import { buildUserMock } from './test-utils'
+import { AuthError } from '@auth'
 import { AuthResponseBuilder } from '@utils'
 import request from 'supertest'
 
 describe('POST /signin', () => {
-  test('happy past', () => {
-    repositorySignIn.resolve()
-    return request(app)
-      .post(AuthRouter.getAbsoluteRoutes().signIn)
+  test('happy past', async () => {
+    signInMock.resolve({ data: buildUserMock(), error: null })
+    const response = await request(app)
+      .post(apiSignInUrl())
       .send(signInData)
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
-      .expect(200)
-      .then(response => {
-        expect(response.body).toEqual(
-          new AuthResponseBuilder().data({ data, error: null }).build(),
-        )
-      })
+    expect(response.status).toBe(200)
+    expect(response.body).toEqual(
+      new AuthResponseBuilder()
+        .data({ data: buildUserMock(), error: null })
+        .build(),
+    )
   })
 
-  test('email invalid', () => {
-    return request(app)
-      .post(AuthRouter.getAbsoluteRoutes().signIn)
+  test('email invalid', async () => {
+    const response = await request(app)
+      .post(apiSignInUrl())
       .send({ ...signInData, email: 'alan.com' })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
-      .expect(400)
-      .then(response => {
-        expect(response.body).toEqual(
-          new AuthResponseBuilder()
-            .status('error')
-            .code(400)
-            .message(i18nTest.t('email_invalid'))
-            .build(),
-        )
-      })
+    expect(response.status).toBe(400)
+    expect(response.body).toEqual(
+      new AuthResponseBuilder()
+        .status('error')
+        .code(400)
+        .message(i18nTest.t('email_invalid'))
+        .build(),
+    )
   })
 
-  test('password invalid', () => {
-    return request(app)
-      .post(AuthRouter.getAbsoluteRoutes().signIn)
+  test('password invalid', async () => {
+    const response = await request(app)
+      .post(apiSignInUrl())
       .send({ ...signInData, password: '123' })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
-      .expect(400)
-      .then(response => {
-        expect(response.body).toEqual(
-          new AuthResponseBuilder()
-            .status('error')
-            .code(400)
-            .message(i18nTest.t('password_min_length'))
-            .build(),
-        )
-      })
+    expect(response.status).toBe(400)
+    expect(response.body).toEqual(
+      new AuthResponseBuilder()
+        .status('error')
+        .code(400)
+        .message(i18nTest.t('password_min_length'))
+        .build(),
+    )
   })
 
-  test('credential invalid', () => {
+  test('credential invalid', async () => {
     repositorySignIn.reject(new AuthError('invalid_credentials'))
-    return request(app)
-      .post(AuthRouter.getAbsoluteRoutes().signIn)
-      .set('Accept', 'application/json')
+    const response = await request(app)
+      .post(apiSignInUrl())
       .send(signInData)
+      .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
-      .expect(400)
-      .then(response => {
-        expect(response.body).toEqual(
-          new AuthResponseBuilder()
-            .status('error')
-            .code(400)
-            .message(i18nTest.t('invalid_credentials'))
-            .build(),
-        )
-      })
+    expect(response.status).toBe(400)
+    expect(response.body).toEqual(
+      new AuthResponseBuilder()
+        .status('error')
+        .code(400)
+        .message(i18nTest.t('invalid_credentials'))
+        .build(),
+    )
   })
 
-  test('other error', () => {
+  test('other error', async () => {
     repositorySignIn.reject(new Error('unknown_error'))
-    return request(app)
-      .post(AuthRouter.getAbsoluteRoutes().signIn)
-      .set('Accept', 'application/json')
+    const response = await request(app)
+      .post(apiSignInUrl())
       .send(signInData)
+      .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
-      .expect(500)
-      .then(response => {
-        expect(response.body).toEqual(
-          new AuthResponseBuilder()
-            .status('error')
-            .code(500)
-            .message(i18nTest.t('unknown_error'))
-            .build(),
-        )
-      })
+    expect(response.status).toBe(500)
+    expect(response.body).toEqual(
+      new AuthResponseBuilder()
+        .status('error')
+        .code(500)
+        .message(i18nTest.t('unknown_error'))
+        .build(),
+    )
   })
 })

@@ -1,4 +1,5 @@
 import { AuthRespository, UserResponse } from '@auth'
+import { AuthRouter } from '@auth'
 import { CustomerCodeJwtHelper } from '@utils'
 
 export const authRepositoryMock: AuthRespository = {
@@ -109,4 +110,15 @@ export const repositoryUser = {
     ),
   reject: (error: Error) =>
     (authRepositoryMock.getUser as jest.Mock).mockRejectedValue(error),
+}
+
+export const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost'
+export const PORT_FRONTEND = process.env.PORT_FRONTEND || '3000'
+
+export const ROUTE_FRONTEND_REGISTER = `${FRONTEND_URL}:${PORT_FRONTEND}/register`
+export const ROUTE_FRONTEND_CALLBACK = `${FRONTEND_URL}:${PORT_FRONTEND}/auth/callback`
+
+export const API_CALLBACK = AuthRouter.getAbsoluteRoutes().callback
+export function apiCallbackWithCode(code: string) {
+  return `${API_CALLBACK}?code=${code}`
 }

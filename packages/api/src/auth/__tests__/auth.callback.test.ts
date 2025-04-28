@@ -1,54 +1,51 @@
-import { repositoryCallback } from './auth.configtest'
+import {
+  callbackMock,
+  apiCallbackWithCode,
+  ROUTE_FRONTEND_CALLBACK,
+  ROUTE_FRONTEND_REGISTER,
+} from './auth.callback.test-helper'
 import { app, i18n as i18nTest } from './auth.test-base'
-import { AuthError, AuthRouter } from '@auth'
+import { AuthError } from '@auth'
 import { AuthResponseBuilder } from '@utils'
 import request from 'supertest'
 
 describe('GET /callback', () => {
-  test('happy past', () => {
-    repositoryCallback.resolve()
+  test('happy path', async () => {
+    callbackMock.resolve()
 
-    return request(app)
-      .get(AuthRouter.getAbsoluteRoutes().callback + '?code=123456789')
+    const response = await request(app)
+      .get(apiCallbackWithCode('123456789'))
       .set('Accept', 'application/json')
-      .expect(302)
-      .then(response => {
-        const location = response.headers.location
-        expect(location).toEqual('http://localhost:3000/auth/callback')
-        const [access, refresh] = response.headers['set-cookie']
-        expect(access).toBeDefined()
-        expect(refresh).toBeDefined()
-      })
+    expect(response.status).toBe(302)
+    expect(response.headers.location).toEqual(ROUTE_FRONTEND_CALLBACK)
+    const [access, refresh] = response.headers['set-cookie'] || []
+    expect(access).toBeDefined()
+    expect(refresh).toBeDefined()
   })
 
-  test('without code', () => {
-    repositoryCallback.resolve()
+  test('without code', async () => {
+    callbackMock.resolve()
 
-    return request(app)
-      .get(AuthRouter.getAbsoluteRoutes().callback)
+    const response = await request(app)
+      .get(apiCallbackWithCode(''))
       .set('Accept', 'application/json')
-      .expect(302)
-      .then(response => {
-        const location = response.headers.location
-        expect(location).toEqual('http://localhost:3000/?signUp=true')
-      })
+    expect(response.status).toBe(302)
+    expect(response.headers.location).toEqual(ROUTE_FRONTEND_REGISTER)
   })
 
-  test('happy past', () => {
-    repositoryCallback.reject(new AuthError('not_found_anonymous_key'))
+  test('error', async () => {
+    callbackMock.reject(new AuthError('not_found_anonymous_key'))
 
-    return request(app)
-      .get(AuthRouter.getAbsoluteRoutes().callback + '?code=123456789')
+    const response = await request(app)
+      .get(apiCallbackWithCode('123456789'))
       .set('Accept', 'application/json')
-      .expect(401)
-      .then(response => {
-        expect(response.body).toEqual(
-          new AuthResponseBuilder()
-            .status('error')
-            .code(401)
-            .message(i18nTest.t('not_found_anonymous_key'))
-            .build(),
-        )
-      })
+    expect(response.status).toBe(401)
+    expect(response.body).toEqual(
+      new AuthResponseBuilder()
+        .status('error')
+        .code(401)
+        .message(i18nTest.t('not_found_anonymous_key'))
+        .build(),
+    )
   })
 })

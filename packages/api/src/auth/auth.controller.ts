@@ -162,12 +162,13 @@ export class AuthController {
   callback = async (req: Request, res: Response, next: NextFunction) => {
     const { code, error, error_description } = req.query
 
-    if (error && error_description === 'Database error saving new user') {
-      res.redirect('http://localhost:3000/?signUp=true')
-      return
-    }
-    if (!code) {
-      res.redirect('http://localhost:3000/?signUp=true')
+    if (
+      !code ||
+      (error && error_description === 'Database error saving new user')
+    ) {
+      res.redirect(
+        `${process.env.FRONTEND_URL}:${process.env.PORT_FRONTEND}/register`,
+      )
       return
     }
 

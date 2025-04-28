@@ -1,81 +1,70 @@
 import { dataUser, repositoryUser } from './auth.configtest'
 import { app, i18n as i18nTest } from './auth.test-base'
-import { AuthError, AuthRouter } from '@auth'
+import { apiUserUrl } from './auth.user.test-helper'
+import { AuthError } from '@auth'
 import { AuthResponseBuilder } from '@utils'
 import request from 'supertest'
 
 describe('GET /user', () => {
-  test('happy past', () => {
+  test('happy past', async () => {
     repositoryUser.resolve()
-    return request(app)
-      .get(AuthRouter.getAbsoluteRoutes().user)
+    const response = await request(app)
+      .get(apiUserUrl())
       .send()
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer ${dataUser.session?.access_token}`)
-      .expect('Content-Type', /json/)
-      .expect(200)
-      .then(response => {
-        expect(response.body).toEqual(
-          new AuthResponseBuilder().data(dataUser).build(),
-        )
-      })
+    expect(response.status).toBe(200)
+    expect(response.body).toEqual(
+      new AuthResponseBuilder().data(dataUser).build(),
+    )
   })
 
-  test('without token', () => {
-    return request(app)
-      .get(AuthRouter.getAbsoluteRoutes().user)
+  test('without token', async () => {
+    const response = await request(app)
+      .get(apiUserUrl())
       .send()
       .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(401)
-      .then(response => {
-        expect(response.body).toEqual(
-          new AuthResponseBuilder()
-            .code(401)
-            .status('error')
-            .message(i18nTest.t('token_required'))
-            .build(),
-        )
-      })
+    expect(response.status).toBe(401)
+    expect(response.body).toEqual(
+      new AuthResponseBuilder()
+        .code(401)
+        .status('error')
+        .message(i18nTest.t('token_required'))
+        .build(),
+    )
   })
 
-  test('token do not return user', () => {
+  test('token do not return user', async () => {
     repositoryUser.resolve({ user: null, session: null })
-    return request(app)
-      .get(AuthRouter.getAbsoluteRoutes().user)
+    const response = await request(app)
+      .get(apiUserUrl())
       .send()
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer ${dataUser.session?.access_token}`)
-      .expect('Content-Type', /json/)
-      .expect(401)
-      .then(response => {
-        expect(response.body).toEqual(
-          new AuthResponseBuilder()
-            .code(401)
-            .status('error')
-            .message(i18nTest.t('token_without_user'))
-            .build(),
-        )
-      })
+    expect(response.status).toBe(401)
+    expect(response.body).toEqual(
+      new AuthResponseBuilder()
+        .code(401)
+        .status('error')
+        .message(i18nTest.t('token_without_user'))
+        .build(),
+    )
   })
 
-  test('token error', () => {
+  test('token error', async () => {
     repositoryUser.reject(new AuthError('token_required'))
-    return request(app)
-      .get(AuthRouter.getAbsoluteRoutes().user)
+    const response = await request(app)
+      .get(apiUserUrl())
       .send()
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer ${dataUser.session?.access_token}`)
-      .expect('Content-Type', /json/)
-      .expect(401)
-      .then(response => {
-        expect(response.body).toEqual(
-          new AuthResponseBuilder()
-            .code(401)
-            .status('error')
-            .message(i18nTest.t('token_required'))
-            .build(),
-        )
-      })
+    expect(response.status).toBe(401)
+    expect(response.body).toEqual(
+      new AuthResponseBuilder()
+        .code(401)
+        .status('error')
+        .message(i18nTest.t('token_required'))
+        .build(),
+    )
   })
 })

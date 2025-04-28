@@ -1,4 +1,10 @@
-import { AuthRouter } from '../auth.routes'
+import {
+  PROVIDER_GOOGLE,
+  PROVIDER_INVALID,
+  EXPECTED_PATHNAME,
+  EXPECTED_CODE_CHALLENGE_METHOD,
+  apiAuthorizeUrl,
+} from './auth.authorize.test-helper'
 import { repositorySignIn } from './auth.configtest'
 import { app, i18n as i18nInstance } from './auth.test-base'
 import { authorizeDataType } from '@auth'
@@ -10,7 +16,7 @@ describe('GET /authorize', () => {
   test('happy past', () => {
     repositorySignIn.resolve()
     return request(app)
-      .get(AuthRouter.getAbsoluteRoutes().authorize + '?provider=google')
+      .get(apiAuthorizeUrl({ provider: PROVIDER_GOOGLE }))
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(200)
@@ -26,7 +32,7 @@ describe('GET /authorize', () => {
   test('return url', () => {
     repositorySignIn.resolve()
     return request(app)
-      .get(AuthRouter.getAbsoluteRoutes().authorize + '?provider=google')
+      .get(apiAuthorizeUrl({ provider: PROVIDER_GOOGLE }))
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(200)
@@ -34,17 +40,19 @@ describe('GET /authorize', () => {
         const body: ApiResponse<authorizeDataType> = response.body
         const url = new URL(body.data!.url)
         expect(url.origin).toEqual(process.env.SUPABASE_URL)
-        expect(url.pathname).toEqual('/auth/v1/authorize')
-        expect(url.searchParams.get('provider')).toEqual('google')
+        expect(url.pathname).toEqual(EXPECTED_PATHNAME)
+        expect(url.searchParams.get('provider')).toEqual(PROVIDER_GOOGLE)
         expect(url.searchParams.get('redirect_to')).not.toBeNull()
         expect(url.searchParams.get('code_challenge')).not.toBeNull()
-        expect(url.searchParams.get('code_challenge_method')).toEqual('S256')
+        expect(url.searchParams.get('code_challenge_method')).toEqual(
+          EXPECTED_CODE_CHALLENGE_METHOD,
+        )
       })
   })
 
   test('bad request, provider invalid', () => {
     return request(app)
-      .get(AuthRouter.getAbsoluteRoutes().authorize + '?provider=invalid')
+      .get(apiAuthorizeUrl({ provider: PROVIDER_INVALID }))
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(400)
