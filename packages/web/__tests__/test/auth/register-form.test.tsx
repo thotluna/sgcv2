@@ -1,22 +1,18 @@
-import { server } from '../../msw/server'
 import { RegisterFormPage } from './page-objects/register-form.pom'
-import { cleanup, screen } from '@testing-library/react'
-import { waitFor } from '@testing-library/react'
-import { axe, toHaveNoViolations } from 'jest-axe'
-
-process.env.NEXT_PUBLIC_URL_API = 'http://localhost'
-
-expect.extend(toHaveNoViolations)
-
-beforeAll(() => server.listen())
-afterEach(() => server.resetHandlers())
-afterAll(() => server.close())
-
-afterEach(() => {
-  cleanup()
-})
+import { SingUpDTO } from '@/app/_auth/types'
+import { waitFor, screen } from '@testing-library/react'
+import { axe } from 'jest-axe'
 
 describe('Register Form Component', () => {
+  it('displays all inputs', async () => {
+    const mockOnSubmit = jest.fn()
+    const page = new RegisterFormPage(mockOnSubmit)
+    expect(page.codeInput).toBeInTheDocument()
+    expect(page.emailInput).toBeInTheDocument()
+    expect(page.passwordInput).toBeInTheDocument()
+    expect(page.confirmPasswordInput).toBeInTheDocument()
+    expect(page.submitButton).toBeInTheDocument()
+  })
   it('displays validation errors when fields are empty', async () => {
     const mockOnSubmit = jest.fn()
     const page = new RegisterFormPage(mockOnSubmit)
@@ -33,35 +29,30 @@ describe('Register Form Component', () => {
   })
 
   it('calls onSubmit with valid data', async () => {
-    const mockOnSubmit: jest.Mock<
-      Promise<void>,
-      [
-        {
-          code: string
-          email: string
-          password: string
-          confirmPassword: string
-        },
-      ]
-    > = jest.fn().mockResolvedValue(undefined)
+    const mockOnSubmit: jest.Mock<Promise<void>, [SingUpDTO]> = jest
+      .fn()
+      .mockResolvedValue(undefined)
     const page = new RegisterFormPage(mockOnSubmit)
-    await screen.findByLabelText(/code/i)
-    await waitFor(async () => {
-      await page.fillAndSubmit(
-        '1234',
-        'test@example.com',
-        'password123',
-        'password123',
-      )
+    await screen.findByLabelText(/customer_code/i)
+
+    await page.fillAndSubmit(
+      '1234',
+      'test@example.com',
+      'password123',
+      'password123',
+    )
+
+    await waitFor(() => {
+      expect(mockOnSubmit).toHaveBeenCalledTimes(1)
     })
-    await waitFor(() => expect(mockOnSubmit).toHaveBeenCalledTimes(1))
-    expect(mockOnSubmit.mock.calls[0][0]).toEqual(
+    expect(mockOnSubmit).toHaveBeenCalledWith(
       expect.objectContaining({
         code: '1234',
         email: 'test@example.com',
         password: 'password123',
         confirmPassword: 'password123',
       }),
+      expect.anything(),
     )
   })
 
@@ -69,9 +60,8 @@ describe('Register Form Component', () => {
     const mockOnSubmit = jest.fn()
     const page = new RegisterFormPage(mockOnSubmit)
     await screen.findByLabelText(/code/i)
-    await waitFor(async () => {
-      await page.fillAndSubmit('1234', 'bademail', 'password123', 'password123')
-    })
+    await page.fillAndSubmit('1234', 'bademail', 'password123', 'password123')
+
     expect(await page.getEmailError()).toBeInTheDocument()
     expect(mockOnSubmit).not.toHaveBeenCalled()
   })
@@ -80,14 +70,12 @@ describe('Register Form Component', () => {
     const mockOnSubmit = jest.fn()
     const page = new RegisterFormPage(mockOnSubmit)
     await screen.findByLabelText(/code/i)
-    await waitFor(async () => {
-      await page.fillAndSubmit(
-        '1234',
-        'test@example.com',
-        'password123',
-        'different',
-      )
-    })
+    await page.fillAndSubmit(
+      '1234',
+      'test@example.com',
+      'password123',
+      'different',
+    )
 
     expect(await page.getConfirmPasswordError()).toBeInTheDocument()
     expect(mockOnSubmit).not.toHaveBeenCalled()
@@ -97,8 +85,6 @@ describe('Register Form Component', () => {
     const mockOnSubmit = jest.fn().mockResolvedValue(undefined)
     const page = new RegisterFormPage(mockOnSubmit)
     await screen.findByLabelText(/code/i)
-    await waitFor(async () =>
-      expect(await axe(page.element.container)).toHaveNoViolations(),
-    )
+    expect(await axe(page.element.container)).toHaveNoViolations()
   })
 })

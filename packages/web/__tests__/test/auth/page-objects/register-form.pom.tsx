@@ -1,5 +1,5 @@
-import { SingUpForm } from '../../../../src/app/_auth/components/signup-form'
 import { SingUpDTO } from '../../../../src/app/_auth/types'
+import { SingUpForm } from '@/app/(sign)/register/signup-form'
 import { render, screen, RenderResult } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Toaster } from 'sonner'
@@ -20,7 +20,7 @@ export class RegisterFormPage {
   }
 
   get codeInput(): HTMLInputElement {
-    return screen.getByLabelText(/code/i)
+    return screen.getByLabelText(/customer_code/i)
   }
 
   get emailInput(): HTMLInputElement {
