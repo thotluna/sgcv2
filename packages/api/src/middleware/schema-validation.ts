@@ -13,7 +13,8 @@ export const schemaValidation =
       if (error instanceof ZodError) {
         res.status(400).send(
           new AuthResponseBuilder()
-            .code(400)
+            .httpCode(400)
+            .code(error.issues[0].message)
             .status('error')
             .message(error.issues.map(issue => req.t(issue.message)).join(', '))
             .build(),

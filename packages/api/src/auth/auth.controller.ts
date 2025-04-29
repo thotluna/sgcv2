@@ -41,42 +41,6 @@ export class AuthController {
 
       res.send(response)
     } catch (error) {
-      if (error instanceof AuthError) {
-        res
-          .status(401)
-          .send(
-            new AuthResponseBuilder()
-              .status('error')
-              .code(401)
-              .message(req.t(error.message))
-              .build(),
-          )
-        return
-      }
-      if (error instanceof CustomerCodeTokeError) {
-        res
-          .status(400)
-          .send(
-            new AuthResponseBuilder()
-              .status('error')
-              .code(400)
-              .message(req.t(error.message))
-              .build(),
-          )
-        return
-      }
-      if (error instanceof DBErrorConexion) {
-        res
-          .status(500)
-          .send(
-            new AuthResponseBuilder()
-              .status('error')
-              .code(500)
-              .message(req.t(error.message))
-              .build(),
-          )
-        return
-      }
       next(error)
     }
   }

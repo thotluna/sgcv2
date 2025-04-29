@@ -5,6 +5,8 @@ import {
   DBError,
   DBErrorConexion,
   AuthRespository,
+  DB_ERROR_CODES,
+  AUTH_ERROR_CODES,
 } from '@auth'
 import { Database } from '@sgcv2/shared'
 import { SupabaseClient, createClient } from '@supabase/supabase-js'
@@ -39,9 +41,17 @@ export class SupabaseAuthRepository implements AuthRespository {
 
     if (error) {
       if (error.code === 'PGRST116') {
-        throw new AuthError('code_not_found')
+        throw new AuthError(
+          AUTH_ERROR_CODES.CODE_NOT_FOUND,
+          AUTH_ERROR_CODES.CODE_NOT_FOUND,
+          401,
+        )
       }
-      throw new DBErrorConexion('db_conexion_error')
+      throw new DBErrorConexion(
+        DB_ERROR_CODES.CONNECTION,
+        DB_ERROR_CODES.CONNECTION,
+        500,
+      )
     }
 
     return true

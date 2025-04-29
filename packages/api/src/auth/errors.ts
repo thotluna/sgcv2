@@ -16,6 +16,7 @@ export const AUTH_ERROR_CODES = {
   TOKEN_INVALID: 'token_invalid',
   TOKEN_MALFORMED: 'jwt_malformed',
   INVALID_CREDENTIALS: 'invalid_credentials',
+  CODE_NOT_FOUND: 'code_not_found',
   NOT_FOUND_ANONYMOUS_KEY: 'not_found_anonymous_key',
   INVALID_CODE: 'Invalid_code',
   UNKNOWN_ERROR: 'unknown_error',
