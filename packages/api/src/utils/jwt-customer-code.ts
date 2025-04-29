@@ -45,7 +45,6 @@ export class CustomerCodeJwtHelper {
       const decode = jwt.verify(token, this.SECRET!) as VerifiedTokenPayload
       return decode
     } catch (error) {
-      console.log(error)
       if (error instanceof jwt.TokenExpiredError) {
         throw new CustomerCodeTokeError(
           AUTH_ERROR_CODES.TOKEN_INVALID,
@@ -54,14 +53,12 @@ export class CustomerCodeJwtHelper {
         )
       }
       if ((error as Error).name === 'JsonWebTokenError') {
-        console.log(error)
         throw new CustomerCodeTokeError(
           AUTH_ERROR_CODES.TOKEN_INVALID,
           AUTH_ERROR_CODES.TOKEN_MALFORMED,
           401,
         )
       }
-      console.log(error)
       throw new CustomerCodeTokeError(
         AUTH_ERROR_CODES.TOKEN_INVALID,
         AUTH_ERROR_CODES.TOKEN_INVALID,

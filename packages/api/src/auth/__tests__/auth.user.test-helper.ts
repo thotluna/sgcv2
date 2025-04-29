@@ -19,7 +19,6 @@ export const getToken = (type: TypeTokenKey) => {
   const { JWT_SECRET } = process.env
   if (type === TypeTokens.OK) {
     const token = new CustomerCodeJwtHelper(JWT_SECRET!).crearToken('xc@xc.xc')
-    console.log({ token })
     return token
   }
   if (type === TypeTokens.EXPIRED)
