@@ -1,3 +1,4 @@
+// Habilita los alias de módulos en producción
 import { ServerApi } from './server'
 import {
   AuthRespository,
@@ -7,6 +8,7 @@ import {
   AuthService,
 } from '@auth'
 import 'dotenv/config'
+import 'module-alias/register'
 
 export const getAuthRouter = () => {
   const repository: AuthRespository = new SupabaseAuthRepository()
