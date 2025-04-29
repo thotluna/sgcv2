@@ -35,6 +35,7 @@ export default defineConfig([
     },
     rules: {
       ...tsPlugin.configs.recommended.rules,
+      'no-console': 'error',
     },
   },
   {
