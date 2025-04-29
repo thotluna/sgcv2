@@ -25,12 +25,16 @@ export function errorHandler(
 
   const builder = new AuthResponseBuilder()
     .status('error')
-    .code(customError.code || httpCode)
+    .code(customError.code || err.message)
     .message(req.t(customError.message || customError.code || err.message))
 
   if (typeof customError.httpCode === 'number') {
     builder.httpCode(customError.httpCode)
+  } else {
+    builder.httpCode(httpCode)
   }
+
+  console.log(builder.build())
 
   res.send(builder.build())
 }

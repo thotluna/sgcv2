@@ -1,6 +1,6 @@
 import { AuthService, SUPABASE_URLs, AuthError, DBErrorConexion } from '@auth'
 import { ApiResponse, ClientCodeType } from '@sgcv2/shared'
-import { CustomerCodeTokeError, AuthResponseBuilder } from '@utils'
+import { AuthResponseBuilder } from '@utils'
 import { NextFunction, Request, Response } from 'express'
 
 export class AuthController {
@@ -52,30 +52,6 @@ export class AuthController {
       const data = await this.service.signUp(email, password, code)
       res.send(new AuthResponseBuilder().data(data).build())
     } catch (error) {
-      if (error instanceof AuthError) {
-        res
-          .status(400)
-          .send(
-            new AuthResponseBuilder()
-              .status('error')
-              .code(400)
-              .message(req.t(error.message))
-              .build(),
-          )
-        return
-      }
-      if (error instanceof CustomerCodeTokeError) {
-        res
-          .status(400)
-          .send(
-            new AuthResponseBuilder()
-              .status('error')
-              .code(400)
-              .message(req.t(error.message))
-              .build(),
-          )
-        return
-      }
       next(error)
     }
   }
@@ -85,21 +61,8 @@ export class AuthController {
 
     try {
       const data = await this.service.signIn(email, password)
-
       res.send(new AuthResponseBuilder().data(data).build())
     } catch (error) {
-      if (error instanceof AuthError) {
-        res
-          .status(400)
-          .send(
-            new AuthResponseBuilder()
-              .status('error')
-              .code(400)
-              .message(req.t(error.message))
-              .build(),
-          )
-        return
-      }
       next(error)
     }
   }

@@ -2,7 +2,7 @@ import { repositorySignIn, signInData } from './auth.configtest'
 import { apiSignInUrl, signInMock } from './auth.sign-in.test-helper'
 import { app, i18n as i18nTest } from './auth.test-base'
 import { buildUserMock } from './test-utils'
-import { AuthError } from '@auth'
+import { AUTH_ERROR_CODES, AuthError, VALIDATION_ERROR_CODES } from '@auth'
 import { AuthResponseBuilder } from '@utils'
 import request from 'supertest'
 
@@ -32,8 +32,9 @@ describe('POST /signin', () => {
     expect(response.body).toEqual(
       new AuthResponseBuilder()
         .status('error')
-        .code(400)
-        .message(i18nTest.t('email_invalid'))
+        .httpCode(400)
+        .code(VALIDATION_ERROR_CODES.EMAIL_INVALID)
+        .message(i18nTest.t(VALIDATION_ERROR_CODES.EMAIL_INVALID))
         .build(),
     )
   })
@@ -48,25 +49,33 @@ describe('POST /signin', () => {
     expect(response.body).toEqual(
       new AuthResponseBuilder()
         .status('error')
-        .code(400)
-        .message(i18nTest.t('password_min_length'))
+        .httpCode(400)
+        .code(VALIDATION_ERROR_CODES.PASSWORD_MIN_LENGTH)
+        .message(i18nTest.t(VALIDATION_ERROR_CODES.PASSWORD_MIN_LENGTH))
         .build(),
     )
   })
 
   test('credential invalid', async () => {
-    repositorySignIn.reject(new AuthError('invalid_credentials'))
+    repositorySignIn.reject(
+      new AuthError(
+        AUTH_ERROR_CODES.INVALID_CREDENTIALS,
+        AUTH_ERROR_CODES.INVALID_CREDENTIALS,
+        401,
+      ),
+    )
     const response = await request(app)
       .post(apiSignInUrl())
       .send(signInData)
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
-    expect(response.status).toBe(400)
+    expect(response.status).toBe(401)
     expect(response.body).toEqual(
       new AuthResponseBuilder()
         .status('error')
-        .code(400)
-        .message(i18nTest.t('invalid_credentials'))
+        .httpCode(401)
+        .code(AUTH_ERROR_CODES.INVALID_CREDENTIALS)
+        .message(i18nTest.t(AUTH_ERROR_CODES.INVALID_CREDENTIALS))
         .build(),
     )
   })
@@ -82,8 +91,9 @@ describe('POST /signin', () => {
     expect(response.body).toEqual(
       new AuthResponseBuilder()
         .status('error')
-        .code(500)
-        .message(i18nTest.t('unknown_error'))
+        .httpCode(500)
+        .code(AUTH_ERROR_CODES.UNKNOWN_ERROR)
+        .message(i18nTest.t(AUTH_ERROR_CODES.UNKNOWN_ERROR))
         .build(),
     )
   })

@@ -1,4 +1,4 @@
-import { AuthRespository, AuthError } from '@auth'
+import { AuthRespository, AuthError, AUTH_ERROR_CODES } from '@auth'
 import { generatePKCEParams, CustomerCodeJwtHelper } from '@utils'
 
 export class AuthService {
@@ -23,9 +23,14 @@ export class AuthService {
 
   async signUp(email: string, password: string, code: string) {
     const { SECRET } = process.env
+    console.log(code)
     const payload = new CustomerCodeJwtHelper(SECRET!).verificarToken(code)
     if (payload.email !== email) {
-      throw new AuthError('Invalid_code')
+      throw new AuthError(
+        AUTH_ERROR_CODES.INVALID_CODE,
+        AUTH_ERROR_CODES.INVALID_CODE,
+        400,
+      )
     }
 
     await this.repository.validateCustomerCode(code)

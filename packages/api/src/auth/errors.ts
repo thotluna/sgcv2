@@ -20,6 +20,7 @@ export const AUTH_ERROR_CODES = {
   NOT_FOUND_ANONYMOUS_KEY: 'not_found_anonymous_key',
   INVALID_CODE: 'Invalid_code',
   UNKNOWN_ERROR: 'unknown_error',
+  PROVIDER_INVALID: 'provider_invalid',
 } as const
 
 export const DB_ERROR_CODES = {

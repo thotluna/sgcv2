@@ -39,8 +39,6 @@ export class CustomerCodeJwtHelper {
   }
 
   public verificarToken(token: string): VerifiedTokenPayload {
-    assert(token, 'Token is required => jwt-customer-code => verificarToken')
-
     try {
       const decode = jwt.verify(token, this.SECRET!) as VerifiedTokenPayload
       return decode

@@ -24,7 +24,11 @@ export class SupabaseAuthRepository implements AuthRespository {
       .select()
 
     if (error) {
-      throw new DBError(error.message)
+      throw new DBError(
+        DB_ERROR_CODES.CONNECTION,
+        DB_ERROR_CODES.CONNECTION,
+        500,
+      )
     }
 
     return data
@@ -70,10 +74,17 @@ export class SupabaseAuthRepository implements AuthRespository {
         error.name === 'AuthApiError' &&
         error.message === 'Database error saving new user'
       ) {
-        throw new AuthError('auth_error_invalid_client_code')
+        throw new AuthError(
+          AUTH_ERROR_CODES.INVALID_CODE,
+          AUTH_ERROR_CODES.INVALID_CODE,
+        )
       }
       if (error.status === 422) {
-        throw new AuthError('auth_email_already_registed')
+        throw new AuthError(
+          AUTH_ERROR_CODES.EMAIL_ALREADY_REGISTERED,
+          AUTH_ERROR_CODES.EMAIL_ALREADY_REGISTERED,
+          401,
+        )
       }
     }
     return data
@@ -90,7 +101,11 @@ export class SupabaseAuthRepository implements AuthRespository {
 
     if (error) {
       if (error.status === 400) {
-        throw new AuthError('invalid_credentials')
+        throw new AuthError(
+          AUTH_ERROR_CODES.INVALID_CREDENTIALS,
+          AUTH_ERROR_CODES.INVALID_CREDENTIALS,
+          400,
+        )
       }
     }
 
@@ -112,32 +127,32 @@ export class SupabaseAuthRepository implements AuthRespository {
     const { SUPABASE_ANON_KEY: apiKey } = process.env
 
     if (apiKey === undefined) {
-      throw new AuthError('not_found_anonymous_key')
+      throw new AuthError(
+        AUTH_ERROR_CODES.NOT_FOUND_ANONYMOUS_KEY,
+        AUTH_ERROR_CODES.NOT_FOUND_ANONYMOUS_KEY,
+        500,
+      )
     }
+    const request = await fetch(SUPABASE_URLs.EXGHANGE, {
+      method: 'POST',
+      headers: {
+        apiKey: apiKey,
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        auth_code: code,
+        code_verifier: codeVerifier,
+      }),
+    }).then(result => result.json())
 
-    try {
-      const request = await fetch(SUPABASE_URLs.EXGHANGE, {
-        method: 'POST',
-        headers: {
-          apiKey: apiKey,
-          Authorization: `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          auth_code: code,
-          code_verifier: codeVerifier,
-        }),
-      }).then(result => result.json())
-
-      return request as CallbackResult
-    } catch (error) {
-      throw new AuthError((error as Error).message)
-    }
+    return request as CallbackResult
   }
 
   async getUser(access_token: string) {
     const { data, error } = await this.client.auth.getUser(access_token)
-    if (error) throw new AuthError(error.message)
+    if (error)
+      throw new AuthError(AUTH_ERROR_CODES.UNKNOWN_ERROR, error.message, 400)
 
     return data as unknown as UserResponse
   }

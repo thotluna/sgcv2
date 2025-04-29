@@ -6,7 +6,12 @@ import {
 import { apiSignUpUrl, signUpMock } from './auth.sign-up.test-helper'
 import { app, i18n as i18nInstance } from './auth.test-base'
 import { buildUserMock } from './test-utils'
-import { AUTH_ERROR_CODES, AuthError } from '@auth'
+import {
+  AUTH_ERROR_CODES,
+  AuthError,
+  DB_ERROR_CODES,
+  VALIDATION_ERROR_CODES,
+} from '@auth'
 import { AuthResponseBuilder } from '@utils'
 import request from 'supertest'
 
@@ -33,8 +38,9 @@ describe('POST /signup', () => {
     expect(response.body).toEqual(
       new AuthResponseBuilder()
         .status('error')
-        .code(400)
-        .message(i18nInstance.t('password_min_length', { lng: 'es' }))
+        .httpCode(400)
+        .code(VALIDATION_ERROR_CODES.PASSWORD_MIN_LENGTH)
+        .message(i18nInstance.t(VALIDATION_ERROR_CODES.PASSWORD_MIN_LENGTH))
         .build(),
     )
   })
@@ -48,8 +54,9 @@ describe('POST /signup', () => {
     expect(response.body).toEqual(
       new AuthResponseBuilder()
         .status('error')
-        .code(400)
-        .message(i18nInstance.t('email_invalid', { lng: 'es' }))
+        .httpCode(400)
+        .code(VALIDATION_ERROR_CODES.EMAIL_INVALID)
+        .message(i18nInstance.t(VALIDATION_ERROR_CODES.EMAIL_INVALID))
         .build(),
     )
   })
@@ -59,34 +66,42 @@ describe('POST /signup', () => {
       .post(apiSignUpUrl())
       .send({ ...signupData, code: '123' })
       .set('Accept', 'application/json')
-    expect(response.status).toBe(400)
+    expect(response.status).toBe(401)
     expect(response.body).toEqual(
       new AuthResponseBuilder()
         .status('error')
-        .code(400)
-        .message(AUTH_ERROR_CODES.TOKEN_MALFORMED)
+        .httpCode(401)
+        .code(AUTH_ERROR_CODES.TOKEN_INVALID)
+        .message(i18nInstance.t(AUTH_ERROR_CODES.TOKEN_MALFORMED))
         .build(),
     )
   })
 
   test('error, code client refused', async () => {
-    repositoryValidateCode.reject(new AuthError('code_not_found'))
+    repositoryValidateCode.reject(
+      new AuthError(
+        AUTH_ERROR_CODES.CODE_NOT_FOUND,
+        AUTH_ERROR_CODES.CODE_NOT_FOUND,
+        401,
+      ),
+    )
     const response = await request(app)
       .post(apiSignUpUrl())
       .send(signupData)
       .set('Accept', 'application/json')
-    expect(response.status).toBe(400)
+    expect(response.status).toBe(401)
     expect(response.body).toEqual(
       new AuthResponseBuilder()
         .status('error')
-        .code(400)
-        .message(i18nInstance.t('code_not_found'))
+        .httpCode(401)
+        .code(AUTH_ERROR_CODES.CODE_NOT_FOUND)
+        .message(i18nInstance.t(AUTH_ERROR_CODES.CODE_NOT_FOUND))
         .build(),
     )
   })
 
   test('error, any other', async () => {
-    repositoryValidateCode.reject(new Error('db_conexion_error'))
+    repositoryValidateCode.reject(new Error(DB_ERROR_CODES.CONNECTION))
     const response = await request(app)
       .post(apiSignUpUrl())
       .send(signupData)
@@ -95,30 +110,34 @@ describe('POST /signup', () => {
     expect(response.body).toEqual(
       new AuthResponseBuilder()
         .status('error')
-        .code(500)
-        .message(
-          i18nInstance.t('db_conexion_error', {
-            lng: 'es',
-          }),
-        )
+        .httpCode(500)
+        .code(DB_ERROR_CODES.CONNECTION)
+        .message(i18nInstance.t(DB_ERROR_CODES.CONNECTION))
         .build(),
     )
   })
 
   test('error, email registered', async () => {
     repositoryValidateCode.resolve()
-    repositorySignUp.reject(new AuthError('auth_email_already_registed'))
+    repositorySignUp.reject(
+      new AuthError(
+        AUTH_ERROR_CODES.EMAIL_ALREADY_REGISTERED,
+        AUTH_ERROR_CODES.EMAIL_ALREADY_REGISTERED,
+        401,
+      ),
+    )
 
     const response = await request(app)
       .post(apiSignUpUrl())
       .send(signupData)
       .set('Accept', 'application/json')
-    expect(response.status).toBe(400)
+    expect(response.status).toBe(401)
     expect(response.body).toEqual(
       new AuthResponseBuilder()
         .status('error')
-        .code(400)
-        .message(i18nInstance.t('auth_email_already_registed', { lng: 'es' }))
+        .httpCode(401)
+        .code(AUTH_ERROR_CODES.EMAIL_ALREADY_REGISTERED)
+        .message(i18nInstance.t(AUTH_ERROR_CODES.EMAIL_ALREADY_REGISTERED))
         .build(),
     )
   })
