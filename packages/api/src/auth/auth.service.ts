@@ -23,7 +23,6 @@ export class AuthService {
 
   async signUp(email: string, password: string, code: string) {
     const { SECRET } = process.env
-    console.log(code)
     const payload = new CustomerCodeJwtHelper(SECRET!).verificarToken(code)
     if (payload.email !== email) {
       throw new AuthError(

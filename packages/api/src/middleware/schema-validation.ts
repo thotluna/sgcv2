@@ -11,7 +11,6 @@ export const schemaValidation =
 
       next()
     } catch (error) {
-      console.log(error)
       if (error instanceof ZodError) {
         res.status(400).send(
           new AuthResponseBuilder()

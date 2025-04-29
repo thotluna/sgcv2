@@ -34,7 +34,5 @@ export function errorHandler(
     builder.httpCode(httpCode)
   }
 
-  console.log(builder.build())
-
   res.send(builder.build())
 }
