@@ -15,7 +15,6 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { zodResolver } from '@hookform/resolvers/zod'
-// import { createClient } from '@supabase/supabase-js'
 import { Eye, EyeOff, Linkedin } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -29,15 +28,6 @@ export function SingInForm({
 }) {
   const [passwordVisible, setPasswordVisible] = useState(false)
   const traslateValidation = useTranslations('validation')
-
-  // const signInWithGoogle = () => {
-  //   const supabase = createClient(
-  //     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  //     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-  //   )
-  //   supabase.auth.signInWithOAuth({ provider: 'google' })
-  // }
-
   const form = useForm<SingInDTO>({
     resolver: zodResolver(getSignInFormSchema(traslateValidation)),
     defaultValues: {
