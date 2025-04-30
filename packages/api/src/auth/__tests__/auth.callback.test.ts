@@ -30,7 +30,10 @@ describe('GET /callback', () => {
       .get(apiCallbackWithCode(''))
       .set('Accept', 'application/json')
     expect(response.status).toBe(302)
-    expect(response.headers.location).toEqual(ROUTE_FRONTEND_REGISTER)
+    const urlLocation = new URL(response.headers.location)
+    expect(`${urlLocation.origin}${urlLocation.pathname}`).toEqual(
+      ROUTE_FRONTEND_REGISTER,
+    )
   })
 
   test('error', async () => {

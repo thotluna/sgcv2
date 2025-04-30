@@ -75,7 +75,7 @@ export class AuthController {
 
       const { data, codeVerifier } = resp
       const url = new URL(
-        `${process.env.SUPABASE_URL}/${SUPABASE_URLs.AUTHORIZATION}`,
+        `${process.env.SUPABASE_URL}${SUPABASE_URLs.AUTHORIZATION}`,
       )
 
       Object.keys(data).forEach(key => {
@@ -96,9 +96,18 @@ export class AuthController {
       !code ||
       (error && error_description === 'Database error saving new user')
     ) {
-      res.redirect(
+      const url = new URL(
         `${process.env.FRONTEND_URL}:${process.env.PORT_FRONTEND}/register`,
       )
+
+      const searchParams = url.searchParams
+      searchParams.append('error', 'authentication')
+      searchParams.append(
+        'error_description',
+        req.t(AUTH_ERROR.CLIENT_CODE_REQUIRED),
+      )
+
+      res.redirect(url.toString())
       return
     }
 
