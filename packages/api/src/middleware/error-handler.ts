@@ -1,4 +1,6 @@
+import translate from '../locales/en/translation.json'
 import { AuthResponseBuilder } from '../utils/auth-response-builder'
+import logger from '../utils/logger'
 import type { BaseError } from '@sgcv2/shared'
 import { NextFunction, Request, Response } from 'express'
 
@@ -13,6 +15,16 @@ export function errorHandler(
   }
 
   const customError = err as Partial<BaseError>
+
+  // Registrar el error
+  logger.error(`${customError.name} ${customError.code || err.message}`, {
+    statusCode: customError.statusCode || 500,
+    code: customError.code,
+    message: translate[customError.message || customError.code],
+    debugger: JSON.stringify(customError.details),
+    stack: err.stack,
+    originalError: err,
+  })
 
   res.status(customError.statusCode || 500)
   res.type('application/json')
