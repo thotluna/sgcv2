@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from 'express'
 import { ZodError } from 'zod'
 import type { AnyZodObject } from 'zod'
 
+//TODO: This function should return a ValidationError for the error-handler middleware to process.
 export const schemaValidation =
   (schema: AnyZodObject) =>
   async (req: Request, res: Response, next: NextFunction) => {

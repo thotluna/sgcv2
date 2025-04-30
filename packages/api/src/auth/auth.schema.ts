@@ -1,9 +1,9 @@
-import { VALIDATION_ERROR_CODES } from './errors'
+import { AUTH_ERROR, PROVIDER_ERROR, VALIDATION_ERROR } from './errors'
 import { z } from 'zod'
 
 export const customerCodeSchema = z.object({
   code: z.string({
-    required_error: VALIDATION_ERROR_CODES.CLIENT_CODE_REQUIRED,
+    required_error: AUTH_ERROR.CLIENT_CODE_REQUIRED,
   }),
 })
 
@@ -14,17 +14,17 @@ export const httpCustomerCodeSchema = z.object({
 export const httpEmailCodeSchema = z.object({
   body: z.object({
     email: z
-      .string({ required_error: VALIDATION_ERROR_CODES.EMAIL_REQUIRED })
-      .email(VALIDATION_ERROR_CODES.EMAIL_INVALID),
+      .string({ required_error: VALIDATION_ERROR.EMAIL_REQUIRED })
+      .email(VALIDATION_ERROR.EMAIL_INVALID),
   }),
 })
 
 export const signInSchema = z.object({
-  email: z.string().email(VALIDATION_ERROR_CODES.EMAIL_INVALID),
+  email: z.string().email(VALIDATION_ERROR.EMAIL_INVALID),
   password: z
     .string()
-    .min(8, VALIDATION_ERROR_CODES.PASSWORD_MIN_LENGTH)
-    .max(36, VALIDATION_ERROR_CODES.PASSWORD_MAX_LENGTH),
+    .min(8, VALIDATION_ERROR.PASSWORD_MIN_LENGTH)
+    .max(36, VALIDATION_ERROR.PASSWORD_MAX_LENGTH),
 })
 
 export const httpSingInSchema = z.object({
@@ -43,7 +43,7 @@ export const authorizeSchema = z.object({
       errorMap: (issue, ctx) => {
         if (issue.code === z.ZodIssueCode.invalid_enum_value) {
           return {
-            message: VALIDATION_ERROR_CODES.PROVIDER_INVALID,
+            message: PROVIDER_ERROR.PROVIDER_INVALID,
           }
         }
         return { message: ctx.defaultError }

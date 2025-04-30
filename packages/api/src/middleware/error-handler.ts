@@ -1,5 +1,5 @@
 import { AuthResponseBuilder } from '../utils/auth-response-builder'
-import type { BusinessErrorShape } from '@sgcv2/shared'
+import type { BaseError } from '@sgcv2/shared'
 import { NextFunction, Request, Response } from 'express'
 
 export function errorHandler(
@@ -12,15 +12,9 @@ export function errorHandler(
     return next(err)
   }
 
-  const customError = err as Partial<BusinessErrorShape>
-  const httpCode =
-    typeof customError.httpCode === 'number'
-      ? customError.httpCode
-      : res.statusCode && res.statusCode !== 200
-        ? res.statusCode
-        : 500
+  const customError = err as Partial<BaseError>
 
-  res.status(httpCode)
+  res.status(customError.statusCode || 500)
   res.type('application/json')
 
   const builder = new AuthResponseBuilder()
@@ -28,10 +22,10 @@ export function errorHandler(
     .code(customError.code || err.message)
     .message(req.t(customError.message || customError.code || err.message))
 
-  if (typeof customError.httpCode === 'number') {
-    builder.httpCode(customError.httpCode)
+  if (typeof customError.statusCode === 'number') {
+    builder.httpCode(customError.statusCode)
   } else {
-    builder.httpCode(httpCode)
+    builder.httpCode(500)
   }
 
   res.send(builder.build())

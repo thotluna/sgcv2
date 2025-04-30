@@ -1,13 +1,7 @@
 import { apiClientCodeUrl } from './auth.client-code.test-helper'
 import { clientCode, repositoryValidateCode } from './auth.configtest'
 import { app, i18n as i18nInstance } from './auth.test-base'
-import {
-  AUTH_ERROR_CODES,
-  AuthError,
-  DB_ERROR_CODES,
-  DBErrorConexion,
-  VALIDATION_ERROR_CODES,
-} from '@auth'
+import { AUTH_ERROR, AuthErrorC, SYSTEM_ERROR, SystemError } from '@auth'
 import { ClientCodeType } from '@sgcv2/shared'
 import { AuthResponseBuilder } from '@utils'
 import 'dotenv/config'
@@ -39,8 +33,8 @@ describe('auth /code/validate test', () => {
       new AuthResponseBuilder()
         .status('error')
         .httpCode(400)
-        .code(VALIDATION_ERROR_CODES.CLIENT_CODE_REQUIRED)
-        .message(i18nInstance.t(VALIDATION_ERROR_CODES.CLIENT_CODE_REQUIRED))
+        .code(AUTH_ERROR.CLIENT_CODE_REQUIRED)
+        .message(i18nInstance.t(AUTH_ERROR.CLIENT_CODE_REQUIRED))
         .build(),
     )
   })
@@ -57,15 +51,18 @@ describe('auth /code/validate test', () => {
       new AuthResponseBuilder()
         .status('error')
         .httpCode(401)
-        .code(AUTH_ERROR_CODES.TOKEN_INVALID)
-        .message(i18nInstance.t(AUTH_ERROR_CODES.TOKEN_MALFORMED))
+        .code(AUTH_ERROR.TOKEN_INVALID)
+        .message(i18nInstance.t(AUTH_ERROR.TOKEN_MALFORMED))
         .build(),
     )
   })
 
   test('code refused', async () => {
     repositoryValidateCode.reject(
-      new AuthError('code_not_found', AUTH_ERROR_CODES.CODE_NOT_FOUND, 401),
+      new AuthErrorC(AUTH_ERROR.TOKEN_INVALID, AUTH_ERROR.CODE_NOT_FOUND, {
+        message: 'Code not found',
+        timestamp: Date.now(),
+      }),
     )
     const response = await request(app)
       .post(apiClientCodeUrl())
@@ -76,8 +73,8 @@ describe('auth /code/validate test', () => {
       new AuthResponseBuilder()
         .status('error')
         .httpCode(401)
-        .code(AUTH_ERROR_CODES.CODE_NOT_FOUND)
-        .message(i18nInstance.t('code_not_found'))
+        .code(AUTH_ERROR.TOKEN_INVALID)
+        .message(i18nInstance.t(AUTH_ERROR.CODE_NOT_FOUND))
         .build(),
     )
     expect(response.status).toBe(401)
@@ -85,11 +82,10 @@ describe('auth /code/validate test', () => {
 
   test('error db', async () => {
     repositoryValidateCode.reject(
-      new DBErrorConexion(
-        DB_ERROR_CODES.CONNECTION,
-        DB_ERROR_CODES.CONNECTION,
-        500,
-      ),
+      new SystemError(SYSTEM_ERROR.UNKNOWN_ERROR, SYSTEM_ERROR.UNKNOWN_ERROR, {
+        message: 'Connection error',
+        timestamp: Date.now(),
+      }),
     )
     const response = await request(app)
       .post(apiClientCodeUrl())
@@ -100,8 +96,8 @@ describe('auth /code/validate test', () => {
       new AuthResponseBuilder()
         .status('error')
         .httpCode(500)
-        .code(DB_ERROR_CODES.CONNECTION)
-        .message(i18nInstance.t(DB_ERROR_CODES.CONNECTION))
+        .code(SYSTEM_ERROR.UNKNOWN_ERROR)
+        .message(i18nInstance.t(SYSTEM_ERROR.UNKNOWN_ERROR))
         .build(),
     )
     expect(response.status).toBe(500)

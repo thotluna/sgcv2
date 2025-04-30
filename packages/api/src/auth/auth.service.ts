@@ -1,4 +1,4 @@
-import { AuthRespository, AuthError, AUTH_ERROR_CODES } from '@auth'
+import { AuthRespository, AuthErrorC, AUTH_ERROR } from '@auth'
 import { generatePKCEParams, CustomerCodeJwtHelper } from '@utils'
 
 export class AuthService {
@@ -25,11 +25,7 @@ export class AuthService {
     const { SECRET } = process.env
     const payload = new CustomerCodeJwtHelper(SECRET!).verificarToken(code)
     if (payload.email !== email) {
-      throw new AuthError(
-        AUTH_ERROR_CODES.INVALID_CODE,
-        AUTH_ERROR_CODES.INVALID_CODE,
-        400,
-      )
+      throw new AuthErrorC(AUTH_ERROR.INVALID_CODE, AUTH_ERROR.INVALID_CODE)
     }
 
     await this.repository.validateCustomerCode(code)
@@ -51,9 +47,11 @@ export class AuthService {
   async authorization(provider: string) {
     const PKCEPparams = await generatePKCEParams()
 
+    const { FRONTEND_URL, PORT_FRONTEND, FRONTEND_CALLBACK } = process.env
+
     const data: Record<string, string> = {
       provider,
-      redirect_to: 'http://localhost:3001/v1/auth/callback',
+      redirect_to: `${FRONTEND_URL}:${PORT_FRONTEND}${FRONTEND_CALLBACK}`,
       code_challenge: PKCEPparams.codeChallenge,
       code_challenge_method: 'S256',
     }
@@ -65,7 +63,11 @@ export class AuthService {
     return await this.repository.callback(code, codeVerifier)
   }
 
-  getUser(access_token: string) {
-    return this.repository.getUser(access_token)
+  async getUser(access_token: string) {
+    const user = await this.repository.getUser(access_token)
+    if (!user.user) {
+      throw new AuthErrorC(AUTH_ERROR.TOKEN_INVALID, AUTH_ERROR.TOKEN_INVALID)
+    }
+    return user
   }
 }

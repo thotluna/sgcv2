@@ -2,7 +2,7 @@ import { repositorySignIn, signInData } from './auth.configtest'
 import { apiSignInUrl, signInMock } from './auth.sign-in.test-helper'
 import { app, i18n as i18nTest } from './auth.test-base'
 import { buildUserMock } from './test-utils'
-import { AUTH_ERROR_CODES, AuthError, VALIDATION_ERROR_CODES } from '@auth'
+import { AUTH_ERROR, AuthErrorC, SYSTEM_ERROR, VALIDATION_ERROR } from '@auth'
 import { AuthResponseBuilder } from '@utils'
 import request from 'supertest'
 
@@ -33,8 +33,8 @@ describe('POST /signin', () => {
       new AuthResponseBuilder()
         .status('error')
         .httpCode(400)
-        .code(VALIDATION_ERROR_CODES.EMAIL_INVALID)
-        .message(i18nTest.t(VALIDATION_ERROR_CODES.EMAIL_INVALID))
+        .code(VALIDATION_ERROR.EMAIL_INVALID)
+        .message(i18nTest.t(VALIDATION_ERROR.EMAIL_INVALID))
         .build(),
     )
   })
@@ -50,18 +50,17 @@ describe('POST /signin', () => {
       new AuthResponseBuilder()
         .status('error')
         .httpCode(400)
-        .code(VALIDATION_ERROR_CODES.PASSWORD_MIN_LENGTH)
-        .message(i18nTest.t(VALIDATION_ERROR_CODES.PASSWORD_MIN_LENGTH))
+        .code(VALIDATION_ERROR.PASSWORD_MIN_LENGTH)
+        .message(i18nTest.t(VALIDATION_ERROR.PASSWORD_MIN_LENGTH))
         .build(),
     )
   })
 
   test('credential invalid', async () => {
     repositorySignIn.reject(
-      new AuthError(
-        AUTH_ERROR_CODES.INVALID_CREDENTIALS,
-        AUTH_ERROR_CODES.INVALID_CREDENTIALS,
-        401,
+      new AuthErrorC(
+        AUTH_ERROR.INVALID_CREDENTIALS,
+        AUTH_ERROR.INVALID_CREDENTIALS,
       ),
     )
     const response = await request(app)
@@ -74,8 +73,8 @@ describe('POST /signin', () => {
       new AuthResponseBuilder()
         .status('error')
         .httpCode(401)
-        .code(AUTH_ERROR_CODES.INVALID_CREDENTIALS)
-        .message(i18nTest.t(AUTH_ERROR_CODES.INVALID_CREDENTIALS))
+        .code(AUTH_ERROR.INVALID_CREDENTIALS)
+        .message(i18nTest.t(AUTH_ERROR.INVALID_CREDENTIALS))
         .build(),
     )
   })
@@ -92,8 +91,8 @@ describe('POST /signin', () => {
       new AuthResponseBuilder()
         .status('error')
         .httpCode(500)
-        .code(AUTH_ERROR_CODES.UNKNOWN_ERROR)
-        .message(i18nTest.t(AUTH_ERROR_CODES.UNKNOWN_ERROR))
+        .code(SYSTEM_ERROR.UNKNOWN_ERROR)
+        .message(i18nTest.t(SYSTEM_ERROR.UNKNOWN_ERROR))
         .build(),
     )
   })

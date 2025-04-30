@@ -7,10 +7,11 @@ import { apiSignUpUrl, signUpMock } from './auth.sign-up.test-helper'
 import { app, i18n as i18nInstance } from './auth.test-base'
 import { buildUserMock } from './test-utils'
 import {
-  AUTH_ERROR_CODES,
-  AuthError,
-  DB_ERROR_CODES,
-  VALIDATION_ERROR_CODES,
+  AUTH_ERROR,
+  AuthErrorC,
+  SYSTEM_ERROR,
+  SystemError,
+  VALIDATION_ERROR,
 } from '@auth'
 import { AuthResponseBuilder } from '@utils'
 import request from 'supertest'
@@ -39,8 +40,8 @@ describe('POST /signup', () => {
       new AuthResponseBuilder()
         .status('error')
         .httpCode(400)
-        .code(VALIDATION_ERROR_CODES.PASSWORD_MIN_LENGTH)
-        .message(i18nInstance.t(VALIDATION_ERROR_CODES.PASSWORD_MIN_LENGTH))
+        .code(VALIDATION_ERROR.PASSWORD_MIN_LENGTH)
+        .message(i18nInstance.t(VALIDATION_ERROR.PASSWORD_MIN_LENGTH))
         .build(),
     )
   })
@@ -55,8 +56,8 @@ describe('POST /signup', () => {
       new AuthResponseBuilder()
         .status('error')
         .httpCode(400)
-        .code(VALIDATION_ERROR_CODES.EMAIL_INVALID)
-        .message(i18nInstance.t(VALIDATION_ERROR_CODES.EMAIL_INVALID))
+        .code(VALIDATION_ERROR.EMAIL_INVALID)
+        .message(i18nInstance.t(VALIDATION_ERROR.EMAIL_INVALID))
         .build(),
     )
   })
@@ -71,19 +72,15 @@ describe('POST /signup', () => {
       new AuthResponseBuilder()
         .status('error')
         .httpCode(401)
-        .code(AUTH_ERROR_CODES.TOKEN_INVALID)
-        .message(i18nInstance.t(AUTH_ERROR_CODES.TOKEN_MALFORMED))
+        .code(AUTH_ERROR.TOKEN_INVALID)
+        .message(i18nInstance.t(AUTH_ERROR.TOKEN_MALFORMED))
         .build(),
     )
   })
 
   test('error, code client refused', async () => {
     repositoryValidateCode.reject(
-      new AuthError(
-        AUTH_ERROR_CODES.CODE_NOT_FOUND,
-        AUTH_ERROR_CODES.CODE_NOT_FOUND,
-        401,
-      ),
+      new AuthErrorC(AUTH_ERROR.CODE_NOT_FOUND, AUTH_ERROR.CODE_NOT_FOUND),
     )
     const response = await request(app)
       .post(apiSignUpUrl())
@@ -94,14 +91,19 @@ describe('POST /signup', () => {
       new AuthResponseBuilder()
         .status('error')
         .httpCode(401)
-        .code(AUTH_ERROR_CODES.CODE_NOT_FOUND)
-        .message(i18nInstance.t(AUTH_ERROR_CODES.CODE_NOT_FOUND))
+        .code(AUTH_ERROR.CODE_NOT_FOUND)
+        .message(i18nInstance.t(AUTH_ERROR.CODE_NOT_FOUND))
         .build(),
     )
   })
 
   test('error, any other', async () => {
-    repositoryValidateCode.reject(new Error(DB_ERROR_CODES.CONNECTION))
+    repositoryValidateCode.reject(
+      new SystemError(SYSTEM_ERROR.UNKNOWN_ERROR, SYSTEM_ERROR.UNKNOWN_ERROR, {
+        message: 'Connection error',
+        timestamp: Date.now(),
+      }),
+    )
     const response = await request(app)
       .post(apiSignUpUrl())
       .send(signupData)
@@ -111,8 +113,8 @@ describe('POST /signup', () => {
       new AuthResponseBuilder()
         .status('error')
         .httpCode(500)
-        .code(DB_ERROR_CODES.CONNECTION)
-        .message(i18nInstance.t(DB_ERROR_CODES.CONNECTION))
+        .code(SYSTEM_ERROR.UNKNOWN_ERROR)
+        .message(i18nInstance.t(SYSTEM_ERROR.UNKNOWN_ERROR))
         .build(),
     )
   })
@@ -120,10 +122,13 @@ describe('POST /signup', () => {
   test('error, email registered', async () => {
     repositoryValidateCode.resolve()
     repositorySignUp.reject(
-      new AuthError(
-        AUTH_ERROR_CODES.EMAIL_ALREADY_REGISTERED,
-        AUTH_ERROR_CODES.EMAIL_ALREADY_REGISTERED,
-        401,
+      new AuthErrorC(
+        AUTH_ERROR.EMAIL_ALREADY_REGISTERED,
+        AUTH_ERROR.EMAIL_ALREADY_REGISTERED,
+        {
+          message: 'Email already registered',
+          timestamp: Date.now(),
+        },
       ),
     )
 
@@ -136,8 +141,8 @@ describe('POST /signup', () => {
       new AuthResponseBuilder()
         .status('error')
         .httpCode(401)
-        .code(AUTH_ERROR_CODES.EMAIL_ALREADY_REGISTERED)
-        .message(i18nInstance.t(AUTH_ERROR_CODES.EMAIL_ALREADY_REGISTERED))
+        .code(AUTH_ERROR.EMAIL_ALREADY_REGISTERED)
+        .message(i18nInstance.t(AUTH_ERROR.EMAIL_ALREADY_REGISTERED))
         .build(),
     )
   })

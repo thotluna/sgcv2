@@ -5,7 +5,7 @@ import {
   ROUTE_FRONTEND_REGISTER,
 } from './auth.callback.test-helper'
 import { app, i18n as i18nTest } from './auth.test-base'
-import { AUTH_ERROR_CODES, AuthError } from '@auth'
+import { AUTH_ERROR, AuthErrorC } from '@auth'
 import { AuthResponseBuilder } from '@utils'
 import request from 'supertest'
 
@@ -35,10 +35,9 @@ describe('GET /callback', () => {
 
   test('error', async () => {
     callbackMock.reject(
-      new AuthError(
-        AUTH_ERROR_CODES.NOT_FOUND_ANONYMOUS_KEY,
-        AUTH_ERROR_CODES.NOT_FOUND_ANONYMOUS_KEY,
-        401,
+      new AuthErrorC(
+        AUTH_ERROR.NOT_FOUND_ANONYMOUS_KEY,
+        AUTH_ERROR.NOT_FOUND_ANONYMOUS_KEY,
       ),
     )
 
@@ -49,8 +48,9 @@ describe('GET /callback', () => {
     expect(response.body).toEqual(
       new AuthResponseBuilder()
         .status('error')
-        .code(401)
-        .message(i18nTest.t(AUTH_ERROR_CODES.NOT_FOUND_ANONYMOUS_KEY))
+        .httpCode(401)
+        .code(AUTH_ERROR.NOT_FOUND_ANONYMOUS_KEY)
+        .message(i18nTest.t(AUTH_ERROR.NOT_FOUND_ANONYMOUS_KEY))
         .build(),
     )
   })

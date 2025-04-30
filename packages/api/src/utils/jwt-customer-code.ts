@@ -1,5 +1,4 @@
-import { AUTH_ERROR_CODES } from '@auth'
-import { createErrorFactory } from '@sgcv2/shared'
+import { TokenError, SYSTEM_ERROR, AUTH_ERROR } from '@auth'
 import { assert } from 'console'
 import jwt from 'jsonwebtoken'
 
@@ -12,8 +11,6 @@ interface VerifiedTokenPayload extends CustomerCodePayload {
   exp: number
 }
 
-export const CustomerCodeTokeError = createErrorFactory('CustomerCodeTokeError')
-
 const EXPIRATION_TIME = '24h'
 
 export class CustomerCodeJwtHelper {
@@ -24,8 +21,6 @@ export class CustomerCodeJwtHelper {
   }
 
   public crearToken(email: string, expires?: number): string {
-    assert(email, 'Email is required')
-
     const expiresIn = expires || EXPIRATION_TIME
 
     try {
@@ -33,8 +28,15 @@ export class CustomerCodeJwtHelper {
         expiresIn: expiresIn,
       })
       return token
-    } catch {
-      throw new CustomerCodeTokeError('Falló la creación del token.')
+    } catch (error) {
+      throw new TokenError(
+        SYSTEM_ERROR.UNKNOWN_ERROR,
+        SYSTEM_ERROR.UNKNOWN_ERROR,
+        {
+          message: (error as Error).message,
+          timestamp: Date.now(),
+        },
+      )
     }
   }
 
@@ -44,24 +46,29 @@ export class CustomerCodeJwtHelper {
       return decode
     } catch (error) {
       if (error instanceof jwt.TokenExpiredError) {
-        throw new CustomerCodeTokeError(
-          AUTH_ERROR_CODES.TOKEN_INVALID,
-          AUTH_ERROR_CODES.TOKEN_EXPIRED,
-          401,
+        throw new TokenError(
+          AUTH_ERROR.TOKEN_INVALID,
+          AUTH_ERROR.TOKEN_EXPIRED,
+          {
+            message: (error as Error).message,
+            timestamp: Date.now(),
+          },
         )
       }
       if ((error as Error).name === 'JsonWebTokenError') {
-        throw new CustomerCodeTokeError(
-          AUTH_ERROR_CODES.TOKEN_INVALID,
-          AUTH_ERROR_CODES.TOKEN_MALFORMED,
-          401,
+        throw new TokenError(
+          AUTH_ERROR.TOKEN_INVALID,
+          AUTH_ERROR.TOKEN_MALFORMED,
+          {
+            message: (error as Error).message,
+            timestamp: Date.now(),
+          },
         )
       }
-      throw new CustomerCodeTokeError(
-        AUTH_ERROR_CODES.TOKEN_INVALID,
-        AUTH_ERROR_CODES.TOKEN_INVALID,
-        401,
-      )
+      throw new TokenError(AUTH_ERROR.TOKEN_INVALID, AUTH_ERROR.TOKEN_INVALID, {
+        message: (error as Error).message,
+        timestamp: Date.now(),
+      })
     }
   }
 
@@ -81,8 +88,10 @@ export class CustomerCodeJwtHelper {
 
       return null
     } catch (error) {
-      console.error('Error decoding unverified token:', error)
-      return null
+      throw new TokenError(AUTH_ERROR.TOKEN_INVALID, AUTH_ERROR.TOKEN_INVALID, {
+        message: (error as Error).message,
+        timestamp: Date.now(),
+      })
     }
   }
 }

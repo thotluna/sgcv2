@@ -7,7 +7,7 @@ import {
 } from './auth.authorize.test-helper'
 import { repositorySignIn } from './auth.configtest'
 import { app, i18n as i18nInstance } from './auth.test-base'
-import { AUTH_ERROR_CODES, authorizeDataType } from '@auth'
+import { authorizeDataType, PROVIDER_ERROR } from '@auth'
 import { ApiResponse } from '@sgcv2/shared'
 import { AuthResponseBuilder } from '@utils'
 import request from 'supertest'
@@ -61,8 +61,8 @@ describe('GET /authorize', () => {
           new AuthResponseBuilder()
             .status('error')
             .httpCode(400)
-            .code(AUTH_ERROR_CODES.PROVIDER_INVALID)
-            .message(i18nInstance.t(AUTH_ERROR_CODES.PROVIDER_INVALID))
+            .code(PROVIDER_ERROR.PROVIDER_INVALID)
+            .message(i18nInstance.t(PROVIDER_ERROR.PROVIDER_INVALID))
             .build(),
         )
       })

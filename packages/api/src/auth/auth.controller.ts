@@ -1,4 +1,4 @@
-import { AuthService, SUPABASE_URLs, AuthError, DBErrorConexion } from '@auth'
+import { AUTH_ERROR, AuthService, SUPABASE_URLs } from '@auth'
 import { ApiResponse, ClientCodeType } from '@sgcv2/shared'
 import { AuthResponseBuilder } from '@utils'
 import { NextFunction, Request, Response } from 'express'
@@ -89,6 +89,7 @@ export class AuthController {
   callback = async (req: Request, res: Response, next: NextFunction) => {
     const { code, error, error_description } = req.query
 
+    //TODO: remplace by const or const errors
     if (
       !code ||
       (error && error_description === 'Database error saving new user')
@@ -128,32 +129,10 @@ export class AuthController {
         )
       return
     } catch (error) {
-      if (error instanceof AuthError) {
-        res
-          .status(401)
-          .send(
-            new AuthResponseBuilder()
-              .status('error')
-              .code(401)
-              .message(req.t(error.message))
-              .build(),
-          )
-        return
-      }
-      if (error instanceof DBErrorConexion) {
-        res.status(401).send({
-          status: 'fail',
-          message: req.t('db_conexion_error'),
-        })
-        return
-      }
       next(error)
     }
   }
 
-  // session = (_req: Request, _res: Response, _next: NextFunction) => {
-  //   throw new Error('Method not implemented.')
-  // }
   getUser = async (req: Request, res: Response, next: NextFunction) => {
     const tok = req.headers['authorization']
 
@@ -163,8 +142,9 @@ export class AuthController {
         .send(
           new AuthResponseBuilder()
             .status('error')
-            .code(401)
-            .message(req.t('token_required'))
+            .httpCode(401)
+            .code(AUTH_ERROR.TOKEN_REQUIRED)
+            .message(req.t(AUTH_ERROR.TOKEN_REQUIRED))
             .build(),
         )
       return
@@ -174,32 +154,8 @@ export class AuthController {
 
     try {
       const user = await this.service.getUser(token)
-      if (!user.user) {
-        res
-          .status(401)
-          .send(
-            new AuthResponseBuilder()
-              .status('error')
-              .code(401)
-              .message(req.t('token_without_user'))
-              .build(),
-          )
-        return
-      }
       res.send(new AuthResponseBuilder().data(user).build())
     } catch (error) {
-      if (error instanceof AuthError) {
-        res
-          .status(401)
-          .send(
-            new AuthResponseBuilder()
-              .status('error')
-              .code(401)
-              .message(req.t(error.message))
-              .build(),
-          )
-        return
-      }
       next(error)
     }
   }
