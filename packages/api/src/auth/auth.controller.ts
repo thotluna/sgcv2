@@ -74,7 +74,9 @@ export class AuthController {
       const resp = await this.service.authorization(provider)
 
       const { data, codeVerifier } = resp
-      const url = new URL(SUPABASE_URLs.AUTHORIZATION)
+      const url = new URL(
+        `${process.env.SUPABASE_URL}/${SUPABASE_URLs.AUTHORIZATION}`,
+      )
 
       Object.keys(data).forEach(key => {
         url.searchParams.append(key, data[key])

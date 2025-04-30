@@ -140,18 +140,21 @@ export class SupabaseAuthRepository implements AuthRespository {
   async callback(code: string, codeVerifier: string) {
     const { SUPABASE_ANON_KEY: apiKey } = process.env
 
-    const request = await fetch(SUPABASE_URLs.EXGHANGE, {
-      method: 'POST',
-      headers: {
-        apiKey: apiKey!,
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
+    const request = await fetch(
+      `${process.env.SUPABASE_URL!}${SUPABASE_URLs.EXGHANGE}`,
+      {
+        method: 'POST',
+        headers: {
+          apiKey: apiKey!,
+          Authorization: `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          auth_code: code,
+          code_verifier: codeVerifier,
+        }),
       },
-      body: JSON.stringify({
-        auth_code: code,
-        code_verifier: codeVerifier,
-      }),
-    }).then(result => result.json())
+    ).then(result => result.json())
 
     return request as CallbackResult
   }

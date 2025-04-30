@@ -47,11 +47,11 @@ export class AuthService {
   async authorization(provider: string) {
     const PKCEPparams = await generatePKCEParams()
 
-    const { FRONTEND_URL, PORT_FRONTEND, FRONTEND_CALLBACK } = process.env
+    const { API_HOST, PORT } = process.env
 
     const data: Record<string, string> = {
       provider,
-      redirect_to: `${FRONTEND_URL}:${PORT_FRONTEND}${FRONTEND_CALLBACK}`,
+      redirect_to: `${API_HOST}:${PORT}/v1/auth/callback`,
       code_challenge: PKCEPparams.codeChallenge,
       code_challenge_method: 'S256',
     }
