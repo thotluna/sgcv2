@@ -1,9 +1,7 @@
 import { ServerApi } from '../../server'
-import { AuthController } from '../auth.controller'
-import { AuthRouter } from '../auth.routes'
-import { AuthService } from '../auth.service'
-import { AuthsRepository } from '../types'
-import { authRepository } from './auth.configtest'
+import { AuthRespository } from '../auth.repository'
+import { authRepositoryMock } from './auth.configtest'
+import { AuthController, AuthRouter, AuthService } from '@auth'
 import 'dotenv/config'
 import { Application } from 'express'
 import { Server } from 'http'
@@ -11,11 +9,11 @@ import i18next from 'i18next'
 
 export let app: Application
 let server!: Server
-let repository: AuthsRepository
+let repository: AuthRespository
 export let i18n: typeof i18next
 
 beforeAll(async () => {
-  repository = authRepository
+  repository = authRepositoryMock
 
   const serverApp = ServerApi.getInstance()
   i18n = serverApp.getI18nextInstance()

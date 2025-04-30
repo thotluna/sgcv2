@@ -1,81 +1,88 @@
-import { AuthResponseBuilder } from '../../utils/auth-response-builder'
-import { AuthError } from '../errors'
-import { authRoute, dataUser, repositoryUser } from './auth.configtest'
+import { dataUser, repositoryUser } from './auth.configtest'
 import { app, i18n as i18nTest } from './auth.test-base'
+import { apiUserUrl, getToken, TypeTokens } from './auth.user.test-helper'
+import { AUTH_ERROR_CODES } from '@auth'
+import { AuthResponseBuilder } from '@utils'
 import request from 'supertest'
 
 describe('GET /user', () => {
-  test('happy past', () => {
+  test('happy past', async () => {
     repositoryUser.resolve()
-    return request(app)
-      .get(authRoute.USER)
+    const response = await request(app)
+      .get(apiUserUrl())
       .send()
       .set('Accept', 'application/json')
-      .set('Authorization', `Bearer ${dataUser.session?.access_token}`)
-      .expect('Content-Type', /json/)
-      .expect(200)
-      .then(response => {
-        expect(response.body).toEqual(
-          new AuthResponseBuilder().data(dataUser).build(),
-        )
-      })
+      .set('Authorization', `Beare ${getToken(TypeTokens.OK)}`)
+    expect(response.body).toEqual(
+      new AuthResponseBuilder().data(dataUser).build(),
+    )
+    expect(response.status).toBe(200)
   })
 
-  test('without token', () => {
-    return request(app)
-      .get(authRoute.USER)
+  test('without token', async () => {
+    const response = await request(app)
+      .get(apiUserUrl())
       .send()
       .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(401)
-      .then(response => {
-        expect(response.body).toEqual(
-          new AuthResponseBuilder()
-            .code(401)
-            .status('error')
-            .message(i18nTest.t('token_required'))
-            .build(),
-        )
-      })
+    expect(response.status).toBe(401)
+    expect(response.body).toEqual(
+      new AuthResponseBuilder()
+        .status('error')
+        .code(AUTH_ERROR_CODES.TOKEN_REQUIRED)
+        .httpCode(401)
+        .message(i18nTest.t(AUTH_ERROR_CODES.TOKEN_REQUIRED))
+        .build(),
+    )
   })
 
-  test('token do not return user', () => {
+  test('with empty bearer', async () => {
+    const response = await request(app)
+      .get(apiUserUrl())
+      .send()
+      .set('Accept', 'application/json')
+      .set('Authorization', `Beare ${getToken(TypeTokens.EMPTY)}`)
+    expect(response.status).toBe(401)
+    expect(response.body).toEqual(
+      new AuthResponseBuilder()
+        .status('error')
+        .code(AUTH_ERROR_CODES.TOKEN_INVALID)
+        .httpCode(401)
+        .message(i18nTest.t(AUTH_ERROR_CODES.TOKEN_MALFORMED))
+        .build(),
+    )
+  })
+
+  test('token do not return user', async () => {
     repositoryUser.resolve({ user: null, session: null })
-    return request(app)
-      .get(authRoute.USER)
+    const response = await request(app)
+      .get(apiUserUrl())
       .send()
       .set('Accept', 'application/json')
-      .set('Authorization', `Bearer ${dataUser.session?.access_token}`)
-      .expect('Content-Type', /json/)
-      .expect(401)
-      .then(response => {
-        expect(response.body).toEqual(
-          new AuthResponseBuilder()
-            .code(401)
-            .status('error')
-            .message(i18nTest.t('token_without_user'))
-            .build(),
-        )
-      })
+      .set('Authorization', `Beare ${getToken(TypeTokens.OK)}`)
+    expect(response.status).toBe(401)
+    expect(response.body).toEqual(
+      new AuthResponseBuilder()
+        .code(401)
+        .status('error')
+        .message(i18nTest.t('token_without_user'))
+        .build(),
+    )
   })
 
-  test('token error', () => {
-    repositoryUser.reject(new AuthError('token_required'))
-    return request(app)
-      .get(authRoute.USER)
+  test('token malformed', async () => {
+    const response = await request(app)
+      .get(apiUserUrl())
       .send()
       .set('Accept', 'application/json')
-      .set('Authorization', `Bearer ${dataUser.session?.access_token}`)
-      .expect('Content-Type', /json/)
-      .expect(401)
-      .then(response => {
-        expect(response.body).toEqual(
-          new AuthResponseBuilder()
-            .code(401)
-            .status('error')
-            .message(i18nTest.t('token_required'))
-            .build(),
-        )
-      })
+      .set('Authorization', `Bearer ${getToken(TypeTokens.MAL_FORMAT)}`)
+    expect(response.status).toBe(401)
+    expect(response.body).toEqual(
+      new AuthResponseBuilder()
+        .code(AUTH_ERROR_CODES.TOKEN_INVALID)
+        .httpCode(401)
+        .status('error')
+        .message(i18nTest.t(AUTH_ERROR_CODES.TOKEN_MALFORMED))
+        .build(),
+    )
   })
 })

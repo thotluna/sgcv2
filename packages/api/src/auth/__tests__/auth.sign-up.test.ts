@@ -1,159 +1,144 @@
-import { AuthResponseBuilder } from '../../utils/auth-response-builder'
-import { AuthError } from '../errors'
 import {
-  authRoute,
-  data,
   repositorySignUp,
   repositoryValidateCode,
   signupData,
 } from './auth.configtest'
-import './auth.test-base'
+import { apiSignUpUrl, signUpMock } from './auth.sign-up.test-helper'
 import { app, i18n as i18nInstance } from './auth.test-base'
+import { buildUserMock } from './test-utils'
+import {
+  AUTH_ERROR_CODES,
+  AuthError,
+  DB_ERROR_CODES,
+  VALIDATION_ERROR_CODES,
+} from '@auth'
+import { AuthResponseBuilder } from '@utils'
 import request from 'supertest'
 
 describe('POST /signup', () => {
-  test('happy past', () => {
-    const dataI = signupData
+  test('happy past', async () => {
     repositoryValidateCode.resolve()
-    repositorySignUp.resolve()
-    return request(app)
-      .post(authRoute.SIGN_UP)
-      .send(dataI)
+    signUpMock.resolve(buildUserMock())
+    const response = await request(app)
+      .post(apiSignUpUrl())
+      .send(signupData)
       .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(200)
-      .then(response => {
-        expect(response.body).toEqual(
-          new AuthResponseBuilder()
-            .data({
-              data: data,
-              error: null,
-            })
-            .build(),
-        )
-      })
+    expect(response.status).toBe(200)
+    expect(response.body).toEqual(
+      new AuthResponseBuilder().data(buildUserMock()).build(),
+    )
   })
 
-  test('bad request, password invalid format', () => {
-    return request(app)
-      .post(authRoute.SIGN_UP)
+  test('bad request, password invalid format', async () => {
+    const response = await request(app)
+      .post(apiSignUpUrl())
       .send({ ...signupData, password: '123' })
       .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(400)
-      .then(response => {
-        expect(response.body).toEqual(
-          new AuthResponseBuilder()
-            .status('error')
-            .code(400)
-            .message(i18nInstance.t('password_min_length', { lng: 'es' }))
-            .build(),
-        )
-      })
+    expect(response.status).toBe(400)
+    expect(response.body).toEqual(
+      new AuthResponseBuilder()
+        .status('error')
+        .httpCode(400)
+        .code(VALIDATION_ERROR_CODES.PASSWORD_MIN_LENGTH)
+        .message(i18nInstance.t(VALIDATION_ERROR_CODES.PASSWORD_MIN_LENGTH))
+        .build(),
+    )
   })
 
-  test('bad request, email invalid format', () => {
-    return request(app)
-      .post('/v1/auth/signup')
+  test('bad request, email invalid format', async () => {
+    const response = await request(app)
+      .post(apiSignUpUrl())
       .send({ ...signupData, email: 'alan.com' })
       .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(400)
-      .then(response => {
-        expect(response.body).toEqual(
-          new AuthResponseBuilder()
-            .status('error')
-            .code(400)
-            .message(i18nInstance.t('email_invalid', { lng: 'es' }))
-            .build(),
-        )
-      })
+    expect(response.status).toBe(400)
+    expect(response.body).toEqual(
+      new AuthResponseBuilder()
+        .status('error')
+        .httpCode(400)
+        .code(VALIDATION_ERROR_CODES.EMAIL_INVALID)
+        .message(i18nInstance.t(VALIDATION_ERROR_CODES.EMAIL_INVALID))
+        .build(),
+    )
   })
 
-  test('bad request, code client invalid format', () => {
-    return request(app)
-      .post(authRoute.SIGN_UP)
+  test('bad request, code client invalid format', async () => {
+    const response = await request(app)
+      .post(apiSignUpUrl())
       .send({ ...signupData, code: '123' })
       .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(400)
-      .then(response => {
-        expect(response.body).toEqual(
-          new AuthResponseBuilder()
-            .status('error')
-            .code(400)
-            .message(
-              i18nInstance.t('jwt malformed', {
-                lng: 'es',
-              }),
-            )
-            .build(),
-        )
-      })
+    expect(response.status).toBe(401)
+    expect(response.body).toEqual(
+      new AuthResponseBuilder()
+        .status('error')
+        .httpCode(401)
+        .code(AUTH_ERROR_CODES.TOKEN_INVALID)
+        .message(i18nInstance.t(AUTH_ERROR_CODES.TOKEN_MALFORMED))
+        .build(),
+    )
   })
 
-  test('error, code client refused', () => {
-    repositoryValidateCode.reject(new AuthError('code_not_found'))
-    return request(app)
-      .post(authRoute.SIGN_UP)
+  test('error, code client refused', async () => {
+    repositoryValidateCode.reject(
+      new AuthError(
+        AUTH_ERROR_CODES.CODE_NOT_FOUND,
+        AUTH_ERROR_CODES.CODE_NOT_FOUND,
+        401,
+      ),
+    )
+    const response = await request(app)
+      .post(apiSignUpUrl())
       .send(signupData)
       .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(400)
-      .then(response => {
-        expect(response.body).toEqual(
-          new AuthResponseBuilder()
-            .status('error')
-            .code(400)
-            .message(i18nInstance.t('code_not_found'))
-            .build(),
-        )
-      })
+    expect(response.status).toBe(401)
+    expect(response.body).toEqual(
+      new AuthResponseBuilder()
+        .status('error')
+        .httpCode(401)
+        .code(AUTH_ERROR_CODES.CODE_NOT_FOUND)
+        .message(i18nInstance.t(AUTH_ERROR_CODES.CODE_NOT_FOUND))
+        .build(),
+    )
   })
 
-  test('error, any other', () => {
-    repositoryValidateCode.reject(new Error('db_conexion_error'))
-    return request(app)
-      .post(authRoute.SIGN_UP)
+  test('error, any other', async () => {
+    repositoryValidateCode.reject(new Error(DB_ERROR_CODES.CONNECTION))
+    const response = await request(app)
+      .post(apiSignUpUrl())
       .send(signupData)
       .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(500)
-      .then(response => {
-        expect(response.body).toEqual(
-          new AuthResponseBuilder()
-            .status('error')
-            .code(500)
-            .message(
-              i18nInstance.t('db_conexion_error', {
-                lng: 'es',
-              }),
-            )
-            .build(),
-        )
-      })
+    expect(response.status).toBe(500)
+    expect(response.body).toEqual(
+      new AuthResponseBuilder()
+        .status('error')
+        .httpCode(500)
+        .code(DB_ERROR_CODES.CONNECTION)
+        .message(i18nInstance.t(DB_ERROR_CODES.CONNECTION))
+        .build(),
+    )
   })
 
-  test('error, email registered', () => {
+  test('error, email registered', async () => {
     repositoryValidateCode.resolve()
-    repositorySignUp.reject(new AuthError('auth_email_already_registed'))
+    repositorySignUp.reject(
+      new AuthError(
+        AUTH_ERROR_CODES.EMAIL_ALREADY_REGISTERED,
+        AUTH_ERROR_CODES.EMAIL_ALREADY_REGISTERED,
+        401,
+      ),
+    )
 
-    return request(app)
-      .post(authRoute.SIGN_UP)
+    const response = await request(app)
+      .post(apiSignUpUrl())
       .send(signupData)
       .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(400)
-      .then(response => {
-        expect(response.body).toEqual(
-          new AuthResponseBuilder()
-            .status('error')
-            .code(400)
-            .message(
-              i18nInstance.t('auth_email_already_registed', { lng: 'es' }),
-            )
-            .build(),
-        )
-      })
+    expect(response.status).toBe(401)
+    expect(response.body).toEqual(
+      new AuthResponseBuilder()
+        .status('error')
+        .httpCode(401)
+        .code(AUTH_ERROR_CODES.EMAIL_ALREADY_REGISTERED)
+        .message(i18nInstance.t(AUTH_ERROR_CODES.EMAIL_ALREADY_REGISTERED))
+        .build(),
+    )
   })
 })

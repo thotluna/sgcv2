@@ -1,7 +1,8 @@
-import { CustomerCodeJwtHelper } from '../../utils/jwt-customer-code'
-import { AuthsRepository, UserResponse } from '../types'
+import { AuthRespository, UserResponse } from '@auth'
+import { AuthRouter } from '@auth'
+import { CustomerCodeJwtHelper } from '@utils'
 
-export const authRepository: AuthsRepository = {
+export const authRepositoryMock: AuthRespository = {
   saveCustomerCode: jest.fn(),
   validateCustomerCode: jest.fn(),
   signUp: jest.fn(),
@@ -12,29 +13,25 @@ export const authRepository: AuthsRepository = {
 }
 export const repositoryValidateCode = {
   resolve: () =>
-    (authRepository.validateCustomerCode as jest.Mock).mockResolvedValue(true),
+    (authRepositoryMock.validateCustomerCode as jest.Mock).mockResolvedValue(
+      true,
+    ),
   reject: (error: Error) =>
-    (authRepository.validateCustomerCode as jest.Mock).mockRejectedValue(error),
+    (authRepositoryMock.validateCustomerCode as jest.Mock).mockRejectedValue(
+      error,
+    ),
 }
 
-export const authRoute = {
-  VALIDATE_CODE: '/v1/auth/code/validate',
-  SIGN_UP: '/v1/auth/signup',
-  SIGN_IN: '/v1/auth/signin',
-  AUTHORIZE: '/v1/auth/authorize',
-  CALLBACK: '/v1/auth/callback',
-  USER: '/v1/auth/user',
-}
-
+const { SECRET } = process.env
 export const clientCode = {
-  correct: new CustomerCodeJwtHelper().crearToken('qw@qw.co'),
+  correct: new CustomerCodeJwtHelper(SECRET!).crearToken('qw@qw.co'),
   incorrect: 'code invalid',
 }
 
 export const signupData = {
   email: 'alan@gmail.com',
   password: '12345678',
-  code: new CustomerCodeJwtHelper().crearToken('alan@gmail.com'),
+  code: new CustomerCodeJwtHelper(SECRET!).crearToken('alan@gmail.com'),
 }
 
 export const data = {
@@ -51,12 +48,12 @@ export const data = {
 
 export const repositorySignUp = {
   resolve: () =>
-    (authRepository.signUp as jest.Mock).mockResolvedValue({
+    (authRepositoryMock.signUp as jest.Mock).mockResolvedValue({
       data,
       error: null,
     }),
   reject: (error: Error) =>
-    (authRepository.signUp as jest.Mock).mockRejectedValue(error),
+    (authRepositoryMock.signUp as jest.Mock).mockRejectedValue(error),
 }
 
 export const signInData = {
@@ -66,23 +63,23 @@ export const signInData = {
 
 export const repositorySignIn = {
   resolve: () =>
-    (authRepository.signIn as jest.Mock).mockResolvedValue({
+    (authRepositoryMock.signIn as jest.Mock).mockResolvedValue({
       data,
       error: null,
     }),
   reject: (error: Error) =>
-    (authRepository.signIn as jest.Mock).mockRejectedValue(error),
+    (authRepositoryMock.signIn as jest.Mock).mockRejectedValue(error),
 }
 
 export const repositoryCallback = {
   resolve: () =>
-    (authRepository.callback as jest.Mock).mockResolvedValue({
+    (authRepositoryMock.callback as jest.Mock).mockResolvedValue({
       access_token: '123456789',
       expires_at: Date.now(),
       refresh_token: '123456789',
     }),
   reject: (error: Error) =>
-    (authRepository.callback as jest.Mock).mockRejectedValue(error),
+    (authRepositoryMock.callback as jest.Mock).mockRejectedValue(error),
 }
 
 export const dataUser: UserResponse = {
@@ -93,7 +90,8 @@ export const dataUser: UserResponse = {
     role: 'authenticated',
   },
   session: {
-    access_token: '123456789',
+    access_token:
+      'eyJhbGciOiJIUzI1NiIsImtpZCI6Im1YWlA5N3FRSkhPRkI4ckMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3J6ZnZ6cWhjZWFocXBqempzd3h6LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiIzY2RmOGY3MC0yNjc2LTQ5ZGMtOWZkYS0xNTFkNTg5YTkxNWEiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzQ1ODkxNDg3LCJpYXQiOjE3NDU4ODc4ODcsImVtYWlsIjoidGhvdGx1bmFAZ21haWwuY29tIiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbCI6InRob3RsdW5hQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaG9uZV92ZXJpZmllZCI6ZmFsc2UsInN1YiI6IjNjZGY4ZjcwLTI2NzYtNDlkYy05ZmRhLTE1MWQ1ODlhOTE1YSJ9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzQ1ODg3ODg3fV0sInNlc3Npb25faWQiOiJjYzkxZGFiOC04YzI3LTRlYTUtYTRhOS01NDBhMTYzNTkwMGQiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.aYuZrgqRcdTfuaZjtQm7S-vzPzuqmV3OvCXoBKb_KLE',
     expires_at: Date.now(),
     expires_in: 3600,
     refresh_token: '123456789',
@@ -109,9 +107,20 @@ export const dataUser: UserResponse = {
 
 export const repositoryUser = {
   resolve: (data?: UserResponse | undefined) =>
-    (authRepository.getUser as jest.Mock).mockResolvedValue(
+    (authRepositoryMock.getUser as jest.Mock).mockResolvedValue(
       data ? data : dataUser,
     ),
   reject: (error: Error) =>
-    (authRepository.getUser as jest.Mock).mockRejectedValue(error),
+    (authRepositoryMock.getUser as jest.Mock).mockRejectedValue(error),
+}
+
+export const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost'
+export const PORT_FRONTEND = process.env.PORT_FRONTEND || '3000'
+
+export const ROUTE_FRONTEND_REGISTER = `${FRONTEND_URL}:${PORT_FRONTEND}/register`
+export const ROUTE_FRONTEND_CALLBACK = `${FRONTEND_URL}:${PORT_FRONTEND}/auth/callback`
+
+export const API_CALLBACK = AuthRouter.getAbsoluteRoutes().callback
+export function apiCallbackWithCode(code: string) {
+  return `${API_CALLBACK}?code=${code}`
 }

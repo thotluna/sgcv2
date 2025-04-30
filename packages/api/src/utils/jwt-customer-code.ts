@@ -1,3 +1,4 @@
+import { AUTH_ERROR_CODES } from '@auth'
 import { createErrorFactory } from '@sgcv2/shared'
 import { assert } from 'console'
 import jwt from 'jsonwebtoken'
@@ -16,14 +17,20 @@ export const CustomerCodeTokeError = createErrorFactory('CustomerCodeTokeError')
 const EXPIRATION_TIME = '24h'
 
 export class CustomerCodeJwtHelper {
-  private SECRET = process.env.SECRET
+  private SECRET: string
 
-  public crearToken(email: string): string {
+  constructor(secret: string) {
+    this.SECRET = secret
+  }
+
+  public crearToken(email: string, expires?: number): string {
     assert(email, 'Email is required')
 
+    const expiresIn = expires || EXPIRATION_TIME
+
     try {
-      const token = jwt.sign({ email }, this.SECRET!, {
-        expiresIn: EXPIRATION_TIME,
+      const token = jwt.sign({ id: email, email }, this.SECRET!, {
+        expiresIn: expiresIn,
       })
       return token
     } catch {
@@ -32,19 +39,29 @@ export class CustomerCodeJwtHelper {
   }
 
   public verificarToken(token: string): VerifiedTokenPayload {
-    assert(token, 'Token is required')
-
     try {
       const decode = jwt.verify(token, this.SECRET!) as VerifiedTokenPayload
       return decode
     } catch (error) {
-      if (error instanceof jwt.JsonWebTokenError) {
-        throw new CustomerCodeTokeError(error.message)
-      }
       if (error instanceof jwt.TokenExpiredError) {
-        throw new CustomerCodeTokeError('Expired_code')
+        throw new CustomerCodeTokeError(
+          AUTH_ERROR_CODES.TOKEN_INVALID,
+          AUTH_ERROR_CODES.TOKEN_EXPIRED,
+          401,
+        )
       }
-      throw new CustomerCodeTokeError((error as Error).message)
+      if ((error as Error).name === 'JsonWebTokenError') {
+        throw new CustomerCodeTokeError(
+          AUTH_ERROR_CODES.TOKEN_INVALID,
+          AUTH_ERROR_CODES.TOKEN_MALFORMED,
+          401,
+        )
+      }
+      throw new CustomerCodeTokeError(
+        AUTH_ERROR_CODES.TOKEN_INVALID,
+        AUTH_ERROR_CODES.TOKEN_INVALID,
+        401,
+      )
     }
   }
 

@@ -1,7 +1,10 @@
+import { VALIDATION_ERROR_CODES } from './errors'
 import { z } from 'zod'
 
 export const customerCodeSchema = z.object({
-  code: z.string({ required_error: 'client_code_required' }),
+  code: z.string({
+    required_error: VALIDATION_ERROR_CODES.CLIENT_CODE_REQUIRED,
+  }),
 })
 
 export const httpCustomerCodeSchema = z.object({
@@ -11,17 +14,17 @@ export const httpCustomerCodeSchema = z.object({
 export const httpEmailCodeSchema = z.object({
   body: z.object({
     email: z
-      .string({ required_error: 'email_required' })
-      .email('email_invalid'),
+      .string({ required_error: VALIDATION_ERROR_CODES.EMAIL_REQUIRED })
+      .email(VALIDATION_ERROR_CODES.EMAIL_INVALID),
   }),
 })
 
 export const signInSchema = z.object({
-  email: z.string().email('email_invalid'),
+  email: z.string().email(VALIDATION_ERROR_CODES.EMAIL_INVALID),
   password: z
     .string()
-    .min(8, 'password_min_length')
-    .max(36, 'password_max_length'),
+    .min(8, VALIDATION_ERROR_CODES.PASSWORD_MIN_LENGTH)
+    .max(36, VALIDATION_ERROR_CODES.PASSWORD_MAX_LENGTH),
 })
 
 export const httpSingInSchema = z.object({
@@ -40,7 +43,7 @@ export const authorizeSchema = z.object({
       errorMap: (issue, ctx) => {
         if (issue.code === z.ZodIssueCode.invalid_enum_value) {
           return {
-            message: 'provider_invalid',
+            message: VALIDATION_ERROR_CODES.PROVIDER_INVALID,
           }
         }
         return { message: ctx.defaultError }

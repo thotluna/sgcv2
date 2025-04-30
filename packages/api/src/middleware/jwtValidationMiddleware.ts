@@ -1,29 +1,33 @@
+import { AUTH_ERROR_CODES, AuthError } from '../auth/errors'
+import { CustomerCodeJwtHelper } from '@utils'
 import { NextFunction, Request, Response } from 'express'
-import { JwtPayload, verify } from 'jsonwebtoken'
+import { JwtPayload } from 'jsonwebtoken'
 
 export interface CustomRequest extends Request {
   token: string | JwtPayload
 }
 
-export function verificarToken(
+export async function verificarToken(
   req: Request,
-  res: Response,
+  _res: Response,
   next: NextFunction,
 ) {
   try {
-    const token = req.header('Authorization')?.replace('Bearer ', '')
-
-    if (!token) {
-      res.status(401).json({ message: 'Token no proporcionado' })
-      return
+    if (!req.header('Authorization')) {
+      throw new AuthError(
+        AUTH_ERROR_CODES.TOKEN_REQUIRED,
+        AUTH_ERROR_CODES.TOKEN_REQUIRED,
+        401,
+      )
     }
 
-    const decoded = verify(token, process.env.SECRET_KEY!)
+    const token = req.header('Authorization')?.split(' ')[1]
 
-    ;(req as CustomRequest).token = decoded
-
+    const { JWT_SECRET } = process.env
+    new CustomerCodeJwtHelper(JWT_SECRET!).verificarToken(token!)
+    ;(req as CustomRequest).token = token!
     next()
-  } catch {
-    res.status(401).send('Please authenticate')
+  } catch (error) {
+    next(error)
   }
 }

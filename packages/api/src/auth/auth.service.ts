@@ -1,32 +1,35 @@
-import { CustomerCodeJwtHelper } from '../utils/jwt-customer-code'
-import { AuthError } from './errors'
-import { generatePKCEParams } from './oauth'
-import { AuthsRepository } from './types'
-import jwt from 'jsonwebtoken'
+import { AuthRespository, AuthError, AUTH_ERROR_CODES } from '@auth'
+import { generatePKCEParams, CustomerCodeJwtHelper } from '@utils'
 
 export class AuthService {
-  private repository: AuthsRepository
+  private repository: AuthRespository
 
-  constructor(repository: AuthsRepository) {
+  constructor(repository: AuthRespository) {
     this.repository = repository
   }
 
   async customerCode(email: string) {
     const { SECRET } = process.env
-    const token = jwt.sign({ email }, SECRET!, { expiresIn: '24h' })
+    const token = new CustomerCodeJwtHelper(SECRET!).crearToken(email)
 
     return await this.repository.saveCustomerCode(token, email)
   }
 
   async validateCustomerCode(code: string) {
-    new CustomerCodeJwtHelper().verificarToken(code)
+    const { SECRET } = process.env
+    new CustomerCodeJwtHelper(SECRET!).verificarToken(code)
     return await this.repository.validateCustomerCode(code)
   }
 
   async signUp(email: string, password: string, code: string) {
-    const payload = new CustomerCodeJwtHelper().verificarToken(code)
+    const { SECRET } = process.env
+    const payload = new CustomerCodeJwtHelper(SECRET!).verificarToken(code)
     if (payload.email !== email) {
-      throw new AuthError('Invalid_code')
+      throw new AuthError(
+        AUTH_ERROR_CODES.INVALID_CODE,
+        AUTH_ERROR_CODES.INVALID_CODE,
+        400,
+      )
     }
 
     await this.repository.validateCustomerCode(code)

@@ -3,7 +3,18 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
+    "baseUrl": "src",
+    "paths": {
+      "@auth": ["auth/index.ts"],
+      "@auth/*": ["auth/*"],
+      "@utils": ["utils/index.ts"],
+      "@utils/*": ["utils/*"],
+      "@middleware": ["middleware/index.ts"],
+      "@middleware/*": ["middleware/*"],
+      "@api/*": ["*"],
+      "@sgcv2/*": ["../../*/src"]
+    }
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"],

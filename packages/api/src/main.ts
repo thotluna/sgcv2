@@ -1,12 +1,17 @@
-import { AuthController } from './auth/auth.controller'
-import { SupabaseAuthRepository } from './auth/auth.repository'
-import { AuthRouter } from './auth/auth.routes'
-import { AuthService } from './auth/auth.service'
-import { AuthsRepository } from './auth/types'
+// Habilita los alias de módulos en producción
 import { ServerApi } from './server'
+import {
+  AuthRespository,
+  SupabaseAuthRepository,
+  AuthController,
+  AuthRouter,
+  AuthService,
+} from '@auth'
+import 'dotenv/config'
+import 'module-alias/register'
 
 export const getAuthRouter = () => {
-  const repository: AuthsRepository = new SupabaseAuthRepository()
+  const repository: AuthRespository = new SupabaseAuthRepository()
   const service = new AuthService(repository)
   const authController = new AuthController(service)
   const authRouter = new AuthRouter(authController)

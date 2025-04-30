@@ -1,9 +1,6 @@
-import { AuthResponseBuilder } from '../utils/auth-response-builder'
-import { CustomerCodeTokeError } from '../utils/jwt-customer-code'
-import { SUPABASE_URLs } from './auth.repository'
-import { AuthService } from './auth.service'
-import { AuthError, DBErrorConexion } from './errors'
+import { AuthService, SUPABASE_URLs, AuthError, DBErrorConexion } from '@auth'
 import { ApiResponse, ClientCodeType } from '@sgcv2/shared'
+import { AuthResponseBuilder } from '@utils'
 import { NextFunction, Request, Response } from 'express'
 
 export class AuthController {
@@ -44,42 +41,6 @@ export class AuthController {
 
       res.send(response)
     } catch (error) {
-      if (error instanceof AuthError) {
-        res
-          .status(401)
-          .send(
-            new AuthResponseBuilder()
-              .status('error')
-              .code(401)
-              .message(req.t(error.message))
-              .build(),
-          )
-        return
-      }
-      if (error instanceof CustomerCodeTokeError) {
-        res
-          .status(400)
-          .send(
-            new AuthResponseBuilder()
-              .status('error')
-              .code(400)
-              .message(req.t(error.message))
-              .build(),
-          )
-        return
-      }
-      if (error instanceof DBErrorConexion) {
-        res
-          .status(500)
-          .send(
-            new AuthResponseBuilder()
-              .status('error')
-              .code(500)
-              .message(req.t(error.message))
-              .build(),
-          )
-        return
-      }
       next(error)
     }
   }
@@ -91,30 +52,6 @@ export class AuthController {
       const data = await this.service.signUp(email, password, code)
       res.send(new AuthResponseBuilder().data(data).build())
     } catch (error) {
-      if (error instanceof AuthError) {
-        res
-          .status(400)
-          .send(
-            new AuthResponseBuilder()
-              .status('error')
-              .code(400)
-              .message(req.t(error.message))
-              .build(),
-          )
-        return
-      }
-      if (error instanceof CustomerCodeTokeError) {
-        res
-          .status(400)
-          .send(
-            new AuthResponseBuilder()
-              .status('error')
-              .code(400)
-              .message(req.t(error.message))
-              .build(),
-          )
-        return
-      }
       next(error)
     }
   }
@@ -124,21 +61,8 @@ export class AuthController {
 
     try {
       const data = await this.service.signIn(email, password)
-
       res.send(new AuthResponseBuilder().data(data).build())
     } catch (error) {
-      if (error instanceof AuthError) {
-        res
-          .status(400)
-          .send(
-            new AuthResponseBuilder()
-              .status('error')
-              .code(400)
-              .message(req.t(error.message))
-              .build(),
-          )
-        return
-      }
       next(error)
     }
   }
@@ -165,12 +89,13 @@ export class AuthController {
   callback = async (req: Request, res: Response, next: NextFunction) => {
     const { code, error, error_description } = req.query
 
-    if (error && error_description === 'Database error saving new user') {
-      res.redirect('http://localhost:3000/?signUp=true')
-      return
-    }
-    if (!code) {
-      res.redirect('http://localhost:3000/?signUp=true')
+    if (
+      !code ||
+      (error && error_description === 'Database error saving new user')
+    ) {
+      res.redirect(
+        `${process.env.FRONTEND_URL}:${process.env.PORT_FRONTEND}/register`,
+      )
       return
     }
 
@@ -198,7 +123,9 @@ export class AuthController {
           maxAge: 7 * 24 * 60 * 60 * 1000,
         })
 
-        .redirect(`${process.env.FRONTEND_URL}/auth/callback`)
+        .redirect(
+          `${process.env.FRONTEND_URL}:${process.env.PORT_FRONTEND}/auth/callback`,
+        )
       return
     } catch (error) {
       if (error instanceof AuthError) {

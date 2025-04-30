@@ -8,14 +8,15 @@ export const schemaValidation =
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       await schema.parseAsync(req)
+
       next()
     } catch (error) {
       if (error instanceof ZodError) {
         res.status(400).send(
           new AuthResponseBuilder()
-            .code(400)
+            .httpCode(400)
+            .code(error.issues[0].message)
             .status('error')
-            // translate Zod issue messages using req.t
             .message(error.issues.map(issue => req.t(issue.message)).join(', '))
             .build(),
         )
