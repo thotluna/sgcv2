@@ -7,7 +7,7 @@ import {
 } from './auth.authorize.test-helper'
 import { repositorySignIn } from './auth.configtest'
 import { app, i18n as i18nInstance } from './auth.test-base'
-import { ApiResponses, STATUS } from '@api/types'
+import { ApiResponse, STATUS } from '@api/types'
 import { authorizeDataType, PROVIDER_ERROR, ProviderError } from '@auth'
 import { HTTP_CODE } from '@sgcv2/shared'
 import request from 'supertest'
@@ -21,7 +21,7 @@ describe('GET /authorize', () => {
       .expect('Content-Type', /json/)
       .expect(200)
       .then(response => {
-        const body: ApiResponses<authorizeDataType> = response.body
+        const body: ApiResponse<authorizeDataType> = response.body
         expect(body.status).toEqual(STATUS.SUCCESS)
         expect(body.httpCode).toEqual(HTTP_CODE.OK)
         expect(body.data?.codeVerifier).not.toBeNull()
@@ -37,7 +37,7 @@ describe('GET /authorize', () => {
       .expect('Content-Type', /json/)
       .expect(200)
       .then(response => {
-        const body: ApiResponses<authorizeDataType> = response.body
+        const body: ApiResponse<authorizeDataType> = response.body
         const url = new URL(body.data!.url)
         expect(url.origin).toEqual(process.env.SUPABASE_URL)
         expect(url.pathname).toEqual(EXPECTED_PATHNAME)
@@ -61,7 +61,7 @@ describe('GET /authorize', () => {
       .expect('Content-Type', /json/)
       .expect(400)
       .then(response => {
-        const body: ApiResponses<authorizeDataType> = response.body
+        const body: ApiResponse<authorizeDataType> = response.body
         expect(body.status).toEqual(STATUS.ERROR)
         expect(body.data).toBeUndefined()
         expect(body.httpCode).toEqual(HTTP_CODE.BAD_REQUEST)

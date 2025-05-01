@@ -1,7 +1,7 @@
 import { apiClientCodeUrl } from './auth.client-code.test-helper'
 import { clientCode, repositoryValidateCode } from './auth.configtest'
 import { app, i18n as i18nInstance } from './auth.test-base'
-import { ApiResponses, STATUS } from '@api/types'
+import { ApiResponse, STATUS } from '@api/types'
 import { AUTH_ERROR, AuthErrorC, SYSTEM_ERROR, SystemError } from '@auth'
 import { BaseError, ClientCodeType, HTTP_CODE } from '@sgcv2/shared'
 import 'dotenv/config'
@@ -16,7 +16,7 @@ describe('auth /code/validate test', () => {
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
     expect(response.status).toBe(HTTP_CODE.OK)
-    const body: ApiResponses<{ code: string }, BaseError> = response.body
+    const body: ApiResponse<{ code: string }, BaseError> = response.body
     expect(body.status).toEqual(STATUS.SUCCESS)
     expect(body.data).toEqual({ code: clientCode.correct })
     expect(body.message).toBeUndefined()
@@ -32,7 +32,7 @@ describe('auth /code/validate test', () => {
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
     expect(response.status).toBe(HTTP_CODE.BAD_REQUEST)
-    const body: ApiResponses<ClientCodeType, BaseError> = response.body
+    const body: ApiResponse<ClientCodeType, BaseError> = response.body
     expect(body.status).toEqual(STATUS.ERROR)
     expect(body.data).toBeUndefined()
     expect(body.message).toEqual(
@@ -57,7 +57,7 @@ describe('auth /code/validate test', () => {
       .set('Accept-Language', 'es')
       .expect('Content-Type', /json/)
     expect(response.status).toBe(HTTP_CODE.UNAUTHORIZED)
-    const body: ApiResponses<ClientCodeType, BaseError> = response.body
+    const body: ApiResponse<ClientCodeType, BaseError> = response.body
     expect(body.status).toEqual(STATUS.ERROR)
     expect(body.data).toBeUndefined()
     expect(body.message).toEqual(i18nInstance.t(AUTH_ERROR.TOKEN_MALFORMED))
@@ -85,7 +85,7 @@ describe('auth /code/validate test', () => {
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
     expect(response.status).toBe(HTTP_CODE.UNAUTHORIZED)
-    const body: ApiResponses<string, BaseError> = response.body
+    const body: ApiResponse<string, BaseError> = response.body
     expect(body.status).toEqual(STATUS.ERROR)
     expect(body.data).toBeUndefined()
     expect(body.message).toEqual(i18nInstance.t(AUTH_ERROR.CODE_NOT_FOUND))
@@ -113,7 +113,7 @@ describe('auth /code/validate test', () => {
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
     expect(response.status).toBe(HTTP_CODE.SERVER_ERROR)
-    const body: ApiResponses<string, BaseError> = response.body
+    const body: ApiResponse<string, BaseError> = response.body
     expect(body.status).toEqual(STATUS.ERROR)
     expect(body.data).toBeUndefined()
     expect(body.message).toEqual(i18nInstance.t(SYSTEM_ERROR.UNKNOWN_ERROR))

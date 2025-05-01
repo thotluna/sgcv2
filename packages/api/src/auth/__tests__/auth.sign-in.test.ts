@@ -2,7 +2,7 @@ import { repositorySignIn, signInData } from './auth.configtest'
 import { apiSignInUrl, signInMock } from './auth.sign-in.test-helper'
 import { app, i18n as i18nTest } from './auth.test-base'
 import { buildUserMock } from './test-utils'
-import { ApiResponses, STATUS } from '@api/types'
+import { ApiResponse, STATUS } from '@api/types'
 import {
   AUTH_ERROR,
   AuthErrorC,
@@ -22,8 +22,7 @@ describe('POST /signin', () => {
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
     expect(response.status).toBe(HTTP_CODE.OK)
-    const body: ApiResponses<{ data: UserResponse; error: null }> =
-      response.body
+    const body: ApiResponse<{ data: UserResponse; error: null }> = response.body
     expect(body.status).toEqual(STATUS.SUCCESS)
     expect(body.data?.data).toEqual(buildUserMock())
     expect(body.data?.error).toBeNull()
@@ -41,7 +40,7 @@ describe('POST /signin', () => {
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
     expect(response.status).toBe(HTTP_CODE.BAD_REQUEST)
-    const body: ApiResponses<undefined, ErrorDetail> = response.body
+    const body: ApiResponse<undefined, ErrorDetail> = response.body
     expect(body.status).toEqual(STATUS.ERROR)
     expect(body.data).toBeUndefined()
     expect(body.message).toEqual(i18nTest.t(VALIDATION_ERROR.EMAIL_INVALID))
@@ -63,7 +62,7 @@ describe('POST /signin', () => {
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
     expect(response.status).toBe(HTTP_CODE.BAD_REQUEST)
-    const body: ApiResponses<undefined, ErrorDetail> = response.body
+    const body: ApiResponse<undefined, ErrorDetail> = response.body
     expect(body.status).toEqual(STATUS.ERROR)
     expect(body.data).toBeUndefined()
     expect(body.message).toEqual(
@@ -93,7 +92,7 @@ describe('POST /signin', () => {
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
     expect(response.status).toBe(HTTP_CODE.UNAUTHORIZED)
-    const body: ApiResponses<undefined, ErrorDetail> = response.body
+    const body: ApiResponse<undefined, ErrorDetail> = response.body
     expect(body.status).toEqual(STATUS.ERROR)
     expect(body.data).toBeUndefined()
     expect(body.message).toEqual(i18nTest.t(AUTH_ERROR.INVALID_CREDENTIALS))
@@ -116,7 +115,7 @@ describe('POST /signin', () => {
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
     expect(response.status).toBe(500)
-    const body: ApiResponses<undefined, ErrorDetail> = response.body
+    const body: ApiResponse<undefined, ErrorDetail> = response.body
     expect(body.status).toEqual(STATUS.ERROR)
     expect(body.data).toBeUndefined()
     expect(body.message).toEqual(i18nTest.t(SYSTEM_ERROR.UNKNOWN_ERROR))
@@ -139,7 +138,7 @@ describe('POST /signin', () => {
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
     expect(response.status).toBe(HTTP_CODE.SERVER_ERROR)
-    const body: ApiResponses<undefined, ErrorDetail> = response.body
+    const body: ApiResponse<undefined, ErrorDetail> = response.body
     expect(body.status).toEqual(STATUS.ERROR)
     expect(body.data).toBeUndefined()
     expect(body.message).toEqual(i18nTest.t(SYSTEM_ERROR.UNKNOWN_ERROR))

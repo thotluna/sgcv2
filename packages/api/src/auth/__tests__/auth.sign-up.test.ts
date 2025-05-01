@@ -6,7 +6,7 @@ import {
 import { apiSignUpUrl, signUpMock } from './auth.sign-up.test-helper'
 import { app, i18n as i18nInstance } from './auth.test-base'
 import { buildUserMock } from './test-utils'
-import { ApiResponses, STATUS } from '@api/types'
+import { ApiResponse, STATUS } from '@api/types'
 import {
   AUTH_ERROR,
   AuthErrorC,
@@ -27,7 +27,7 @@ describe('POST /signup', () => {
       .send(signupData)
       .set('Accept', 'application/json')
     expect(response.status).toBe(HTTP_CODE.OK)
-    const body: ApiResponses<UserResponse> = response.body
+    const body: ApiResponse<UserResponse> = response.body
     expect(body.status).toEqual(STATUS.SUCCESS)
     expect(body.data?.user).toEqual(buildUserMock().user)
     expect(body.message).toBeUndefined()
@@ -43,8 +43,7 @@ describe('POST /signup', () => {
       .send({ ...signupData, password: '123' })
       .set('Accept', 'application/json')
     expect(response.status).toBe(HTTP_CODE.BAD_REQUEST)
-    const body: ApiResponses<{ data: UserResponse; error: null }> =
-      response.body
+    const body: ApiResponse<{ data: UserResponse; error: null }> = response.body
     expect(body.status).toEqual(STATUS.ERROR)
     expect(body.data?.data).toBeUndefined()
     expect(body.message).toEqual(
@@ -67,8 +66,7 @@ describe('POST /signup', () => {
       .send({ ...signupData, email: 'alan.com' })
       .set('Accept', 'application/json')
     expect(response.status).toBe(HTTP_CODE.BAD_REQUEST)
-    const body: ApiResponses<{ data: UserResponse; error: null }> =
-      response.body
+    const body: ApiResponse<{ data: UserResponse; error: null }> = response.body
     expect(body.status).toEqual(STATUS.ERROR)
     expect(body.data?.data).toBeUndefined()
     expect(body.message).toEqual(i18nInstance.t(VALIDATION_ERROR.EMAIL_INVALID))
@@ -89,7 +87,7 @@ describe('POST /signup', () => {
       .send({ ...signupData, code: '123' })
       .set('Accept', 'application/json')
     expect(response.status).toBe(HTTP_CODE.UNAUTHORIZED)
-    const body: ApiResponses<UserResponse, ErrorDetail> = response.body
+    const body: ApiResponse<UserResponse, ErrorDetail> = response.body
     expect(body.status).toEqual(STATUS.ERROR)
     expect(body.data).toBeUndefined()
     expect(body.message).toEqual(i18nInstance.t(AUTH_ERROR.TOKEN_MALFORMED))
@@ -113,7 +111,7 @@ describe('POST /signup', () => {
       .send(signupData)
       .set('Accept', 'application/json')
     expect(response.status).toBe(HTTP_CODE.UNAUTHORIZED)
-    const body: ApiResponses<UserResponse, ErrorDetail> = response.body
+    const body: ApiResponse<UserResponse, ErrorDetail> = response.body
     expect(body.status).toEqual(STATUS.ERROR)
     expect(body.data).toBeUndefined()
     expect(body.message).toEqual(i18nInstance.t(AUTH_ERROR.CODE_NOT_FOUND))
@@ -140,8 +138,7 @@ describe('POST /signup', () => {
       .send(signupData)
       .set('Accept', 'application/json')
     expect(response.status).toBe(HTTP_CODE.SERVER_ERROR)
-    const body: ApiResponses<{ data: UserResponse; error: null }> =
-      response.body
+    const body: ApiResponse<{ data: UserResponse; error: null }> = response.body
     expect(body.status).toEqual(STATUS.ERROR)
     expect(body.data?.data).toBeUndefined()
     expect(body.message).toEqual(i18nInstance.t(SYSTEM_ERROR.UNKNOWN_ERROR))
@@ -174,7 +171,7 @@ describe('POST /signup', () => {
       .send(signupData)
       .set('Accept', 'application/json')
     expect(response.status).toBe(HTTP_CODE.UNAUTHORIZED)
-    const body: ApiResponses<undefined, BaseError> = response.body
+    const body: ApiResponse<undefined, BaseError> = response.body
     expect(body.status).toEqual(STATUS.ERROR)
     expect(body.data).toBeUndefined()
     expect(body.message).toEqual(
