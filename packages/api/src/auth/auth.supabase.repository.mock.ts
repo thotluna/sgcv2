@@ -1,5 +1,5 @@
 import type { CallbackResult, User, UserResponse } from '@auth'
-import { AuthError, AuthRespository, AUTH_ERROR_CODES } from '@auth'
+import { AUTH_ERROR, AuthErrorC, AuthRespository } from '@auth'
 import { CustomerCodeJwtHelper } from '@utils'
 
 export class SupabaseAuthRepositoryMock implements AuthRespository {
@@ -40,17 +40,15 @@ export class SupabaseAuthRepositoryMock implements AuthRespository {
   signUp = async (email: string, password: string): Promise<UserResponse> => {
     const existingUser = this.mockData.users.find(user => user.email === email)
     if (existingUser) {
-      throw new AuthError(
-        AUTH_ERROR_CODES.EMAIL_ALREADY_REGISTERED,
-        AUTH_ERROR_CODES.EMAIL_ALREADY_REGISTERED,
-        401,
+      throw new AuthErrorC(
+        AUTH_ERROR.EMAIL_ALREADY_REGISTERED,
+        AUTH_ERROR.EMAIL_ALREADY_REGISTERED,
       )
     }
 
     const result = this.getUserResponse(email)
     this.mockData.users.push({ id: result.user!.id, email, password })
     this.mockData.usersTull.push(result.user!)
-
     return result
   }
 
@@ -62,10 +60,9 @@ export class SupabaseAuthRepositoryMock implements AuthRespository {
     const userFull = this.mockData.usersTull.find(user => user.email === email)
 
     if (!user || !userFull) {
-      throw new AuthError(
-        AUTH_ERROR_CODES.INVALID_CREDENTIALS,
-        AUTH_ERROR_CODES.INVALID_CREDENTIALS,
-        401,
+      throw new AuthErrorC(
+        AUTH_ERROR.INVALID_CREDENTIALS,
+        AUTH_ERROR.INVALID_CREDENTIALS,
       )
     }
 
@@ -124,13 +121,15 @@ export class SupabaseAuthRepositoryMock implements AuthRespository {
   }
 
   getUser = async (access_token: string): Promise<UserResponse> => {
+    const decode = new CustomerCodeJwtHelper(
+      process.env.JWT_SECRET!,
+    ).getPayload(access_token)
     // Simular obtención de usuario basado en un token de acceso
-    const user = this.mockData.users.find(u => u.id === access_token)
+    const user = this.mockData.users.find(u => u.email === decode?.email)
     if (!user) {
-      throw new AuthError(
-        AUTH_ERROR_CODES.UNKNOWN_ERROR,
-        'Usuario no encontrado',
-        400,
+      throw new AuthErrorC(
+        AUTH_ERROR.NOT_FOUND_ANONYMOUS_KEY,
+        AUTH_ERROR.NOT_FOUND_ANONYMOUS_KEY,
       )
     }
     return {

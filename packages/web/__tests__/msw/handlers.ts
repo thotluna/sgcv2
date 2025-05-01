@@ -15,8 +15,6 @@ export const handlers = [
 
     // Bad request
     if (!code) {
-      // console.log('bad request msw')
-
       return res(
         ctx.status(400),
         ctx.json({
@@ -30,8 +28,6 @@ export const handlers = [
 
     //JWT Malformed
     if (code === CUSTOMER_CODE.CODE_NOT_FORMATTED) {
-      // console.log('jwt malformed msw')
-
       return res(
         ctx.status(400),
         ctx.json({
@@ -45,8 +41,6 @@ export const handlers = [
 
     // JWT Invalid
     if (code === CUSTOMER_CODE.CODE_NOT_FOUND) {
-      // console.log('jwt invalid msw')
-
       return res(
         ctx.status(400),
         ctx.json({
@@ -57,8 +51,6 @@ export const handlers = [
         }),
       )
     }
-
-    console.log('correcto msw')
 
     return res(
       ctx.status(200),
