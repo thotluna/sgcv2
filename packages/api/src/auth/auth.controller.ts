@@ -1,6 +1,5 @@
-import { AUTH_ERROR, AuthService, SUPABASE_URLs } from '@auth'
-import { ApiResponse, ClientCodeType } from '@sgcv2/shared'
-import { AuthResponseBuilder } from '@utils'
+import { ApiResponseBuilder } from '@api/types'
+import { AUTH_ERROR, AuthService, SUPABASE_URLs, UserResponse } from '@auth'
 import { NextFunction, Request, Response } from 'express'
 
 export class AuthController {
@@ -16,7 +15,7 @@ export class AuthController {
     try {
       const token = await this.service.customerCode(email)
       res.send(
-        new AuthResponseBuilder().status('success').data({ token }).build(),
+        new ApiResponseBuilder().status('success').data({ token }).build(),
       )
     } catch (error) {
       next(error)
@@ -33,11 +32,16 @@ export class AuthController {
     try {
       await this.service.validateCustomerCode(code)
 
-      const response: ApiResponse<ClientCodeType> = {
-        status: 'success',
-        data: code,
-        code: 200,
-      }
+      // const response: ApiResponse<ClientCodeType> = {
+      //   status: 'success',
+      //   data: code,
+      //   code: 200,
+      // }
+
+      const response = new ApiResponseBuilder()
+        .status('success')
+        .data({ code })
+        .build()
 
       res.send(response)
     } catch (error) {
@@ -50,7 +54,8 @@ export class AuthController {
 
     try {
       const data = await this.service.signUp(email, password, code)
-      res.send(new AuthResponseBuilder().data(data).build())
+
+      res.send(new ApiResponseBuilder<UserResponse | null>().data(data).build())
     } catch (error) {
       next(error)
     }
@@ -61,7 +66,7 @@ export class AuthController {
 
     try {
       const data = await this.service.signIn(email, password)
-      res.send(new AuthResponseBuilder().data(data).build())
+      res.send(new ApiResponseBuilder().data(data).build())
     } catch (error) {
       next(error)
     }
@@ -82,7 +87,7 @@ export class AuthController {
         url.searchParams.append(key, data[key])
       })
 
-      res.send(new AuthResponseBuilder().data({ url, codeVerifier }).build())
+      res.send(new ApiResponseBuilder().data({ url, codeVerifier }).build())
     } catch (error) {
       next(error)
     }
@@ -148,16 +153,19 @@ export class AuthController {
     const tok = req.headers['authorization']
 
     if (!tok) {
-      res
-        .status(401)
-        .send(
-          new AuthResponseBuilder()
-            .status('error')
-            .httpCode(401)
-            .code(AUTH_ERROR.TOKEN_REQUIRED)
-            .message(req.t(AUTH_ERROR.TOKEN_REQUIRED))
-            .build(),
-        )
+      res.status(401).send(
+        new ApiResponseBuilder<null>()
+          .status('error')
+          .httpCode(401)
+          .message(req.t(AUTH_ERROR.TOKEN_REQUIRED))
+          .errors([
+            {
+              code: AUTH_ERROR.TOKEN_REQUIRED,
+              message: req.t(AUTH_ERROR.TOKEN_REQUIRED),
+            },
+          ])
+          .build(),
+      )
       return
     }
 
@@ -165,7 +173,7 @@ export class AuthController {
 
     try {
       const user = await this.service.getUser(token)
-      res.send(new AuthResponseBuilder().data(user).build())
+      res.send(new ApiResponseBuilder().data(user).build())
     } catch (error) {
       next(error)
     }

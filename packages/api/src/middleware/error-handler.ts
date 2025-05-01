@@ -1,6 +1,6 @@
 import * as translate from '../locales/en/translation.json'
-import { AuthResponseBuilder } from '../utils/auth-response-builder'
 import logger from '../utils/logger'
+import { ApiResponseBuilder, STATUS } from '@api/types'
 import type { BaseError } from '@sgcv2/shared'
 import { NextFunction, Request, Response } from 'express'
 
@@ -36,16 +36,17 @@ export function errorHandler(
   res.status(customError.statusCode || 500)
   res.type('application/json')
 
-  const builder = new AuthResponseBuilder()
-    .status('error')
-    .code(customError.code || err.message)
+  const builder = new ApiResponseBuilder<null>()
+    .status(STATUS.ERROR)
     .message(req.t(customError.message || customError.code || err.message))
+    .httpCode(customError.statusCode || 500)
 
-  if (typeof customError.statusCode === 'number') {
-    builder.httpCode(customError.statusCode)
-  } else {
-    builder.httpCode(500)
-  }
+  builder.errors([
+    {
+      code: customError.code || err.message,
+      message: req.t(customError.message || customError.code || err.message),
+    },
+  ])
 
   res.send(builder.build())
 }

@@ -1,4 +1,4 @@
-import { AuthResponseBuilder } from '../utils/auth-response-builder'
+import { ValidationError } from '@auth'
 import { NextFunction, Request, Response } from 'express'
 import { ZodError } from 'zod'
 import type { AnyZodObject } from 'zod'
@@ -6,22 +6,23 @@ import type { AnyZodObject } from 'zod'
 //TODO: This function should return a ValidationError for the error-handler middleware to process.
 export const schemaValidation =
   (schema: AnyZodObject) =>
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, _res: Response, next: NextFunction) => {
     try {
       await schema.parseAsync(req)
 
       next()
     } catch (error) {
       if (error instanceof ZodError) {
-        res.status(400).send(
-          new AuthResponseBuilder()
-            .httpCode(400)
-            .code(error.issues[0].message)
-            .status('error')
-            .message(error.issues.map(issue => req.t(issue.message)).join(', '))
-            .build(),
+        next(
+          new ValidationError(
+            error.issues[0].message,
+            req.t(error.issues[0].message),
+            {
+              timestamp: Date.now(),
+              field: error.issues[0].path[0],
+            },
+          ),
         )
-        return
       }
 
       next(error)

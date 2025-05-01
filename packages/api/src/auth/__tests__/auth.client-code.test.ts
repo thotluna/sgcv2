@@ -1,9 +1,9 @@
 import { apiClientCodeUrl } from './auth.client-code.test-helper'
 import { clientCode, repositoryValidateCode } from './auth.configtest'
 import { app, i18n as i18nInstance } from './auth.test-base'
+import { ApiResponses, STATUS } from '@api/types'
 import { AUTH_ERROR, AuthErrorC, SYSTEM_ERROR, SystemError } from '@auth'
-import { ClientCodeType } from '@sgcv2/shared'
-import { AuthResponseBuilder } from '@utils'
+import { BaseError, ClientCodeType, HTTP_CODE } from '@sgcv2/shared'
 import 'dotenv/config'
 import request from 'supertest'
 
@@ -15,12 +15,15 @@ describe('auth /code/validate test', () => {
       .send({ code: clientCode.correct })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
-    expect(response.status).toBe(200)
-    expect(response.body).toEqual(
-      new AuthResponseBuilder<ClientCodeType>()
-        .data(clientCode.correct as ClientCodeType)
-        .build(),
-    )
+    expect(response.status).toBe(HTTP_CODE.OK)
+    const body: ApiResponses<{ code: string }, BaseError> = response.body
+    expect(body.status).toEqual(STATUS.SUCCESS)
+    expect(body.data).toEqual({ code: clientCode.correct })
+    expect(body.message).toBeUndefined()
+    expect(body.httpCode).toEqual(HTTP_CODE.OK)
+    expect(body.errors).toEqual([])
+    expect(body.metadata).toBeUndefined()
+    expect(body.timestamp).not.toBeNull()
   })
 
   test('bad request', async () => {
@@ -28,15 +31,22 @@ describe('auth /code/validate test', () => {
       .post(apiClientCodeUrl())
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
-    expect(response.status).toBe(400)
-    expect(response.body).toEqual(
-      new AuthResponseBuilder()
-        .status('error')
-        .httpCode(400)
-        .code(AUTH_ERROR.CLIENT_CODE_REQUIRED)
-        .message(i18nInstance.t(AUTH_ERROR.CLIENT_CODE_REQUIRED))
-        .build(),
+    expect(response.status).toBe(HTTP_CODE.BAD_REQUEST)
+    const body: ApiResponses<ClientCodeType, BaseError> = response.body
+    expect(body.status).toEqual(STATUS.ERROR)
+    expect(body.data).toBeUndefined()
+    expect(body.message).toEqual(
+      i18nInstance.t(AUTH_ERROR.CLIENT_CODE_REQUIRED),
     )
+    expect(body.httpCode).toEqual(HTTP_CODE.BAD_REQUEST)
+    expect(body.errors).toEqual([
+      {
+        code: AUTH_ERROR.CLIENT_CODE_REQUIRED,
+        message: i18nInstance.t(AUTH_ERROR.CLIENT_CODE_REQUIRED),
+      },
+    ])
+    expect(body.metadata).toBeUndefined()
+    expect(body.timestamp).not.toBeNull()
   })
 
   test('code invalid', async () => {
@@ -46,20 +56,25 @@ describe('auth /code/validate test', () => {
       .set('Accept', 'application/json')
       .set('Accept-Language', 'es')
       .expect('Content-Type', /json/)
-    expect(response.status).toBe(401)
-    expect(response.body).toEqual(
-      new AuthResponseBuilder()
-        .status('error')
-        .httpCode(401)
-        .code(AUTH_ERROR.TOKEN_INVALID)
-        .message(i18nInstance.t(AUTH_ERROR.TOKEN_MALFORMED))
-        .build(),
-    )
+    expect(response.status).toBe(HTTP_CODE.UNAUTHORIZED)
+    const body: ApiResponses<ClientCodeType, BaseError> = response.body
+    expect(body.status).toEqual(STATUS.ERROR)
+    expect(body.data).toBeUndefined()
+    expect(body.message).toEqual(i18nInstance.t(AUTH_ERROR.TOKEN_MALFORMED))
+    expect(body.httpCode).toEqual(HTTP_CODE.UNAUTHORIZED)
+    expect(body.errors).toEqual([
+      {
+        code: AUTH_ERROR.TOKEN_INVALID,
+        message: i18nInstance.t(AUTH_ERROR.TOKEN_MALFORMED),
+      },
+    ])
+    expect(body.metadata).toBeUndefined()
+    expect(body.timestamp).not.toBeNull()
   })
 
   test('code refused', async () => {
     repositoryValidateCode.reject(
-      new AuthErrorC(AUTH_ERROR.TOKEN_INVALID, AUTH_ERROR.CODE_NOT_FOUND, {
+      new AuthErrorC(AUTH_ERROR.CODE_NOT_FOUND, AUTH_ERROR.CODE_NOT_FOUND, {
         message: 'Code not found',
         timestamp: Date.now(),
       }),
@@ -69,15 +84,20 @@ describe('auth /code/validate test', () => {
       .send({ code: clientCode.correct })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
-    expect(response.body).toEqual(
-      new AuthResponseBuilder()
-        .status('error')
-        .httpCode(401)
-        .code(AUTH_ERROR.TOKEN_INVALID)
-        .message(i18nInstance.t(AUTH_ERROR.CODE_NOT_FOUND))
-        .build(),
-    )
-    expect(response.status).toBe(401)
+    expect(response.status).toBe(HTTP_CODE.UNAUTHORIZED)
+    const body: ApiResponses<string, BaseError> = response.body
+    expect(body.status).toEqual(STATUS.ERROR)
+    expect(body.data).toBeUndefined()
+    expect(body.message).toEqual(i18nInstance.t(AUTH_ERROR.CODE_NOT_FOUND))
+    expect(body.httpCode).toEqual(HTTP_CODE.UNAUTHORIZED)
+    expect(body.errors).toEqual([
+      {
+        code: AUTH_ERROR.CODE_NOT_FOUND,
+        message: i18nInstance.t(AUTH_ERROR.CODE_NOT_FOUND),
+      },
+    ])
+    expect(body.metadata).toBeUndefined()
+    expect(body.timestamp).not.toBeNull()
   })
 
   test('error db', async () => {
@@ -92,14 +112,17 @@ describe('auth /code/validate test', () => {
       .send({ code: clientCode.correct })
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
-    expect(response.body).toEqual(
-      new AuthResponseBuilder()
-        .status('error')
-        .httpCode(500)
-        .code(SYSTEM_ERROR.UNKNOWN_ERROR)
-        .message(i18nInstance.t(SYSTEM_ERROR.UNKNOWN_ERROR))
-        .build(),
-    )
-    expect(response.status).toBe(500)
+    expect(response.status).toBe(HTTP_CODE.SERVER_ERROR)
+    const body: ApiResponses<string, BaseError> = response.body
+    expect(body.status).toEqual(STATUS.ERROR)
+    expect(body.data).toBeUndefined()
+    expect(body.message).toEqual(i18nInstance.t(SYSTEM_ERROR.UNKNOWN_ERROR))
+    expect(body.httpCode).toEqual(HTTP_CODE.SERVER_ERROR)
+    expect(body.errors).toEqual([
+      {
+        code: SYSTEM_ERROR.UNKNOWN_ERROR,
+        message: i18nInstance.t(SYSTEM_ERROR.UNKNOWN_ERROR),
+      },
+    ])
   })
 })

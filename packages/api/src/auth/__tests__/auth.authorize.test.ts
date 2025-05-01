@@ -7,9 +7,9 @@ import {
 } from './auth.authorize.test-helper'
 import { repositorySignIn } from './auth.configtest'
 import { app, i18n as i18nInstance } from './auth.test-base'
-import { authorizeDataType, PROVIDER_ERROR } from '@auth'
-import { ApiResponse } from '@sgcv2/shared'
-import { AuthResponseBuilder } from '@utils'
+import { ApiResponses, STATUS } from '@api/types'
+import { authorizeDataType, PROVIDER_ERROR, ProviderError } from '@auth'
+import { HTTP_CODE } from '@sgcv2/shared'
 import request from 'supertest'
 
 describe('GET /authorize', () => {
@@ -21,9 +21,9 @@ describe('GET /authorize', () => {
       .expect('Content-Type', /json/)
       .expect(200)
       .then(response => {
-        const body: ApiResponse<authorizeDataType> = response.body
-        expect(body.code).toEqual(200)
-        expect(body.status).toEqual('success')
+        const body: ApiResponses<authorizeDataType> = response.body
+        expect(body.status).toEqual(STATUS.SUCCESS)
+        expect(body.httpCode).toEqual(HTTP_CODE.OK)
         expect(body.data?.codeVerifier).not.toBeNull()
         expect(body.data?.url).not.toBeNull()
       })
@@ -37,7 +37,7 @@ describe('GET /authorize', () => {
       .expect('Content-Type', /json/)
       .expect(200)
       .then(response => {
-        const body: ApiResponse<authorizeDataType> = response.body
+        const body: ApiResponses<authorizeDataType> = response.body
         const url = new URL(body.data!.url)
         expect(url.origin).toEqual(process.env.SUPABASE_URL)
         expect(url.pathname).toEqual(EXPECTED_PATHNAME)
@@ -51,20 +51,40 @@ describe('GET /authorize', () => {
   })
 
   test('bad request, provider invalid', () => {
+    const error = new ProviderError(
+      PROVIDER_ERROR.PROVIDER_INVALID,
+      i18nInstance.t(PROVIDER_ERROR.PROVIDER_INVALID),
+    )
     return request(app)
       .get(apiAuthorizeUrl({ provider: PROVIDER_INVALID }))
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(400)
       .then(response => {
-        expect(response.body).toEqual(
-          new AuthResponseBuilder()
-            .status('error')
-            .httpCode(400)
-            .code(PROVIDER_ERROR.PROVIDER_INVALID)
-            .message(i18nInstance.t(PROVIDER_ERROR.PROVIDER_INVALID))
-            .build(),
+        const body: ApiResponses<authorizeDataType> = response.body
+        expect(body.status).toEqual(STATUS.ERROR)
+        expect(body.data).toBeUndefined()
+        expect(body.httpCode).toEqual(HTTP_CODE.BAD_REQUEST)
+        expect(body.message).toEqual(
+          i18nInstance.t(PROVIDER_ERROR.PROVIDER_INVALID),
         )
+        expect(body.errors).toEqual([
+          {
+            code: error.code,
+            message: error.message,
+          },
+        ])
+        expect(body.metadata).toBeUndefined()
+        expect(body.timestamp).not.toBeNull()
+        // expect(response.body).toEqual(
+        //   // new AuthResponseBuilder()
+        //   //   .status('error')
+        //   //   .httpCode(400)
+        //   //   .code(PROVIDER_ERROR.PROVIDER_INVALID)
+        //   //   .message(i18nInstance.t(PROVIDER_ERROR.PROVIDER_INVALID))
+        //   //   .build(),
+
+        // )
       })
   })
 })

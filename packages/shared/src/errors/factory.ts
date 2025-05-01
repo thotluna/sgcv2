@@ -1,3 +1,5 @@
+import { HttpCodeType } from '../http-codes'
+
 export interface BusinessErrorShape {
   code: string
   message: string
@@ -22,15 +24,25 @@ export interface BaseErrorInterface {
   name: string
   code: string
   message: string
-  statusCode: number
+  statusCode: HttpCodeType
   details?: Record<string, unknown>
   timestamp: Date
 }
 
-export class BaseError extends Error implements BaseErrorInterface {
+export interface ErrorDetail {
+  code: string
+  message: string
+  field?: string
+  details?: Record<string, unknown>
+}
+
+export class BaseError
+  extends Error
+  implements BaseErrorInterface, ErrorDetail
+{
   name: string
   code: string
-  statusCode: number
+  statusCode: HttpCodeType
   details?: Record<string, unknown>
   timestamp: Date
 
@@ -38,7 +50,7 @@ export class BaseError extends Error implements BaseErrorInterface {
     name: string,
     code: string,
     message: string,
-    statusCode = 500,
+    statusCode: HttpCodeType,
     details?: Record<string, unknown>,
   ) {
     super(message)
@@ -50,7 +62,7 @@ export class BaseError extends Error implements BaseErrorInterface {
   }
 }
 
-export const errorClassFactory = (name: string, statusCode: number) =>
+export const errorClassFactory = (name: string, statusCode: HttpCodeType) =>
   class BusinessError extends BaseError {
     constructor(
       code: string,
