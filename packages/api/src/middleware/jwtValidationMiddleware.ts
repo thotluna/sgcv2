@@ -1,4 +1,4 @@
-import { AUTH_ERROR_CODES, AuthError } from '../auth/errors'
+import { AUTH_ERROR, TokenError } from '@auth'
 import { CustomerCodeJwtHelper } from '@utils'
 import { NextFunction, Request, Response } from 'express'
 import { JwtPayload } from 'jsonwebtoken'
@@ -14,10 +14,12 @@ export async function verificarToken(
 ) {
   try {
     if (!req.header('Authorization')) {
-      throw new AuthError(
-        AUTH_ERROR_CODES.TOKEN_REQUIRED,
-        AUTH_ERROR_CODES.TOKEN_REQUIRED,
-        401,
+      throw new TokenError(
+        AUTH_ERROR.TOKEN_REQUIRED,
+        AUTH_ERROR.TOKEN_REQUIRED,
+        {
+          timestamp: Date.now(),
+        },
       )
     }
 

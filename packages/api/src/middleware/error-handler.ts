@@ -1,6 +1,11 @@
-import { AuthResponseBuilder } from '../utils/auth-response-builder'
-import type { BusinessErrorShape } from '@sgcv2/shared'
+import * as translate from '../locales/en/translation.json'
+import logger from '../utils/logger'
+import { ApiResponseBuilder, STATUS } from '@api/types'
+import type { BaseError } from '@sgcv2/shared'
 import { NextFunction, Request, Response } from 'express'
+
+// Definir un registro de traducciones
+const translations: Record<string, string> = translate
 
 export function errorHandler(
   err: Error,
@@ -12,27 +17,36 @@ export function errorHandler(
     return next(err)
   }
 
-  const customError = err as Partial<BusinessErrorShape>
-  const httpCode =
-    typeof customError.httpCode === 'number'
-      ? customError.httpCode
-      : res.statusCode && res.statusCode !== 200
-        ? res.statusCode
-        : 500
+  const customError = err as Partial<BaseError>
 
-  res.status(httpCode)
+  // Registrar el error
+  const errorMessageKey =
+    (customError.message || customError.code || err.message) ?? 'unknown_error'
+  const translatedMessage = translations[errorMessageKey] ?? errorMessageKey
+
+  logger.error(`${customError.name} ${customError.code || err.message}`, {
+    statusCode: customError.statusCode || 500,
+    code: customError.code,
+    message: translatedMessage,
+    debugger: JSON.stringify(customError.details),
+    stack: err.stack,
+    originalError: err,
+  })
+
+  res.status(customError.statusCode || 500)
   res.type('application/json')
 
-  const builder = new AuthResponseBuilder()
-    .status('error')
-    .code(customError.code || err.message)
+  const builder = new ApiResponseBuilder<null>()
+    .status(STATUS.ERROR)
     .message(req.t(customError.message || customError.code || err.message))
+    .httpCode(customError.statusCode || 500)
 
-  if (typeof customError.httpCode === 'number') {
-    builder.httpCode(customError.httpCode)
-  } else {
-    builder.httpCode(httpCode)
-  }
+  builder.errors([
+    {
+      code: customError.code || err.message,
+      message: req.t(customError.message || customError.code || err.message),
+    },
+  ])
 
   res.send(builder.build())
 }

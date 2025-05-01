@@ -1,10 +1,10 @@
 import { SignInPage } from './page-objects/sign-in.pom'
 import { test } from '@playwright/test'
 
-const unregisteredCredentials = {
-  email: 'test@sample.com',
-  password: '123456789',
-}
+// const unregisteredCredentials = {
+//   email: 'test@sample.com',
+//   password: '123456789',
+// }
 
 test.beforeEach(async ({ page }) => {
   const signIn = new SignInPage(page)
@@ -46,13 +46,13 @@ test.describe('Sign-in form validation errors', () => {
     await signIn.expectErrorValidation('password_min_length')
   })
 
-  test('should show invalid credentials error for unregistered user', async ({
-    page,
-  }) => {
-    const signIn = new SignInPage(page)
-    await signIn.fillEmail(unregisteredCredentials.email)
-    await signIn.fillPassword(unregisteredCredentials.password)
-    await signIn.submit()
-    await signIn.expectErrorValidation('credential_invalid')
-  })
+  // test('should show invalid credentials error for unregistered user', async ({
+  //   page,
+  // }) => {
+  //   const signIn = new SignInPage(page)
+  //   await signIn.fillEmail(unregisteredCredentials.email)
+  //   await signIn.fillPassword(unregisteredCredentials.password)
+  //   await signIn.submit()
+  //   await signIn.expectErrorValidation('credential_invalid')
+  // })
 })

@@ -1,6 +1,5 @@
-import { AuthService, SUPABASE_URLs, AuthError, DBErrorConexion } from '@auth'
-import { ApiResponse, ClientCodeType } from '@sgcv2/shared'
-import { AuthResponseBuilder } from '@utils'
+import { ApiResponseBuilder } from '@api/types'
+import { AUTH_ERROR, AuthService, SUPABASE_URLs, UserResponse } from '@auth'
 import { NextFunction, Request, Response } from 'express'
 
 export class AuthController {
@@ -16,7 +15,7 @@ export class AuthController {
     try {
       const token = await this.service.customerCode(email)
       res.send(
-        new AuthResponseBuilder().status('success').data({ token }).build(),
+        new ApiResponseBuilder().status('success').data({ token }).build(),
       )
     } catch (error) {
       next(error)
@@ -33,11 +32,16 @@ export class AuthController {
     try {
       await this.service.validateCustomerCode(code)
 
-      const response: ApiResponse<ClientCodeType> = {
-        status: 'success',
-        data: code,
-        code: 200,
-      }
+      // const response: ApiResponse<ClientCodeType> = {
+      //   status: 'success',
+      //   data: code,
+      //   code: 200,
+      // }
+
+      const response = new ApiResponseBuilder()
+        .status('success')
+        .data({ code })
+        .build()
 
       res.send(response)
     } catch (error) {
@@ -50,7 +54,8 @@ export class AuthController {
 
     try {
       const data = await this.service.signUp(email, password, code)
-      res.send(new AuthResponseBuilder().data(data).build())
+
+      res.send(new ApiResponseBuilder<UserResponse | null>().data(data).build())
     } catch (error) {
       next(error)
     }
@@ -61,7 +66,7 @@ export class AuthController {
 
     try {
       const data = await this.service.signIn(email, password)
-      res.send(new AuthResponseBuilder().data(data).build())
+      res.send(new ApiResponseBuilder().data(data).build())
     } catch (error) {
       next(error)
     }
@@ -74,13 +79,15 @@ export class AuthController {
       const resp = await this.service.authorization(provider)
 
       const { data, codeVerifier } = resp
-      const url = new URL(SUPABASE_URLs.AUTHORIZATION)
+      const url = new URL(
+        `${process.env.SUPABASE_URL}${SUPABASE_URLs.AUTHORIZATION}`,
+      )
 
       Object.keys(data).forEach(key => {
         url.searchParams.append(key, data[key])
       })
 
-      res.send(new AuthResponseBuilder().data({ url, codeVerifier }).build())
+      res.send(new ApiResponseBuilder().data({ url, codeVerifier }).build())
     } catch (error) {
       next(error)
     }
@@ -89,13 +96,23 @@ export class AuthController {
   callback = async (req: Request, res: Response, next: NextFunction) => {
     const { code, error, error_description } = req.query
 
+    //TODO: remplace by const or const errors
     if (
       !code ||
       (error && error_description === 'Database error saving new user')
     ) {
-      res.redirect(
+      const url = new URL(
         `${process.env.FRONTEND_URL}:${process.env.PORT_FRONTEND}/register`,
       )
+
+      const searchParams = url.searchParams
+      searchParams.append('error', 'authentication')
+      searchParams.append(
+        'error_description',
+        req.t(AUTH_ERROR.CLIENT_CODE_REQUIRED),
+      )
+
+      res.redirect(url.toString())
       return
     }
 
@@ -128,45 +145,27 @@ export class AuthController {
         )
       return
     } catch (error) {
-      if (error instanceof AuthError) {
-        res
-          .status(401)
-          .send(
-            new AuthResponseBuilder()
-              .status('error')
-              .code(401)
-              .message(req.t(error.message))
-              .build(),
-          )
-        return
-      }
-      if (error instanceof DBErrorConexion) {
-        res.status(401).send({
-          status: 'fail',
-          message: req.t('db_conexion_error'),
-        })
-        return
-      }
       next(error)
     }
   }
 
-  // session = (_req: Request, _res: Response, _next: NextFunction) => {
-  //   throw new Error('Method not implemented.')
-  // }
   getUser = async (req: Request, res: Response, next: NextFunction) => {
     const tok = req.headers['authorization']
 
     if (!tok) {
-      res
-        .status(401)
-        .send(
-          new AuthResponseBuilder()
-            .status('error')
-            .code(401)
-            .message(req.t('token_required'))
-            .build(),
-        )
+      res.status(401).send(
+        new ApiResponseBuilder<null>()
+          .status('error')
+          .httpCode(401)
+          .message(req.t(AUTH_ERROR.TOKEN_REQUIRED))
+          .errors([
+            {
+              code: AUTH_ERROR.TOKEN_REQUIRED,
+              message: req.t(AUTH_ERROR.TOKEN_REQUIRED),
+            },
+          ])
+          .build(),
+      )
       return
     }
 
@@ -174,32 +173,8 @@ export class AuthController {
 
     try {
       const user = await this.service.getUser(token)
-      if (!user.user) {
-        res
-          .status(401)
-          .send(
-            new AuthResponseBuilder()
-              .status('error')
-              .code(401)
-              .message(req.t('token_without_user'))
-              .build(),
-          )
-        return
-      }
-      res.send(new AuthResponseBuilder().data(user).build())
+      res.send(new ApiResponseBuilder().data(user).build())
     } catch (error) {
-      if (error instanceof AuthError) {
-        res
-          .status(401)
-          .send(
-            new AuthResponseBuilder()
-              .status('error')
-              .code(401)
-              .message(req.t(error.message))
-              .build(),
-          )
-        return
-      }
       next(error)
     }
   }

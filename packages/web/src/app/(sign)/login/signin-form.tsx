@@ -28,7 +28,6 @@ export function SingInForm({
 }) {
   const [passwordVisible, setPasswordVisible] = useState(false)
   const traslateValidation = useTranslations('validation')
-
   const form = useForm<SingInDTO>({
     resolver: zodResolver(getSignInFormSchema(traslateValidation)),
     defaultValues: {
