@@ -1,4 +1,4 @@
-import messages from '../../../messages/es.json'
+import messages from '../../../messages/es.json' with { type: 'json' }
 import { getCustomerCode, SignUpPage } from './page-objects/register.pom'
 import { test, expect, Page } from '@playwright/test'
 
@@ -25,7 +25,7 @@ test.describe('User Registration Flow', () => {
     })
   }
 
-  test.beforeEach(async () => {
+  test.beforeAll(async () => {
     await fetch(`http://localhost:3001/reset-mock`).catch(() => {
       throw new Error('Failed to reset repository')
     })

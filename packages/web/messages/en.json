@@ -20,7 +20,7 @@
     "customer_code_invalid_validation": "Error validating customer code",
     "password_not_match": "Passwords do not match",
     "jwt malformed": "Malformed JWT",
-    "credential_invalid": "Email or password is not valid"
+    "invalid_credentials": "Email or password is not valid"
   },
   "SignInPage": {
     "title": "Sign In",

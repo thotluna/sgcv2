@@ -5,23 +5,34 @@ export class SignInPage {
   constructor(private page: Page) {}
 
   async goto() {
-    await this.page.goto('http://localhost:3000')
+    await this.page.goto('http://localhost:3000/login')
   }
 
   async fillEmail(value: string) {
-    await this.page.getByLabel(messages.SignPages.email).fill(value)
+    const mail = this.page.getByLabel(messages.SignPages.email)
+    await mail.focus()
+    await mail.fill(value)
   }
 
   async fillPassword(value: string) {
-    await this.page
-      .getByLabel(messages.SignPages.password, { exact: true })
-      .fill(value)
+    const passwordInput = this.page.getByLabel(messages.SignPages.password, {
+      exact: true,
+    })
+    await passwordInput.focus()
+    await passwordInput.fill(value)
   }
 
   async submit() {
     await this.page
       .getByRole('button', { name: messages.SignPages.submit })
       .click()
+  }
+
+  async fillForm(email: string, password: string) {
+    await this.fillEmail(email)
+    await this.fillPassword(password)
+
+    await this.submit()
   }
 
   async expectErrorValidation(key: keyof typeof messages.validation) {
