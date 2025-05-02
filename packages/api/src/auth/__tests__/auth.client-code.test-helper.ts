@@ -11,8 +11,6 @@ export function apiClientCodeUrl(params: { [key: string]: any } = {}) {
   })
   return url.pathname + url.search
 }
-
-// Mock y datos específicos para el test de client code, manipula el mock global inyectado
 export const clientCodeMock = {
   resolve: (data = buildUserMock()) =>
     (authRepositoryMock.validateCustomerCode as jest.Mock).mockResolvedValue(

@@ -6,6 +6,5 @@ export interface ApiResponse<T> {
   code: number | string | null
   metadata?: object | null
 }
-
 export * from './database.types'
 export * from './clients.types'

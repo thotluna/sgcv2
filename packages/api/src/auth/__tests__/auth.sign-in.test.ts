@@ -33,7 +33,6 @@ describe('POST /signin', () => {
     expect(body.metadata).toBeUndefined()
     expect(body.timestamp).not.toBeNull()
   })
-
   test('email invalid', async () => {
     const response = await request(app)
       .post(apiSignInUrl())
@@ -55,7 +54,6 @@ describe('POST /signin', () => {
     expect(body.metadata).toBeUndefined()
     expect(body.timestamp).not.toBeNull()
   })
-
   test('password invalid', async () => {
     const response = await request(app)
       .post(apiSignInUrl())
@@ -79,7 +77,6 @@ describe('POST /signin', () => {
     expect(body.metadata).toBeUndefined()
     expect(body.timestamp).not.toBeNull()
   })
-
   test('credential invalid', async () => {
     repositorySignIn.reject(
       new AuthError({
@@ -107,7 +104,6 @@ describe('POST /signin', () => {
     expect(body.metadata).toBeUndefined()
     expect(body.timestamp).not.toBeNull()
   })
-
   test('other error', async () => {
     repositorySignIn.reject(new Error('unknown_error'))
     const response = await request(app)
@@ -130,7 +126,6 @@ describe('POST /signin', () => {
     expect(body.metadata).toBeUndefined()
     expect(body.timestamp).not.toBeNull()
   })
-
   test('other error', async () => {
     repositorySignIn.reject(new Error('unknown_error'))
     const response = await request(app)

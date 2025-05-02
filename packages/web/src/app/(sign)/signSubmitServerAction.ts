@@ -12,23 +12,17 @@ export async function sendSing<TData>(
 ): Promise<Result | void> {
   const cookieStore = await cookies()
   const lang = await getLanguageFromCookies(cookieStore)
-
   const resp = await getSeccionByCredentials(data, url, lang)
-
   if (resp.error) return resp.error
-
   if (!resp.data || !resp.data.session)
     return {
       status: 'error',
       message: 'No se encontro session',
     }
-
   const { session } = resp.data
   saveAuthCookies(session, cookieStore)
-
   redirect('/private')
 }
-
 async function getSeccionByCredentials<TData>(
   data: TData,
   url: string,
@@ -46,10 +40,8 @@ async function getSeccionByCredentials<TData>(
       },
       body: JSON.stringify(data),
     })
-
     if (res.status !== 200) {
       const error = await res.json()
-
       return {
         error: {
           status: error.status,
@@ -57,7 +49,6 @@ async function getSeccionByCredentials<TData>(
         },
       }
     }
-
     const userResponse = await res.json()
     return userResponse
   } catch (error) {
@@ -70,23 +61,19 @@ async function getSeccionByCredentials<TData>(
     }
   }
 }
-
 function saveAuthCookies(
   session: Session | null,
   cookieStore: ReadonlyRequestCookies,
 ) {
   if (!session) throw new Error('falta la session')
-
   const {
     access_token: accessToken,
     expires_in: expiresIn,
     expires_at: expiresAt,
     refresh_token: refreshToken,
   } = session
-
   cookieStore.delete('access_token')
   cookieStore.delete('refresh_token')
-
   cookieStore.set('access_token', accessToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
@@ -94,13 +81,11 @@ function saveAuthCookies(
     maxAge: expiresIn * 1000,
     expires: expiresAt,
   })
-
   cookieStore.set('refresh_token', refreshToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     path: '/',
     maxAge: 7 * 24 * 60 * 60 * 1000,
   })
-
   cookieStore.delete('code-verify')
 }

@@ -15,13 +15,11 @@ export class SupabaseAuthRepository implements AuthRespository {
     process.env.SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROL!,
   )
-
   saveCustomerCode = async (token: string, email: string) => {
     const { data, error } = await this.client
       .from('clientcode')
       .insert([{ code: token, email }])
       .select()
-
     if (error) {
       throw new SystemError({
         code: SYSTEM_ERROR.UNKNOWN_ERROR,
@@ -32,11 +30,8 @@ export class SupabaseAuthRepository implements AuthRespository {
         },
       })
     }
-
     return data
   }
-
-  // Deprecated
   validateCustomerCode = async (code: string) => {
     const { error } = await this.client
       .from('clientcode')
@@ -44,7 +39,6 @@ export class SupabaseAuthRepository implements AuthRespository {
       .eq('code', code)
       .eq('claimed', false)
       .single()
-
     if (error) {
       if (error.code === 'PGRST116') {
         throw new AuthError({
@@ -65,18 +59,14 @@ export class SupabaseAuthRepository implements AuthRespository {
         },
       })
     }
-
     return true
   }
-
   signUp = async (email: string, password: string) => {
     const signUpData = {
       email,
       password,
     }
-
     const { data, error } = await this.client.auth.signUp(signUpData)
-
     if (error) {
       if (
         error.name === 'AuthApiError' &&
@@ -104,16 +94,13 @@ export class SupabaseAuthRepository implements AuthRespository {
     }
     return data
   }
-
   signIn = async (email: string, password: string) => {
     const signInData = {
       email,
       password,
     }
-
     const { error, data } =
       await this.client.auth.signInWithPassword(signInData)
-
     if (error) {
       if (error.status === 400) {
         throw new AuthError({
@@ -126,10 +113,8 @@ export class SupabaseAuthRepository implements AuthRespository {
         })
       }
     }
-
     return data
   }
-
   closeCustomerCode = async (code: string) => {
     const { error } = await this.client
       .from('clientcode')
@@ -137,13 +122,10 @@ export class SupabaseAuthRepository implements AuthRespository {
       .eq('code', code)
       .eq('claimed', false)
       .single()
-
     return error === null
   }
-
   async callback(code: string, codeVerifier: string) {
     const { SUPABASE_ANON_KEY: apiKey } = process.env
-
     const request = await fetch(
       `${process.env.SUPABASE_URL!}${SUPABASE_URLs.EXGHANGE}`,
       {
@@ -159,10 +141,8 @@ export class SupabaseAuthRepository implements AuthRespository {
         }),
       },
     ).then(result => result.json())
-
     return request as CallbackResult
   }
-
   async getUser(access_token: string) {
     const { data, error } = await this.client.auth.getUser(access_token)
     if (error)
@@ -174,7 +154,6 @@ export class SupabaseAuthRepository implements AuthRespository {
           timestamp: Date.now(),
         },
       })
-
     return data as unknown as UserResponse
   }
 }

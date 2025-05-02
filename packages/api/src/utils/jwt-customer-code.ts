@@ -5,24 +5,18 @@ import jwt from 'jsonwebtoken'
 interface CustomerCodePayload {
   email: string
 }
-
 interface VerifiedTokenPayload extends CustomerCodePayload {
   iat: number
   exp: number
 }
-
 const EXPIRATION_TIME = '24h'
-
 export class CustomerCodeJwtHelper {
   private SECRET: string
-
   constructor(secret: string) {
     this.SECRET = secret
   }
-
   public crearToken(email: string, expires?: number): string {
     const expiresIn = expires || EXPIRATION_TIME
-
     try {
       const token = jwt.sign({ id: email, email }, this.SECRET!, {
         expiresIn: expiresIn,
@@ -39,7 +33,6 @@ export class CustomerCodeJwtHelper {
       })
     }
   }
-
   public verificarToken(token: string): VerifiedTokenPayload {
     try {
       const decode = jwt.verify(token, this.SECRET!) as VerifiedTokenPayload
@@ -75,13 +68,10 @@ export class CustomerCodeJwtHelper {
       })
     }
   }
-
   public getPayload(token: string): VerifiedTokenPayload | null {
     assert(token, 'Token is required')
-
     try {
       const decodificado = jwt.decode(token)
-
       if (
         decodificado &&
         typeof decodificado === 'object' &&
@@ -89,7 +79,6 @@ export class CustomerCodeJwtHelper {
       ) {
         return decodificado as VerifiedTokenPayload
       }
-
       return null
     } catch (error) {
       throw new TokenError({

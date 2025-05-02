@@ -27,7 +27,6 @@ describe('auth /code/validate test', () => {
     expect(body.metadata).toBeUndefined()
     expect(body.timestamp).not.toBeNull()
   })
-
   test('bad request', async () => {
     const response = await request(app)
       .post(apiClientCodeUrl())
@@ -50,7 +49,6 @@ describe('auth /code/validate test', () => {
     expect(body.metadata).toBeUndefined()
     expect(body.timestamp).not.toBeNull()
   })
-
   test('code invalid', async () => {
     const response = await request(app)
       .post(apiClientCodeUrl())
@@ -73,7 +71,6 @@ describe('auth /code/validate test', () => {
     expect(body.metadata).toBeUndefined()
     expect(body.timestamp).not.toBeNull()
   })
-
   test('code refused', async () => {
     repositoryValidateCode.reject(
       new AuthError({
@@ -105,7 +102,6 @@ describe('auth /code/validate test', () => {
     expect(body.metadata).toBeUndefined()
     expect(body.timestamp).not.toBeNull()
   })
-
   test('error db', async () => {
     repositoryValidateCode.reject(
       new SystemError({

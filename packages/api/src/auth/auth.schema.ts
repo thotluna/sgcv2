@@ -6,11 +6,9 @@ export const customerCodeSchema = z.object({
     required_error: AUTH_ERROR.CLIENT_CODE_REQUIRED,
   }),
 })
-
 export const httpCustomerCodeSchema = z.object({
   body: customerCodeSchema,
 })
-
 export const httpEmailCodeSchema = z.object({
   body: z.object({
     email: z
@@ -18,7 +16,6 @@ export const httpEmailCodeSchema = z.object({
       .email(VALIDATION_ERROR.EMAIL_INVALID),
   }),
 })
-
 export const signInSchema = z.object({
   email: z.string().email(VALIDATION_ERROR.EMAIL_INVALID),
   password: z
@@ -26,17 +23,13 @@ export const signInSchema = z.object({
     .min(8, VALIDATION_ERROR.PASSWORD_MIN_LENGTH)
     .max(36, VALIDATION_ERROR.PASSWORD_MAX_LENGTH),
 })
-
 export const httpSingInSchema = z.object({
   body: signInSchema,
 })
-
 export const signUpSchema = signInSchema.merge(customerCodeSchema)
-
 export const httpSignUpSchema = z.object({
   body: signUpSchema,
 })
-
 export const authorizeSchema = z.object({
   query: z.object({
     provider: z.enum(['google', 'github'], {

@@ -7,7 +7,6 @@ export const VALIDATION_ERROR = {
   PASSWORD_MIN_LENGTH: 'password_min_length',
   PASSWORD_MAX_LENGTH: 'password_max_length',
 } as const
-
 export const AUTH_ERROR = {
   EMAIL_ALREADY_REGISTERED: 'auth_email_already_registered',
   INVALID_CREDENTIALS: 'invalid_credentials',
@@ -20,22 +19,17 @@ export const AUTH_ERROR = {
   NOT_FOUND_ANONYMOUS_KEY: 'not_found_anonymous_key',
   INVALID_CODE: 'Invalid_code',
 } as const
-
 export const SYSTEM_ERROR = {
   UNKNOWN_ERROR: 'unknown_error',
 } as const
-
 export const PROVIDER_ERROR = {
   PROVIDER_INVALID: 'provider_invalid',
 } as const
-
 export const AuthError = errorClassFactory('AuthError', 401 as HttpCodeType)
-
 export const ProviderError = errorClassFactory(
   'ProviderError',
   500 as HttpCodeType,
 )
-
 export const TokenError = errorClassFactory(
   'CustomerCodeError',
   401 as HttpCodeType,

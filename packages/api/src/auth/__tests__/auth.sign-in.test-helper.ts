@@ -11,8 +11,6 @@ export function apiSignInUrl(params: { [key: string]: any } = {}) {
   })
   return url.pathname + url.search
 }
-
-// Mock y datos específicos para el test de sign-in, manipula el mock global inyectado
 export const signInMock = {
   resolve: (data = { data: buildUserMock(), error: null }) =>
     (authRepositoryMock.signIn as jest.Mock).mockResolvedValue(data),

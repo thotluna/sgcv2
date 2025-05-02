@@ -76,15 +76,6 @@ describe('GET /authorize', () => {
         ])
         expect(body.metadata).toBeUndefined()
         expect(body.timestamp).not.toBeNull()
-        // expect(response.body).toEqual(
-        //   // new AuthResponseBuilder()
-        //   //   .status('error')
-        //   //   .httpCode(400)
-        //   //   .code(PROVIDER_ERROR.PROVIDER_INVALID)
-        //   //   .message(i18nInstance.t(PROVIDER_ERROR.PROVIDER_INVALID))
-        //   //   .build(),
-
-        // )
       })
   })
 })

@@ -13,7 +13,6 @@ interface ValidationErrorOptions {
   httpCode?: HttpCodeType
   validationRules?: Record<string, unknown>
 }
-
 const createValidationErrorFactory = (name: string) => {
   return class ValidationErrorClass
     extends BaseError
@@ -21,7 +20,6 @@ const createValidationErrorFactory = (name: string) => {
   {
     field?: string
     validationRules?: Record<string, unknown>
-
     constructor({
       code,
       message,
@@ -34,7 +32,6 @@ const createValidationErrorFactory = (name: string) => {
       this.field = field
       this.validationRules = validationRules
     }
-
     toJSON() {
       return {
         ...super.toJSON(),
@@ -44,5 +41,4 @@ const createValidationErrorFactory = (name: string) => {
     }
   }
 }
-
 export const ValidationError = createValidationErrorFactory('ValidationError')

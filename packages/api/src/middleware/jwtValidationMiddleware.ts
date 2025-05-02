@@ -6,7 +6,6 @@ import { JwtPayload } from 'jsonwebtoken'
 export interface CustomRequest extends Request {
   token: string | JwtPayload
 }
-
 export async function verificarToken(
   req: Request,
   _res: Response,
@@ -22,9 +21,7 @@ export async function verificarToken(
         },
       })
     }
-
     const token = req.header('Authorization')?.split(' ')[1]
-
     const { JWT_SECRET } = process.env
     new CustomerCodeJwtHelper(JWT_SECRET!).verificarToken(token!)
     ;(req as CustomRequest).token = token!

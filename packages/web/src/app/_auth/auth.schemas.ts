@@ -10,11 +10,9 @@ export function getSignInFormSchema(t?: (key: string) => string) {
       .max(50, t?.('password_max_length') || 'password_max_length'),
   })
 }
-
 export type SignInFormSchemaType = z.infer<
   Awaited<ReturnType<typeof getSignInFormSchema>>
 >
-
 export function getSignUpFormSchema(t?: (key: string) => string) {
   return z
     .object({
@@ -51,7 +49,6 @@ export function getSignUpFormSchema(t?: (key: string) => string) {
       }
     })
 }
-
 export type SignUpFormSchemaType = z.infer<
   Awaited<ReturnType<typeof getSignUpFormSchema>>
 >

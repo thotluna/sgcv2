@@ -19,34 +19,25 @@ export class AuthRouter {
     callback: '/callback',
     user: '/user',
   } as const
-
   static apiPrefix = '/v1/auth'
-
-  // Método estático para uso en tests: rutas absolutas
   static getAbsoluteRoutes() {
     const prefix = AuthRouter.apiPrefix
     return Object.fromEntries(
       Object.entries(AuthRouter.routes).map(([k, v]) => [k, `${prefix}${v}`]),
     ) as typeof AuthRouter.routes
   }
-
-  // Método de instancia para uso en el router: rutas relativas
   getRelativeRoutes() {
     return AuthRouter.routes
   }
-
   private router: Router
   private authController: AuthController
-
   constructor(authController: AuthController) {
     this.router = Router()
     this.authController = authController
   }
-
   getRouter() {
     return this.router
   }
-
   initializeRoutes() {
     const routes = this.getRelativeRoutes()
     this.router.post(
@@ -54,7 +45,6 @@ export class AuthRouter {
       schemaValidation(httpEmailCodeSchema),
       this.authController.customerCode,
     )
-    //'/code/validate'
     this.router.post(
       routes.validateCode,
       schemaValidation(httpCustomerCodeSchema),
@@ -75,14 +65,7 @@ export class AuthRouter {
       schemaValidation(authorizeSchema),
       this.authController.authorize,
     )
-
-    this.router.get(
-      routes.callback,
-
-      this.authController.callback,
-    )
-
+    this.router.get(routes.callback, this.authController.callback)
     this.router.get(routes.user, verificarToken, this.authController.getUser)
-    // this.router.get('/session', this.authController.session)
   }
 }

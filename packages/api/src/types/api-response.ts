@@ -5,7 +5,6 @@ export const STATUS = {
   SUCCESS: 'success',
   ERROR: 'error',
 } as const
-
 export interface ApiResponse<T, E = ErrorDetail> {
   data?: T | undefined
   status: (typeof STATUS)[keyof typeof STATUS]
@@ -14,9 +13,7 @@ export interface ApiResponse<T, E = ErrorDetail> {
   metadata?: Record<string, unknown> | undefined
   errors?: E[]
   timestamp: string
-  // traceId?: string
 }
-
 export class ApiResponseBuilder<T, E = ErrorDetail | null> {
   private response: ApiResponse<T, E> = {
     status: STATUS.SUCCESS,
@@ -24,7 +21,6 @@ export class ApiResponseBuilder<T, E = ErrorDetail | null> {
     errors: [],
     timestamp: new Date().toISOString(),
   }
-
   status(status: 'success' | 'error') {
     this.response.status = status
     return this

@@ -6,5 +6,4 @@ export const HTTP_CODE = {
   NOT_FOUND: 404,
   SERVER_ERROR: 500,
 } as const
-
 export type HttpCodeType = (typeof HTTP_CODE)[keyof typeof HTTP_CODE]
