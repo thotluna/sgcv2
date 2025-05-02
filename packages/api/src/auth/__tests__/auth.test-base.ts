@@ -11,10 +11,8 @@ export let app: Application
 let server!: Server
 let repository: AuthRespository
 export let i18n: typeof i18next
-
 beforeAll(async () => {
   repository = authRepositoryMock
-
   const serverApp = ServerApi.getInstance()
   i18n = serverApp.getI18nextInstance()
   await i18n.changeLanguage('es')
@@ -24,11 +22,9 @@ beforeAll(async () => {
   server = serverApp.start()!
   app = serverApp.getApp()
 })
-
 afterAll(() => {
   server.close()
 })
-
 function getAuthRouter() {
   const service = new AuthService(repository)
   const authController = new AuthController(service)

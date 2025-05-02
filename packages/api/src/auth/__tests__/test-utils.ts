@@ -15,7 +15,6 @@ export function buildUserMock(
     created_at: fixedTimestamp,
     role: 'authenticated',
   }
-
   const mock: UserResponse = {
     user: { ...baseUser, ...(overrides.user || {}) },
     session: {
@@ -29,6 +28,5 @@ export function buildUserMock(
     },
     ...overrides,
   }
-
   return mock
 }

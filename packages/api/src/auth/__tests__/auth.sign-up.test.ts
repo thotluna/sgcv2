@@ -37,7 +37,6 @@ describe('POST /signup', () => {
     expect(body.metadata).toBeUndefined()
     expect(body.timestamp).not.toBeNull()
   })
-
   test('bad request, password invalid format', async () => {
     const response = await request(app)
       .post(apiSignUpUrl())
@@ -60,7 +59,6 @@ describe('POST /signup', () => {
     expect(body.metadata).toBeUndefined()
     expect(body.timestamp).not.toBeNull()
   })
-
   test('bad request, email invalid format', async () => {
     const response = await request(app)
       .post(apiSignUpUrl())
@@ -81,7 +79,6 @@ describe('POST /signup', () => {
     expect(body.metadata).toBeUndefined()
     expect(body.timestamp).not.toBeNull()
   })
-
   test('bad request, code client invalid format', async () => {
     const response = await request(app)
       .post(apiSignUpUrl())
@@ -102,7 +99,6 @@ describe('POST /signup', () => {
     expect(body.metadata).toBeUndefined()
     expect(body.timestamp).not.toBeNull()
   })
-
   test('error, code client refused', async () => {
     repositoryValidateCode.reject(
       new AuthError({
@@ -129,7 +125,6 @@ describe('POST /signup', () => {
     expect(body.metadata).toBeUndefined()
     expect(body.timestamp).not.toBeNull()
   })
-
   test('error, any other', async () => {
     repositoryValidateCode.reject(
       new SystemError({
@@ -161,7 +156,6 @@ describe('POST /signup', () => {
     expect(body.metadata).toBeUndefined()
     expect(body.timestamp).not.toBeNull()
   })
-
   test('error, email registered', async () => {
     repositoryValidateCode.resolve()
     repositorySignUp.reject(
@@ -174,7 +168,6 @@ describe('POST /signup', () => {
         },
       }),
     )
-
     const response = await request(app)
       .post(apiSignUpUrl())
       .send(signupData)

@@ -1,16 +1,13 @@
 import { BaseError } from './errors'
 import { HTTP_CODE, HttpCodeType } from '@sgcv2/shared'
 
-// Interface para errores del sistema
 export interface SystemErrorContract extends BaseError {
   severity: 'low' | 'medium' | 'high'
   stackTrace?: string
 }
-
 export class SystemErrorClass extends BaseError implements SystemErrorContract {
   severity: 'low' | 'medium' | 'high'
   stackTrace?: string
-
   constructor(
     name: string,
     httpCode: HttpCodeType,
@@ -24,8 +21,6 @@ export class SystemErrorClass extends BaseError implements SystemErrorContract {
     this.severity = severity
     this.stackTrace = stackTrace ?? new Error().stack
   }
-
-  // Método para mantener compatibilidad con código existente
   toJSON() {
     return {
       ...super.toJSON(),
@@ -34,7 +29,6 @@ export class SystemErrorClass extends BaseError implements SystemErrorContract {
     }
   }
 }
-
 interface SystemErrorOptions {
   code: string
   message?: string
@@ -43,7 +37,6 @@ interface SystemErrorOptions {
   details?: Record<string, unknown>
   stackTrace?: string
 }
-
 export const createSystemErrorFactory = (
   name: string,
   httpCode: HttpCodeType,
@@ -51,7 +44,6 @@ export const createSystemErrorFactory = (
   return class SystemErrorClass extends BaseError {
     severity: 'low' | 'medium' | 'high' = 'medium'
     stackTrace: string | undefined
-
     constructor({
       code,
       message,
@@ -63,7 +55,6 @@ export const createSystemErrorFactory = (
       this.severity = severity
       this.stackTrace = stackTrace
     }
-
     toJSON() {
       return {
         ...super.toJSON(),
@@ -73,8 +64,7 @@ export const createSystemErrorFactory = (
     }
   }
 }
-
 export const SystemError = createSystemErrorFactory(
   'SystemError',
   HTTP_CODE.SERVER_ERROR,
-) // Factory para errores del sistema
+)

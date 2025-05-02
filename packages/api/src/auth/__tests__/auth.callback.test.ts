@@ -14,7 +14,6 @@ import request from 'supertest'
 describe('GET /callback', () => {
   test('happy path', async () => {
     callbackMock.resolve()
-
     const response = await request(app)
       .get(apiCallbackWithCode('123456789'))
       .set('Accept', 'application/json')
@@ -24,10 +23,8 @@ describe('GET /callback', () => {
     expect(access).toBeDefined()
     expect(refresh).toBeDefined()
   })
-
   test('without code', async () => {
     callbackMock.resolve()
-
     const response = await request(app)
       .get(apiCallbackWithCode(''))
       .set('Accept', 'application/json')
@@ -37,7 +34,6 @@ describe('GET /callback', () => {
       ROUTE_FRONTEND_REGISTER,
     )
   })
-
   test('error', async () => {
     callbackMock.reject(
       new AuthError({
@@ -45,7 +41,6 @@ describe('GET /callback', () => {
         message: AUTH_ERROR.NOT_FOUND_ANONYMOUS_KEY,
       }),
     )
-
     const response = await request(app)
       .get(apiCallbackWithCode('123456789'))
       .set('Accept', 'application/json')

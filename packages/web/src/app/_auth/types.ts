@@ -2,22 +2,18 @@ import { SignInFormSchemaType, SignUpFormSchemaType } from './auth.schemas'
 
 export type SingUpDTO = SignUpFormSchemaType
 export type SingInDTO = SignInFormSchemaType
-
 export type Result = {
   status: string
   message: string
   data?: unknown
 }
-
 export type Provider = 'google' | 'github' | 'linkedin'
-
 export interface User {
   id: string
   email?: string
   created_at: string
   role?: string
 }
-
 export interface Session {
   provider_token?: string | null
   provider_refresh_token?: string | null
@@ -28,7 +24,6 @@ export interface Session {
   token_type: string
   user: User
 }
-
 export type UserResponse =
   | {
       user: User | null

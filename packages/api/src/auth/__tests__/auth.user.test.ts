@@ -26,7 +26,6 @@ describe('GET /user', () => {
     expect(body.metadata).toBeUndefined()
     expect(body.timestamp).not.toBeNull()
   })
-
   test('without token', async () => {
     const response = await request(app)
       .get(apiUserUrl())
@@ -46,7 +45,6 @@ describe('GET /user', () => {
     expect(body.metadata).toBeUndefined()
     expect(body.timestamp).not.toBeNull()
   })
-
   test('with empty bearer', async () => {
     const response = await request(app)
       .get(apiUserUrl())
@@ -68,7 +66,6 @@ describe('GET /user', () => {
     expect(body.metadata).toBeUndefined()
     expect(body.timestamp).not.toBeNull()
   })
-
   test('token do not return user', async () => {
     repositoryUser.resolve({ user: null, session: null })
     const response = await request(app)
@@ -91,7 +88,6 @@ describe('GET /user', () => {
     expect(body.metadata).toBeUndefined()
     expect(body.timestamp).not.toBeNull()
   })
-
   test('token malformed', async () => {
     const response = await request(app)
       .get(apiUserUrl())

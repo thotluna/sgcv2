@@ -4,13 +4,11 @@ import { NextRequest, NextResponse } from 'next/server'
 export async function GET(request: NextRequest) {
   const cookieStore = await cookies()
   const accessToken = cookieStore.get('access_token')
-
   if (!accessToken) {
     const url = request.nextUrl.clone()
     url.pathname = '/register'
     return NextResponse.redirect(url)
   }
-
   cookieStore.delete('code-verify')
   const url = request.nextUrl.clone()
   url.pathname = '/private'

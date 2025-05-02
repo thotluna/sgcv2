@@ -8,7 +8,6 @@ export const schemaValidation =
   async (req: Request, _res: Response, next: NextFunction) => {
     try {
       await schema.parseAsync(req)
-
       next()
     } catch (error) {
       if (error instanceof ZodError) {
@@ -21,7 +20,6 @@ export const schemaValidation =
           }),
         )
       }
-
       next(error)
     }
   }

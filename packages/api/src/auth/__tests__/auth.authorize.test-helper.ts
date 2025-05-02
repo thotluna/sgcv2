@@ -6,7 +6,6 @@ export const PROVIDER_GOOGLE = 'google'
 export const PROVIDER_INVALID = 'invalid'
 export const EXPECTED_PATHNAME = '/auth/v1/authorize'
 export const EXPECTED_CODE_CHALLENGE_METHOD = 'S256'
-
 export function apiAuthorizeUrl(params: {
   provider: string
   [key: string]: any

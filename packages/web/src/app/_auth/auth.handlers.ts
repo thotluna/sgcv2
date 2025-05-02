@@ -3,7 +3,6 @@
 import { cookies } from 'next/headers'
 
 const BASE_URL = `${process.env.NEXT_PUBLIC_URL_API}/v1/auth`
-
 export async function validateCustomerCode(code: string) {
   const url = `${BASE_URL}/code/validate`
   const language = await getLanguage()
@@ -16,7 +15,6 @@ export async function validateCustomerCode(code: string) {
       },
       body: JSON.stringify({ code }),
     })
-
     const data = await response.json()
     return data
   } catch (error) {
@@ -26,7 +24,6 @@ export async function validateCustomerCode(code: string) {
     }
   }
 }
-
 async function getLanguage() {
   try {
     const language = (await cookies()).get('NEXT_LOCALE')?.value || 'es'

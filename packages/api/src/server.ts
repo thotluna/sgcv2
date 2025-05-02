@@ -16,7 +16,6 @@ export class ServerApi {
   private port: number = Number(PORT) || 3000
   private server?: Server
   public i18nextInstance: typeof i18next
-
   constructor() {
     this.i18nextInstance = i18next
     this.i18nextInstance
@@ -27,7 +26,7 @@ export class ServerApi {
         backend: {
           loadPath: __dirname + '/locales/{{lng}}/{{ns}}.json',
           addPath: __dirname + '/locales/{{lng}}/{{ns}}.missing.json',
-          reloadInterval: 0, // disable file watch to avoid open handles
+          reloadInterval: 0,
         },
         fallbackLng: 'es',
         preload: ['en', 'es'],
@@ -41,8 +40,8 @@ export class ServerApi {
     this.app = express()
     this.app.use(
       middleware.handle(this.i18nextInstance, {
-        ignoreRoutes: ['/foo'], // or function(req, res, options, i18next) { /* return true to ignore */ }
-        removeLngFromUrl: false, // removes the language from the url when language detected in path
+        ignoreRoutes: ['/foo'],
+        removeLngFromUrl: false,
       }),
     )
     this.app.use(cookieParser())
@@ -54,51 +53,42 @@ export class ServerApi {
         credentials: true,
       }),
     )
-
     this.router = Router()
     this.router.get('/', (_req, res) => {
       res.send('Hello World!')
     })
     this.app.use('/v1', this.router)
   }
-
   public static getInstance(): ServerApi {
     const instance = new ServerApi()
     return instance
   }
-
   public getI18nextInstance(): typeof i18next {
     return this.i18nextInstance
   }
-
   public addRoute(path: string, router: Router) {
     this.router.use(path, router)
     this.app.use('/v1', this.router)
   }
-
   setPort(port: number) {
     this.port = port
   }
-
   public start(portForce?: number) {
     this.app.use(errorHandler)
     if (portForce) {
       this.server = this.app.listen(portForce, () => {
+        // eslint-disable-next-line no-console
         console.log(`Server listening on port ${portForce}!`)
       })
-      // allow process to exit if this is the only handle
-      // this.server.unref()
       return this.server
     }
-
     while (this.port >= 3000 || this.port <= 4000) {
       try {
         this.port = Math.floor(Math.random() * (4000 - 3000 + 1)) + 3000
         this.server = this.app.listen(this.port, () => {
+          // eslint-disable-next-line no-console
           console.log(`Server listening on port ${this.port}!`)
         })
-        // allow process to exit if this is the only handle
-        // this.server.unref()
         return this.server
       } catch {
         continue
@@ -106,7 +96,6 @@ export class ServerApi {
     }
     return null
   }
-
   public getApp() {
     return this.app
   }

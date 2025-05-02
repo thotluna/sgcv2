@@ -4,7 +4,6 @@ export interface User {
   created_at: string
   role?: string
 }
-
 export interface Session {
   provider_token?: string | null
   provider_refresh_token?: string | null
@@ -15,7 +14,6 @@ export interface Session {
   token_type: string
   user: User
 }
-
 export type UserResponse =
   | {
       user: User | null
@@ -25,13 +23,11 @@ export type UserResponse =
       user: null
       session: null
     }
-
 export interface CallbackResult {
   access_token: string
   expires_at: number
   refresh_token: string
 }
-
 export interface authorizeDataType {
   codeVerifier: string
   url: string

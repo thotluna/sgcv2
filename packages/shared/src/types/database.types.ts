@@ -5,7 +5,6 @@ export type Json =
   | null
   | { [key: string]: Json | undefined }
   | Json[]
-
 export type Database = {
   public: {
     Tables: {
@@ -45,9 +44,7 @@ export type Database = {
     }
   }
 }
-
 type PublicSchema = Database[Extract<keyof Database, 'public'>]
-
 export type Tables<
   PublicTableNameOrOptions extends
     | keyof (PublicSchema['Tables'] & PublicSchema['Views'])
@@ -72,7 +69,6 @@ export type Tables<
       ? R
       : never
     : never
-
 export type TablesInsert<
   PublicTableNameOrOptions extends
     | keyof PublicSchema['Tables']
@@ -93,7 +89,6 @@ export type TablesInsert<
       ? I
       : never
     : never
-
 export type TablesUpdate<
   PublicTableNameOrOptions extends
     | keyof PublicSchema['Tables']
@@ -114,7 +109,6 @@ export type TablesUpdate<
       ? U
       : never
     : never
-
 export type Enums<
   PublicEnumNameOrOptions extends
     | keyof PublicSchema['Enums']
@@ -127,7 +121,6 @@ export type Enums<
   : PublicEnumNameOrOptions extends keyof PublicSchema['Enums']
     ? PublicSchema['Enums'][PublicEnumNameOrOptions]
     : never
-
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof PublicSchema['CompositeTypes']
