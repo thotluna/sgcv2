@@ -1,24 +1,45 @@
 import { HttpCodeType } from '@sgcv2/shared'
 
-export interface BusinessErrorShape {
+export interface CoreError {
+  name: string
   code: string
   message: string
-  httpCode?: number
+  timestamp: Date
 }
 
-export const createErrorFactory = (name: string) =>
-  class BusinessError extends Error implements BusinessErrorShape {
+export interface BusinessErrorInterface extends CoreError {
+  httpCode?: HttpCodeType
+  details?: Record<string, unknown>
+}
+
+export const createBusinessErrorFactory = (name: string) =>
+  class BusinessError extends Error implements BusinessError {
     code: string
-    httpCode?: number
-    constructor(code: string, message?: string, httpCode?: number) {
+    httpCode?: HttpCodeType
+    details?: Record<string, unknown>
+    timestamp: Date
+
+    constructor(
+      code: string,
+      message?: string,
+      httpCode?: HttpCodeType,
+      details?: Record<string, unknown>,
+    ) {
       super(message ?? code)
       this.name = name
       this.code = code
-      if (httpCode !== undefined) {
-        this.httpCode = httpCode
-      }
+      this.httpCode = httpCode
+      this.details = details
+      this.timestamp = new Date()
     }
   }
+
+export interface ErrorDetail {
+  code: string
+  message: string
+  field?: string
+  details?: Record<string, unknown>
+}
 
 export interface BaseErrorInterface {
   name: string
@@ -29,18 +50,7 @@ export interface BaseErrorInterface {
   timestamp: Date
 }
 
-export interface ErrorDetail {
-  code: string
-  message: string
-  field?: string
-  details?: Record<string, unknown>
-}
-
-export class BaseError
-  extends Error
-  implements BaseErrorInterface, ErrorDetail
-{
-  name: string
+export class BaseError extends Error implements BaseErrorInterface {
   code: string
   statusCode: HttpCodeType
   details?: Record<string, unknown>
@@ -60,15 +70,30 @@ export class BaseError
     this.details = details
     this.timestamp = new Date()
   }
+
+  // Método para mantener compatibilidad y serialización
+  toJSON() {
+    return {
+      name: this.name,
+      code: this.code,
+      message: this.message,
+      statusCode: this.statusCode,
+      details: this.details,
+      timestamp: this.timestamp,
+    }
+  }
 }
 
-export const errorClassFactory = (name: string, statusCode: HttpCodeType) =>
-  class BusinessError extends BaseError {
-    constructor(
-      code: string,
-      message: string,
-      details?: Record<string, unknown>,
-    ) {
+export interface BusinessErrorOptions {
+  code: string
+  message: string
+  details?: Record<string, unknown>
+}
+
+export const errorClassFactory = (name: string, statusCode: HttpCodeType) => {
+  return class BusinessError extends BaseError {
+    constructor({ code, message, details }: BusinessErrorOptions) {
       super(name, code, message, statusCode, details)
     }
   }
+}

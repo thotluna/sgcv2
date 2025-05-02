@@ -1,4 +1,5 @@
 import { errorClassFactory } from '@api/errors/errors'
+import { HttpCodeType } from '@sgcv2/shared'
 
 export const VALIDATION_ERROR = {
   EMAIL_REQUIRED: 'email_required',
@@ -8,7 +9,7 @@ export const VALIDATION_ERROR = {
 } as const
 
 export const AUTH_ERROR = {
-  EMAIL_ALREADY_REGISTERED: 'auth_email_already_registed',
+  EMAIL_ALREADY_REGISTERED: 'auth_email_already_registered',
   INVALID_CREDENTIALS: 'invalid_credentials',
   TOKEN_REQUIRED: 'token_required',
   TOKEN_EXPIRED: 'token_expired',
@@ -28,8 +29,14 @@ export const PROVIDER_ERROR = {
   PROVIDER_INVALID: 'provider_invalid',
 } as const
 
-export const ValidationError = errorClassFactory('ValidationError', 400)
-export const AuthErrorC = errorClassFactory('AuthError', 401)
-export const SystemError = errorClassFactory('SystemError', 500)
-export const ProviderError = errorClassFactory('ProviderError', 500)
-export const TokenError = errorClassFactory('CustomerCodeError', 401)
+export const AuthError = errorClassFactory('AuthError', 401 as HttpCodeType)
+
+export const ProviderError = errorClassFactory(
+  'ProviderError',
+  500 as HttpCodeType,
+)
+
+export const TokenError = errorClassFactory(
+  'CustomerCodeError',
+  401 as HttpCodeType,
+)
