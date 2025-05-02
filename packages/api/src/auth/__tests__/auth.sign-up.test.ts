@@ -6,6 +6,7 @@ import {
 import { apiSignUpUrl, signUpMock } from './auth.sign-up.test-helper'
 import { app, i18n as i18nInstance } from './auth.test-base'
 import { buildUserMock } from './test-utils'
+import { BaseError, ErrorDetail } from '@api/errors/errors'
 import { ApiResponse, STATUS } from '@api/types'
 import {
   AUTH_ERROR,
@@ -15,7 +16,7 @@ import {
   UserResponse,
   VALIDATION_ERROR,
 } from '@auth'
-import { BaseError, ErrorDetail, HTTP_CODE } from '@sgcv2/shared'
+import { HTTP_CODE } from '@sgcv2/shared'
 import request from 'supertest'
 
 describe('POST /signup', () => {

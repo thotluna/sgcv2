@@ -1,4 +1,5 @@
-import { ErrorDetail, HTTP_CODE, HttpCodeType } from '@sgcv2/shared'
+import { ErrorDetail } from '@api/errors/errors'
+import { HTTP_CODE, HttpCodeType } from '@sgcv2/shared'
 
 export const STATUS = {
   SUCCESS: 'success',

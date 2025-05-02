@@ -1,9 +1,9 @@
-import { HttpCodeType } from '../http-codes'
+import { HttpCodeType } from '@sgcv2/shared'
 
 export interface BusinessErrorShape {
   code: string
   message: string
-  httpCode?: number // Opcional, para transición suave
+  httpCode?: number
 }
 
 export const createErrorFactory = (name: string) =>

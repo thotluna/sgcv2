@@ -1,4 +1,4 @@
-import { errorClassFactory } from '@sgcv2/shared'
+import { errorClassFactory } from '@api/errors/errors'
 
 export const VALIDATION_ERROR = {
   EMAIL_REQUIRED: 'email_required',

@@ -2,6 +2,7 @@ import { repositorySignIn, signInData } from './auth.configtest'
 import { apiSignInUrl, signInMock } from './auth.sign-in.test-helper'
 import { app, i18n as i18nTest } from './auth.test-base'
 import { buildUserMock } from './test-utils'
+import { ErrorDetail } from '@api/errors/errors'
 import { ApiResponse, STATUS } from '@api/types'
 import {
   AUTH_ERROR,
@@ -10,7 +11,7 @@ import {
   UserResponse,
   VALIDATION_ERROR,
 } from '@auth'
-import { ErrorDetail, HTTP_CODE } from '@sgcv2/shared'
+import { HTTP_CODE } from '@sgcv2/shared'
 import request from 'supertest'
 
 describe('POST /signin', () => {

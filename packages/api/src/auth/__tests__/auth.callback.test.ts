@@ -5,9 +5,10 @@ import {
   ROUTE_FRONTEND_REGISTER,
 } from './auth.callback.test-helper'
 import { app, i18n as i18nTest } from './auth.test-base'
+import { ErrorDetail } from '@api/errors/errors'
 import { ApiResponse, STATUS } from '@api/types'
 import { AUTH_ERROR, AuthErrorC } from '@auth'
-import { ErrorDetail, HTTP_CODE } from '@sgcv2/shared'
+import { HTTP_CODE } from '@sgcv2/shared'
 import request from 'supertest'
 
 describe('GET /callback', () => {

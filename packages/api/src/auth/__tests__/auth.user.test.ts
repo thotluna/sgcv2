@@ -1,10 +1,11 @@
 import { dataUser, repositoryUser } from './auth.configtest'
 import { app, i18n as i18nTest } from './auth.test-base'
 import { apiUserUrl, getToken, TypeTokens } from './auth.user.test-helper'
+import { ErrorDetail } from '@api/errors/errors'
 import { ApiResponse, STATUS } from '@api/types'
 import { AUTH_ERROR } from '@auth/errors'
 import { UserResponse } from '@auth/types'
-import { ErrorDetail, HTTP_CODE } from '@sgcv2/shared'
+import { HTTP_CODE } from '@sgcv2/shared'
 import request from 'supertest'
 
 describe('GET /user', () => {

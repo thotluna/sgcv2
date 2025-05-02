@@ -1,9 +1,10 @@
 import { apiClientCodeUrl } from './auth.client-code.test-helper'
 import { clientCode, repositoryValidateCode } from './auth.configtest'
 import { app, i18n as i18nInstance } from './auth.test-base'
+import { BaseError } from '@api/errors/errors'
 import { ApiResponse, STATUS } from '@api/types'
 import { AUTH_ERROR, AuthErrorC, SYSTEM_ERROR, SystemError } from '@auth'
-import { BaseError, ClientCodeType, HTTP_CODE } from '@sgcv2/shared'
+import { ClientCodeType, HTTP_CODE } from '@sgcv2/shared'
 import 'dotenv/config'
 import request from 'supertest'
 
