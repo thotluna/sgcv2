@@ -37,7 +37,9 @@
     "jwt malformed": "Error en el formato jwt",
     "confirm_password": "Confirmar contraseña",
     "phase_sign": "Si ya tienes una cuenta, ingresa ",
-    "phase_link": "aquí"
+    "phase_link": "aquí",
+    "Invalid_code": "Código inválido",
+    "auth_email_already_registered": "El email ya está registrado"
   },
   "ErrorPage": {
     "title": "Error",

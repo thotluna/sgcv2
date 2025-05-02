@@ -3,6 +3,7 @@
 import { useAuthSubmit } from '../useAuthSubmit'
 import { SingUpForm } from '@/app/(sign)/register/signup-form'
 import { SingUpDTO } from '@/app/_auth/types'
+import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
 
 const URL_API = {
@@ -10,10 +11,11 @@ const URL_API = {
 } as const
 
 export default function Register() {
+  const traslateRegisterPage = useTranslations('RegisterPage')
   const handler = useAuthSubmit<SingUpDTO>({
     url: URL_API.SIGN_UP,
     onError: message => {
-      toast.error(message)
+      toast.error(traslateRegisterPage(message))
     },
   })
 

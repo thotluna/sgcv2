@@ -37,7 +37,9 @@
     "jwt malformed": "Malformed JWT",
     "confirm_password": "Confirm Password",
     "phase_sign": "If you already have an account, sign in ",
-    "phase_link": "here"
+    "phase_link": "here",
+    "Invalid_code": "Invalid code",
+    "auth_email_already_registered": "El email ya está registrado"
   },
   "ErrorPage": {
     "title": "Error",

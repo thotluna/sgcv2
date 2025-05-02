@@ -10,7 +10,10 @@ export function useAuthSubmit<TData>({
 }: Props): (data: TData) => Promise<void> {
   const handler = async (data: TData) => {
     const res = await sendSing(data, url)
-    if (res.status === 'error') onError(res.message)
+
+    if (res.code) {
+      onError(res.code)
+    }
   }
   return handler
 }
