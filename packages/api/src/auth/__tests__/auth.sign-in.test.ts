@@ -6,7 +6,7 @@ import { ErrorDetail } from '@api/errors/errors'
 import { ApiResponse, STATUS } from '@api/types'
 import {
   AUTH_ERROR,
-  AuthErrorC,
+  AuthError,
   SYSTEM_ERROR,
   UserResponse,
   VALIDATION_ERROR,
@@ -82,10 +82,10 @@ describe('POST /signin', () => {
 
   test('credential invalid', async () => {
     repositorySignIn.reject(
-      new AuthErrorC(
-        AUTH_ERROR.INVALID_CREDENTIALS,
-        AUTH_ERROR.INVALID_CREDENTIALS,
-      ),
+      new AuthError({
+        code: AUTH_ERROR.INVALID_CREDENTIALS,
+        message: AUTH_ERROR.INVALID_CREDENTIALS,
+      }),
     )
     const response = await request(app)
       .post(apiSignInUrl())

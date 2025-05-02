@@ -1,5 +1,5 @@
 import type { CallbackResult, User, UserResponse } from '@auth'
-import { AUTH_ERROR, AuthErrorC, AuthRespository } from '@auth'
+import { AUTH_ERROR, AuthError, AuthRespository } from '@auth'
 import { CustomerCodeJwtHelper } from '@utils'
 
 export class SupabaseAuthRepositoryMock implements AuthRespository {
@@ -40,10 +40,10 @@ export class SupabaseAuthRepositoryMock implements AuthRespository {
   signUp = async (email: string, password: string): Promise<UserResponse> => {
     const existingUser = this.mockData.users.find(user => user.email === email)
     if (existingUser) {
-      throw new AuthErrorC(
-        AUTH_ERROR.EMAIL_ALREADY_REGISTERED,
-        AUTH_ERROR.EMAIL_ALREADY_REGISTERED,
-      )
+      throw new AuthError({
+        code: AUTH_ERROR.EMAIL_ALREADY_REGISTERED,
+        message: AUTH_ERROR.EMAIL_ALREADY_REGISTERED,
+      })
     }
 
     const result = this.getUserResponse(email)
@@ -60,10 +60,10 @@ export class SupabaseAuthRepositoryMock implements AuthRespository {
     const userFull = this.mockData.usersTull.find(user => user.email === email)
 
     if (!user || !userFull) {
-      throw new AuthErrorC(
-        AUTH_ERROR.INVALID_CREDENTIALS,
-        AUTH_ERROR.INVALID_CREDENTIALS,
-      )
+      throw new AuthError({
+        code: AUTH_ERROR.INVALID_CREDENTIALS,
+        message: AUTH_ERROR.INVALID_CREDENTIALS,
+      })
     }
 
     return {
@@ -127,10 +127,10 @@ export class SupabaseAuthRepositoryMock implements AuthRespository {
     // Simular obtención de usuario basado en un token de acceso
     const user = this.mockData.users.find(u => u.email === decode?.email)
     if (!user) {
-      throw new AuthErrorC(
-        AUTH_ERROR.NOT_FOUND_ANONYMOUS_KEY,
-        AUTH_ERROR.NOT_FOUND_ANONYMOUS_KEY,
-      )
+      throw new AuthError({
+        code: AUTH_ERROR.NOT_FOUND_ANONYMOUS_KEY,
+        message: AUTH_ERROR.NOT_FOUND_ANONYMOUS_KEY,
+      })
     }
     return {
       user: {

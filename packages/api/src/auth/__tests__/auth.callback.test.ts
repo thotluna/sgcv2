@@ -7,7 +7,7 @@ import {
 import { app, i18n as i18nTest } from './auth.test-base'
 import { ErrorDetail } from '@api/errors/errors'
 import { ApiResponse, STATUS } from '@api/types'
-import { AUTH_ERROR, AuthErrorC } from '@auth'
+import { AUTH_ERROR, AuthError } from '@auth'
 import { HTTP_CODE } from '@sgcv2/shared'
 import request from 'supertest'
 
@@ -40,10 +40,10 @@ describe('GET /callback', () => {
 
   test('error', async () => {
     callbackMock.reject(
-      new AuthErrorC(
-        AUTH_ERROR.NOT_FOUND_ANONYMOUS_KEY,
-        AUTH_ERROR.NOT_FOUND_ANONYMOUS_KEY,
-      ),
+      new AuthError({
+        code: AUTH_ERROR.NOT_FOUND_ANONYMOUS_KEY,
+        message: AUTH_ERROR.NOT_FOUND_ANONYMOUS_KEY,
+      }),
     )
 
     const response = await request(app)
