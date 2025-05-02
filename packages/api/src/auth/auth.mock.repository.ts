@@ -2,7 +2,7 @@ import type { CallbackResult, User, UserResponse } from '@auth'
 import { AUTH_ERROR, AuthError, AuthRespository } from '@auth'
 import { CustomerCodeJwtHelper } from '@utils'
 
-export class SupabaseAuthRepositoryMock implements AuthRespository {
+export class AuthMockRepository implements AuthRespository {
   private mockData: {
     customerCodes: Array<{
       code: string
