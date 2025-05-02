@@ -58,7 +58,8 @@ async function getSeccionByCredentials<TData>(
       }
     }
 
-    return await res.json()
+    const userResponse = await res.json()
+    return userResponse
   } catch (error) {
     const e = error as Error
     return {

@@ -29,6 +29,12 @@ async function getCustomerCode(email: string) {
   return data.code
 }
 
+test.beforeEach(async () => {
+  await fetch(`http://localhost:3001/reset-mock`).catch(() => {
+    throw new Error('Failed to reset repository')
+  })
+})
+
 test('happy path', async ({ page }) => {
   const email = 'test@example.com'
   const code = await getCustomerCode(email)
@@ -39,5 +45,11 @@ test('happy path', async ({ page }) => {
   await signUpPage.fillPassword('123456789')
   await signUpPage.fillConfirmPassword('123456789')
   await signUpPage.submit()
+
+  // Esperar navegación con más tiempo y detalles
+  await page.waitForURL('**/private', {
+    timeout: 15000,
+    waitUntil: 'networkidle',
+  })
   expect(page.url()).toBe('http://localhost:3000/private')
 })

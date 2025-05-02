@@ -172,8 +172,9 @@ export class AuthController {
     const token = tok!.split(' ')[1]
 
     try {
-      const user = await this.service.getUser(token)
-      res.send(new ApiResponseBuilder().data(user).build())
+      const userResponse = await this.service.getUser(token)
+
+      res.send(new ApiResponseBuilder().data(userResponse).build())
     } catch (error) {
       next(error)
     }
