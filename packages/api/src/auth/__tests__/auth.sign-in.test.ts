@@ -2,15 +2,16 @@ import { repositorySignIn, signInData } from './auth.configtest'
 import { apiSignInUrl, signInMock } from './auth.sign-in.test-helper'
 import { app, i18n as i18nTest } from './auth.test-base'
 import { buildUserMock } from './test-utils'
+import { ErrorDetail } from '@api/errors/errors'
 import { ApiResponse, STATUS } from '@api/types'
 import {
   AUTH_ERROR,
-  AuthErrorC,
+  AuthError,
   SYSTEM_ERROR,
   UserResponse,
   VALIDATION_ERROR,
 } from '@auth'
-import { ErrorDetail, HTTP_CODE } from '@sgcv2/shared'
+import { HTTP_CODE } from '@sgcv2/shared'
 import request from 'supertest'
 
 describe('POST /signin', () => {
@@ -81,10 +82,10 @@ describe('POST /signin', () => {
 
   test('credential invalid', async () => {
     repositorySignIn.reject(
-      new AuthErrorC(
-        AUTH_ERROR.INVALID_CREDENTIALS,
-        AUTH_ERROR.INVALID_CREDENTIALS,
-      ),
+      new AuthError({
+        code: AUTH_ERROR.INVALID_CREDENTIALS,
+        message: AUTH_ERROR.INVALID_CREDENTIALS,
+      }),
     )
     const response = await request(app)
       .post(apiSignInUrl())

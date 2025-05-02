@@ -18,6 +18,7 @@
     "e2e:debug": "npx playwright test --debug"
   },
   "dependencies": {
+    "@sgcv2/shared": "workspace:*",
     "@hookform/resolvers": "^5.0.1",
     "@radix-ui/react-label": "^2.1.2",
     "@radix-ui/react-slot": "^1.1.2",

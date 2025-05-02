@@ -6,16 +6,17 @@ import {
 import { apiSignUpUrl, signUpMock } from './auth.sign-up.test-helper'
 import { app, i18n as i18nInstance } from './auth.test-base'
 import { buildUserMock } from './test-utils'
+import { SystemError } from '@api/errors'
+import { BaseError, ErrorDetail } from '@api/errors/errors'
 import { ApiResponse, STATUS } from '@api/types'
 import {
   AUTH_ERROR,
-  AuthErrorC,
+  AuthError,
   SYSTEM_ERROR,
-  SystemError,
   UserResponse,
   VALIDATION_ERROR,
 } from '@auth'
-import { BaseError, ErrorDetail, HTTP_CODE } from '@sgcv2/shared'
+import { HTTP_CODE } from '@sgcv2/shared'
 import request from 'supertest'
 
 describe('POST /signup', () => {
@@ -104,7 +105,10 @@ describe('POST /signup', () => {
 
   test('error, code client refused', async () => {
     repositoryValidateCode.reject(
-      new AuthErrorC(AUTH_ERROR.CODE_NOT_FOUND, AUTH_ERROR.CODE_NOT_FOUND),
+      new AuthError({
+        code: AUTH_ERROR.CODE_NOT_FOUND,
+        message: AUTH_ERROR.CODE_NOT_FOUND,
+      }),
     )
     const response = await request(app)
       .post(apiSignUpUrl())
@@ -128,9 +132,14 @@ describe('POST /signup', () => {
 
   test('error, any other', async () => {
     repositoryValidateCode.reject(
-      new SystemError(SYSTEM_ERROR.UNKNOWN_ERROR, SYSTEM_ERROR.UNKNOWN_ERROR, {
-        message: 'Connection error',
-        timestamp: Date.now(),
+      new SystemError({
+        code: SYSTEM_ERROR.UNKNOWN_ERROR,
+        message: SYSTEM_ERROR.UNKNOWN_ERROR,
+        severity: 'medium',
+        details: {
+          message: 'Connection error',
+          timestamp: Date.now(),
+        },
       }),
     )
     const response = await request(app)
@@ -156,14 +165,14 @@ describe('POST /signup', () => {
   test('error, email registered', async () => {
     repositoryValidateCode.resolve()
     repositorySignUp.reject(
-      new AuthErrorC(
-        AUTH_ERROR.EMAIL_ALREADY_REGISTERED,
-        AUTH_ERROR.EMAIL_ALREADY_REGISTERED,
-        {
+      new AuthError({
+        code: AUTH_ERROR.EMAIL_ALREADY_REGISTERED,
+        message: AUTH_ERROR.EMAIL_ALREADY_REGISTERED,
+        details: {
           message: 'Email already registered',
           timestamp: Date.now(),
         },
-      ),
+      }),
     )
 
     const response = await request(app)

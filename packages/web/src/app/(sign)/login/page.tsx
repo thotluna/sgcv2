@@ -1,6 +1,6 @@
 'use client'
 
-import { useSubmitHandler } from '../useSubmitHandler'
+import { useAuthSubmit } from '../useAuthSubmit'
 import { SingInForm } from '@/app/(sign)/login/signin-form'
 import { SingInDTO } from '@/app/_auth/types'
 
@@ -9,7 +9,7 @@ const URL_API = {
 } as const
 
 export default function Login() {
-  const handler = useSubmitHandler<SingInDTO>(URL_API.SIGN_IN)
+  const handler = useAuthSubmit<SingInDTO>(URL_API.SIGN_IN)
 
   return <SingInForm onSubmit={handler} />
 }

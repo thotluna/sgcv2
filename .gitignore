@@ -26,3 +26,5 @@ yarn-error.log*
 **/playwright-report
 **/test-results
 
+api@1.0.0
+ts-node-dev

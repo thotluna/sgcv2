@@ -18,10 +18,8 @@ export async function validateCustomerCode(code: string) {
     })
 
     const data = await response.json()
-    // console.log('[validateCustomerCode]', { status: response.status, data })
     return data
   } catch (error) {
-    // console.log('[validateCustomerCode][error]', error)
     return {
       status: 'error',
       message: error,

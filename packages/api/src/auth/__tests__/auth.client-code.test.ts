@@ -1,9 +1,11 @@
 import { apiClientCodeUrl } from './auth.client-code.test-helper'
 import { clientCode, repositoryValidateCode } from './auth.configtest'
 import { app, i18n as i18nInstance } from './auth.test-base'
+import { SystemError } from '@api/errors'
+import { BaseError } from '@api/errors/errors'
 import { ApiResponse, STATUS } from '@api/types'
-import { AUTH_ERROR, AuthErrorC, SYSTEM_ERROR, SystemError } from '@auth'
-import { BaseError, ClientCodeType, HTTP_CODE } from '@sgcv2/shared'
+import { AUTH_ERROR, AuthError, SYSTEM_ERROR } from '@auth'
+import { ClientCodeType, HTTP_CODE } from '@sgcv2/shared'
 import 'dotenv/config'
 import request from 'supertest'
 
@@ -74,9 +76,13 @@ describe('auth /code/validate test', () => {
 
   test('code refused', async () => {
     repositoryValidateCode.reject(
-      new AuthErrorC(AUTH_ERROR.CODE_NOT_FOUND, AUTH_ERROR.CODE_NOT_FOUND, {
-        message: 'Code not found',
-        timestamp: Date.now(),
+      new AuthError({
+        code: AUTH_ERROR.CODE_NOT_FOUND,
+        message: AUTH_ERROR.CODE_NOT_FOUND,
+        details: {
+          message: 'Code not found',
+          timestamp: Date.now(),
+        },
       }),
     )
     const response = await request(app)
@@ -102,9 +108,14 @@ describe('auth /code/validate test', () => {
 
   test('error db', async () => {
     repositoryValidateCode.reject(
-      new SystemError(SYSTEM_ERROR.UNKNOWN_ERROR, SYSTEM_ERROR.UNKNOWN_ERROR, {
-        message: 'Connection error',
-        timestamp: Date.now(),
+      new SystemError({
+        code: SYSTEM_ERROR.UNKNOWN_ERROR,
+        message: SYSTEM_ERROR.UNKNOWN_ERROR,
+        severity: 'high',
+        details: {
+          message: 'Connection error',
+          timestamp: Date.now(),
+        },
       }),
     )
     const response = await request(app)

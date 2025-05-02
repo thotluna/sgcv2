@@ -14,13 +14,13 @@ export async function verificarToken(
 ) {
   try {
     if (!req.header('Authorization')) {
-      throw new TokenError(
-        AUTH_ERROR.TOKEN_REQUIRED,
-        AUTH_ERROR.TOKEN_REQUIRED,
-        {
+      throw new TokenError({
+        code: AUTH_ERROR.TOKEN_REQUIRED,
+        message: AUTH_ERROR.TOKEN_REQUIRED,
+        details: {
           timestamp: Date.now(),
         },
-      )
+      })
     }
 
     const token = req.header('Authorization')?.split(' ')[1]

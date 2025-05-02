@@ -51,10 +51,10 @@ describe('GET /authorize', () => {
   })
 
   test('bad request, provider invalid', () => {
-    const error = new ProviderError(
-      PROVIDER_ERROR.PROVIDER_INVALID,
-      i18nInstance.t(PROVIDER_ERROR.PROVIDER_INVALID),
-    )
+    const error = new ProviderError({
+      code: PROVIDER_ERROR.PROVIDER_INVALID,
+      message: i18nInstance.t(PROVIDER_ERROR.PROVIDER_INVALID),
+    })
     return request(app)
       .get(apiAuthorizeUrl({ provider: PROVIDER_INVALID }))
       .set('Accept', 'application/json')

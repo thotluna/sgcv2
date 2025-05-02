@@ -1,10 +1,10 @@
+import { SystemError } from '@api/errors/system-error'
 import type { CallbackResult, UserResponse } from '@auth'
 import {
   SUPABASE_URLs,
   AuthRespository,
   SYSTEM_ERROR,
-  SystemError,
-  AuthErrorC,
+  AuthError,
   AUTH_ERROR,
 } from '@auth'
 import { Database } from '@sgcv2/shared'
@@ -23,14 +23,14 @@ export class SupabaseAuthRepository implements AuthRespository {
       .select()
 
     if (error) {
-      throw new SystemError(
-        SYSTEM_ERROR.UNKNOWN_ERROR,
-        SYSTEM_ERROR.UNKNOWN_ERROR,
-        {
+      throw new SystemError({
+        code: SYSTEM_ERROR.UNKNOWN_ERROR,
+        message: SYSTEM_ERROR.UNKNOWN_ERROR,
+        details: {
           message: error.message,
           timestamp: Date.now(),
         },
-      )
+      })
     }
 
     return data
@@ -47,23 +47,23 @@ export class SupabaseAuthRepository implements AuthRespository {
 
     if (error) {
       if (error.code === 'PGRST116') {
-        throw new AuthErrorC(
-          AUTH_ERROR.CODE_NOT_FOUND,
-          AUTH_ERROR.CODE_NOT_FOUND,
-          {
+        throw new AuthError({
+          code: AUTH_ERROR.CODE_NOT_FOUND,
+          message: AUTH_ERROR.CODE_NOT_FOUND,
+          details: {
             message: error.message,
             timestamp: Date.now(),
           },
-        )
+        })
       }
-      throw new SystemError(
-        SYSTEM_ERROR.UNKNOWN_ERROR,
-        SYSTEM_ERROR.UNKNOWN_ERROR,
-        {
+      throw new SystemError({
+        code: SYSTEM_ERROR.UNKNOWN_ERROR,
+        message: SYSTEM_ERROR.UNKNOWN_ERROR,
+        details: {
           message: error.message,
           timestamp: Date.now(),
         },
-      )
+      })
     }
 
     return true
@@ -82,20 +82,24 @@ export class SupabaseAuthRepository implements AuthRespository {
         error.name === 'AuthApiError' &&
         error.message === 'Database error saving new user'
       ) {
-        throw new AuthErrorC(AUTH_ERROR.INVALID_CODE, AUTH_ERROR.INVALID_CODE, {
-          message: error.message,
-          timestamp: Date.now(),
-        })
-      }
-      if (error.status === 422) {
-        throw new AuthErrorC(
-          AUTH_ERROR.EMAIL_ALREADY_REGISTERED,
-          AUTH_ERROR.EMAIL_ALREADY_REGISTERED,
-          {
+        throw new AuthError({
+          code: AUTH_ERROR.INVALID_CODE,
+          message: AUTH_ERROR.INVALID_CODE,
+          details: {
             message: error.message,
             timestamp: Date.now(),
           },
-        )
+        })
+      }
+      if (error.status === 422) {
+        throw new AuthError({
+          code: AUTH_ERROR.EMAIL_ALREADY_REGISTERED,
+          message: AUTH_ERROR.EMAIL_ALREADY_REGISTERED,
+          details: {
+            message: error.message,
+            timestamp: Date.now(),
+          },
+        })
       }
     }
     return data
@@ -112,14 +116,14 @@ export class SupabaseAuthRepository implements AuthRespository {
 
     if (error) {
       if (error.status === 400) {
-        throw new AuthErrorC(
-          AUTH_ERROR.INVALID_CREDENTIALS,
-          AUTH_ERROR.INVALID_CREDENTIALS,
-          {
+        throw new AuthError({
+          code: AUTH_ERROR.INVALID_CREDENTIALS,
+          message: AUTH_ERROR.INVALID_CREDENTIALS,
+          details: {
             message: error.message,
             timestamp: Date.now(),
           },
-        )
+        })
       }
     }
 
@@ -162,14 +166,14 @@ export class SupabaseAuthRepository implements AuthRespository {
   async getUser(access_token: string) {
     const { data, error } = await this.client.auth.getUser(access_token)
     if (error)
-      throw new SystemError(
-        SYSTEM_ERROR.UNKNOWN_ERROR,
-        SYSTEM_ERROR.UNKNOWN_ERROR,
-        {
+      throw new SystemError({
+        code: SYSTEM_ERROR.UNKNOWN_ERROR,
+        message: SYSTEM_ERROR.UNKNOWN_ERROR,
+        details: {
           message: error.message,
           timestamp: Date.now(),
         },
-      )
+      })
 
     return data as unknown as UserResponse
   }

@@ -1,7 +1,7 @@
 import * as translate from '../locales/en/translation.json'
 import logger from '../utils/logger'
+import { BaseError } from '@api/errors/errors'
 import { ApiResponseBuilder, STATUS } from '@api/types'
-import type { BaseError } from '@sgcv2/shared'
 import { NextFunction, Request, Response } from 'express'
 
 // Definir un registro de traducciones

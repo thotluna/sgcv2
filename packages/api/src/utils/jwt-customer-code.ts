@@ -29,14 +29,14 @@ export class CustomerCodeJwtHelper {
       })
       return token
     } catch (error) {
-      throw new TokenError(
-        SYSTEM_ERROR.UNKNOWN_ERROR,
-        SYSTEM_ERROR.UNKNOWN_ERROR,
-        {
+      throw new TokenError({
+        code: SYSTEM_ERROR.UNKNOWN_ERROR,
+        message: SYSTEM_ERROR.UNKNOWN_ERROR,
+        details: {
           message: (error as Error).message,
           timestamp: Date.now(),
         },
-      )
+      })
     }
   }
 
@@ -46,28 +46,32 @@ export class CustomerCodeJwtHelper {
       return decode
     } catch (error) {
       if (error instanceof jwt.TokenExpiredError) {
-        throw new TokenError(
-          AUTH_ERROR.TOKEN_INVALID,
-          AUTH_ERROR.TOKEN_EXPIRED,
-          {
+        throw new TokenError({
+          code: AUTH_ERROR.TOKEN_INVALID,
+          message: AUTH_ERROR.TOKEN_EXPIRED,
+          details: {
             message: (error as Error).message,
             timestamp: Date.now(),
           },
-        )
+        })
       }
       if ((error as Error).name === 'JsonWebTokenError') {
-        throw new TokenError(
-          AUTH_ERROR.TOKEN_INVALID,
-          AUTH_ERROR.TOKEN_MALFORMED,
-          {
+        throw new TokenError({
+          code: AUTH_ERROR.TOKEN_INVALID,
+          message: AUTH_ERROR.TOKEN_MALFORMED,
+          details: {
             message: (error as Error).message,
             timestamp: Date.now(),
           },
-        )
+        })
       }
-      throw new TokenError(AUTH_ERROR.TOKEN_INVALID, AUTH_ERROR.TOKEN_INVALID, {
-        message: (error as Error).message,
-        timestamp: Date.now(),
+      throw new TokenError({
+        code: AUTH_ERROR.TOKEN_INVALID,
+        message: AUTH_ERROR.TOKEN_INVALID,
+        details: {
+          message: (error as Error).message,
+          timestamp: Date.now(),
+        },
       })
     }
   }
@@ -88,9 +92,13 @@ export class CustomerCodeJwtHelper {
 
       return null
     } catch (error) {
-      throw new TokenError(AUTH_ERROR.TOKEN_INVALID, AUTH_ERROR.TOKEN_INVALID, {
-        message: (error as Error).message,
-        timestamp: Date.now(),
+      throw new TokenError({
+        code: AUTH_ERROR.TOKEN_INVALID,
+        message: AUTH_ERROR.TOKEN_INVALID,
+        details: {
+          message: (error as Error).message,
+          timestamp: Date.now(),
+        },
       })
     }
   }
