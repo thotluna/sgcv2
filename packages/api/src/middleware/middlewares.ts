@@ -29,8 +29,8 @@ export function getI18n() {
     .init({
       debug: false,
       backend: {
-        loadPath: __dirname + '../locales/{{lng}}/{{ns}}.json',
-        addPath: __dirname + '../locales/{{lng}}/{{ns}}.missing.json',
+        loadPath: __dirname + '../../locales/{{lng}}/{{ns}}.json',
+        addPath: __dirname + '../../locales/{{lng}}/{{ns}}.missing.json',
         reloadInterval: 0,
         saveMissing: false,
       },
