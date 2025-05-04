@@ -1,5 +1,5 @@
-import { errorHandler } from './middleware/error-handler'
-import { setMiddleware } from './serve/middlewares'
+import { errorHandler } from './middleware/error-handler.middleware'
+import { setMiddleware } from './middleware/middlewares'
 import logger from '@utils/logger'
 import express, { type Application } from 'express'
 import { Server } from 'http'
@@ -20,9 +20,6 @@ export class ServerApi {
     return instance
   }
 
-  setPort(port: number) {
-    this.port = port
-  }
   public start(portForce?: number) {
     this.app.use(errorHandler)
     if (portForce) {
