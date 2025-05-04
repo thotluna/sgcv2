@@ -1,6 +1,7 @@
 import { ServerApi } from '../../server'
 import { AuthRespository } from '../auth.repository'
 import { authRepositoryMock } from './auth.configtest'
+import { getI18n } from '@api/serve'
 import { AuthController, AuthRouter, AuthService } from '@auth'
 import 'dotenv/config'
 import { Application } from 'express'
@@ -14,7 +15,7 @@ export let i18n: typeof i18next
 beforeAll(async () => {
   repository = authRepositoryMock
   const serverApp = ServerApi.getInstance()
-  i18n = serverApp.getI18nextInstance()
+  i18n = getI18n()
   await i18n.changeLanguage('es')
   const service = new AuthService(repository)
   const authController = new AuthController(service)
@@ -24,6 +25,7 @@ beforeAll(async () => {
   server = serverApp.start()!
   app = serverApp.getApp()
 })
-afterAll(() => {
+afterAll(async () => {
+  await i18n.off('languageChanged')
   server.close()
 })

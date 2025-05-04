@@ -32,6 +32,7 @@ export function getI18n() {
         loadPath: __dirname + '../locales/{{lng}}/{{ns}}.json',
         addPath: __dirname + '../locales/{{lng}}/{{ns}}.missing.json',
         reloadInterval: 0,
+        saveMissing: false,
       },
       fallbackLng: 'es',
       preload: ['en', 'es'],
