@@ -34,8 +34,7 @@ class ApplicationBootstrapper {
       const { repository, authController } = this.createDependencies()
       const app = ServerApi.getInstance()
       const authRouter = new AuthRouter(authController)
-      authRouter.initializeRoutes()
-      app.addRoute('/auth', authRouter.getRouter())
+      authRouter.initializeRoutes(app.getApp())
       if (this.config.testMode) {
         app.getApp().get('/reset-mock', this.createResetEndpoint(repository))
         logger.warn('Run on test mode')

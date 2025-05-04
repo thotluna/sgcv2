@@ -1,14 +1,10 @@
 import { errorHandler } from './middleware/error-handler'
-import cookieParser from 'cookie-parser'
-import cors from 'cors'
+import { getI18n, setMiddleware } from './serve/middlewares'
 import express, { Application, Router } from 'express'
 import { Server } from 'http'
 import i18next from 'i18next'
-import i18nextFsBackend from 'i18next-fs-backend'
-import middleware from 'i18next-http-middleware'
-import morgan from 'morgan'
 
-const { ALLOWED_HOSTS, PORT } = process.env
+const { PORT } = process.env
 
 export class ServerApi {
   private app: Application
@@ -17,47 +13,11 @@ export class ServerApi {
   private server?: Server
   public i18nextInstance: typeof i18next
   constructor() {
-    this.i18nextInstance = i18next
-    this.i18nextInstance
-      .use(i18nextFsBackend)
-      .use(middleware.LanguageDetector)
-      .init({
-        debug: false,
-        backend: {
-          loadPath: __dirname + '/locales/{{lng}}/{{ns}}.json',
-          addPath: __dirname + '/locales/{{lng}}/{{ns}}.missing.json',
-          reloadInterval: 0,
-        },
-        fallbackLng: 'es',
-        preload: ['en', 'es'],
-        detection: {
-          order: ['querystring', 'cookie', 'header'],
-          caches: ['cookie'],
-        },
-        load: 'languageOnly',
-        saveMissing: true,
-      })
+    this.i18nextInstance = getI18n()
+
     this.app = express()
-    this.app.use(
-      middleware.handle(this.i18nextInstance, {
-        ignoreRoutes: ['/foo'],
-        removeLngFromUrl: false,
-      }),
-    )
-    this.app.use(cookieParser())
-    this.app.use(express.json())
-    this.app.use(morgan('dev'))
-    this.app.use(
-      cors({
-        origin: ALLOWED_HOSTS!,
-        credentials: true,
-      }),
-    )
+    setMiddleware(this.app)
     this.router = Router()
-    this.router.get('/', (_req, res) => {
-      res.send('Hello World!')
-    })
-    this.app.use('/v1', this.router)
   }
   public static getInstance(): ServerApi {
     const instance = new ServerApi()

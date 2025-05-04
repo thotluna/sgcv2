@@ -7,7 +7,7 @@ import {
   httpSingInSchema,
 } from '@auth'
 import { schemaValidation, verificarToken } from '@middleware'
-import { Router } from 'express'
+import { type Application, Router } from 'express'
 
 export class AuthRouter {
   private static readonly routes = {
@@ -38,7 +38,7 @@ export class AuthRouter {
   getRouter() {
     return this.router
   }
-  initializeRoutes() {
+  initializeRoutes(app: Application) {
     const routes = this.getRelativeRoutes()
     this.router.post(
       routes.customerCode,
@@ -67,5 +67,6 @@ export class AuthRouter {
     )
     this.router.get(routes.callback, this.authController.callback)
     this.router.get(routes.user, verificarToken, this.authController.getUser)
+    app.use('/v1/auth', this.router)
   }
 }

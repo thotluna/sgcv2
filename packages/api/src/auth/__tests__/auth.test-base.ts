@@ -16,19 +16,14 @@ beforeAll(async () => {
   const serverApp = ServerApi.getInstance()
   i18n = serverApp.getI18nextInstance()
   await i18n.changeLanguage('es')
-  jest.spyOn(console, 'warn').mockImplementation(() => {})
-  jest.spyOn(console, 'log').mockImplementation(() => {})
-  serverApp.addRoute('/auth', getAuthRouter())
+  const service = new AuthService(repository)
+  const authController = new AuthController(service)
+  const authRouter = new AuthRouter(authController)
+  authRouter.initializeRoutes(serverApp.getApp())
+
   server = serverApp.start()!
   app = serverApp.getApp()
 })
 afterAll(() => {
   server.close()
 })
-function getAuthRouter() {
-  const service = new AuthService(repository)
-  const authController = new AuthController(service)
-  const authRouter = new AuthRouter(authController)
-  authRouter.initializeRoutes()
-  return authRouter.getRouter()
-}
