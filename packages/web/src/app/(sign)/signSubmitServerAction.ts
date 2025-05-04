@@ -9,7 +9,7 @@ import { redirect } from 'next/navigation'
 export async function sendSing<TData>(
   data: TData,
   url: string,
-): Promise<Result | void> {
+): Promise<Result> {
   const cookieStore = await cookies()
   const lang = await getLanguageFromCookies(cookieStore)
   const resp = await getSeccionByCredentials(data, url, lang)
@@ -23,13 +23,14 @@ export async function sendSing<TData>(
   saveAuthCookies(session, cookieStore)
   redirect('/private')
 }
+
 async function getSeccionByCredentials<TData>(
   data: TData,
   url: string,
   lang: string,
 ): Promise<{
   data?: UserResponse
-  error?: { status: string; message: string }
+  error?: { status: string; code: string; message: string }
 }> {
   try {
     const res = await fetch(url, {
@@ -41,11 +42,12 @@ async function getSeccionByCredentials<TData>(
       body: JSON.stringify(data),
     })
     if (res.status !== 200) {
-      const error = await res.json()
+      const { errors } = await res.json()
       return {
         error: {
-          status: error.status,
-          message: error.message,
+          status: 'error',
+          code: errors[0].code || 'invalid',
+          message: errors[0].code,
         },
       }
     }
@@ -56,11 +58,13 @@ async function getSeccionByCredentials<TData>(
     return {
       error: {
         status: 'error',
+        code: e.name || 'invalid',
         message: e.message,
       },
     }
   }
 }
+
 function saveAuthCookies(
   session: Session | null,
   cookieStore: ReadonlyRequestCookies,
