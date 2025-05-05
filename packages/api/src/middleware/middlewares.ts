@@ -1,3 +1,4 @@
+import swagerSetup from '../docs/swagger'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import { type Application, json, RequestHandler } from 'express'
@@ -5,6 +6,7 @@ import i18next from 'i18next'
 import i18nextFsBackend from 'i18next-fs-backend'
 import middleware from 'i18next-http-middleware'
 import morgan from 'morgan'
+import swaggerUi from 'swagger-ui-express'
 
 const { ALLOWED_HOSTS } = process.env
 
@@ -18,6 +20,7 @@ export function setMiddleware(app: Application) {
       credentials: true
     })
   )
+  app.use('/docs', swaggerUi.serve, swaggerUi.setup(swagerSetup))
   app.use(i18nMiddleware())
 }
 

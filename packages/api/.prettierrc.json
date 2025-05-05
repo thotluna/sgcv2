@@ -8,5 +8,15 @@
   "printWidth": 80,
   "trailingComma": "none",
   "bracketSpacing": true,
-  "parser": "typescript"
+  "parser": "typescript",
+  "overrides": [
+    {
+      "files": "*.json",
+      "options": {
+        "parser": "json",
+        "singleQuote": false,
+        "trailingComma": "none"
+      }
+    }
+  ]
 }
