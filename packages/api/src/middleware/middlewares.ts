@@ -15,8 +15,8 @@ export function setMiddleware(app: Application) {
   app.use(
     cors({
       origin: ALLOWED_HOSTS!,
-      credentials: true,
-    }),
+      credentials: true
+    })
   )
   app.use(i18nMiddleware())
 }
@@ -32,16 +32,16 @@ export function getI18n() {
         loadPath: __dirname + '../../locales/{{lng}}/{{ns}}.json',
         addPath: __dirname + '../../locales/{{lng}}/{{ns}}.missing.json',
         reloadInterval: 0,
-        saveMissing: false,
+        saveMissing: false
       },
       fallbackLng: 'es',
       preload: ['en', 'es'],
       detection: {
         order: ['querystring', 'cookie', 'header'],
-        caches: ['cookie'],
+        caches: ['cookie']
       },
       load: 'languageOnly',
-      saveMissing: true,
+      saveMissing: true
     })
   return i18n
 }
@@ -50,6 +50,6 @@ function i18nMiddleware(): RequestHandler {
   const i18n = getI18n()
   return middleware.handle(i18n, {
     ignoreRoutes: ['/foo'],
-    removeLngFromUrl: false,
+    removeLngFromUrl: false
   })
 }

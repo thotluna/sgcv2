@@ -7,7 +7,7 @@ export function getSignInFormSchema(t?: (key: string) => string) {
     password: z
       .string()
       .min(8, t?.('password_min_length') || 'password_min_length')
-      .max(50, t?.('password_max_length') || 'password_max_length'),
+      .max(50, t?.('password_max_length') || 'password_max_length')
   })
 }
 export type SignInFormSchemaType = z.infer<
@@ -27,7 +27,7 @@ export function getSignUpFormSchema(t?: (key: string) => string) {
       confirmPassword: z
         .string()
         .min(8, t?.('password_min_length') || 'password_min_length')
-        .max(50, t?.('password_max_length') || 'password_max_length'),
+        .max(50, t?.('password_max_length') || 'password_max_length')
     })
     .superRefine(async ({ code }, ctx) => {
       const data = await validateCustomerCode(code)
@@ -35,7 +35,7 @@ export function getSignUpFormSchema(t?: (key: string) => string) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: data.message,
-          path: ['code'],
+          path: ['code']
         })
       }
     })
@@ -44,7 +44,7 @@ export function getSignUpFormSchema(t?: (key: string) => string) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: t?.('password_not_match') || 'password_not_match',
-          path: ['confirmPassword'],
+          path: ['confirmPassword']
         })
       }
     })

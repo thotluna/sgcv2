@@ -15,7 +15,7 @@ export class SystemErrorClass extends BaseError implements SystemErrorContract {
     message?: string,
     severity: 'low' | 'medium' | 'high' = 'medium',
     stackTrace?: string,
-    details?: Record<string, unknown>,
+    details?: Record<string, unknown>
   ) {
     super(name, code, message ?? code, httpCode, details)
     this.severity = severity
@@ -25,7 +25,7 @@ export class SystemErrorClass extends BaseError implements SystemErrorContract {
     return {
       ...super.toJSON(),
       severity: this.severity,
-      stackTrace: this.stackTrace,
+      stackTrace: this.stackTrace
     }
   }
 }
@@ -39,7 +39,7 @@ interface SystemErrorOptions {
 }
 export const createSystemErrorFactory = (
   name: string,
-  httpCode: HttpCodeType,
+  httpCode: HttpCodeType
 ) => {
   return class SystemErrorClass extends BaseError {
     severity: 'low' | 'medium' | 'high' = 'medium'
@@ -49,7 +49,7 @@ export const createSystemErrorFactory = (
       message,
       severity = 'medium',
       details,
-      stackTrace,
+      stackTrace
     }: SystemErrorOptions) {
       super(name, code, message ?? code, httpCode, details)
       this.severity = severity
@@ -59,12 +59,12 @@ export const createSystemErrorFactory = (
       return {
         ...super.toJSON(),
         severity: this.severity,
-        stackTrace: this.stackTrace,
+        stackTrace: this.stackTrace
       }
     }
   }
 }
 export const SystemError = createSystemErrorFactory(
   'SystemError',
-  HTTP_CODE.SERVER_ERROR,
+  HTTP_CODE.SERVER_ERROR
 )

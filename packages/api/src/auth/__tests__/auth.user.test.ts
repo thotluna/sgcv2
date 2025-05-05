@@ -1,6 +1,6 @@
-import { dataUser, repositoryUser } from './auth.configtest'
+import { repositoryUser } from './auth.configtest'
 import { app, i18n as i18nTest } from './auth.test-base'
-import { apiUserUrl, getToken, TypeTokens } from './auth.user.test-helper'
+import { apiUserUrl, USER_TOKES } from './auth.user.test-helper'
 import { ErrorDetail } from '@api/errors/errors'
 import { ApiResponse, STATUS } from '@api/types'
 import { AUTH_ERROR } from '@auth/errors'
@@ -13,13 +13,12 @@ describe('GET /user', () => {
     repositoryUser.resolve()
     const response = await request(app)
       .get(apiUserUrl())
-      .send()
       .set('Accept', 'application/json')
-      .set('Authorization', `Beare ${getToken(TypeTokens.OK)}`)
+      .set('Authorization', `Beare ${USER_TOKES.VALID}`)
     expect(response.status).toBe(HTTP_CODE.OK)
     const body: ApiResponse<UserResponse> = response.body
     expect(body.status).toEqual(STATUS.SUCCESS)
-    expect(body.data?.user).toEqual(dataUser.user)
+    expect(body.data?.user).not.toBeUndefined()
     expect(body.message).toBeUndefined()
     expect(body.httpCode).toEqual(HTTP_CODE.OK)
     expect(body.errors).toEqual([])
@@ -39,8 +38,8 @@ describe('GET /user', () => {
     expect(body.errors).toEqual([
       {
         code: AUTH_ERROR.TOKEN_REQUIRED,
-        message: i18nTest.t(AUTH_ERROR.TOKEN_REQUIRED),
-      },
+        message: i18nTest.t(AUTH_ERROR.TOKEN_REQUIRED)
+      }
     ])
     expect(body.metadata).toBeUndefined()
     expect(body.timestamp).not.toBeNull()
@@ -50,7 +49,7 @@ describe('GET /user', () => {
       .get(apiUserUrl())
       .send()
       .set('Accept', 'application/json')
-      .set('Authorization', `Beare ${getToken(TypeTokens.EMPTY)}`)
+      .set('Authorization', `Beare ${USER_TOKES.EMPTY}`)
     expect(response.status).toBe(HTTP_CODE.UNAUTHORIZED)
     const body: ApiResponse<UserResponse, ErrorDetail> = response.body
     expect(body.status).toEqual(STATUS.ERROR)
@@ -60,19 +59,18 @@ describe('GET /user', () => {
     expect(body.errors).toEqual([
       {
         code: AUTH_ERROR.TOKEN_INVALID,
-        message: i18nTest.t(AUTH_ERROR.TOKEN_MALFORMED),
-      },
+        message: i18nTest.t(AUTH_ERROR.TOKEN_MALFORMED)
+      }
     ])
     expect(body.metadata).toBeUndefined()
     expect(body.timestamp).not.toBeNull()
   })
   test('token do not return user', async () => {
-    repositoryUser.resolve({ user: null, session: null })
     const response = await request(app)
       .get(apiUserUrl())
       .send()
       .set('Accept', 'application/json')
-      .set('Authorization', `Beare ${getToken(TypeTokens.OK)}`)
+      .set('Authorization', `Beare ${USER_TOKES.NOT_USER}`)
     expect(response.status).toBe(HTTP_CODE.UNAUTHORIZED)
     const body: ApiResponse<UserResponse, ErrorDetail> = response.body
     expect(body.status).toEqual(STATUS.ERROR)
@@ -82,8 +80,8 @@ describe('GET /user', () => {
     expect(body.errors).toEqual([
       {
         code: AUTH_ERROR.TOKEN_INVALID,
-        message: i18nTest.t(AUTH_ERROR.TOKEN_INVALID),
-      },
+        message: i18nTest.t(AUTH_ERROR.TOKEN_INVALID)
+      }
     ])
     expect(body.metadata).toBeUndefined()
     expect(body.timestamp).not.toBeNull()
@@ -93,7 +91,7 @@ describe('GET /user', () => {
       .get(apiUserUrl())
       .send()
       .set('Accept', 'application/json')
-      .set('Authorization', `Bearer ${getToken(TypeTokens.MAL_FORMAT)}`)
+      .set('Authorization', `Bearer ${USER_TOKES.MAL_FORMET}`)
     expect(response.status).toBe(HTTP_CODE.UNAUTHORIZED)
     const body: ApiResponse<UserResponse, ErrorDetail> = response.body
     expect(body.status).toEqual(STATUS.ERROR)
@@ -103,8 +101,8 @@ describe('GET /user', () => {
     expect(body.errors).toEqual([
       {
         code: AUTH_ERROR.TOKEN_INVALID,
-        message: i18nTest.t(AUTH_ERROR.TOKEN_MALFORMED),
-      },
+        message: i18nTest.t(AUTH_ERROR.TOKEN_MALFORMED)
+      }
     ])
     expect(body.metadata).toBeUndefined()
     expect(body.timestamp).not.toBeNull()

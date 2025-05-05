@@ -56,5 +56,5 @@ export default defineConfig([
     files: ['**/*.test.ts', '**/*.spec.ts', '**/__tests__/**/*.ts'],
     rules: { '@typescript-eslint/no-explicit-any': 'off' }
   },
-  prettierPluginRecomended
+  prettierConfig
 ])

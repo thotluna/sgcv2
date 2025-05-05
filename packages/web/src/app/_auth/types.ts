@@ -2,11 +2,11 @@ import { SignInFormSchemaType, SignUpFormSchemaType } from './auth.schemas'
 
 export type SingUpDTO = SignUpFormSchemaType
 export type SingInDTO = SignInFormSchemaType
-export type Result = {
+export type Result<T> = {
   status: string
   code?: string
   message?: string
-  data?: unknown
+  data?: T
 }
 export type Provider = 'google' | 'github' | 'linkedin'
 export interface User {

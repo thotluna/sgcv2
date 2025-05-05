@@ -3,7 +3,7 @@ import { HTTP_CODE, HttpCodeType } from '@sgcv2/shared'
 
 export const STATUS = {
   SUCCESS: 'success',
-  ERROR: 'error',
+  ERROR: 'error'
 } as const
 export interface ApiResponse<T, E = ErrorDetail> {
   data?: T | undefined
@@ -19,7 +19,7 @@ export class ApiResponseBuilder<T, E = ErrorDetail | null> {
     status: STATUS.SUCCESS,
     httpCode: HTTP_CODE.OK,
     errors: [],
-    timestamp: new Date().toISOString(),
+    timestamp: new Date().toISOString()
   }
   status(status: 'success' | 'error') {
     this.response.status = status

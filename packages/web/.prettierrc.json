@@ -1,0 +1,22 @@
+{
+  "plugins": ["@trivago/prettier-plugin-sort-imports"],
+  "semi": false,
+  "singleQuote": true,
+  "arrowParens": "avoid",
+  "tabWidth": 2,
+  "useTabs": false,
+  "printWidth": 80,
+  "trailingComma": "none",
+  "bracketSpacing": true,
+  "parser": "typescript",
+  "overrides": [
+    {
+      "files": "*.json",
+      "options": {
+        "parser": "json",
+        "singleQuote": false,
+        "trailingComma": "none"
+      }
+    }
+  ]
+}

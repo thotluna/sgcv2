@@ -3,7 +3,7 @@ import { test } from '@playwright/test'
 
 test.describe('Sign-in form validation errors', () => {
   test('should show invalid email error for malformed email', async ({
-    page,
+    page
   }) => {
     const signIn = new SignInPage(page)
     await signIn.goto()
@@ -13,7 +13,7 @@ test.describe('Sign-in form validation errors', () => {
   })
 
   test('should show email required error when email is empty', async ({
-    page,
+    page
   }) => {
     const signIn = new SignInPage(page)
     await signIn.goto()
@@ -22,7 +22,7 @@ test.describe('Sign-in form validation errors', () => {
   })
 
   test('should show password invalid error for short password', async ({
-    page,
+    page
   }) => {
     const signIn = new SignInPage(page)
     await signIn.goto()
@@ -32,7 +32,7 @@ test.describe('Sign-in form validation errors', () => {
   })
 
   test('should show password required error when password is empty', async ({
-    page,
+    page
   }) => {
     const signIn = new SignInPage(page)
     await signIn.goto()

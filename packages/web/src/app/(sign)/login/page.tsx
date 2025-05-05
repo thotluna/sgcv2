@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
 const URL_API = {
-  SIGN_IN: `${process.env.NEXT_PUBLIC_URL_API}/v1/auth/signin`,
+  SIGN_IN: `${process.env.NEXT_PUBLIC_URL_API}/v1/auth/signin`
 } as const
 
 export default function Login() {
@@ -19,7 +19,7 @@ export default function Login() {
     onError: message => {
       toast.error(traslateRegisterPage(message))
     },
-    onSuccess: () => router.push('/private'),
+    onSuccess: () => router.push('/private')
   })
 
   return <SingInForm onSubmit={handler} />

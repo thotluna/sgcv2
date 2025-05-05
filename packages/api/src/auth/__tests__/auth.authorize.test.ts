@@ -3,9 +3,8 @@ import {
   PROVIDER_INVALID,
   EXPECTED_PATHNAME,
   EXPECTED_CODE_CHALLENGE_METHOD,
-  apiAuthorizeUrl,
+  apiAuthorizeUrl
 } from './auth.authorize.test-helper'
-import { repositorySignIn } from './auth.configtest'
 import { app, i18n } from './auth.test-base'
 import { ApiResponse, STATUS } from '@api/types'
 import { authorizeDataType, PROVIDER_ERROR } from '@auth'
@@ -14,7 +13,6 @@ import request from 'supertest'
 
 describe('GET /authorize', () => {
   test('happy past', () => {
-    repositorySignIn.resolve()
     return request(app)
       .get(apiAuthorizeUrl({ provider: PROVIDER_GOOGLE }))
       .set('Accept', 'application/json')
@@ -30,7 +28,6 @@ describe('GET /authorize', () => {
   })
 
   test('return url', () => {
-    repositorySignIn.resolve()
     return request(app)
       .get(apiAuthorizeUrl({ provider: PROVIDER_GOOGLE }))
       .set('Accept', 'application/json')
@@ -45,7 +42,7 @@ describe('GET /authorize', () => {
         expect(url.searchParams.get('redirect_to')).not.toBeNull()
         expect(url.searchParams.get('code_challenge')).not.toBeNull()
         expect(url.searchParams.get('code_challenge_method')).toEqual(
-          EXPECTED_CODE_CHALLENGE_METHOD,
+          EXPECTED_CODE_CHALLENGE_METHOD
         )
       })
   })
@@ -65,8 +62,8 @@ describe('GET /authorize', () => {
         expect(body.errors).toEqual([
           {
             code: PROVIDER_ERROR.PROVIDER_INVALID,
-            message: i18n.t(PROVIDER_ERROR.PROVIDER_INVALID),
-          },
+            message: i18n.t(PROVIDER_ERROR.PROVIDER_INVALID)
+          }
         ])
         expect(body.metadata).toBeUndefined()
         expect(body.timestamp).not.toBeNull()

@@ -39,7 +39,7 @@ describe('Register Form Component', () => {
       '1234',
       'test@example.com',
       'password123',
-      'password123',
+      'password123'
     )
 
     await waitFor(() => {
@@ -50,9 +50,9 @@ describe('Register Form Component', () => {
         code: '1234',
         email: 'test@example.com',
         password: 'password123',
-        confirmPassword: 'password123',
+        confirmPassword: 'password123'
       }),
-      expect.anything(),
+      expect.anything()
     )
   })
 
@@ -74,7 +74,7 @@ describe('Register Form Component', () => {
       '1234',
       'test@example.com',
       'password123',
-      'different',
+      'different'
     )
 
     expect(await page.getConfirmPasswordError()).toBeInTheDocument()

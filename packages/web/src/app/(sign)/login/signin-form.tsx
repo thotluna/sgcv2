@@ -11,7 +11,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
+  FormMessage
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -22,7 +22,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 export function SingInForm({
-  onSubmit,
+  onSubmit
 }: {
   onSubmit: (dataform: SingInDTO) => Promise<void>
 }) {
@@ -32,8 +32,8 @@ export function SingInForm({
     resolver: zodResolver(getSignInFormSchema(traslateValidation)),
     defaultValues: {
       email: '',
-      password: '',
-    },
+      password: ''
+    }
   })
   const traslateSignIn = useTranslations('SignInPage')
   const traslateShared = useTranslations('SignPages')
@@ -85,7 +85,7 @@ export function SingInForm({
                       />
                       <Button
                         aria-label={traslateShared(
-                          'toggle_password_visibility',
+                          'toggle_password_visibility'
                         )}
                         variant="outline"
                         onClick={event => {

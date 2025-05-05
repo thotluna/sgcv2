@@ -16,7 +16,7 @@ export class SignInPage {
 
   async fillPassword(value: string) {
     const passwordInput = this.page.getByLabel(messages.SignPages.password, {
-      exact: true,
+      exact: true
     })
     await passwordInput.focus()
     await passwordInput.fill(value)

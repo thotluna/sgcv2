@@ -21,7 +21,7 @@ async function killPortProcess(port: number): Promise<void> {
 
 async function waitForServerToStart(
   port: number,
-  maxAttempts = 30,
+  maxAttempts = 30
 ): Promise<void> {
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
@@ -56,7 +56,7 @@ async function waitForServerToStart(
   }
 
   throw new Error(
-    `No se pudo conectar al servidor después de ${maxAttempts} intentos`,
+    `No se pudo conectar al servidor después de ${maxAttempts} intentos`
   )
 }
 
@@ -64,6 +64,7 @@ async function setupE2EEnvironment() {
   // Matar procesos en el puerto 3001
   await killPortProcess(3001)
 
+  exec('pnpm -F web dev')
   // Iniciar el servidor de API en modo test
   const serverProcess = exec('pnpm -F api dev -- --test')
 

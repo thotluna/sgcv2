@@ -16,7 +16,7 @@ export class LoginFormPage {
       <article>
         <SingInForm onSubmit={this.mockOnSubmit} />
         <Toaster richColors />
-      </article>,
+      </article>
     )
   }
 

@@ -9,7 +9,7 @@ export function useFormatter() {
 }
 
 export function NextIntlClientProvider({
-  children,
+  children
 }: {
   children: ReactNode
 }): ReactNode {

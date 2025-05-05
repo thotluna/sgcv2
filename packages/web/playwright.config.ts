@@ -35,15 +35,15 @@ export default defineConfig({
     trace: 'on-first-retry',
 
     colorScheme: 'dark',
-    locale: 'es-ES',
+    locale: 'es-ES'
   },
 
   /* Configure projects for major browsers */
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-    },
+      use: { ...devices['Desktop Chrome'] }
+    }
 
     // {
     //   name: 'firefox',
@@ -74,7 +74,7 @@ export default defineConfig({
     //   name: 'Google Chrome',
     //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
     // },
-  ],
+  ]
 
   /* Run your local dev server before starting the tests */
   // webServer: {

@@ -5,7 +5,7 @@ import {
   AuthRespository,
   SYSTEM_ERROR,
   AuthError,
-  AUTH_ERROR,
+  AUTH_ERROR
 } from '@auth'
 import { Database } from '@sgcv2/shared'
 import { SupabaseClient, createClient } from '@supabase/supabase-js'
@@ -13,7 +13,7 @@ import { SupabaseClient, createClient } from '@supabase/supabase-js'
 export class SupabaseAuthRepository implements AuthRespository {
   private client: SupabaseClient = createClient<Database>(
     process.env.SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROL!,
+    process.env.SUPABASE_SERVICE_ROL!
   )
   saveCustomerCode = async (token: string, email: string) => {
     const { data, error } = await this.client
@@ -26,8 +26,8 @@ export class SupabaseAuthRepository implements AuthRespository {
         message: SYSTEM_ERROR.UNKNOWN_ERROR,
         details: {
           message: error.message,
-          timestamp: Date.now(),
-        },
+          timestamp: Date.now()
+        }
       })
     }
     return data
@@ -46,8 +46,8 @@ export class SupabaseAuthRepository implements AuthRespository {
           message: AUTH_ERROR.CODE_NOT_FOUND,
           details: {
             message: error.message,
-            timestamp: Date.now(),
-          },
+            timestamp: Date.now()
+          }
         })
       }
       throw new SystemError({
@@ -55,8 +55,8 @@ export class SupabaseAuthRepository implements AuthRespository {
         message: SYSTEM_ERROR.UNKNOWN_ERROR,
         details: {
           message: error.message,
-          timestamp: Date.now(),
-        },
+          timestamp: Date.now()
+        }
       })
     }
     return true
@@ -64,7 +64,7 @@ export class SupabaseAuthRepository implements AuthRespository {
   signUp = async (email: string, password: string) => {
     const signUpData = {
       email,
-      password,
+      password
     }
     const { data, error } = await this.client.auth.signUp(signUpData)
     if (error) {
@@ -77,8 +77,8 @@ export class SupabaseAuthRepository implements AuthRespository {
           message: AUTH_ERROR.INVALID_CODE,
           details: {
             message: error.message,
-            timestamp: Date.now(),
-          },
+            timestamp: Date.now()
+          }
         })
       }
       if (error.status === 422) {
@@ -87,8 +87,8 @@ export class SupabaseAuthRepository implements AuthRespository {
           message: AUTH_ERROR.EMAIL_ALREADY_REGISTERED,
           details: {
             message: error.message,
-            timestamp: Date.now(),
-          },
+            timestamp: Date.now()
+          }
         })
       }
     }
@@ -97,7 +97,7 @@ export class SupabaseAuthRepository implements AuthRespository {
   signIn = async (email: string, password: string) => {
     const signInData = {
       email,
-      password,
+      password
     }
     const { error, data } =
       await this.client.auth.signInWithPassword(signInData)
@@ -108,8 +108,8 @@ export class SupabaseAuthRepository implements AuthRespository {
           message: AUTH_ERROR.INVALID_CREDENTIALS,
           details: {
             message: error.message,
-            timestamp: Date.now(),
-          },
+            timestamp: Date.now()
+          }
         })
       }
     }
@@ -133,13 +133,13 @@ export class SupabaseAuthRepository implements AuthRespository {
         headers: {
           apiKey: apiKey!,
           Authorization: `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           auth_code: code,
-          code_verifier: codeVerifier,
-        }),
-      },
+          code_verifier: codeVerifier
+        })
+      }
     ).then(result => result.json())
     return request as CallbackResult
   }
@@ -151,9 +151,12 @@ export class SupabaseAuthRepository implements AuthRespository {
         message: SYSTEM_ERROR.UNKNOWN_ERROR,
         details: {
           message: error.message,
-          timestamp: Date.now(),
-        },
+          timestamp: Date.now()
+        }
       })
     return data as unknown as UserResponse
+  }
+  resetMock(): Promise<void> {
+    throw new Error('Method not implemented.')
   }
 }

@@ -11,7 +11,7 @@ export function DateTime() {
       const formattedDateTime = new Intl.DateTimeFormat('es-ES', {
         dateStyle: 'long',
         timeStyle: 'long',
-        hour12: true,
+        hour12: true
       })
         .format(now)
         .split('GMT')[0]

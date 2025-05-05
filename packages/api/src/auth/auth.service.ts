@@ -7,8 +7,8 @@ export class AuthService {
     this.repository = repository
   }
   async customerCode(email: string) {
-    const { SECRET } = process.env
-    const token = new CustomerCodeJwtHelper(SECRET!).crearToken(email)
+    const { JWT_SECRET } = process.env
+    const token = new CustomerCodeJwtHelper(JWT_SECRET!).crearToken(email)
     return await this.repository.saveCustomerCode(token, email)
   }
   async validateCustomerCode(code: string) {
@@ -22,7 +22,7 @@ export class AuthService {
     if (payload.email !== email) {
       throw new AuthError({
         code: AUTH_ERROR.INVALID_CODE,
-        message: AUTH_ERROR.INVALID_CODE,
+        message: AUTH_ERROR.INVALID_CODE
       })
     }
     await this.repository.validateCustomerCode(code)
@@ -45,7 +45,7 @@ export class AuthService {
       provider,
       redirect_to: `${API_HOST}:${PORT}/v1/auth/callback`,
       code_challenge: PKCEPparams.codeChallenge,
-      code_challenge_method: 'S256',
+      code_challenge_method: 'S256'
     }
     return { data, codeVerifier: PKCEPparams.codeVerifier }
   }
@@ -57,9 +57,14 @@ export class AuthService {
     if (!user.user) {
       throw new AuthError({
         code: AUTH_ERROR.TOKEN_INVALID,
-        message: AUTH_ERROR.TOKEN_INVALID,
+        message: AUTH_ERROR.TOKEN_INVALID
       })
     }
     return user
+  }
+
+  resetMock() {
+    this.repository.resetMock()
+    return
   }
 }

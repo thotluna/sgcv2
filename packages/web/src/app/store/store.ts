@@ -12,8 +12,8 @@ export interface BasicState {
 export const useStoreState = create<BasicState>((set, get) => ({
   user: {
     role: '',
-    email: '',
+    email: ''
   },
   setUser: user => set({ user }),
-  getUser: () => get().user,
+  getUser: () => get().user
 }))

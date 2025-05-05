@@ -7,7 +7,7 @@ import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
 
 const URL_API = {
-  SIGN_UP: `${process.env.NEXT_PUBLIC_URL_API}/v1/auth/signup`,
+  SIGN_UP: `${process.env.NEXT_PUBLIC_URL_API}/v1/auth/signup`
 } as const
 
 export default function Register() {
@@ -16,7 +16,7 @@ export default function Register() {
     url: URL_API.SIGN_UP,
     onError: message => {
       toast.error(traslateRegisterPage(message))
-    },
+    }
   })
 
   return <SingUpForm onSubmit={handler} />

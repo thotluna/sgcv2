@@ -6,7 +6,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 const compat = new FlatCompat({
-  baseDirectory: __dirname,
+  baseDirectory: __dirname
 })
 
 const eslintConfig = [
@@ -18,8 +18,14 @@ const eslintConfig = [
       '@typescript-eslint/no-var-requires': 'off',
       'import/no-commonjs': 'off', // si usas eslint-plugin-import
       'global-require': 'off', // si usas eslint-plugin-node
-    },
-  },
+      'prettier/prettier': [
+        'error',
+        {
+          trailingComma: 'none'
+        }
+      ]
+    }
+  }
 ]
 
 export default eslintConfig
