@@ -9,7 +9,7 @@ interface VerifiedTokenPayload extends CustomerCodePayload {
   iat: number
   exp: number
 }
-const EXPIRATION_TIME = '24h'
+const EXPIRATION_TIME = '1y'
 export class CustomerCodeJwtHelper {
   private SECRET: string
   constructor(secret: string) {
@@ -18,8 +18,8 @@ export class CustomerCodeJwtHelper {
   public crearToken(email: string, expires?: number): string {
     const expiresIn = expires || EXPIRATION_TIME
     try {
-      const token = jwt.sign({ id: email, email }, this.SECRET!, {
-        expiresIn: expiresIn,
+      const token = jwt.sign({ sub: email, email }, this.SECRET!, {
+        expiresIn: expiresIn
       })
       return token
     } catch (error) {
@@ -28,8 +28,8 @@ export class CustomerCodeJwtHelper {
         message: SYSTEM_ERROR.UNKNOWN_ERROR,
         details: {
           message: (error as Error).message,
-          timestamp: Date.now(),
-        },
+          timestamp: Date.now()
+        }
       })
     }
   }
@@ -44,8 +44,8 @@ export class CustomerCodeJwtHelper {
           message: AUTH_ERROR.TOKEN_EXPIRED,
           details: {
             message: (error as Error).message,
-            timestamp: Date.now(),
-          },
+            timestamp: Date.now()
+          }
         })
       }
       if ((error as Error).name === 'JsonWebTokenError') {
@@ -54,8 +54,8 @@ export class CustomerCodeJwtHelper {
           message: AUTH_ERROR.TOKEN_MALFORMED,
           details: {
             message: (error as Error).message,
-            timestamp: Date.now(),
-          },
+            timestamp: Date.now()
+          }
         })
       }
       throw new TokenError({
@@ -63,8 +63,8 @@ export class CustomerCodeJwtHelper {
         message: AUTH_ERROR.TOKEN_INVALID,
         details: {
           message: (error as Error).message,
-          timestamp: Date.now(),
-        },
+          timestamp: Date.now()
+        }
       })
     }
   }
@@ -86,8 +86,8 @@ export class CustomerCodeJwtHelper {
         message: AUTH_ERROR.TOKEN_INVALID,
         details: {
           message: (error as Error).message,
-          timestamp: Date.now(),
-        },
+          timestamp: Date.now()
+        }
       })
     }
   }

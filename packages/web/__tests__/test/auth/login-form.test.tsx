@@ -33,8 +33,8 @@ describe('Login Form Component', () => {
     expect(mockOnSubmit.mock.calls[0][0]).toEqual(
       expect.objectContaining({
         email: 'test@example.com',
-        password: 'password123',
-      }),
+        password: 'password123'
+      })
     )
   })
 
@@ -43,7 +43,7 @@ describe('Login Form Component', () => {
     const page = new LoginFormPage(mockOnSubmit)
 
     await waitFor(async () =>
-      expect(await axe(page.element.container)).toHaveNoViolations(),
+      expect(await axe(page.element.container)).toHaveNoViolations()
     )
   })
 
@@ -73,7 +73,7 @@ describe('Login Form Component', () => {
       () =>
         new Promise<void>(res => {
           resolvePromise = res
-        }),
+        })
     )
     const page = new LoginFormPage(mockOnSubmit)
     // Trigger form submission
@@ -86,7 +86,7 @@ describe('Login Form Component', () => {
     await waitFor(async () => resolvePromise!())
     // Button enabled after resolution
     await waitFor(() =>
-      expect(page.submitButton).not.toHaveAttribute('disabled'),
+      expect(page.submitButton).not.toHaveAttribute('disabled')
     )
   })
 })

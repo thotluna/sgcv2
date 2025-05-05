@@ -26,7 +26,7 @@ const createValidationErrorFactory = (name: string) => {
       field,
       details,
       httpCode = HTTP_CODE.BAD_REQUEST,
-      validationRules,
+      validationRules
     }: ValidationErrorOptions) {
       super(name, code, message ?? code, httpCode, details)
       this.field = field
@@ -36,7 +36,7 @@ const createValidationErrorFactory = (name: string) => {
       return {
         ...super.toJSON(),
         field: this.field,
-        validationRules: this.validationRules,
+        validationRules: this.validationRules
       }
     }
   }

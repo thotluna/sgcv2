@@ -11,16 +11,16 @@ export async function validateCustomerCode(code: string) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Accept-Language': language,
+        'Accept-Language': language
       },
-      body: JSON.stringify({ code }),
+      body: JSON.stringify({ code })
     })
     const data = await response.json()
     return data
   } catch (error) {
     return {
       status: 'error',
-      message: error,
+      message: error
     }
   }
 }

@@ -6,7 +6,7 @@ import ThemeSwitch from '@/components/ui/theme-switch'
 import { ReactNode, Suspense } from 'react'
 
 export default async function RootLayout({
-  children,
+  children
 }: Readonly<{
   children: ReactNode
 }>) {

@@ -3,18 +3,16 @@ import {
   PROVIDER_INVALID,
   EXPECTED_PATHNAME,
   EXPECTED_CODE_CHALLENGE_METHOD,
-  apiAuthorizeUrl,
+  apiAuthorizeUrl
 } from './auth.authorize.test-helper'
-import { repositorySignIn } from './auth.configtest'
-import { app, i18n as i18nInstance } from './auth.test-base'
+import { app, i18n } from './auth.test-base'
 import { ApiResponse, STATUS } from '@api/types'
-import { authorizeDataType, PROVIDER_ERROR, ProviderError } from '@auth'
+import { authorizeDataType, PROVIDER_ERROR } from '@auth'
 import { HTTP_CODE } from '@sgcv2/shared'
 import request from 'supertest'
 
 describe('GET /authorize', () => {
   test('happy past', () => {
-    repositorySignIn.resolve()
     return request(app)
       .get(apiAuthorizeUrl({ provider: PROVIDER_GOOGLE }))
       .set('Accept', 'application/json')
@@ -30,7 +28,6 @@ describe('GET /authorize', () => {
   })
 
   test('return url', () => {
-    repositorySignIn.resolve()
     return request(app)
       .get(apiAuthorizeUrl({ provider: PROVIDER_GOOGLE }))
       .set('Accept', 'application/json')
@@ -45,16 +42,12 @@ describe('GET /authorize', () => {
         expect(url.searchParams.get('redirect_to')).not.toBeNull()
         expect(url.searchParams.get('code_challenge')).not.toBeNull()
         expect(url.searchParams.get('code_challenge_method')).toEqual(
-          EXPECTED_CODE_CHALLENGE_METHOD,
+          EXPECTED_CODE_CHALLENGE_METHOD
         )
       })
   })
 
   test('bad request, provider invalid', () => {
-    const error = new ProviderError({
-      code: PROVIDER_ERROR.PROVIDER_INVALID,
-      message: i18nInstance.t(PROVIDER_ERROR.PROVIDER_INVALID),
-    })
     return request(app)
       .get(apiAuthorizeUrl({ provider: PROVIDER_INVALID }))
       .set('Accept', 'application/json')
@@ -65,14 +58,12 @@ describe('GET /authorize', () => {
         expect(body.status).toEqual(STATUS.ERROR)
         expect(body.data).toBeUndefined()
         expect(body.httpCode).toEqual(HTTP_CODE.BAD_REQUEST)
-        expect(body.message).toEqual(
-          i18nInstance.t(PROVIDER_ERROR.PROVIDER_INVALID),
-        )
+        expect(body.message).toEqual(i18n.t(PROVIDER_ERROR.PROVIDER_INVALID))
         expect(body.errors).toEqual([
           {
-            code: error.code,
-            message: error.message,
-          },
+            code: PROVIDER_ERROR.PROVIDER_INVALID,
+            message: i18n.t(PROVIDER_ERROR.PROVIDER_INVALID)
+          }
         ])
         expect(body.metadata).toBeUndefined()
         expect(body.timestamp).not.toBeNull()

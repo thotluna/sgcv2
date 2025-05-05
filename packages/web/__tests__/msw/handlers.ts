@@ -5,7 +5,7 @@ const BASE_URL = `${process.env.NEXT_PUBLIC_URL_API}/v1/auth`
 
 export const CUSTOMER_CODE = {
   CODE_NOT_FORMATTED: 'no_format',
-  CODE_NOT_FOUND: 'not_found',
+  CODE_NOT_FOUND: 'not_found'
 } as const
 
 export const handlers = [
@@ -21,8 +21,8 @@ export const handlers = [
           status: 'error',
           message: 'Se requiere codigo de cliente ***',
           code: 400,
-          metadata: null,
-        }),
+          metadata: null
+        })
       )
     }
 
@@ -34,8 +34,8 @@ export const handlers = [
           status: 'error',
           message: 'Error en el formato jwt',
           code: 400,
-          metadata: null,
-        }),
+          metadata: null
+        })
       )
     }
 
@@ -47,8 +47,8 @@ export const handlers = [
           status: 'error',
           message: 'Codigo no encontrado.',
           code: 400,
-          metadata: null,
-        }),
+          metadata: null
+        })
       )
     }
 
@@ -57,8 +57,8 @@ export const handlers = [
       ctx.json({
         data: code,
         status: 'success',
-        code: 200,
-      }),
+        code: 200
+      })
     )
   }),
 
@@ -73,8 +73,8 @@ export const handlers = [
           status: 'error',
           message: 'Se requieren email, password y codigo de cliente',
           code: 400,
-          metadata: null,
-        }),
+          metadata: null
+        })
       )
     }
 
@@ -83,7 +83,7 @@ export const handlers = [
         id: '1',
         email,
         created_at: new Date().toISOString(),
-        role: 'user',
+        role: 'user'
       },
       session: {
         access_token: '123456789',
@@ -95,9 +95,9 @@ export const handlers = [
           id: '1',
           email,
           created_at: new Date().toISOString(),
-          role: 'user',
-        },
-      },
+          role: 'user'
+        }
+      }
     }
 
     return res(
@@ -105,8 +105,8 @@ export const handlers = [
       ctx.json({
         data,
         status: 'success',
-        code: 200,
-      }),
+        code: 200
+      })
     )
-  }),
+  })
 ]

@@ -9,7 +9,7 @@ export interface CustomRequest extends Request {
 export async function verificarToken(
   req: Request,
   _res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) {
   try {
     if (!req.header('Authorization')) {
@@ -17,8 +17,8 @@ export async function verificarToken(
         code: AUTH_ERROR.TOKEN_REQUIRED,
         message: AUTH_ERROR.TOKEN_REQUIRED,
         details: {
-          timestamp: Date.now(),
-        },
+          timestamp: Date.now()
+        }
       })
     }
     const token = req.header('Authorization')?.split(' ')[1]

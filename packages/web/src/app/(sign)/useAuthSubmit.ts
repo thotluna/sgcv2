@@ -8,7 +8,7 @@ interface Props {
 export function useAuthSubmit<TData>({
   url,
   onError,
-  onSuccess,
+  onSuccess
 }: Props): (data: TData) => Promise<void> {
   const handler = async (data: TData) => {
     const res = await sendSing(data, url)

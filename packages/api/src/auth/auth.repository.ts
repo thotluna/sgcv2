@@ -8,4 +8,5 @@ export interface AuthRespository {
   signUp(email: string, password: string): Promise<UserResponse>
   signIn(email: string, password: string): Promise<UserResponse>
   callback(code: string, codeVerifier: string): Promise<CallbackResult>
+  resetMock(): Promise<void>
 }

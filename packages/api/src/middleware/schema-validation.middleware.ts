@@ -14,10 +14,10 @@ export const schemaValidation =
         return next(
           new ValidationError({
             code: error.issues[0].message,
-            message: req.t(error.issues[0].message),
+            message: error.issues[0].message,
             field: error.issues[0].path[0].toString(),
-            details: { timestamp: Date.now() },
-          }),
+            details: { timestamp: Date.now() }
+          })
         )
       }
       next(error)

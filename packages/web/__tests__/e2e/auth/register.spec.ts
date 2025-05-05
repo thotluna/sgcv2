@@ -17,7 +17,7 @@ test.afterAll(() => {
 
 test.describe('Registration form validation errors', () => {
   test('should show JWT malformed error for badly formatted customer code', async ({
-    page,
+    page
   }) => {
     const signUpPage = new SignUpPage(page)
     await signUpPage.goto()
@@ -27,7 +27,7 @@ test.describe('Registration form validation errors', () => {
   })
 
   test('should show code required error when customer code is empty', async ({
-    page,
+    page
   }) => {
     const signUpPage = new SignUpPage(page)
     await signUpPage.goto()
@@ -36,7 +36,7 @@ test.describe('Registration form validation errors', () => {
   })
 
   test('should show email invalid error for badly formatted email', async ({
-    page,
+    page
   }) => {
     const signUpPage = new SignUpPage(page)
     await signUpPage.goto()
@@ -46,7 +46,7 @@ test.describe('Registration form validation errors', () => {
   })
 
   test('should show email required error when email is empty', async ({
-    page,
+    page
   }) => {
     const signUpPage = new SignUpPage(page)
     await signUpPage.goto()
@@ -55,7 +55,7 @@ test.describe('Registration form validation errors', () => {
   })
 
   test('should show password invalid error for short password', async ({
-    page,
+    page
   }) => {
     const signUpPage = new SignUpPage(page)
     await signUpPage.goto()
@@ -66,7 +66,7 @@ test.describe('Registration form validation errors', () => {
   })
 
   test('should show password required error when password is empty', async ({
-    page,
+    page
   }) => {
     const signUpPage = new SignUpPage(page)
     await signUpPage.goto()
@@ -76,7 +76,7 @@ test.describe('Registration form validation errors', () => {
   })
 
   test('should show confirm password invalid error for mismatched passwords', async ({
-    page,
+    page
   }) => {
     const signUpPage = new SignUpPage(page)
     await signUpPage.goto()
@@ -87,7 +87,7 @@ test.describe('Registration form validation errors', () => {
   })
 
   test('should show confirm password required error when confirmation is empty', async ({
-    page,
+    page
   }) => {
     const signUpPage = new SignUpPage(page)
     await signUpPage.goto()

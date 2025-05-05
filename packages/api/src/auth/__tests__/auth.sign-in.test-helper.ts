@@ -15,5 +15,24 @@ export const signInMock = {
   resolve: (data = { data: buildUserMock(), error: null }) =>
     (authRepositoryMock.signIn as jest.Mock).mockResolvedValue(data),
   reject: (error: Error) =>
-    (authRepositoryMock.signIn as jest.Mock).mockRejectedValue(error),
+    (authRepositoryMock.signIn as jest.Mock).mockRejectedValue(error)
+}
+
+export const SIGN_IN_FROM_DATA = {
+  VALID: {
+    email: 'existen@gmail.com',
+    password: '123456789'
+  },
+  EMAIL_INVALID: {
+    email: 'existen@gmail',
+    password: '123456789'
+  },
+  PASSWORD_INVALID: {
+    email: 'existen@gmail.com',
+    password: '123456'
+  },
+  CREDENTIAL_INVALID: {
+    email: 'existen@gmail.com',
+    password: '987654321'
+  }
 }

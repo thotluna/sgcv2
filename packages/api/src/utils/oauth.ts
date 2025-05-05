@@ -8,7 +8,7 @@ function generateCodeVerifier() {
   let codeVerifier = ''
   for (let i = 0; i < longitud; i++) {
     codeVerifier += caracteres.charAt(
-      Math.floor(Math.random() * caracteres.length),
+      Math.floor(Math.random() * caracteres.length)
     )
   }
   return codeVerifier
@@ -30,6 +30,6 @@ export async function generatePKCEParams() {
   const codeChallenge = await generateCodeChallenge(codeVerifier)
   return {
     codeVerifier,
-    codeChallenge,
+    codeChallenge
   }
 }

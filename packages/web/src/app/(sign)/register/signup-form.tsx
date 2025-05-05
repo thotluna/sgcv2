@@ -9,7 +9,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
+  FormMessage
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -20,7 +20,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 export function SingUpForm({
-  onSubmit,
+  onSubmit
 }: {
   onSubmit: (dataform: SingUpDTO) => Promise<void>
 }) {
@@ -37,8 +37,8 @@ export function SingUpForm({
       code: '',
       email: '',
       password: '',
-      confirmPassword: '',
-    },
+      confirmPassword: ''
+    }
   })
 
   return (
@@ -104,7 +104,7 @@ export function SingUpForm({
                       />
                       <Button
                         aria-label={traslateShared(
-                          'toggle_password_visibility',
+                          'toggle_password_visibility'
                         )}
                         onClick={event => {
                           event.preventDefault()
@@ -139,7 +139,7 @@ export function SingUpForm({
                       />
                       <Button
                         aria-label={traslateShared(
-                          'toggle_password_visibility',
+                          'toggle_password_visibility'
                         )}
                         name="submit"
                         onClick={event => {

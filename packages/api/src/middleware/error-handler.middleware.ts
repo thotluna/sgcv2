@@ -9,7 +9,7 @@ export function errorHandler(
   err: Error,
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) {
   if (res.headersSent) {
     return next(err)
@@ -24,7 +24,7 @@ export function errorHandler(
     message: translatedMessage,
     debugger: JSON.stringify(customError.details),
     stack: err.stack,
-    originalError: err,
+    originalError: err
   })
   res.status(customError.statusCode || 500)
   res.type('application/json')
@@ -35,8 +35,8 @@ export function errorHandler(
   builder.errors([
     {
       code: customError.code || err.message,
-      message: req.t(customError.message || customError.code || err.message),
-    },
+      message: req.t(customError.message || customError.code || err.message)
+    }
   ])
   res.send(builder.build())
 }

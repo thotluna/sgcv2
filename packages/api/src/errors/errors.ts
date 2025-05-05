@@ -20,7 +20,7 @@ export const createBusinessErrorFactory = (name: string) =>
       code: string,
       message?: string,
       httpCode?: HttpCodeType,
-      details?: Record<string, unknown>,
+      details?: Record<string, unknown>
     ) {
       super(message ?? code)
       this.name = name
@@ -54,7 +54,7 @@ export class BaseError extends Error implements BaseErrorInterface {
     code: string,
     message: string,
     statusCode: HttpCodeType,
-    details?: Record<string, unknown>,
+    details?: Record<string, unknown>
   ) {
     super(message)
     this.name = name
@@ -70,7 +70,7 @@ export class BaseError extends Error implements BaseErrorInterface {
       message: this.message,
       statusCode: this.statusCode,
       details: this.details,
-      timestamp: this.timestamp,
+      timestamp: this.timestamp
     }
   }
 }

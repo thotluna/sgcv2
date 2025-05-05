@@ -1,7 +1,0 @@
-{
-  "db_connection_error": "db_connection_error",
-  "La contraseña debe tener al menos 8 caracteres": "La contraseña debe tener al menos 8 caracteres",
-  "El email no es válido": "El email no es válido",
-  "Se requiere código de cliente": "Se requiere código de cliente",
-  "El proveedor debe ser 'google' o 'github'": "El proveedor debe ser 'google' o 'github'"
-}

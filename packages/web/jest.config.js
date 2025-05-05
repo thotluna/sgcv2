@@ -10,14 +10,14 @@ module.exports = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^next-intl$': '<rootDir>/__mocks__/next-intl.ts',
-    '^next-intl/(.*)$': '<rootDir>/__mocks__/next-intl.ts',
+    '^next-intl/(.*)$': '<rootDir>/__mocks__/next-intl.ts'
   },
   // Load environment config for React act support
   setupFiles: ['<rootDir>/jest.env.ts'],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   transform: {
-    '^.+\\.[tj]sx?$': ['ts-jest', { tsconfig: 'tsconfig.jest.json' }],
+    '^.+\\.[tj]sx?$': ['ts-jest', { tsconfig: 'tsconfig.jest.json' }]
   },
   // Allow transforming next-intl ESM
-  transformIgnorePatterns: ['node_modules/(?!next-intl)'],
+  transformIgnorePatterns: ['node_modules/(?!next-intl)']
 }

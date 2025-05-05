@@ -6,6 +6,6 @@
     "jsx": "react-jsx",
     "allowJs": true
   },
-  "include": ["**/*.{ts,tsx,js,jsx}"],
+  "include": ["**/*.{ts,tsx}"],
   "exclude": []
 }

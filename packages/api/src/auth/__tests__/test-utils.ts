@@ -6,14 +6,14 @@ import { UserResponse } from '@auth'
  * Para evitar inconsistencias en los tests, los timestamps están hardcodeados.
  */
 export function buildUserMock(
-  overrides: Partial<UserResponse> = {},
+  overrides: Partial<UserResponse> = {}
 ): UserResponse {
   const fixedTimestamp = '1745867632973'
   const baseUser = {
     id: '123456789',
     email: 'alan@gmail.com',
     created_at: fixedTimestamp,
-    role: 'authenticated',
+    role: 'authenticated'
   }
   const mock: UserResponse = {
     user: { ...baseUser, ...(overrides.user || {}) },
@@ -24,9 +24,9 @@ export function buildUserMock(
       refresh_token: '123456789',
       token_type: 'Bearer',
       user: { ...baseUser, ...(overrides.session?.user || {}) },
-      ...(overrides.session || {}),
+      ...(overrides.session || {})
     },
-    ...overrides,
+    ...overrides
   }
   return mock
 }

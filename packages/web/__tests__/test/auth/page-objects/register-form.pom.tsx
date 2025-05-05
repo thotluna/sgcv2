@@ -15,7 +15,7 @@ export class RegisterFormPage {
       <article>
         <SingUpForm onSubmit={this.mockOnSubmit} />
         <Toaster richColors />
-      </article>,
+      </article>
     )
   }
 
@@ -43,7 +43,7 @@ export class RegisterFormPage {
     code: string,
     email: string,
     password: string,
-    confirmPassword: string,
+    confirmPassword: string
   ): Promise<void> {
     const user = userEvent.setup()
     await user.clear(this.codeInput)

@@ -12,7 +12,7 @@ export class AuthController {
     try {
       const token = await this.service.customerCode(email)
       res.send(
-        new ApiResponseBuilder().status('success').data({ token }).build(),
+        new ApiResponseBuilder().status('success').data({ token }).build()
       )
     } catch (error) {
       next(error)
@@ -21,7 +21,7 @@ export class AuthController {
   validationCustomerCode = async (
     req: Request,
     res: Response,
-    next: NextFunction,
+    next: NextFunction
   ) => {
     const { code } = req.body
     try {
@@ -59,7 +59,7 @@ export class AuthController {
       const resp = await this.service.authorization(provider)
       const { data, codeVerifier } = resp
       const url = new URL(
-        `${process.env.SUPABASE_URL}${SUPABASE_URLs.AUTHORIZATION}`,
+        `${process.env.SUPABASE_URL}${SUPABASE_URLs.AUTHORIZATION}`
       )
       Object.keys(data).forEach(key => {
         url.searchParams.append(key, data[key])
@@ -76,13 +76,13 @@ export class AuthController {
       (error && error_description === 'Database error saving new user')
     ) {
       const url = new URL(
-        `${process.env.FRONTEND_URL}:${process.env.PORT_FRONTEND}/register`,
+        `${process.env.FRONTEND_URL}:${process.env.PORT_FRONTEND}/register`
       )
       const searchParams = url.searchParams
       searchParams.append('error', 'authentication')
       searchParams.append(
         'error_description',
-        req.t(AUTH_ERROR.CLIENT_CODE_REQUIRED),
+        req.t(AUTH_ERROR.CLIENT_CODE_REQUIRED)
       )
       res.redirect(url.toString())
       return
@@ -92,7 +92,7 @@ export class AuthController {
       const {
         access_token: accessToken,
         expires_at: expiresAt,
-        refresh_token: refreshToken,
+        refresh_token: refreshToken
       } = await this.service.callback(code as string, codeVerifier)
       res
         .cookie('access_token', accessToken, {
@@ -100,17 +100,17 @@ export class AuthController {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
           sameSite: 'lax',
-          maxAge: 60 * 60 * 1000,
+          maxAge: 60 * 60 * 1000
         })
         .cookie('refresh_token', refreshToken, {
           expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
           sameSite: 'lax',
-          maxAge: 7 * 24 * 60 * 60 * 1000,
+          maxAge: 7 * 24 * 60 * 60 * 1000
         })
         .redirect(
-          `${process.env.FRONTEND_URL}:${process.env.PORT_FRONTEND}/auth/callback`,
+          `${process.env.FRONTEND_URL}:${process.env.PORT_FRONTEND}/auth/callback`
         )
       return
     } catch (error) {
@@ -128,10 +128,10 @@ export class AuthController {
           .errors([
             {
               code: AUTH_ERROR.TOKEN_REQUIRED,
-              message: req.t(AUTH_ERROR.TOKEN_REQUIRED),
-            },
+              message: req.t(AUTH_ERROR.TOKEN_REQUIRED)
+            }
           ])
-          .build(),
+          .build()
       )
       return
     }
@@ -142,5 +142,9 @@ export class AuthController {
     } catch (error) {
       next(error)
     }
+  }
+  resetMock = async (_req: Request, res: Response) => {
+    await this.service.resetMock()
+    res.sendStatus(200)
   }
 }

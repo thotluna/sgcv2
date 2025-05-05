@@ -10,9 +10,9 @@ export async function getUser(token: string | undefined) {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    },
+        'Content-Type': 'application/json'
+      }
+    }
   ).then(res => res.json())
   if (!data) {
     throw new Error('No se ha encontrado el usuario')
@@ -21,7 +21,7 @@ export async function getUser(token: string | undefined) {
 }
 export async function updateAuthSession(request: NextRequest) {
   const response = NextResponse.next({
-    request,
+    request
   })
   const cookiesStrore = await cookies()
   const accessToken = cookiesStrore.get('access_token')
