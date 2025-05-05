@@ -1,5 +1,6 @@
 import { ApiResponseBuilder } from '@api/types'
 import { AUTH_ERROR, AuthService, SUPABASE_URLs, UserResponse } from '@auth'
+import { HTTP_CODE } from '@sgcv2/shared'
 import { NextFunction, Request, Response } from 'express'
 
 export class AuthController {
@@ -39,7 +40,14 @@ export class AuthController {
     const { email, password, code } = req.body
     try {
       const data = await this.service.signUp(email, password, code)
-      res.send(new ApiResponseBuilder<UserResponse | null>().data(data).build())
+      res
+        .status(HTTP_CODE.CREATED)
+        .send(
+          new ApiResponseBuilder<UserResponse | null>()
+            .data(data)
+            .httpCode(HTTP_CODE.CREATED)
+            .build()
+        )
     } catch (error) {
       next(error)
     }

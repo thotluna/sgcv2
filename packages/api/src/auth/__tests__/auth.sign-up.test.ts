@@ -14,9 +14,9 @@ describe('POST /signup', () => {
       .set('Accept', 'application/json')
     const body: ApiResponse<UserResponse> = response.body
     expect(body.message).toBeUndefined()
-    expect(response.status).toBe(HTTP_CODE.OK)
+    expect(response.status).toBe(HTTP_CODE.CREATED)
     expect(body.status).toEqual(STATUS.SUCCESS)
-    expect(body.httpCode).toEqual(HTTP_CODE.OK)
+    expect(body.httpCode).toEqual(HTTP_CODE.CREATED)
     expect(body.errors).toEqual([])
     expect(body.metadata).toBeUndefined()
     expect(body.timestamp).not.toBeNull()
