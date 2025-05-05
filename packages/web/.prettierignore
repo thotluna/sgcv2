@@ -1,6 +1,4 @@
-node_modules
-.next
-dist
-.turbo
-playwright-report
+node_modules.next
+dist.turbo
+playwright - report
 coverage
