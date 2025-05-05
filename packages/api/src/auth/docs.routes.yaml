@@ -1,0 +1,382 @@
+paths:
+  /auth/customer-code:
+    post:
+      tags:
+        - Auth
+      summary: Request customer code via email
+      description: Sends a verification code to the provided email address.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailCodeInput' # Schema reference (define below or globally)
+      responses:
+        '200':
+          description: Code sent successfully.
+        '400':
+          description: Invalid or missing email.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/validate-code:
+    post:
+      tags:
+        - Auth
+      summary: Validate customer code
+      description: Validates the code previously sent to an email.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerCodeInput' # Schema reference
+      responses:
+        '200':
+          description: Code validated successfully.
+          # You could return a temporary token or indicator here if needed
+        '400':
+          description: Invalid data (email, code).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Invalid or expired code.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/signup:
+    post:
+      tags:
+        - Auth
+      summary: Register new user
+      description: Creates a new user account.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUpInput' # Schema reference
+      responses:
+        '201': # Use 201 Created for successful resource creation
+          description: User created successfully.
+          # Usually no body is returned on signup, maybe just a message.
+        '400':
+          description: Invalid registration data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409': # Use 409 Conflict for existing resources
+          description: Email already registered.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/login: # Route 'signIn' in code, but documented as '/login'
+    post:
+      tags:
+        - Auth
+      summary: User login
+      description: Authenticates a user and returns access and refresh tokens.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignInInput' # Schema reference
+      responses:
+        '200':
+          description: Authentication successful. Returns tokens.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    description: JWT access token.
+                  refreshToken:
+                    type: string
+                    description: JWT refresh token.
+        '400':
+          description: Invalid input data (e.g., missing email or password).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Invalid credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/authorize:
+    get:
+      tags:
+        - Auth
+      summary: Initiate OAuth authorization flow (Example)
+      description: Redirects to the OAuth provider for authorization. (Adjust based on actual implementation)
+      parameters:
+        # Define expected query parameters from 'authorizeSchema' here
+        - name: response_type
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [code]
+          description: Expected response type (usually 'code').
+        - name: client_id
+          in: query
+          required: true
+          schema:
+            type: string
+          description: OAuth client identifier.
+        # Add other parameters like redirect_uri, scope, state...
+      responses:
+        '302': # Or the appropriate redirection code
+          description: Redirect to OAuth provider.
+        '400':
+          description: Invalid request parameters.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/callback:
+    get:
+      tags:
+        - Auth
+      summary: OAuth Callback (Example)
+      description: Route where the OAuth provider redirects after authorization. (Adjust based on actual implementation)
+      parameters:
+        # Parameters sent by the OAuth provider (e.g., code, state)
+        - name: code
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Authorization code from the provider.
+        - name: state
+          in: query
+          schema:
+            type: string
+          description: Opaque state to prevent CSRF.
+      responses:
+        '200':
+          description: OAuth authentication successful. Returns tokens.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                  refreshToken:
+                    type: string
+        '400':
+          description: Invalid parameters in callback (e.g., missing code).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Failed validation of OAuth code or state.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error during token exchange.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/user:
+    get:
+      tags:
+        - Auth
+      summary: Get authenticated user information
+      description: Returns the data of the user associated with the provided access token.
+      security:
+        - bearerAuth: [] # Indicates Bearer authentication is required
+      responses:
+        '200':
+          description: User data retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse' # User schema
+        '401':
+          description: Unauthorized (invalid, expired, or missing token).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+           description: Forbidden (valid token but insufficient permissions).
+           content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/reset-mock:
+    get:
+      tags:
+        - Auth
+        - Development # Additional tag for development/test routes
+      summary: Reset mock data (Development Only)
+      description: Endpoint to reset test data in development or test environments. DO NOT USE IN PRODUCTION.
+      responses:
+        '200':
+          description: Mock data reset.
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    # --- Request Body Schemas ---
+    EmailCodeInput:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          format: email
+          description: Email address to send the code to.
+          example: 'test@example.com'
+    CustomerCodeInput:
+      type: object
+      # Define properties based on httpCustomerCodeSchema (e.g., email, code)
+      required:
+        - email
+        - code
+      properties:
+        email:
+          type: string
+          format: email
+          example: 'test@example.com'
+        code:
+          type: string
+          description: Received verification code.
+          example: '123456'
+    SignUpInput:
+      type: object
+      # Define properties based on httpSignUpSchema (e.g., email, password, name)
+      required:
+        - email
+        - password
+        - name
+      properties:
+        email:
+          type: string
+          format: email
+          example: 'newuser@example.com'
+        password:
+          type: string
+          format: password
+          example: 'strongPassword123'
+        name:
+          type: string
+          example: 'John Doe'
+        # ...other fields required for registration
+    SignInInput:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          description: User's email address.
+          example: 'user@example.com'
+        password:
+          type: string
+          format: password
+          description: User's password.
+          example: password123
+
+    # --- Response Schemas ---
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid # or the format you use
+          description: Unique user identifier.
+        email:
+          type: string
+          format: email
+          description: User's email address.
+        name:
+          type: string
+          description: User's name.
+        # ... other user fields you want to expose
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Descriptive error message.
+        code:
+          type: string
+          description: Internal error code (optional).
+        details:
+          type: object # or array, depending on how you handle validation details
+          description: Additional error details (optional).
+
+  securitySchemes:
+    bearerAuth: # Already defined in swagger.ts, but good to have referenced
+      type: http
+      scheme: bearer
+      bearerFormat: JWT # Optional but descriptive
