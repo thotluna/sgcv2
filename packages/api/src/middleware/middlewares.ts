@@ -1,4 +1,4 @@
-import swagerSetup from '../docs/swagger'
+import swagerSetup, { swaggerOptionsCss } from '../docs/swagger'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import { type Application, json, RequestHandler } from 'express'
@@ -20,7 +20,11 @@ export function setMiddleware(app: Application) {
       credentials: true
     })
   )
-  app.use('/docs', swaggerUi.serve, swaggerUi.setup(swagerSetup))
+  app.use(
+    '/docs',
+    swaggerUi.serve,
+    swaggerUi.setup(swagerSetup, swaggerOptionsCss)
+  )
   app.use(i18nMiddleware())
 }
 
