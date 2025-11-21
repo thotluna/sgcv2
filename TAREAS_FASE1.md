@@ -12,23 +12,24 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 
 ### 1. Setup Inicial del Proyecto
 
-#### 1.1 Configuración de Repositorio
-- [ ] Crear repositorio Git (GitHub/GitLab)
-- [ ] Configurar `.gitignore` para Node.js y Next.js
-- [ ] Crear estructura de carpetas base:
+#### 1.1 Configuración de Repositorio ✅ COMPLETADA
+- [x] Crear repositorio Git (GitHub/GitLab)
+- [x] Configurar `.gitignore` para Node.js y Next.js
+- [x] Crear estructura de carpetas base:
   ```
   sgcv2/
-  ├── backend/
-  ├── frontend/
-  ├── docs/          (ya existe)
-  ├── database/
-  └── docker/
+  ├── backend/      ✅ 33 carpetas creadas
+  ├── frontend/     ✅ 26 carpetas creadas
+  ├── docs/         ✅ (ya existía)
+  ├── database/     ✅ (archivos SQL movidos)
+  └── docker/       ⏳ (pendiente)
   ```
-- [ ] Crear `README.md` principal (ya existe, actualizar rutas a /docs)
-- [ ] Configurar branching strategy (Git Flow o GitHub Flow)
-- [ ] Primer commit inicial
+- [x] Crear `README.md` principal (ya existe, rutas actualizadas)
+- [x] Configurar branching strategy (main como default)
+- [x] Primer commit inicial (2 commits realizados)
 
-**Tiempo estimado:** 2 horas
+**Tiempo estimado:** 2 horas  
+**Tiempo real:** ~1 hora ✅
 
 ---
 
