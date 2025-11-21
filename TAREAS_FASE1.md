@@ -130,26 +130,27 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 
 ---
 
-#### 1.6 Configurar Prisma (ORM) ⏳ PENDIENTE
-- [ ] Instalar Prisma en backend:
+#### 1.6 Configurar Prisma (ORM) ✅ COMPLETADA
+- [x] Instalar Prisma en backend
   ```bash
   cd backend
   npm install prisma @prisma/client
   npx prisma init
   ```
-- [ ] Configurar `DATABASE_URL` en `.env` (ya configurado ✅)
-- [ ] Hacer introspection del schema existente:
+- [x] Configurar `DATABASE_URL` en `.env` (ya configurado ✅)
+- [x] Hacer introspection del schema existente (Schema ya provisto ✅)
   ```bash
   npx prisma db pull
   ```
-- [ ] Generar Prisma Client:
+- [x] Generar Prisma Client:
   ```bash
   npx prisma generate
   ```
-- [ ] Crear archivo de configuración de Prisma en `src/config/prisma.ts`
-- [ ] Probar conexión a BD desde backend
+- [x] Crear archivo de configuración de Prisma en `src/config/prisma.ts`
+- [x] Probar conexión a BD desde backend
 
 **Tiempo estimado:** 2 horas
+**Tiempo real:** ~1 hora ✅ (incluyendo debugging de versiones)
 
 ---
 
