@@ -90,36 +90,54 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 
 ---
 
-#### 1.4 Setup de Base de Datos (PostgreSQL)
-- [ ] Mover archivos SQL a `/database`:
-  - `schema.sql`
-  - `workflow_validation.sql`
-  - `seed_data.sql`
-- [ ] Crear base de datos PostgreSQL:
-  ```bash
-  createdb sgcv2
-  ```
-- [ ] Ejecutar schema:
-  ```bash
-  psql -d sgcv2 -f database/schema.sql
-  psql -d sgcv2 -f database/workflow_validation.sql
-  psql -d sgcv2 -f database/seed_data.sql
-  ```
-- [ ] Verificar que las tablas se crearon correctamente
-- [ ] Verificar que los workflows se cargaron
+#### 1.4 Docker Setup ✅ COMPLETADA
+- [x] Crear `docker-compose.yml` en raíz con PostgreSQL 15
+- [x] Configurar volúmenes persistentes para datos
+- [x] Configurar inicialización automática del schema
+- [x] Agregar pgAdmin (opcional, con profile tools)
+- [x] Crear `DOCKER.md` con documentación
+- [x] Probar que `docker-compose up -d` funciona ✅
+- [x] Documentar comandos Docker
 
-**Tiempo estimado:** 1 hora
+**Docker funcionando:**
+- PostgreSQL 15 en puerto 5432
+- 45 tablas creadas automáticamente
+- 33 estados de workflow cargados
+- 24 permisos configurados
+- pgAdmin disponible en puerto 5050 (opcional)
+
+**Tiempo estimado:** 3 horas  
+**Tiempo real:** ~1 hora ✅
 
 ---
 
-#### 1.5 Configurar Prisma (ORM)
+#### 1.5 Setup de Base de Datos (PostgreSQL) ✅ COMPLETADA
+- [x] Base de datos creada automáticamente por Docker
+- [x] Schema ejecutado automáticamente (`schema.sql`)
+- [x] Validaciones ejecutadas (`workflow_validation.sql`)
+- [x] Datos iniciales cargados (`seed_data.sql`)
+- [x] Verificar que las tablas se crearon correctamente ✅
+- [x] Verificar que los workflows se cargaron ✅
+
+**Base de datos verificada:**
+- ✅ 45 tablas creadas
+- ✅ 33 estados de workflow
+- ✅ 24 permisos
+- ✅ Funciones de validación instaladas
+
+**Tiempo estimado:** 1 hora  
+**Tiempo real:** ~15 minutos ✅ (automatizado con Docker)
+
+---
+
+#### 1.6 Configurar Prisma (ORM) ⏳ PENDIENTE
 - [ ] Instalar Prisma en backend:
   ```bash
   cd backend
   npm install prisma @prisma/client
   npx prisma init
   ```
-- [ ] Configurar `DATABASE_URL` en `.env`
+- [ ] Configurar `DATABASE_URL` en `.env` (ya configurado ✅)
 - [ ] Hacer introspection del schema existente:
   ```bash
   npx prisma db pull
@@ -132,21 +150,6 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 - [ ] Probar conexión a BD desde backend
 
 **Tiempo estimado:** 2 horas
-
----
-
-#### 1.6 Docker Setup (Opcional pero Recomendado)
-- [ ] Crear `docker-compose.yml` en raíz:
-  - Servicio PostgreSQL
-  - Servicio Backend (opcional)
-  - Servicio Frontend (opcional)
-- [ ] Crear `Dockerfile` para backend
-- [ ] Crear `Dockerfile` para frontend
-- [ ] Crear `.dockerignore` files
-- [ ] Probar que `docker-compose up` funciona
-- [ ] Documentar comandos Docker en README
-
-**Tiempo estimado:** 3 horas
 
 ---
 
