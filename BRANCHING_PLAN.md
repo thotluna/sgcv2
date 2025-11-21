@@ -11,7 +11,8 @@
 - ✅ Crear rama `feature/*` para cada módulo/funcionalidad
 - ✅ Trabajar en la feature
 - ✅ Mergear feature a `develop` al terminar
-- ✅ **Merge a `main` al completar la fase** → `v0.2.0`, `v0.3.0`, etc.
+- ✅ **Mergear `develop` a `main` inmediatamente** → `v0.X.Y`
+- ✅ Cada feature completado = nuevo release en `main`
 
 ---
 
@@ -57,9 +58,9 @@ git checkout develop
 
 ### **FASE 2: Módulo de ODS Core**
 
-**Estrategia:** Feature branches
+**Estrategia:** Feature branches + Merge a main después de cada feature
 
-#### **Feature 2.1: CRUD de Clientes**
+#### **Feature 2.1: CRUD de Clientes** → `v0.2.1`
 ```bash
 git checkout develop
 git checkout -b feature/clientes-crud
@@ -70,13 +71,20 @@ git commit -m "feat(clientes): add ClienteFinal CRUD"
 git commit -m "feat(clientes): add Localidad management"
 git commit -m "test(clientes): add integration tests"
 
-# Al terminar
+# Mergear a develop
 git checkout develop
 git merge feature/clientes-crud --no-ff
 git branch -d feature/clientes-crud
+
+# ✅ Mergear inmediatamente a main
+git checkout main
+git merge develop --no-ff -m "feat: add Clientes CRUD module"
+git tag -a v0.2.1 -m "Release v0.2.1: Clientes CRUD complete"
+git push origin main develop v0.2.1
+git checkout develop
 ```
 
-#### **Feature 2.2: Workflow Engine**
+#### **Feature 2.2: Workflow Engine** → `v0.2.2`
 ```bash
 git checkout -b feature/workflow-engine
 
@@ -85,13 +93,20 @@ git commit -m "feat(workflow): implement workflow state machine"
 git commit -m "feat(workflow): add transition validation"
 git commit -m "feat(workflow): add approval system"
 
-# Al terminar
+# Mergear a develop
 git checkout develop
 git merge feature/workflow-engine --no-ff
 git branch -d feature/workflow-engine
+
+# ✅ Mergear inmediatamente a main
+git checkout main
+git merge develop --no-ff -m "feat: add Workflow Engine"
+git tag -a v0.2.2 -m "Release v0.2.2: Workflow Engine complete"
+git push origin main develop v0.2.2
+git checkout develop
 ```
 
-#### **Feature 2.3: Gestión de ODS**
+#### **Feature 2.3: Gestión de ODS** → `v0.2.3`
 ```bash
 git checkout -b feature/ods-management
 
@@ -100,18 +115,30 @@ git commit -m "feat(ods): add ODS CRUD"
 git commit -m "feat(ods): integrate workflow"
 git commit -m "feat(ods): add modification tracking"
 
-# Al terminar
+# Mergear a develop
 git checkout develop
 git merge feature/ods-management --no-ff
 git branch -d feature/ods-management
+
+# ✅ Mergear inmediatamente a main
+git checkout main
+git merge develop --no-ff -m "feat: add ODS Management module"
+git tag -a v0.2.3 -m "Release v0.2.3: ODS Management complete"
+git push origin main develop v0.2.3
+git checkout develop
 ```
 
-**Al finalizar Fase 2:**
+**Al finalizar Fase 2 completa:**
 ```bash
+# Crear tag de milestone de fase
 git checkout main
-git merge develop --no-ff -m "chore: merge Phase 2 - ODS Core Module"
-git tag -a v0.2.0 -m "Release v0.2.0: Phase 2 Complete - ODS Core"
-git push origin main develop v0.2.0
+git tag -a v0.2.0 -m "Milestone v0.2.0: Phase 2 Complete - ODS Core Module
+
+Features included:
+- v0.2.1: Clientes CRUD
+- v0.2.2: Workflow Engine
+- v0.2.3: ODS Management"
+git push origin v0.2.0
 git checkout develop
 ```
 
@@ -158,28 +185,80 @@ develop:    B---C---D---E---F---G  ← commits directos
                             trabajamos aquí
 ```
 
-### **Fase 2+: Trabajo con Features**
+### **Fase 2+: Trabajo con Features + Merges Frecuentes**
 ```
-main:     A-----------------------M (v0.1.0)
-           \                     /
-develop:    B---C---D---E---F---G---H---I---J
-                 \         /     \     /
-feature/clientes: 1---2---3       \   /
-feature/workflow:                  4-5-6
+main:     A-----------M1(v0.2.1)---M2(v0.2.2)---M3(v0.2.3)---M(v0.2.0)
+           \         /            /            /            /
+develop:    B---C---D---E---F----G---H---I---J---K--------L
+                 \     /      \     /      \     /
+feature/cli:      1---2        \   /        \   /
+feature/wf:                     3-4          \ /
+feature/ods:                                  5-6
+
+Leyenda:
+- M1, M2, M3 = Merges de features individuales (PATCH releases)
+- M = Merge de milestone de fase (MINOR release)
+- Cada feature → develop → main inmediatamente
+```
+
+### **Ventaja: PRs Pequeños**
+```
+❌ ANTES (PR grande):
+feature/fase-2 (3 semanas de trabajo)
+  ├─ 50 commits
+  ├─ 100 archivos cambiados
+  └─ Difícil de revisar
+
+✅ AHORA (PRs pequeños):
+feature/clientes-crud (3-5 días)
+  ├─ 10 commits
+  ├─ 15 archivos
+  └─ Fácil de revisar ✅
+
+feature/workflow-engine (3-5 días)
+  ├─ 12 commits
+  ├─ 20 archivos
+  └─ Fácil de revisar ✅
 ```
 
 ---
 
 ## 📊 Timeline de Releases
 
-| Versión | Contenido | Estimación |
-|---------|-----------|------------|
-| `v0.1.0` | Fase 1: Setup + Auth | Semana 3 |
-| `v0.2.0` | Fase 2: ODS Core | Semana 6 |
-| `v0.3.0` | Fase 3: Logística | Semana 9 |
-| `v0.4.0` | Fase 4: Finanzas | Semana 12 |
-| `v0.5.0` | Fase 5: Reportes | Semana 15 |
-| `v1.0.0` | MVP Completo | Semana 24 |
+### **Versionado Semántico**
+
+Usamos **Semantic Versioning** (MAJOR.MINOR.PATCH):
+- **MAJOR** (v1.0.0): Cambios incompatibles, MVP completo
+- **MINOR** (v0.X.0): Milestone de fase completa
+- **PATCH** (v0.X.Y): Feature individual completado
+
+### **Releases Planificados**
+
+| Versión | Tipo | Contenido | Estimación |
+|---------|------|-----------|------------|
+| `v0.1.0` | MINOR | **Fase 1 completa**: Setup + Auth + Dashboard | Semana 3 |
+| `v0.2.1` | PATCH | Feature: Clientes CRUD | Semana 4 |
+| `v0.2.2` | PATCH | Feature: Workflow Engine | Semana 5 |
+| `v0.2.3` | PATCH | Feature: ODS Management | Semana 6 |
+| `v0.2.0` | MINOR | **Fase 2 completa**: ODS Core (milestone) | Semana 6 |
+| `v0.3.1` | PATCH | Feature: Equipos Management | Semana 7 |
+| `v0.3.2` | PATCH | Feature: Herramientas Management | Semana 8 |
+| `v0.3.3` | PATCH | Feature: Insumos Management | Semana 9 |
+| `v0.3.0` | MINOR | **Fase 3 completa**: Logística (milestone) | Semana 9 |
+| `v0.4.1` | PATCH | Feature: Proformas | Semana 10 |
+| `v0.4.2` | PATCH | Feature: Facturas | Semana 11 |
+| `v0.4.3` | PATCH | Feature: Pagos | Semana 12 |
+| `v0.4.0` | MINOR | **Fase 4 completa**: Finanzas (milestone) | Semana 12 |
+| `v1.0.0` | MAJOR | **MVP Completo** - Primera versión producción | Semana 24 |
+
+### **Ventajas de Este Enfoque**
+
+✅ **PRs pequeños y manejables** (como mencionaste)
+✅ **Releases frecuentes** (cada feature = nuevo release)
+✅ **Fácil rollback** (si un feature falla, volver a versión anterior)
+✅ **Historial claro** (cada tag = feature específico)
+✅ **Deploy continuo** (main siempre deployable)
+✅ **Feedback rápido** (features en producción más rápido)
 
 ---
 
