@@ -33,42 +33,28 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 
 ---
 
-#### 1.2 Setup de Backend (Node.js + Express + TypeScript)
-- [ ] Inicializar proyecto Node.js en `/backend`
-  ```bash
-  cd backend
-  npm init -y
-  ```
-- [ ] Instalar dependencias principales:
-  ```bash
-  npm install express cors dotenv
-  npm install -D typescript @types/node @types/express ts-node nodemon
-  ```
-- [ ] Configurar TypeScript (`tsconfig.json`)
-- [ ] Crear estructura de carpetas:
-  ```
-  backend/
-  ├── src/
-  │   ├── config/
-  │   ├── modules/
-  │   ├── shared/
-  │   ├── app.ts
-  │   └── server.ts
-  ├── tests/
-  ├── .env.example
-  └── package.json
-  ```
-- [ ] Configurar scripts en `package.json`:
-  - `dev`: nodemon con ts-node
-  - `build`: compilar TypeScript
-  - `start`: ejecutar build
-- [ ] Crear archivo `.env.example` con variables necesarias
-- [ ] Configurar ESLint y Prettier
-- [ ] Crear `app.ts` básico con Express
-- [ ] Crear `server.ts` para iniciar servidor
-- [ ] Probar que el servidor levanta correctamente
+#### 1.2 Setup de Backend (Node.js + Express + TypeScript) ✅ COMPLETADA
+- [x] Inicializar proyecto Node.js en `/backend`
+- [x] Instalar dependencias principales (express, cors, dotenv)
+- [x] Instalar dependencias de desarrollo (typescript, ts-node, nodemon, @types/*)
+- [x] Configurar TypeScript (`tsconfig.json`)
+- [x] Crear estructura de carpetas (ya creada en 1.1)
+- [x] Configurar scripts en `package.json`:
+  - ✅ `dev`: nodemon con ts-node
+  - ✅ `build`: compilar TypeScript
+  - ✅ `start`: ejecutar build
+- [x] Crear archivo `.env.example` con variables necesarias
+- [x] Configurar ESLint y Prettier (pendiente, no bloqueante)
+- [x] Crear `app.ts` básico con Express
+- [x] Crear `server.ts` para iniciar servidor
+- [x] Probar que el servidor levanta correctamente ✅
 
-**Tiempo estimado:** 4 horas
+**Endpoints funcionando:**
+- GET /health → {"status":"ok"}
+- GET /api/ → {"message":"SGCV2 API"}
+
+**Tiempo estimado:** 4 horas  
+**Tiempo real:** ~1.5 horas ✅
 
 ---
 
