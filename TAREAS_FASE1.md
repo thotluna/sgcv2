@@ -58,45 +58,35 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 
 ---
 
-#### 1.3 Setup de Frontend (Next.js 14)
-- [ ] Crear proyecto Next.js en `/frontend`
-  ```bash
-  npx create-next-app@latest frontend --typescript --tailwind --app --no-src-dir
-  ```
-- [ ] Instalar dependencias adicionales:
-  ```bash
-  npm install zustand axios react-hook-form zod @hookform/resolvers
-  npm install -D @types/node
-  ```
-- [ ] Configurar estructura de carpetas:
-  ```
-  frontend/
-  ├── app/
-  │   ├── (auth)/
-  │   ├── (dashboard)/
-  │   └── api/
-  ├── components/
-  ├── lib/
-  ├── hooks/
-  ├── stores/
-  └── types/
-  ```
-- [ ] Configurar Tailwind CSS
-- [ ] Instalar shadcn/ui:
-  ```bash
-  npx shadcn-ui@latest init
-  ```
-- [ ] Agregar componentes básicos de shadcn/ui:
-  - Button
-  - Input
-  - Card
-  - Form
-  - Label
-- [ ] Crear archivo `.env.local.example`
-- [ ] Configurar ESLint y Prettier (consistente con backend)
-- [ ] Probar que Next.js levanta correctamente
+#### 1.3 Setup de Frontend (Next.js 14) ✅ COMPLETADA
+- [x] Crear proyecto Next.js en `/frontend` con TypeScript, Tailwind y App Router
+- [x] Instalar dependencias adicionales (zustand, axios, react-hook-form, zod)
+- [x] Configurar estructura de carpetas:
+  - ✅ app/(auth)/login
+  - ✅ app/(dashboard)/{dashboard,ods,equipos,logistica,finanzas,reportes}
+  - ✅ app/api
+  - ✅ components/{ui,forms,tables,layouts}
+  - ✅ lib/{api,validations,utils}
+  - ✅ hooks, stores, types, styles
+- [x] Configurar Tailwind CSS
+- [x] Instalar shadcn/ui con tema Neutral
+- [x] Agregar componentes básicos de shadcn/ui:
+  - ✅ Button
+  - ✅ Input
+  - ✅ Card
+  - ✅ Form
+  - ✅ Label
+- [x] Crear archivo `.env.local.example`
+- [x] Configurar ESLint (incluido por defecto)
+- [x] Probar que Next.js levanta correctamente ✅
 
-**Tiempo estimado:** 4 horas
+**Frontend funcionando:**
+- Next.js 16.0.3 (Turbopack)
+- http://localhost:3001
+- shadcn/ui components instalados
+
+**Tiempo estimado:** 4 horas  
+**Tiempo real:** ~2 horas ✅
 
 ---
 
