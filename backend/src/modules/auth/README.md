@@ -34,9 +34,11 @@ src/modules/auth/
 ## API Endpoints
 
 ### POST /api/auth/login
+
 Login with username and password.
 
 **Request:**
+
 ```json
 {
   "username": "admin",
@@ -45,6 +47,7 @@ Login with username and password.
 ```
 
 **Response:**
+
 ```json
 {
   "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
@@ -52,14 +55,17 @@ Login with username and password.
 ```
 
 ### GET /api/auth/me
+
 Get current user information (requires authentication).
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 ```
 
 **Response:**
+
 ```json
 {
   "id_usuario": 1,
@@ -73,14 +79,17 @@ Authorization: Bearer <token>
 ```
 
 ### POST /api/auth/logout
+
 Logout (requires authentication).
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 ```
 
 **Response:**
+
 ```json
 {
   "message": "Logout successful",
@@ -96,7 +105,7 @@ Authorization: Bearer <token>
 import { authenticate } from './modules/auth/middleware/auth.middleware';
 
 router.get('/protected', authenticate, (req, res) => {
-    res.json({ user: req.user });
+  res.json({ user: req.user });
 });
 ```
 
@@ -106,13 +115,9 @@ router.get('/protected', authenticate, (req, res) => {
 import { authenticate } from './modules/auth/middleware/auth.middleware';
 import { requireRoles } from './modules/auth/guards/rbac.guard';
 
-router.get('/admin-only', 
-    authenticate, 
-    requireRoles('Administrador'), 
-    (req, res) => {
-        res.json({ message: 'Admin only' });
-    }
-);
+router.get('/admin-only', authenticate, requireRoles('Administrador'), (req, res) => {
+  res.json({ message: 'Admin only' });
+});
 ```
 
 ### Requiring Specific Permissions
@@ -121,50 +126,47 @@ router.get('/admin-only',
 import { authenticate } from './modules/auth/middleware/auth.middleware';
 import { requirePermission } from './modules/auth/guards/rbac.guard';
 
-router.post('/create-ods', 
-    authenticate, 
-    requirePermission('ODS', 'CREAR'), 
-    (req, res) => {
-        res.json({ message: 'ODS created' });
-    }
-);
+router.post('/create-ods', authenticate, requirePermission('ODS', 'CREAR'), (req, res) => {
+  res.json({ message: 'ODS created' });
+});
 ```
 
 ### Multiple Roles
 
 ```typescript
-router.get('/management', 
-    authenticate, 
-    requireRoles('Administrador', 'Gerente'), 
-    (req, res) => {
-        res.json({ message: 'For admins and managers' });
-    }
-);
+router.get('/management', authenticate, requireRoles('Administrador', 'Gerente'), (req, res) => {
+  res.json({ message: 'For admins and managers' });
+});
 ```
 
 ## AuthService Methods
 
 ### `validateUser(username: string, password: string)`
+
 Validates user credentials.
 
 **Returns:** User object if valid, null otherwise.
 
 ### `login(user: { id_usuario: number; username: string })`
+
 Generates a JWT token for the user.
 
 **Returns:** `{ access_token: string }`
 
 ### `hashPassword(password: string)`
+
 Hashes a password using bcrypt.
 
 **Returns:** Hashed password string.
 
 ### `comparePassword(plainPassword: string, hashedPassword: string)`
+
 Compares a plain password with a hashed password.
 
 **Returns:** Boolean indicating if passwords match.
 
 ### `getUserWithRoles(userId: number)`
+
 Gets a user with their roles and permissions.
 
 **Returns:** User object with roles and permissions, or null if not found.
@@ -186,6 +188,7 @@ npm test
 ```
 
 Test files:
+
 - `__tests__/auth.service.test.ts` - Service tests
 - `__tests__/auth.routes.test.ts` - Routes/controller tests
 

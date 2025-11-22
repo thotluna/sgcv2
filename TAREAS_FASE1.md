@@ -1,6 +1,7 @@
 # Tareas - Primera Iteración (Fase 1: Setup y Autenticación)
 
 ## 🎯 Objetivo de la Iteración
+
 Configurar el entorno de desarrollo completo y tener un sistema de autenticación funcional con login, RBAC y dashboard base.
 
 **Duración estimada:** 2-3 semanas  
@@ -13,6 +14,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 ### 1. Setup Inicial del Proyecto
 
 #### 1.1 Configuración de Repositorio ✅ COMPLETADA
+
 - [x] Crear repositorio Git (GitHub/GitLab)
 - [x] Configurar `.gitignore` para Node.js y Next.js
 - [x] Crear estructura de carpetas base:
@@ -34,9 +36,10 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 ---
 
 #### 1.2 Setup de Backend (Node.js + Express + TypeScript) ✅ COMPLETADA
+
 - [x] Inicializar proyecto Node.js en `/backend`
 - [x] Instalar dependencias principales (express, cors, dotenv)
-- [x] Instalar dependencias de desarrollo (typescript, ts-node, nodemon, @types/*)
+- [x] Instalar dependencias de desarrollo (typescript, ts-node, nodemon, @types/\*)
 - [x] Configurar TypeScript (`tsconfig.json`)
 - [x] Crear estructura de carpetas (ya creada en 1.1)
 - [x] Configurar scripts en `package.json`:
@@ -50,6 +53,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 - [x] Probar que el servidor levanta correctamente ✅
 
 **Endpoints funcionando:**
+
 - GET /health → {"status":"ok"}
 - GET /api/ → {"message":"SGCV2 API"}
 
@@ -59,6 +63,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 ---
 
 #### 1.3 Setup de Frontend (Next.js 14) ✅ COMPLETADA
+
 - [x] Crear proyecto Next.js en `/frontend` con TypeScript, Tailwind y App Router
 - [x] Instalar dependencias adicionales (zustand, axios, react-hook-form, zod)
 - [x] Configurar estructura de carpetas:
@@ -81,6 +86,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 - [x] Probar que Next.js levanta correctamente ✅
 
 **Frontend funcionando:**
+
 - Next.js 16.0.3 (Turbopack)
 - http://localhost:3001
 - shadcn/ui components instalados
@@ -91,6 +97,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 ---
 
 #### 1.4 Docker Setup ✅ COMPLETADA
+
 - [x] Crear `docker-compose.yml` en raíz con PostgreSQL 15
 - [x] Configurar volúmenes persistentes para datos
 - [x] Configurar inicialización automática del schema
@@ -100,6 +107,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 - [x] Documentar comandos Docker
 
 **Docker funcionando:**
+
 - PostgreSQL 15 en puerto 5432
 - 45 tablas creadas automáticamente
 - 33 estados de workflow cargados
@@ -112,6 +120,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 ---
 
 #### 1.5 Setup de Base de Datos (PostgreSQL) ✅ COMPLETADA
+
 - [x] Base de datos creada automáticamente por Docker
 - [x] Schema ejecutado automáticamente (`schema.sql`)
 - [x] Validaciones ejecutadas (`workflow_validation.sql`)
@@ -120,6 +129,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 - [x] Verificar que los workflows se cargaron ✅
 
 **Base de datos verificada:**
+
 - ✅ 45 tablas creadas
 - ✅ 33 estados de workflow
 - ✅ 24 permisos
@@ -131,6 +141,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 ---
 
 #### 1.6 Configurar Prisma (ORM) ✅ COMPLETADA
+
 - [x] Instalar Prisma en backend
   ```bash
   cd backend
@@ -157,6 +168,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 ### 2. Módulo de Autenticación
 
 #### 2.1 Backend - Autenticación ✅ COMPLETADA
+
 - [x] Instalar dependencias:
   ```bash
   npm install passport passport-jwt passport-local jsonwebtoken bcrypt
@@ -209,6 +221,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 ---
 
 #### 2.2 Backend - Gestión de Usuarios
+
 - [ ] Crear módulo `users/`:
   ```
   src/modules/users/
@@ -235,6 +248,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 ---
 
 #### 2.3 Backend - Sistema RBAC
+
 - [ ] Crear módulo `rbac/`:
   ```
   src/modules/rbac/
@@ -263,6 +277,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 ### 3. Frontend - Autenticación
 
 #### 3.1 Setup de Autenticación en Frontend
+
 - [ ] Crear store de autenticación con Zustand:
   ```typescript
   // stores/auth.store.ts
@@ -299,6 +314,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 ---
 
 #### 3.2 Página de Login
+
 - [ ] Crear ruta `app/(auth)/login/page.tsx`
 - [ ] Crear componente de formulario de login:
   - Input de username
@@ -320,6 +336,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 ---
 
 #### 3.3 Protección de Rutas
+
 - [ ] Crear middleware de autenticación:
   ```typescript
   // middleware.ts
@@ -341,6 +358,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 ### 4. Dashboard Base
 
 #### 4.1 Layout Principal
+
 - [ ] Crear layout de dashboard `app/(dashboard)/layout.tsx`:
   - Sidebar con navegación
   - Header con usuario y logout
@@ -363,6 +381,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 ---
 
 #### 4.2 Página de Dashboard
+
 - [ ] Crear `app/(dashboard)/dashboard/page.tsx`
 - [ ] Agregar cards de métricas básicas:
   - Total de ODS
@@ -380,6 +399,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 ### 5. Testing y QA
 
 #### 5.1 Testing Backend
+
 - [ ] Configurar Jest para backend
 - [ ] Crear tests para auth.service:
   - Test de login exitoso
@@ -395,6 +415,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 ---
 
 #### 5.2 Testing Frontend
+
 - [ ] Configurar Jest + React Testing Library
 - [ ] Crear tests para componente Login:
   - Renderizado correcto
@@ -409,6 +430,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 ---
 
 #### 5.3 Testing Manual
+
 - [ ] Probar flujo completo de login
 - [ ] Probar protección de rutas
 - [ ] Probar logout
@@ -424,6 +446,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 ### 6. Documentación y Deploy
 
 #### 6.1 Documentación
+
 - [ ] Actualizar README.md con:
   - Instrucciones de instalación actualizadas
   - Variables de entorno necesarias
@@ -438,6 +461,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 ---
 
 #### 6.2 Deploy de Desarrollo (Opcional)
+
 - [ ] Configurar servidor de desarrollo
 - [ ] Deploy de backend
 - [ ] Deploy de frontend
@@ -451,15 +475,15 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 
 ## 📊 Resumen de Tiempo Estimado
 
-| Categoría | Tiempo Estimado |
-|-----------|-----------------|
-| 1. Setup Inicial | 16 horas |
-| 2. Backend Auth | 18 horas |
-| 3. Frontend Auth | 10 horas |
-| 4. Dashboard Base | 10 horas |
-| 5. Testing | 11 horas |
-| 6. Documentación | 3-9 horas |
-| **TOTAL** | **68-74 horas** |
+| Categoría         | Tiempo Estimado |
+| ----------------- | --------------- |
+| 1. Setup Inicial  | 16 horas        |
+| 2. Backend Auth   | 18 horas        |
+| 3. Frontend Auth  | 10 horas        |
+| 4. Dashboard Base | 10 horas        |
+| 5. Testing        | 11 horas        |
+| 6. Documentación  | 3-9 horas       |
+| **TOTAL**         | **68-74 horas** |
 
 **Con 1 developer:** ~2-3 semanas  
 **Con 2 developers:** ~1-2 semanas
@@ -487,6 +511,7 @@ Al finalizar esta iteración, debes tener:
 Una vez completada esta fase, la siguiente iteración será:
 
 **Fase 2: Módulo de ODS Core**
+
 - CRUD de Clientes, Clientes Finales, Localidades
 - Workflow Engine
 - Gestión de ODS
