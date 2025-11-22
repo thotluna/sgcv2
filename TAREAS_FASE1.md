@@ -156,13 +156,13 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 
 ### 2. Módulo de Autenticación
 
-#### 2.1 Backend - Autenticación
-- [ ] Instalar dependencias:
+#### 2.1 Backend - Autenticación ✅ COMPLETADA
+- [x] Instalar dependencias:
   ```bash
   npm install passport passport-jwt passport-local jsonwebtoken bcrypt
-  npm install -D @types/passport @types/passport-jwt @types/jsonwebtoken @types/bcrypt
+  npm install -D @types/passport @types/passport-jwt @types/passport-local @types/jsonwebtoken @types/bcrypt
   ```
-- [ ] Crear módulo `auth/`:
+- [x] Crear módulo `auth/`:
   ```
   src/modules/auth/
   ├── auth.controller.ts
@@ -171,27 +171,40 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
   ├── dto/
   │   ├── login.dto.ts
   │   └── register.dto.ts
-  └── strategies/
-      ├── jwt.strategy.ts
-      └── local.strategy.ts
+  ├── strategies/
+  │   ├── jwt.strategy.ts
+  │   ├── jwt.options.ts
+  │   └── local.strategy.ts
+  ├── middleware/
+  │   └── auth.middleware.ts
+  └── guards/
+      └── rbac.guard.ts
   ```
-- [ ] Implementar `auth.service.ts`:
-  - `login(username, password)` → retorna JWT
-  - `validateUser(username, password)` → valida credenciales
-  - `hashPassword(password)` → hash con bcrypt
-  - `comparePassword(plain, hashed)` → compara passwords
-- [ ] Implementar `auth.controller.ts`:
-  - `POST /api/auth/login` → login
-  - `POST /api/auth/logout` → logout (opcional)
-  - `GET /api/auth/me` → obtener usuario actual
-- [ ] Configurar Passport strategies:
-  - Local strategy para login
-  - JWT strategy para proteger rutas
-- [ ] Crear middleware de autenticación
-- [ ] Crear guards de autorización (RBAC)
-- [ ] Probar endpoints con Postman/Thunder Client
+- [x] Implementar `auth.service.ts`:
+  - ✅ `login(username, password)` → retorna JWT
+  - ✅ `validateUser(username, password)` → valida credenciales
+  - ✅ `hashPassword(password)` → hash con bcrypt
+  - ✅ `comparePassword(plain, hashed)` → compara passwords
+  - ✅ `getUserWithRoles(userId)` → obtiene usuario con roles y permisos
+- [x] Implementar `auth.controller.ts`:
+  - ✅ `POST /api/auth/login` → login
+  - ✅ `POST /api/auth/logout` → logout
+  - ✅ `GET /api/auth/me` → obtener usuario actual
+- [x] Configurar Passport strategies:
+  - ✅ Local strategy para login
+  - ✅ JWT strategy para proteger rutas
+- [x] Crear middleware de autenticación
+  - ✅ `authenticate` → middleware para rutas protegidas
+  - ✅ `optionalAuth` → middleware para autenticación opcional
+- [x] Crear guards de autorización (RBAC)
+  - ✅ `requireRoles(...roles)` → requiere roles específicos
+  - ✅ `requirePermission(module, action)` → requiere permisos específicos
+- [x] Crear documentación (README.md)
+- [x] Crear ejemplos de uso (protected.routes.example.ts)
+- [x] Probar con tests automatizados ✅ (6 tests pasando)
 
-**Tiempo estimado:** 8 horas
+**Tiempo estimado:** 8 horas  
+**Tiempo real:** ~2 horas ✅
 
 ---
 
