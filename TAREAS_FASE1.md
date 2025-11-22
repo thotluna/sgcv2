@@ -222,7 +222,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 
 #### 2.2 Backend - Gestión de Usuarios
 
-- [ ] Crear módulo `users/`:
+- [x] Crear módulo `users/`:
   ```
   src/modules/users/
   ├── users.controller.ts
@@ -232,16 +232,21 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
       ├── create-user.dto.ts
       └── update-user.dto.ts
   ```
-- [ ] Implementar `users.service.ts`:
-  - `findById(id)` → obtener usuario
-  - `findByUsername(username)` → buscar por username
-  - `getUserWithRoles(id)` → usuario con roles y permisos
-  - `updateUser(id, data)` → actualizar usuario
-- [ ] Implementar `users.controller.ts`:
-  - `GET /api/users/me` → perfil del usuario actual
-  - `GET /api/users/:id` → obtener usuario (admin)
-  - `PUT /api/users/:id` → actualizar usuario
-- [ ] Probar endpoints
+- [x] Implementar `users.service.ts`:
+  - ✅ `findById(id)` → obtener usuario
+  - ✅ `findByUsername(username)` → buscar por username
+  - ✅ `getUserWithRoles(id)` → usuario con roles y permisos
+  - ✅ `updateUser(id, data)` → actualizar usuario
+  - ✅ `createUser(data)` → crear usuario
+  - ✅ `deleteUser(id)` → soft delete
+- [x] Implementar `users.controller.ts`:
+  - ✅ `GET /api/users/me` → perfil del usuario actual
+  - ✅ `GET /api/users` → listar usuarios (admin)
+  - ✅ `GET /api/users/:id` → obtener usuario (admin)
+  - ✅ `POST /api/users` → crear usuario (admin)
+  - ✅ `PUT /api/users/:id` → actualizar usuario
+  - ✅ `DELETE /api/users/:id` → eliminar usuario (admin)
+- [x] Probar endpoints con tests automatizados ✅ (Tests unitarios y de integración)
 
 **Tiempo estimado:** 4 horas
 

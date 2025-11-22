@@ -58,6 +58,7 @@ export default [
             '**/*.test.tsx',
             '**/*.spec.ts',
             '**/*.spec.tsx',
+            '**/*.spec.tsx',
             'backend/**',
             'frontend/**',
         ],

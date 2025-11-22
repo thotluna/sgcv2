@@ -5,6 +5,7 @@ import passport from 'passport';
 import { jwtStrategy } from './modules/auth/strategies/jwt.strategy';
 import { localStrategy } from './modules/auth/strategies/local.strategy';
 import authRouter from './modules/auth/auth.routes';
+import usersRouter from './modules/users/users.routes';
 import { prisma } from './config/prisma';
 
 // Load environment variables
@@ -51,8 +52,9 @@ app.get('/health', async (_req: Request, res: Response) => {
 // ---------- API ----------
 const API_PREFIX = process.env.API_PREFIX || '/api';
 
-// Mount auth routes
+// Mount routes
 app.use(`${API_PREFIX}/auth`, authRouter);
+app.use(`${API_PREFIX}/users`, usersRouter);
 
 app.get(`${API_PREFIX}/`, (_req: Request, res: Response) => {
   res.json({
@@ -61,6 +63,8 @@ app.get(`${API_PREFIX}/`, (_req: Request, res: Response) => {
     endpoints: {
       health: '/health',
       api: API_PREFIX,
+      auth: `${API_PREFIX}/auth`,
+      users: `${API_PREFIX}/users`,
     },
   });
 });
