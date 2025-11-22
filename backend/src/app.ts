@@ -1,33 +1,41 @@
 import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import passport from 'passport';
+import { jwtStrategy } from './modules/auth/strategies/jwt.strategy';
+import { localStrategy } from './modules/auth/strategies/local.strategy';
+import authRouter from './modules/auth/auth.routes';
+import { prisma } from './config/prisma';
 
 // Load environment variables
 dotenv.config();
 
-// Create Express app
 const app: Application = express();
 
-// Middleware
-app.use(cors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
-    credentials: true
-}));
+// ---------- Middleware ----------
+app.use(
+    cors({
+        origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+        credentials: true,
+    })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-import { prisma } from './config/prisma';
+// ---------- Passport ----------
+passport.use(jwtStrategy);
+passport.use(localStrategy);
+app.use(passport.initialize());
 
-// Health check endpoint
-app.get('/health', async (_req, res) => {
+// ---------- Health check ----------
+app.get('/health', async (_req: Request, res: Response) => {
     try {
-        // Simple query to check DB connection
         await prisma.$queryRaw`SELECT 1`;
         res.status(200).json({
             status: 'ok',
             timestamp: new Date().toISOString(),
             environment: process.env.NODE_ENV || 'development',
-            database: 'connected'
+            database: 'connected',
         });
     } catch (error) {
         res.status(500).json({
@@ -35,13 +43,16 @@ app.get('/health', async (_req, res) => {
             timestamp: new Date().toISOString(),
             environment: process.env.NODE_ENV || 'development',
             database: 'disconnected',
-            error: error instanceof Error ? error.message : 'Unknown error'
+            error: error instanceof Error ? error.message : 'Unknown error',
         });
     }
 });
 
-// API routes will be added here
+// ---------- API ----------
 const API_PREFIX = process.env.API_PREFIX || '/api';
+
+// Mount auth routes
+app.use(`${API_PREFIX}/auth`, authRouter);
 
 app.get(`${API_PREFIX}/`, (_req: Request, res: Response) => {
     res.json({
@@ -49,27 +60,27 @@ app.get(`${API_PREFIX}/`, (_req: Request, res: Response) => {
         version: '1.0.0',
         endpoints: {
             health: '/health',
-            api: API_PREFIX
-        }
+            api: API_PREFIX,
+        },
     });
 });
 
-// 404 handler
+// ---------- 404 handler ----------
 app.use((req: Request, res: Response) => {
     res.status(404).json({
         error: 'Not Found',
         message: `Route ${req.method} ${req.path} not found`,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
     });
 });
 
-// Error handler
+// ---------- Error handler ----------
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
     console.error('Error:', err);
     res.status(500).json({
         error: 'Internal Server Error',
         message: process.env.NODE_ENV === 'development' ? err.message : 'Something went wrong',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
     });
 });
 
