@@ -3,11 +3,13 @@
 ## 🎯 Estrategia Acordada
 
 ### **Fase Actual: Setup (Fase 1)**
+
 - ✅ Trabajar directamente en `develop`
 - ✅ Commits frecuentes en `develop`
 - ✅ **Merge a `main` al finalizar Fase 1 completa** → `v0.1.0`
 
 ### **Fases Siguientes: Features (Fase 2+)**
+
 - ✅ Crear rama `feature/*` para cada módulo/funcionalidad
 - ✅ Trabajar en la feature
 - ✅ Mergear feature a `develop` al terminar
@@ -23,6 +25,7 @@
 **Rama:** `develop` (trabajo directo)
 
 **Tareas:**
+
 - [x] 1.1 Configuración de Repositorio
 - [x] 1.2 Setup de Backend
 - [x] 1.3 Setup de Frontend
@@ -36,6 +39,7 @@
 - [ ] 6.1 Documentación
 
 **Al finalizar:**
+
 ```bash
 git checkout main
 git merge develop --no-ff -m "chore: merge Phase 1 - Setup & Authentication"
@@ -61,6 +65,7 @@ git checkout develop
 **Estrategia:** Feature branches + Merge a main después de cada feature
 
 #### **Feature 2.1: CRUD de Clientes** → `v0.2.1`
+
 ```bash
 git checkout develop
 git checkout -b feature/clientes-crud
@@ -85,6 +90,7 @@ git checkout develop
 ```
 
 #### **Feature 2.2: Workflow Engine** → `v0.2.2`
+
 ```bash
 git checkout -b feature/workflow-engine
 
@@ -107,6 +113,7 @@ git checkout develop
 ```
 
 #### **Feature 2.3: Gestión de ODS** → `v0.2.3`
+
 ```bash
 git checkout -b feature/ods-management
 
@@ -129,6 +136,7 @@ git checkout develop
 ```
 
 **Al finalizar Fase 2 completa:**
+
 ```bash
 # Crear tag de milestone de fase
 git checkout main
@@ -147,12 +155,14 @@ git checkout develop
 ### **FASE 3: Logística**
 
 **Features:**
+
 - `feature/equipos-management`
 - `feature/herramientas-management`
 - `feature/insumos-management`
 - `feature/vehiculos-management`
 
 **Al finalizar:**
+
 ```bash
 git tag -a v0.3.0 -m "Release v0.3.0: Phase 3 Complete - Logistics"
 ```
@@ -162,12 +172,14 @@ git tag -a v0.3.0 -m "Release v0.3.0: Phase 3 Complete - Logistics"
 ### **FASE 4: Finanzas**
 
 **Features:**
+
 - `feature/proformas`
 - `feature/facturas`
 - `feature/pagos`
 - `feature/financial-reports`
 
 **Al finalizar:**
+
 ```bash
 git tag -a v0.4.0 -m "Release v0.4.0: Phase 4 Complete - Finance"
 ```
@@ -177,6 +189,7 @@ git tag -a v0.4.0 -m "Release v0.4.0: Phase 4 Complete - Finance"
 ## 🔄 Flujo de Trabajo Visual
 
 ### **Fase 1 (Actual): Trabajo Directo en Develop**
+
 ```
 main:     A
            \
@@ -186,6 +199,7 @@ develop:    B---C---D---E---F---G  ← commits directos
 ```
 
 ### **Fase 2+: Trabajo con Features + Merges Frecuentes**
+
 ```
 main:     A-----------M1(v0.2.1)---M2(v0.2.2)---M3(v0.2.3)---M(v0.2.0)
            \         /            /            /            /
@@ -202,6 +216,7 @@ Leyenda:
 ```
 
 ### **Ventaja: PRs Pequeños**
+
 ```
 ❌ ANTES (PR grande):
 feature/fase-2 (3 semanas de trabajo)
@@ -228,28 +243,29 @@ feature/workflow-engine (3-5 días)
 ### **Versionado Semántico**
 
 Usamos **Semantic Versioning** (MAJOR.MINOR.PATCH):
+
 - **MAJOR** (v1.0.0): Cambios incompatibles, MVP completo
 - **MINOR** (v0.X.0): Milestone de fase completa
 - **PATCH** (v0.X.Y): Feature individual completado
 
 ### **Releases Planificados**
 
-| Versión | Tipo | Contenido | Estimación |
-|---------|------|-----------|------------|
-| `v0.1.0` | MINOR | **Fase 1 completa**: Setup + Auth + Dashboard | Semana 3 |
-| `v0.2.1` | PATCH | Feature: Clientes CRUD | Semana 4 |
-| `v0.2.2` | PATCH | Feature: Workflow Engine | Semana 5 |
-| `v0.2.3` | PATCH | Feature: ODS Management | Semana 6 |
-| `v0.2.0` | MINOR | **Fase 2 completa**: ODS Core (milestone) | Semana 6 |
-| `v0.3.1` | PATCH | Feature: Equipos Management | Semana 7 |
-| `v0.3.2` | PATCH | Feature: Herramientas Management | Semana 8 |
-| `v0.3.3` | PATCH | Feature: Insumos Management | Semana 9 |
-| `v0.3.0` | MINOR | **Fase 3 completa**: Logística (milestone) | Semana 9 |
-| `v0.4.1` | PATCH | Feature: Proformas | Semana 10 |
-| `v0.4.2` | PATCH | Feature: Facturas | Semana 11 |
-| `v0.4.3` | PATCH | Feature: Pagos | Semana 12 |
-| `v0.4.0` | MINOR | **Fase 4 completa**: Finanzas (milestone) | Semana 12 |
-| `v1.0.0` | MAJOR | **MVP Completo** - Primera versión producción | Semana 24 |
+| Versión  | Tipo  | Contenido                                     | Estimación |
+| -------- | ----- | --------------------------------------------- | ---------- |
+| `v0.1.0` | MINOR | **Fase 1 completa**: Setup + Auth + Dashboard | Semana 3   |
+| `v0.2.1` | PATCH | Feature: Clientes CRUD                        | Semana 4   |
+| `v0.2.2` | PATCH | Feature: Workflow Engine                      | Semana 5   |
+| `v0.2.3` | PATCH | Feature: ODS Management                       | Semana 6   |
+| `v0.2.0` | MINOR | **Fase 2 completa**: ODS Core (milestone)     | Semana 6   |
+| `v0.3.1` | PATCH | Feature: Equipos Management                   | Semana 7   |
+| `v0.3.2` | PATCH | Feature: Herramientas Management              | Semana 8   |
+| `v0.3.3` | PATCH | Feature: Insumos Management                   | Semana 9   |
+| `v0.3.0` | MINOR | **Fase 3 completa**: Logística (milestone)    | Semana 9   |
+| `v0.4.1` | PATCH | Feature: Proformas                            | Semana 10  |
+| `v0.4.2` | PATCH | Feature: Facturas                             | Semana 11  |
+| `v0.4.3` | PATCH | Feature: Pagos                                | Semana 12  |
+| `v0.4.0` | MINOR | **Fase 4 completa**: Finanzas (milestone)     | Semana 12  |
+| `v1.0.0` | MAJOR | **MVP Completo** - Primera versión producción | Semana 24  |
 
 ### **Ventajas de Este Enfoque**
 

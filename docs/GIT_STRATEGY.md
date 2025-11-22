@@ -11,23 +11,26 @@ Hemos optado por una versión simplificada de GitHub Flow, que es más ágil que
 ### **Ramas Principales**
 
 #### 1. `main` (Producción)
+
 - **Propósito:** Código en producción o listo para producción
 - **Protección:** Solo se actualiza mediante Pull Requests desde `develop`
 - **Estado:** Siempre debe estar estable y deployable
 - **Tags:** Aquí se crean los tags de versión (v1.0.0, v1.1.0, etc.)
 
 #### 2. `develop` (Desarrollo)
+
 - **Propósito:** Rama de integración para desarrollo activo
 - **Estado actual:** ✅ Estamos aquí ahora
 - **Uso:** Aquí se integran todas las features antes de ir a producción
 - **Commits directos:** Permitidos para cambios pequeños
-- **Features grandes:** Se crean ramas feature/* que luego se mergean aquí
+- **Features grandes:** Se crean ramas feature/\* que luego se mergean aquí
 
 ---
 
 ### **Ramas Temporales** (se crean según necesidad)
 
 #### 3. `feature/*` (Características nuevas)
+
 - **Naming:** `feature/nombre-descriptivo`
 - **Ejemplos:**
   - `feature/auth-module`
@@ -38,6 +41,7 @@ Hemos optado por una versión simplificada de GitHub Flow, que es más ágil que
 - **Ciclo de vida:** Se eliminan después del merge
 
 #### 4. `bugfix/*` (Corrección de bugs)
+
 - **Naming:** `bugfix/descripcion-del-bug`
 - **Ejemplos:**
   - `bugfix/login-validation`
@@ -46,6 +50,7 @@ Hemos optado por una versión simplificada de GitHub Flow, que es más ágil que
 - **Destino:** Se mergean a `develop`
 
 #### 5. `hotfix/*` (Correcciones urgentes en producción)
+
 - **Naming:** `hotfix/descripcion-urgente`
 - **Ejemplos:**
   - `hotfix/security-patch`
@@ -153,6 +158,7 @@ git push origin v1.0.1
 Usamos **Conventional Commits** para mensajes claros y consistentes:
 
 ### **Formato**
+
 ```
 <tipo>(<scope>): <descripción corta>
 
@@ -163,18 +169,18 @@ Usamos **Conventional Commits** para mensajes claros y consistentes:
 
 ### **Tipos Principales**
 
-| Tipo | Uso | Ejemplo |
-|------|-----|---------|
-| `feat` | Nueva característica | `feat(auth): add JWT authentication` |
-| `fix` | Corrección de bug | `fix(ods): resolve workflow transition error` |
-| `docs` | Documentación | `docs: update API documentation` |
-| `style` | Formato, no afecta código | `style: format code with prettier` |
-| `refactor` | Refactorización | `refactor(auth): simplify login logic` |
-| `test` | Tests | `test(ods): add unit tests for CRUD` |
-| `chore` | Tareas de mantenimiento | `chore: update dependencies` |
-| `perf` | Mejora de performance | `perf(db): optimize query performance` |
-| `ci` | CI/CD | `ci: add GitHub Actions workflow` |
-| `build` | Build system | `build: configure webpack` |
+| Tipo       | Uso                       | Ejemplo                                       |
+| ---------- | ------------------------- | --------------------------------------------- |
+| `feat`     | Nueva característica      | `feat(auth): add JWT authentication`          |
+| `fix`      | Corrección de bug         | `fix(ods): resolve workflow transition error` |
+| `docs`     | Documentación             | `docs: update API documentation`              |
+| `style`    | Formato, no afecta código | `style: format code with prettier`            |
+| `refactor` | Refactorización           | `refactor(auth): simplify login logic`        |
+| `test`     | Tests                     | `test(ods): add unit tests for CRUD`          |
+| `chore`    | Tareas de mantenimiento   | `chore: update dependencies`                  |
+| `perf`     | Mejora de performance     | `perf(db): optimize query performance`        |
+| `ci`       | CI/CD                     | `ci: add GitHub Actions workflow`             |
+| `build`    | Build system              | `build: configure webpack`                    |
 
 ### **Scopes Comunes**
 
@@ -233,12 +239,14 @@ develop (desarrollo) ← ESTAMOS AQUÍ ✅
 ## 🚀 Próximos Pasos
 
 ### **Opción A: Continuar en develop (Recomendado para ahora)**
+
 ```bash
 # Ya estamos aquí, seguir trabajando
 git status  # Verificar rama actual
 ```
 
 ### **Opción B: Crear feature branch para Prisma**
+
 ```bash
 git checkout -b feature/prisma-orm
 # Trabajar en Prisma
