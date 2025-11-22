@@ -1,5 +1,9 @@
 # SGCV2 - Sistema de Gestión y Control para XTEL Comunicaciones
 
+![Backend CI](https://github.com/thotluna/sgcv2/workflows/Backend%20CI/badge.svg)
+![Frontend CI](https://github.com/thotluna/sgcv2/workflows/Frontend%20CI/badge.svg)
+![Code Quality](https://github.com/thotluna/sgcv2/workflows/Code%20Quality/badge.svg)
+
 Sistema integral de gestión y control para empresa de telecomunicaciones, con workflow flexible, gestión de equipos, logística y facturación.
 
 ## 📋 Índice
