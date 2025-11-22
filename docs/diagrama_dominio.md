@@ -469,10 +469,10 @@ classDiagram
     %% ============================================
     %% RELACIONES PRINCIPALES
     %% ============================================
-    
+
     %% Clientes y Localidades
     ClienteFinal "1" --> "*" Localidad : tiene
-    
+
     %% ODS Core
     Cliente "1" --> "*" ODS : solicita
     ClienteFinal "1" --> "*" ODS : para
@@ -480,7 +480,7 @@ classDiagram
     TipoServicio "1" --> "*" ODS : tipo
     ODS "1" --> "*" ODSEstadoHistorial : historial
     ODS "1" --> "0..1" Configuracion : requiere
-    
+
     %% Workflow Flexible
     TipoServicio "1" --> "*" WorkflowDefinicion : tiene
     WorkflowDefinicion "1" --> "*" WorkflowEstado : define
@@ -492,24 +492,24 @@ classDiagram
     WorkflowTransicion "1" --> "*" ModificacionODS : usa
     Usuario "1" --> "*" ModificacionODS : solicita
     Usuario "1" --> "*" ModificacionODS : aprueba
-    
+
     %% Tecnologías
     ODS "*" --> "*" Tecnologia : usa
     ODSTecnologia "N" --> "1" ODS
     ODSTecnologia "N" --> "1" Tecnologia
-    
+
     %% Equipos
     Cliente "1" --> "*" Equipo : propietario
     Tecnologia "1" --> "*" Equipo : tipo
     Localidad "1" --> "*" Equipo : instalado_en
     Equipo "1" --> "*" EquipoMovimiento : historial
     ODS "1" --> "*" EquipoMovimiento : genera
-    
+
     %% Notas de Entrega
     ODS "1" --> "*" NotaEntrega : genera
     NotaEntrega "1" --> "*" NotaEntregaDetalle : contiene
     Equipo "1" --> "*" NotaEntregaDetalle : incluye
-    
+
     %% Herramientas
     Tecnico "1" --> "*" SolicitudHerramienta : solicita
     SolicitudHerramienta "1" --> "*" SolicitudHerramientaDetalle : detalle
@@ -517,22 +517,22 @@ classDiagram
     SolicitudHerramienta "*" --> "*" ODS : para
     SolicitudHerramientaODS "N" --> "1" SolicitudHerramienta
     SolicitudHerramientaODS "N" --> "1" ODS
-    
+
     %% Insumos
     ODS "1" --> "*" ODSInsumo : asigna
     Insumo "1" --> "*" ODSInsumo : consumido
-    
+
     %% Técnicos
     Empleado "1" --> "0..1" Tecnico : es
     ODS "*" --> "*" Tecnico : asignado_a
     ODSTecnico "N" --> "1" ODS
     ODSTecnico "N" --> "1" Tecnico
-    
+
     %% Informes
     ODS "1" --> "0..1" InformeServicio : tiene
     ODS "1" --> "*" InformeTecnico : genera
     InformeTecnico "1" --> "*" InformeImagen : contiene
-    
+
     %% Finanzas
     Cliente "1" --> "*" Proforma : recibe
     Proforma "1" --> "*" ProformaDetalle : detalle
@@ -540,7 +540,7 @@ classDiagram
     Proforma "1" --> "0..1" Factura : genera
     Cliente "1" --> "*" Factura : para
     Factura "1" --> "*" Pago : recibe
-    
+
     %% Seguridad
     Empleado "1" --> "0..1" Usuario : tiene
     Usuario "*" --> "*" Rol : tiene
@@ -562,32 +562,32 @@ classDiagram
         +Nombre_Comercial
         +RIF
     }
-    
+
     class ClienteFinal {
         +Nombre
     }
-    
+
     class Localidad {
         +Nombre_Sitio
         +Direccion_Completa
     }
-    
+
     class ODS {
         +Numero_ODS
         +Estado_Actual
         +Fecha_Programada
     }
-    
+
     class TipoServicio {
         +Nombre
         +SLA_Dias
     }
-    
+
     class Tecnologia {
         +Categoria
         +Marca_Modelo
     }
-    
+
     Cliente "1" --> "*" ODS : solicita
     ClienteFinal "1" --> "*" Localidad : tiene_sedes
     ClienteFinal "1" --> "*" ODS : para
@@ -605,27 +605,27 @@ classDiagram
         +Estado_Ciclo_Vida
         +Condicion
     }
-    
+
     class EquipoMovimiento {
         +Tipo_Movimiento
         +Fecha_Movimiento
     }
-    
+
     class NotaEntrega {
         +Numero_Nota
         +Estado
         +Fecha_Entrega
     }
-    
+
     class ODS {
         +Numero_ODS
         +Estado_Actual
     }
-    
+
     class Localidad {
         +Nombre_Sitio
     }
-    
+
     Equipo "1" --> "*" EquipoMovimiento : historial
     ODS "1" --> "*" EquipoMovimiento : genera
     ODS "1" --> "*" NotaEntrega : genera
@@ -641,33 +641,33 @@ classDiagram
         +Numero_ODS
         +Estado_Actual
     }
-    
+
     class Tecnico {
         +Nombre
         +Especialidades
         +Disponible
     }
-    
+
     class Herramienta {
         +Codigo
         +Estado
     }
-    
+
     class Insumo {
         +Codigo
         +Stock_Actual
     }
-    
+
     class SolicitudHerramienta {
         +Estado
         +Fecha_Solicitud
     }
-    
+
     class ODSInsumo {
         +Cantidad_Asignada
         +Cantidad_Usada
     }
-    
+
     ODS "*" --> "*" Tecnico : asignado_a
     Tecnico "1" --> "*" SolicitudHerramienta : solicita
     SolicitudHerramienta "*" --> "*" Herramienta : requiere
@@ -683,29 +683,29 @@ classDiagram
         +Numero_ODS
         +Estado_Actual
     }
-    
+
     class Proforma {
         +Numero_Proforma
         +Estado
         +Total
     }
-    
+
     class Factura {
         +Numero_Factura
         +Estado
         +Saldo_Pendiente
     }
-    
+
     class Pago {
         +Numero_Referencia
         +Monto
         +Fecha_Pago
     }
-    
+
     class Cliente {
         +Nombre_Comercial
     }
-    
+
     ODS "*" --> "1" Proforma : incluido_en
     Cliente "1" --> "*" Proforma : recibe
     Proforma "1" --> "0..1" Factura : genera
@@ -717,6 +717,7 @@ classDiagram
 ### Descripción General
 
 El sistema permite configurar workflows personalizados por tipo de servicio, con la capacidad de:
+
 - Definir estados personalizados más allá de los estados base
 - Configurar transiciones permitidas entre estados
 - Establecer reglas de validación para cada transición
@@ -726,9 +727,11 @@ El sistema permite configurar workflows personalizados por tipo de servicio, con
 ### Componentes del Sistema
 
 #### 1. WorkflowDefinicion
+
 Define el workflow completo para un tipo de servicio específico. Permite versionamiento para evolucionar los procesos sin perder historial.
 
 **Ejemplo:**
+
 ```json
 {
   "id_workflow": 1,
@@ -740,15 +743,18 @@ Define el workflow completo para un tipo de servicio específico. Permite versio
 ```
 
 #### 2. WorkflowEstado
+
 Estados personalizables del workflow. Cada estado puede tener propiedades visuales (color) y lógicas (inicial/final).
 
 **Estados Base (obligatorios):**
+
 - PENDIENTE
 - EN_PROGRESO
 - COMPLETADA
 - CERRADA
 
 **Estados Personalizables (ejemplos):**
+
 - PAUSADA
 - REQUIERE_APROBACION
 - MATERIALES_PENDIENTES
@@ -757,9 +763,11 @@ Estados personalizables del workflow. Cada estado puede tener propiedades visual
 - ESPERANDO_CLIENTE
 
 #### 3. WorkflowTransicion
+
 Define las transiciones permitidas entre estados, con opciones de validación y aprobación.
 
 **Ejemplo:**
+
 ```json
 {
   "id_transicion": 15,
@@ -776,9 +784,11 @@ Define las transiciones permitidas entre estados, con opciones de validación y 
 ```
 
 #### 4. ReglaTransicion
+
 Validaciones específicas que deben cumplirse para permitir una transición.
 
 **Tipos de Reglas:**
+
 - **VALIDACION_CAMPO**: Verifica que ciertos campos estén completos
 - **VALIDACION_RECURSO**: Verifica disponibilidad de recursos
 - **VALIDACION_PERMISO**: Verifica permisos del usuario
@@ -786,6 +796,7 @@ Validaciones específicas que deben cumplirse para permitir una transición.
 - **VALIDACION_TEMPORAL**: Restricciones de tiempo
 
 **Ejemplo:**
+
 ```json
 {
   "tipo_regla": "VALIDACION_RECURSO",
@@ -798,9 +809,11 @@ Validaciones específicas que deben cumplirse para permitir una transición.
 ```
 
 #### 5. ModificacionODS
+
 Registro de todas las modificaciones realizadas a una ODS, incluyendo cambios de estado y modificaciones de alcance.
 
 **Tipos de Modificación:**
+
 - **CAMBIO_ESTADO**: Transición normal de estado
 - **CAMBIO_ALCANCE**: Modificación del alcance del trabajo
 - **PAUSA**: Pausa temporal de la ODS
@@ -810,15 +823,15 @@ Registro de todas las modificaciones realizadas a una ODS, incluyendo cambios de
 
 ### Matriz de Permisos por Rol
 
-| Acción | Técnico | Supervisor | Coordinador | Gerente Ops |
-|--------|---------|------------|-------------|-------------|
-| Pausar ODS | ✅ | ✅ | ✅ | ✅ |
-| Solicitar Materiales | ✅ | ✅ | ✅ | ✅ |
-| Reprogramar | ❌ | ✅ | ✅ | ✅ |
-| Cambiar Alcance | ❌ | ✅ | ✅ | ✅ |
-| Modificar Workflow | ❌ | ❌ | ❌ | ✅ |
-| Cancelar ODS | ❌ | ❌ | ✅ | ✅ |
-| Aprobar Modificaciones | ❌ | ✅ | ✅ | ✅ |
+| Acción                 | Técnico | Supervisor | Coordinador | Gerente Ops |
+| ---------------------- | ------- | ---------- | ----------- | ----------- |
+| Pausar ODS             | ✅      | ✅         | ✅          | ✅          |
+| Solicitar Materiales   | ✅      | ✅         | ✅          | ✅          |
+| Reprogramar            | ❌      | ✅         | ✅          | ✅          |
+| Cambiar Alcance        | ❌      | ✅         | ✅          | ✅          |
+| Modificar Workflow     | ❌      | ❌         | ❌          | ✅          |
+| Cancelar ODS           | ❌      | ❌         | ✅          | ✅          |
+| Aprobar Modificaciones | ❌      | ✅         | ✅          | ✅          |
 
 ### Flujo de Modificación con Aprobación
 
@@ -828,7 +841,7 @@ sequenceDiagram
     participant S as Sistema
     participant Sup as Supervisor
     participant ODS as ODS
-    
+
     T->>S: Solicita cambio de alcance
     S->>S: Valida reglas de transición
     S->>S: Crea ModificacionODS (aprobada=false)
@@ -877,6 +890,7 @@ CERRADA
 ### Trazabilidad y Auditoría
 
 Cada modificación registra:
+
 - **Quién**: Usuario que solicita y usuario que aprueba
 - **Qué**: Estado anterior, estado nuevo, tipo de modificación
 - **Cuándo**: Fecha de solicitud y fecha de aprobación
@@ -884,6 +898,7 @@ Cada modificación registra:
 - **Cómo**: Datos adicionales en formato JSON
 
 **Ejemplo de Registro:**
+
 ```json
 {
   "id_modificacion": 1523,
@@ -909,6 +924,7 @@ Cada modificación registra:
 ### Estados de ODS por Tipo de Servicio
 
 **Inspección:**
+
 - NUEVO
 - POR_COORDINAR
 - COORDINACION_RECHAZADA
@@ -922,6 +938,7 @@ Cada modificación registra:
 - PAGADO
 
 **Instalación:**
+
 - NUEVO
 - PENDIENTE_POR_ASIGNACIONES
 - PENDIENTE_POR_EQUIPOS
@@ -937,6 +954,7 @@ Cada modificación registra:
 - PAGADO
 
 **Mantenimiento Correctivo:**
+
 - NUEVO
 - PENDIENTE_ASIGNACION
 - REALIZANDO
@@ -979,6 +997,7 @@ Cada modificación registra:
 ## Reglas de Negocio Clave
 
 ### Reglas Generales
+
 1. **Una ODS solo puede estar en un estado a la vez**
 2. **Un equipo solo puede estar instalado en una localidad**
 3. **Un técnico no puede tener múltiples ODS REALIZANDO simultáneamente**
@@ -991,6 +1010,7 @@ Cada modificación registra:
 10. **Los equipos instalados deben estar asociados a una localidad**
 
 ### Reglas de Workflow Flexible
+
 11. **Cada tipo de servicio debe tener un workflow activo definido**
 12. **Las transiciones de estado deben estar definidas en el workflow correspondiente**
 13. **No se puede transicionar a un estado si no existe una transición válida**

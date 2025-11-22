@@ -7,6 +7,7 @@ Se ha completado exitosamente la implementación del módulo de autenticación d
 ## ✅ Archivos Creados/Modificados
 
 ### Nuevos Archivos
+
 1. **auth.controller.ts** - Controlador con endpoints de autenticación
 2. **register.dto.ts** - DTO para registro de usuarios
 3. **local.strategy.ts** - Estrategia de Passport para autenticación local
@@ -16,6 +17,7 @@ Se ha completado exitosamente la implementación del módulo de autenticación d
 7. **protected.routes.example.ts** - Ejemplos de uso
 
 ### Archivos Modificados
+
 1. **auth.service.ts** - Agregados métodos hashPassword, comparePassword, getUserWithRoles
 2. **auth.routes.ts** - Refactorizado para usar controller, agregados endpoints /logout y /me
 3. **app.ts** - Agregada local strategy a Passport
@@ -23,6 +25,7 @@ Se ha completado exitosamente la implementación del módulo de autenticación d
 ## ✅ Funcionalidades Implementadas
 
 ### AuthService
+
 - ✅ `validateUser(username, password)` - Valida credenciales de usuario
 - ✅ `login(user)` - Genera token JWT
 - ✅ `hashPassword(password)` - Hash de contraseñas con bcrypt
@@ -30,25 +33,30 @@ Se ha completado exitosamente la implementación del módulo de autenticación d
 - ✅ `getUserWithRoles(userId)` - Obtiene usuario con roles y permisos
 
 ### AuthController
+
 - ✅ `POST /api/auth/login` - Endpoint de login
 - ✅ `POST /api/auth/logout` - Endpoint de logout
 - ✅ `GET /api/auth/me` - Obtener información del usuario actual
 
 ### Passport Strategies
+
 - ✅ JWT Strategy - Para proteger rutas con tokens
 - ✅ Local Strategy - Para autenticación con username/password
 
 ### Middleware
+
 - ✅ `authenticate` - Middleware para rutas protegidas
 - ✅ `optionalAuth` - Middleware para autenticación opcional
 
 ### RBAC Guards
+
 - ✅ `requireRoles(...roles)` - Guard para requerir roles específicos
 - ✅ `requirePermission(module, action)` - Guard para requerir permisos específicos
 
 ## ✅ Tests
 
 Todos los tests están pasando:
+
 ```
 Test Suites: 2 passed, 2 total
 Tests:       6 passed, 6 total
@@ -70,6 +78,7 @@ auth.routes.ts        |  58.33  |   66.66  |  44.44  |   65
 ## 🎯 Endpoints Disponibles
 
 ### POST /api/auth/login
+
 ```bash
 curl -X POST http://localhost:3000/api/auth/login \
   -H "Content-Type: application/json" \
@@ -77,12 +86,14 @@ curl -X POST http://localhost:3000/api/auth/login \
 ```
 
 ### GET /api/auth/me
+
 ```bash
 curl -X GET http://localhost:3000/api/auth/me \
   -H "Authorization: Bearer <token>"
 ```
 
 ### POST /api/auth/logout
+
 ```bash
 curl -X POST http://localhost:3000/api/auth/logout \
   -H "Authorization: Bearer <token>"
@@ -91,6 +102,7 @@ curl -X POST http://localhost:3000/api/auth/logout \
 ## 📚 Documentación
 
 Se ha creado documentación completa en:
+
 - `/backend/src/modules/auth/README.md` - Guía completa del módulo
 - `/backend/src/modules/examples/protected.routes.example.ts` - Ejemplos de uso
 
@@ -117,6 +129,7 @@ Todos los requisitos de la tarea 2.1 han sido implementados y probados exitosame
 ## 📝 Próximos Pasos
 
 La siguiente tarea es **2.2 Backend - Gestión de Usuarios**:
+
 - Crear módulo `users/`
 - Implementar CRUD de usuarios
 - Endpoints para gestión de usuarios

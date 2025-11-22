@@ -3,74 +3,74 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 
 export class AuthController {
-    private authService: AuthService;
+  private authService: AuthService;
 
-    constructor() {
-        this.authService = new AuthService();
-    }
+  constructor() {
+    this.authService = new AuthService();
+  }
 
-    async login(req: Request, res: Response): Promise<Response> {
-        try {
-            const dto: LoginDto = req.body;
+  async login(req: Request, res: Response): Promise<Response> {
+    try {
+      const dto: LoginDto = req.body;
 
-            if (!dto.username || !dto.password) {
-                return res.status(400).json({
-                    error: 'Bad Request',
-                    message: 'Username and password are required'
-                });
-            }
-
-            const user = await this.authService.validateUser(dto.username, dto.password);
-
-            if (!user) {
-                return res.status(401).json({ error: 'Invalid credentials' });
-            }
-
-            const token = await this.authService.login({
-                id_usuario: user.id_usuario,
-                username: user.username
-            });
-
-            return res.json(token);
-        } catch (error) {
-            console.error('Login error:', error);
-            return res.status(500).json({
-                error: 'Internal Server Error',
-                message: 'An error occurred during login'
-            });
-        }
-    }
-
-    async logout(_req: Request, res: Response): Promise<Response> {
-        return res.json({
-            message: 'Logout successful',
-            note: 'Client should remove the token from storage'
+      if (!dto.username || !dto.password) {
+        return res.status(400).json({
+          error: 'Bad Request',
+          message: 'Username and password are required',
         });
+      }
+
+      const user = await this.authService.validateUser(dto.username, dto.password);
+
+      if (!user) {
+        return res.status(401).json({ error: 'Invalid credentials' });
+      }
+
+      const token = await this.authService.login({
+        id_usuario: user.id_usuario,
+        username: user.username,
+      });
+
+      return res.json(token);
+    } catch (error) {
+      console.error('Login error:', error);
+      return res.status(500).json({
+        error: 'Internal Server Error',
+        message: 'An error occurred during login',
+      });
     }
+  }
 
-    async me(req: Request, res: Response): Promise<Response> {
-        try {
-            const user = req.user as any;
+  async logout(_req: Request, res: Response): Promise<Response> {
+    return res.json({
+      message: 'Logout successful',
+      note: 'Client should remove the token from storage',
+    });
+  }
 
-            if (!user) {
-                return res.status(401).json({ error: 'Unauthorized' });
-            }
+  async me(req: Request, res: Response): Promise<Response> {
+    try {
+      const user = req.user as any;
 
-            const userWithRoles = await this.authService.getUserWithRoles(user.id_usuario);
+      if (!user) {
+        return res.status(401).json({ error: 'Unauthorized' });
+      }
 
-            if (!userWithRoles) {
-                return res.status(404).json({ error: 'User not found' });
-            }
+      const userWithRoles = await this.authService.getUserWithRoles(user.id_usuario);
 
-            const { password_hash, ...userWithoutPassword } = userWithRoles;
+      if (!userWithRoles) {
+        return res.status(404).json({ error: 'User not found' });
+      }
 
-            return res.json(userWithoutPassword);
-        } catch (error) {
-            console.error('Get user error:', error);
-            return res.status(500).json({
-                error: 'Internal Server Error',
-                message: 'An error occurred while fetching user data'
-            });
-        }
+      const { password_hash, ...userWithoutPassword } = userWithRoles;
+
+      return res.json(userWithoutPassword);
+    } catch (error) {
+      console.error('Get user error:', error);
+      return res.status(500).json({
+        error: 'Internal Server Error',
+        message: 'An error occurred while fetching user data',
+      });
     }
+  }
 }

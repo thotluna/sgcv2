@@ -19,6 +19,7 @@ Sistema integral de gestión y control para empresa de telecomunicaciones, con w
 SGCV2 es un sistema de gestión empresarial diseñado específicamente para XTEL Comunicaciones, empresa contratista de telecomunicaciones que presta servicios a carriers (Movistar, Digitel, Movilnet).
 
 El sistema gestiona el ciclo completo de:
+
 - **Órdenes de Servicio (ODS)** con workflow flexible
 - **Logística** de equipos, herramientas e insumos
 - **Personal técnico** y asignaciones
@@ -30,29 +31,33 @@ El sistema gestiona el ciclo completo de:
 ## 📚 Documentación
 
 ### Documentos de Análisis
-| Documento | Descripción | Tamaño |
-|-----------|-------------|--------|
-| **[docs/SGCV2.md](docs/SGCV2.md)** | Requerimientos iniciales y procesos de negocio | 24 KB |
-| **[docs/analisis_diseno.md](docs/analisis_diseno.md)** | Análisis completo, requerimientos funcionales/no funcionales, casos de uso | 86 KB |
+
+| Documento                                              | Descripción                                                                | Tamaño |
+| ------------------------------------------------------ | -------------------------------------------------------------------------- | ------ |
+| **[docs/SGCV2.md](docs/SGCV2.md)**                     | Requerimientos iniciales y procesos de negocio                             | 24 KB  |
+| **[docs/analisis_diseno.md](docs/analisis_diseno.md)** | Análisis completo, requerimientos funcionales/no funcionales, casos de uso | 86 KB  |
 
 ### Modelado y Diseño
-| Documento | Descripción | Tamaño |
-|-----------|-------------|--------|
-| **[docs/diagrama_dominio.md](docs/diagrama_dominio.md)** | Modelo de dominio completo con diagramas Mermaid | 26.5 KB |
-| **[docs/PLAN_IMPLEMENTACION.md](docs/PLAN_IMPLEMENTACION.md)** | Plan de implementación tecnológico (24 semanas) | 18.8 KB |
+
+| Documento                                                      | Descripción                                      | Tamaño  |
+| -------------------------------------------------------------- | ------------------------------------------------ | ------- |
+| **[docs/diagrama_dominio.md](docs/diagrama_dominio.md)**       | Modelo de dominio completo con diagramas Mermaid | 26.5 KB |
+| **[docs/PLAN_IMPLEMENTACION.md](docs/PLAN_IMPLEMENTACION.md)** | Plan de implementación tecnológico (24 semanas)  | 18.8 KB |
 
 ### Base de Datos
-| Archivo | Descripción | Tamaño |
-|---------|-------------|--------|
-| **[database/schema.sql](database/schema.sql)** | DDL PostgreSQL completo (45 tablas) | 34 KB |
-| **[database/workflow_validation.sql](database/workflow_validation.sql)** | Funciones de validación de workflow | 8.5 KB |
-| **[database/seed_data.sql](database/seed_data.sql)** | Datos iniciales (workflows, permisos) | 18.5 KB |
-| **[docs/DATABASE_GUIDE.md](docs/DATABASE_GUIDE.md)** | Guía completa del esquema de BD | 9.5 KB |
-| **[docs/ESTADOS_DINAMICOS.md](docs/ESTADOS_DINAMICOS.md)** | Decisión de diseño: VARCHAR vs ENUM | 9.2 KB |
+
+| Archivo                                                                  | Descripción                           | Tamaño  |
+| ------------------------------------------------------------------------ | ------------------------------------- | ------- |
+| **[database/schema.sql](database/schema.sql)**                           | DDL PostgreSQL completo (45 tablas)   | 34 KB   |
+| **[database/workflow_validation.sql](database/workflow_validation.sql)** | Funciones de validación de workflow   | 8.5 KB  |
+| **[database/seed_data.sql](database/seed_data.sql)**                     | Datos iniciales (workflows, permisos) | 18.5 KB |
+| **[docs/DATABASE_GUIDE.md](docs/DATABASE_GUIDE.md)**                     | Guía completa del esquema de BD       | 9.5 KB  |
+| **[docs/ESTADOS_DINAMICOS.md](docs/ESTADOS_DINAMICOS.md)**               | Decisión de diseño: VARCHAR vs ENUM   | 9.2 KB  |
 
 ### Tareas
-| Archivo | Descripción |
-|---------|-------------|
+
+| Archivo                                | Descripción                                            |
+| -------------------------------------- | ------------------------------------------------------ |
 | **[TAREAS_FASE1.md](TAREAS_FASE1.md)** | ⭐ Lista detallada de tareas para la primera iteración |
 
 ---
@@ -60,6 +65,7 @@ El sistema gestiona el ciclo completo de:
 ## 🛠️ Stack Tecnológico
 
 ### Backend
+
 - **Runtime**: Node.js 20 LTS
 - **Framework**: Express.js + TypeScript
 - **ORM**: Prisma
@@ -67,6 +73,7 @@ El sistema gestiona el ciclo completo de:
 - **Validación**: Zod
 
 ### Frontend
+
 - **Framework**: Next.js 14 (App Router)
 - **UI**: shadcn/ui + Tailwind CSS
 - **State**: Zustand + React Query
@@ -74,10 +81,12 @@ El sistema gestiona el ciclo completo de:
 - **Tablas**: TanStack Table
 
 ### Base de Datos
+
 - **Motor**: PostgreSQL 15+
 - **Extensiones**: uuid-ossp, pgcrypto
 
 ### DevOps
+
 - **Containerización**: Docker + Docker Compose
 - **CI/CD**: GitHub Actions
 - **Hosting**: VPS / AWS / Vercel + Railway
@@ -87,6 +96,7 @@ El sistema gestiona el ciclo completo de:
 ## ✨ Características Principales
 
 ### 🔄 Sistema de Workflow Flexible
+
 - ✅ Workflows personalizados por tipo de servicio
 - ✅ Estados dinámicos (no hardcoded)
 - ✅ Transiciones configurables con validaciones
@@ -95,6 +105,7 @@ El sistema gestiona el ciclo completo de:
 - ✅ Versionamiento de workflows
 
 ### 📦 Gestión de Logística
+
 - ✅ Tracking individual de equipos por serial
 - ✅ Control de herramientas con préstamos
 - ✅ Gestión de stock de insumos
@@ -102,12 +113,14 @@ El sistema gestiona el ciclo completo de:
 - ✅ Alertas de stock mínimo
 
 ### 👥 Gestión de Personal
+
 - ✅ Técnicos con especialidades
 - ✅ Asignación a ODS
 - ✅ Calendario de técnicos
 - ✅ Control de disponibilidad
 
 ### 💰 Módulo Financiero
+
 - ✅ Generación de proformas
 - ✅ Facturación automática
 - ✅ Control de pagos
@@ -115,6 +128,7 @@ El sistema gestiona el ciclo completo de:
 - ✅ Dashboard financiero
 
 ### 🔐 Seguridad
+
 - ✅ RBAC (Role-Based Access Control)
 - ✅ 11 roles predefinidos
 - ✅ Permisos granulares
@@ -122,6 +136,7 @@ El sistema gestiona el ciclo completo de:
 - ✅ Autenticación JWT
 
 ### 📊 Reportes
+
 - ✅ Dashboard ejecutivo
 - ✅ Métricas en tiempo real
 - ✅ Exportación a Excel/PDF
@@ -132,6 +147,7 @@ El sistema gestiona el ciclo completo de:
 ## 🚀 Instalación
 
 ### Prerrequisitos
+
 - Node.js 20+
 - PostgreSQL 15+
 - Docker (opcional)
@@ -186,6 +202,7 @@ cd frontend && npm run dev
 ```
 
 Acceder a:
+
 - **Frontend**: http://localhost:3000
 - **Backend API**: http://localhost:4000
 - **API Docs**: http://localhost:4000/api-docs
@@ -239,6 +256,7 @@ sgcv2/
 ## 🗺️ Roadmap
 
 ### ✅ Fase 0: Análisis y Diseño (Completado)
+
 - [x] Análisis de requerimientos
 - [x] Modelado de dominio
 - [x] Diseño de base de datos
@@ -246,18 +264,21 @@ sgcv2/
 - [x] Workflows iniciales
 
 ### 🔄 Fase 1: Setup y Autenticación (En Progreso)
+
 - [ ] Configuración de proyecto
 - [ ] Sistema de autenticación
 - [ ] RBAC
 - [ ] Dashboard base
 
 ### ⏳ Fase 2: Módulo ODS Core (Próximo)
+
 - [ ] CRUD de clientes y localidades
 - [ ] Workflow engine
 - [ ] Gestión de ODS
 - [ ] Sistema de modificaciones
 
 ### ⏳ Fase 3-10: Implementación Completa
+
 Ver [PLAN_IMPLEMENTACION.md](PLAN_IMPLEMENTACION.md) para detalles completos.
 
 **Tiempo estimado total**: 24 semanas (~6 meses)
@@ -267,12 +288,14 @@ Ver [PLAN_IMPLEMENTACION.md](PLAN_IMPLEMENTACION.md) para detalles completos.
 ## 📊 Estadísticas del Proyecto
 
 ### Documentación
+
 - **7 documentos** técnicos
 - **~200 KB** de documentación
 - **72 requerimientos** funcionales
 - **10 categorías** de req. no funcionales
 
 ### Base de Datos
+
 - **45 tablas**
 - **15 tipos enumerados**
 - **20+ índices**
@@ -280,6 +303,7 @@ Ver [PLAN_IMPLEMENTACION.md](PLAN_IMPLEMENTACION.md) para detalles completos.
 - **7 funciones/vistas**
 
 ### Funcionalidades
+
 - **7 tipos** de servicio
 - **3 workflows** iniciales configurados
 - **11 roles** de usuario
