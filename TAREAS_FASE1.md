@@ -254,7 +254,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 
 #### 2.3 Backend - Sistema RBAC
 
-- [ ] Crear módulo `rbac/`:
+- [x] Crear módulo `rbac/`:
   ```
   src/modules/rbac/
   ├── rbac.service.ts
@@ -265,15 +265,15 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
       ├── roles.decorator.ts
       └── permissions.decorator.ts
   ```
-- [ ] Implementar `rbac.service.ts`:
-  - `getUserPermissions(userId)` → permisos del usuario
-  - `hasPermission(userId, module, action)` → verificar permiso
-  - `hasRole(userId, roleName)` → verificar rol
-- [ ] Crear decorators:
-  - `@Roles('admin', 'gerente')` → requiere roles
-  - `@RequirePermission('ODS', 'CREAR')` → requiere permiso
-- [ ] Crear guards para proteger rutas
-- [ ] Probar sistema de permisos
+- [x] Implementar `rbac.service.ts`:
+  - ✅ `getUserPermissions(userId)` → permisos del usuario
+  - ✅ `hasPermission(userId, module, action)` → verificar permiso
+  - ✅ `hasRole(userId, roleName)` → verificar rol
+- [x] Crear decorators:
+  - ✅ `@Roles('admin', 'gerente')` → requiere roles
+  - ✅ `@RequirePermission('ODS', 'CREAR')` → requiere permiso
+- [x] Crear guards para proteger rutas
+- [x] Probar sistema de permisos ✅ (Tests unitarios con cobertura >78%)
 
 **Tiempo estimado:** 6 horas
 

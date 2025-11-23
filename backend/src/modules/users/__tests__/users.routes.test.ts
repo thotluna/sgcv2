@@ -32,7 +32,15 @@ jest.mock('../../auth/middleware/auth.middleware', () => ({
   }),
 }));
 
-jest.mock('../../auth/guards/rbac.guard', () => ({
+jest.mock('../../rbac/rbac.service', () => ({
+  rbacService: {
+    hasRole: jest.fn().mockResolvedValue(true),
+    hasPermission: jest.fn().mockResolvedValue(true),
+    getUserPermissions: jest.fn().mockResolvedValue([]),
+  },
+}));
+
+jest.mock('../../rbac/guards/roles.guard', () => ({
   requireRoles: jest.fn(() => (_req: any, _res: any, next: any) => next()),
 }));
 
