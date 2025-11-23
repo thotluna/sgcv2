@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { UsersController } from './users.controller';
 import { authenticate } from '../auth/middleware/auth.middleware';
-import { requireRoles } from '../auth/guards/rbac.guard';
+import { requireRoles } from '../rbac/guards/roles.guard';
 
 const router = Router();
 const usersController = new UsersController();
