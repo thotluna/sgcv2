@@ -45,9 +45,17 @@ export default function LoginPage() {
         description: 'Welcome back!',
       });
       router.push('/');
-    } catch (error: any) {
+    } catch (error: unknown) {
+      let errorMessage = 'Invalid credentials. Please try again.';
+      if (error && typeof error === 'object' && 'response' in error) {
+        const axiosError = error as { response: { data: { message: string } } };
+        if (axiosError.response?.data?.message) {
+          errorMessage = axiosError.response.data.message;
+        }
+      }
+
       toast.error('Login failed', {
-        description: error?.response?.data?.message || 'Invalid credentials. Please try again.',
+        description: errorMessage,
       });
     } finally {
       setIsLoading(false);

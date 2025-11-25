@@ -2,7 +2,6 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import LoginPage from '../page';
 import { useAuthStore } from '@/stores/auth.store';
-import { useRouter } from 'next/navigation';
 
 // Mock the auth store
 jest.mock('@/stores/auth.store', () => ({
