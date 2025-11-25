@@ -281,9 +281,9 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 
 ### 3. Frontend - Autenticación
 
-#### 3.1 Setup de Autenticación en Frontend
+#### 3.1 Setup de Autenticación en Frontend ✅ COMPLETADA
 
-- [ ] Crear store de autenticación con Zustand:
+- [x] Crear store de autenticación con Zustand:
   ```typescript
   // stores/auth.store.ts
   interface AuthState {
@@ -295,14 +295,14 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
     checkAuth: () => Promise<void>;
   }
   ```
-- [ ] Crear API client con Axios:
+- [x] Crear API client con Axios:
   ```typescript
-  // lib/api-client.ts
-  - Configurar baseURL
-  - Interceptor para agregar JWT token
-  - Interceptor para manejar errores 401
+  // lib/api/client.ts
+  - Configurar baseURL ✅
+  - Interceptor para agregar JWT token ✅
+  - Interceptor para manejar errores 401 ✅
   ```
-- [ ] Crear tipos TypeScript:
+- [x] Crear tipos TypeScript:
   ```typescript
   // types/auth.ts
   interface User {
@@ -314,29 +314,42 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
   }
   ```
 
-**Tiempo estimado:** 3 horas
+**Tiempo estimado:** 3 horas  
+**Tiempo real:** ~1.5 horas ✅
 
 ---
 
-#### 3.2 Página de Login
+#### 3.2 Página de Login ✅ COMPLETADA
 
-- [ ] Crear ruta `app/(auth)/login/page.tsx`
-- [ ] Crear componente de formulario de login:
-  - Input de username
-  - Input de password
-  - Botón de submit
-  - Validación con Zod
-  - Manejo de errores
-- [ ] Implementar lógica de login:
-  - Llamar a API `/api/auth/login`
-  - Guardar token en localStorage/cookie
-  - Actualizar store de autenticación
-  - Redirect a dashboard
-- [ ] Agregar loading state
-- [ ] Agregar mensajes de error
-- [ ] Estilizar con Tailwind/shadcn
+- [x] Crear ruta `app/(auth)/login/page.tsx`
+- [x] Crear componente de formulario de login:
+  - ✅ Input de username
+  - ✅ Input de password
+  - ✅ Botón de submit
+  - ✅ Validación con Zod
+  - ✅ Manejo de errores
+- [x] Implementar lógica de login:
+  - ✅ Llamar a API `/api/auth/login`
+  - ✅ Guardar token en localStorage con Zustand persist
+  - ✅ Actualizar store de autenticación
+  - ✅ Redirect a dashboard
+- [x] Agregar loading state
+- [x] Agregar mensajes de error con Sonner
+- [x] Estilizar con Tailwind/shadcn
 
-**Tiempo estimado:** 4 horas
+**Bugs corregidos:**
+
+- ✅ Validación de username cambiada de email a string (permitir 'admin')
+- ✅ Backend actualizado para devolver `{ user, token }` en lugar de solo `{ access_token }`
+- ✅ Tests actualizados para reflejar nuevo formato de respuesta
+
+**Credenciales de prueba:**
+
+- Username: `admin`
+- Password: `admin123`
+
+**Tiempo estimado:** 4 horas  
+**Tiempo real:** ~2 horas ✅
 
 ---
 
@@ -403,34 +416,79 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 
 ### 5. Testing y QA
 
-#### 5.1 Testing Backend
+#### 5.1 Testing Backend ✅ COMPLETADA
 
-- [ ] Configurar Jest para backend
-- [ ] Crear tests para auth.service:
-  - Test de login exitoso
-  - Test de login fallido
-  - Test de validación de token
-- [ ] Crear tests para RBAC:
-  - Test de verificación de permisos
-  - Test de verificación de roles
-- [ ] Ejecutar tests y verificar coverage
+- [x] Configurar Jest para backend
+- [x] Crear tests para auth.service:
+  - ✅ Test de login exitoso
+  - ✅ Test de login fallido
+  - ✅ Test de validación de token
+  - ✅ Test de hash y comparación de passwords
+- [x] Crear tests para auth.controller:
+  - ✅ Test de endpoint login (200, 400, 401)
+  - ✅ Test de endpoint logout
+  - ✅ Test de endpoint me
+- [x] Crear tests para auth.routes:
+  - ✅ Tests de integración de rutas de autenticación
+- [x] Crear tests para RBAC:
+  - ✅ Test de verificación de permisos
+  - ✅ Test de verificación de roles
+  - ✅ Test de guards (roles.guard, permissions.guard)
+- [x] Crear tests para users module:
+  - ✅ Tests de users.service
+  - ✅ Tests de users.controller
+  - ✅ Tests de users.routes
+- [x] Ejecutar tests y verificar coverage
 
-**Tiempo estimado:** 4 horas
+**Resultados:**
+
+- ✅ 9 test suites pasando
+- ✅ 69 tests pasando
+- ✅ Coverage general: ~40% (módulos críticos >78%)
+- ✅ Auth module: 85%+ coverage
+- ✅ RBAC module: 78%+ coverage
+- ✅ Users module: 90%+ coverage
+
+**Tiempo estimado:** 4 horas  
+**Tiempo real:** ~3 horas ✅
 
 ---
 
-#### 5.2 Testing Frontend
+#### 5.2 Testing Frontend ✅ COMPLETADA
 
-- [ ] Configurar Jest + React Testing Library
-- [ ] Crear tests para componente Login:
-  - Renderizado correcto
-  - Validación de formulario
-  - Submit exitoso
-  - Manejo de errores
-- [ ] Crear tests para auth store
-- [ ] Ejecutar tests
+- [x] Configurar Jest + React Testing Library
+- [x] Crear tests para componente Login:
+  - ✅ Renderizado correcto
+  - ✅ Validación de formulario
+  - ✅ Submit exitoso
+  - ✅ Manejo de errores
+  - ✅ Loading states
+  - ✅ Accessibility
+- [x] Crear tests para auth store:
+  - ✅ Initial state
+  - ✅ Login success/failure
+  - ✅ Logout
+  - ✅ CheckAuth
+  - ✅ State persistence
+- [x] Ejecutar tests
 
-**Tiempo estimado:** 4 horas
+**Resultados:**
+
+- ✅ 2 test suites pasando
+- ✅ 18 tests pasando
+- ✅ Login component: 11 tests
+- ✅ Auth store: 7 tests
+- ✅ Cobertura completa de funcionalidad crítica
+
+**Archivos creados:**
+
+- `jest.config.ts` - Configuración de Jest
+- `jest.setup.ts` - Setup y mocks globales
+- `app/(auth)/login/__tests__/page.test.tsx` - Tests del componente Login
+- `stores/__tests__/auth.store.test.ts` - Tests del auth store
+
+**Tiempo estimado:** 4 horas  
+**Tiempo real:** ~2 horas ✅
 
 ---
 
@@ -480,18 +538,48 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 
 ## 📊 Resumen de Tiempo Estimado
 
-| Categoría         | Tiempo Estimado |
-| ----------------- | --------------- |
-| 1. Setup Inicial  | 16 horas        |
-| 2. Backend Auth   | 18 horas        |
-| 3. Frontend Auth  | 10 horas        |
-| 4. Dashboard Base | 10 horas        |
-| 5. Testing        | 11 horas        |
-| 6. Documentación  | 3-9 horas       |
-| **TOTAL**         | **68-74 horas** |
+| Categoría         | Tiempo Estimado | Tiempo Real   | Estado            |
+| ----------------- | --------------- | ------------- | ----------------- |
+| 1. Setup Inicial  | 16 horas        | ~5.5 horas    | ✅ Completo       |
+| 2. Backend Auth   | 18 horas        | ~5 horas      | ✅ Completo       |
+| 3. Frontend Auth  | 10 horas        | ~3.5 horas    | ✅ Completo       |
+| 4. Dashboard Base | 10 horas        | -             | ⏳ Pendiente      |
+| 5. Testing        | 11 horas        | ~5 horas      | ✅ Completo       |
+| 6. Documentación  | 3-9 horas       | -             | ⏳ Pendiente      |
+| **TOTAL**         | **68-74 horas** | **~19 horas** | **~70% completo** |
+
+**Progreso actual:**
+
+- ✅ **Completado:** Setup, Backend Auth, Frontend Auth (Login), Testing (Backend + Frontend)
+- ⏳ **Pendiente:** Protección de rutas, Dashboard layout, Documentación
 
 **Con 1 developer:** ~2-3 semanas  
 **Con 2 developers:** ~1-2 semanas
+
+---
+
+## 📈 Estado Actual del Proyecto (2025-11-25)
+
+### ✅ Completado (70%)
+
+- Setup completo de backend y frontend
+- Base de datos PostgreSQL con schema
+- Sistema de autenticación JWT completo
+- RBAC implementado y testeado
+- Página de login funcional
+- **Testing completo:**
+  - Backend: 69 tests (9 suites)
+  - Frontend: 18 tests (2 suites)
+- API client con interceptores
+- Zustand store para autenticación
+
+### ⏳ En Progreso / Pendiente (30%)
+
+- Middleware de protección de rutas
+- Layout de dashboard
+- Componentes de navegación (Sidebar, Header)
+- Documentación actualizada
+- Deploy (opcional)
 
 ---
 
@@ -504,10 +592,12 @@ Al finalizar esta iteración, debes tener:
 - ✅ Sistema de login funcional
 - ✅ JWT authentication implementado
 - ✅ RBAC básico funcionando
-- ✅ Dashboard con layout principal
-- ✅ Rutas protegidas
-- ✅ Tests básicos pasando
-- ✅ Documentación actualizada
+- ⏳ Dashboard con layout principal (pendiente)
+- ⏳ Rutas protegidas (pendiente)
+- ✅ Tests básicos pasando (69 tests, 9 suites)
+- ⏳ Documentación actualizada (pendiente)
+
+**Estado actual:** 6/9 criterios completados (67%)
 
 ---
 
@@ -534,6 +624,7 @@ Una vez completada esta fase, la siguiente iteración será:
 
 ---
 
-**Versión:** 1.0  
-**Fecha:** 2025-11-21  
-**Próxima revisión:** Al completar 50% de las tareas
+**Versión:** 1.1  
+**Fecha inicial:** 2025-11-21  
+**Última actualización:** 2025-11-25  
+**Próxima revisión:** Al completar Dashboard y protección de rutas
