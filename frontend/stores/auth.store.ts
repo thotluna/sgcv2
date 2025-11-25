@@ -13,6 +13,18 @@ interface AuthState {
   checkAuth: () => Promise<void>;
 }
 
+// Helper to set cookie (for SSR middleware access)
+function setCookie(name: string, value: string, days: number = 7) {
+  const expires = new Date();
+  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Strict`;
+}
+
+// Helper to delete cookie
+function deleteCookie(name: string) {
+  document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
+}
+
 export const useAuthStore = create<AuthState>()(
   persist(
     set => ({
@@ -23,21 +35,34 @@ export const useAuthStore = create<AuthState>()(
       login: async (username, password) => {
         try {
           const { user, token } = await authService.login(username, password);
+
+          // Set token in cookie for middleware access
+          setCookie('auth-token', token);
+
           set({ user, token, isAuthenticated: true });
         } catch (error) {
           console.error('Login failed:', error);
           set({ user: null, token: null, isAuthenticated: false });
-          throw error; //
+          throw error;
         }
       },
 
       logout: () => {
+        // Remove token from cookie
+        deleteCookie('auth-token');
+
         set({ user: null, token: null, isAuthenticated: false });
         localStorage.removeItem('auth-storage');
       },
 
       checkAuth: async () => {
         const { user, token } = await authService.getMe();
+
+        // Sync token with cookie
+        if (token) {
+          setCookie('auth-token', token);
+        }
+
         set({ user, token, isAuthenticated: true });
       },
     }),

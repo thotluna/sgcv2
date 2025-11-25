@@ -22,6 +22,11 @@ type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = new URLSearchParams(
+    typeof window !== 'undefined' ? window.location.search : ''
+  );
+  const callbackUrl = searchParams.get('callbackUrl') || '/';
+
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuthStore();
 
@@ -44,7 +49,8 @@ export default function LoginPage() {
       toast.success('Login successful!', {
         description: 'Welcome back!',
       });
-      router.push('/');
+      // Redirect to callback URL or dashboard
+      router.push(callbackUrl);
     } catch (error: unknown) {
       let errorMessage = 'Invalid credentials. Please try again.';
       if (error && typeof error === 'object' && 'response' in error) {

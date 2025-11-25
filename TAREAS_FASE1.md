@@ -495,7 +495,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 #### 5.3 Testing Manual (Automatizado con Playwright E2E)
 
 - [x] Probar flujo completo de login (ingresar credenciales válidas, verificar redirección al dashboard y persistencia del token)
-- [ ] Probar protección de rutas (intentar acceder a rutas protegidas sin estar autenticado y verificar redirección a /login) - **Pendiente: requiere implementar middleware de protección**
+- [x] Probar protección de rutas (intentar acceder a rutas protegidas sin estar autenticado y verificar redirección a /login) ✅
 - [ ] Probar logout (click en botón de logout, asegurar que el token se elimina y se redirige a /login) - **Pendiente: requiere implementar UI de logout**
 - [x] Probar en diferentes navegadores (Chrome, Firefox, Safari/WebKit) y dispositivos (desktop, mobile) para validar UI responsiva
 - [x] Probar diseño responsive (verificar que el formulario y layout se adaptan correctamente en tamaños de pantalla pequeños)
@@ -504,6 +504,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 
 **Archivos creados:**
 
+- `frontend/middleware.ts` - Middleware de Next.js para protección de rutas
 - `frontend/playwright.config.ts` - Configuración de Playwright
 - `frontend/e2e/login.spec.ts` - Tests E2E automatizados
 - `frontend/package.json` - Scripts `test:e2e` y `test:e2e:ui`
@@ -511,17 +512,26 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 **Tests implementados:**
 
 - ✅ Login flow con redirección y persistencia de token (Chromium, Firefox, WebKit)
+- ✅ Protección de rutas con redirección a /login + callbackUrl (Chromium, Firefox, WebKit)
 - ✅ Responsive layout en móvil (375x667) (Chromium, Firefox, WebKit)
-- ⏭️ Protección de rutas (skipped - pendiente implementación)
+
+**Funcionalidades implementadas:**
+
+- ✅ Middleware de Next.js que protege todas las rutas excepto `/login`
+- ✅ Redirección automática a `/login` si no hay token
+- ✅ Redirección automática a `/` si ya está autenticado e intenta acceder a `/login`
+- ✅ Callback URL para redirigir al usuario a su destino original después del login
+- ✅ Sincronización de token entre localStorage y cookies (para SSR)
 
 **Notas:**
 
 - Se usaron selectores semánticos (`getByPlaceholder`, `getByRole`) en lugar de selectores técnicos para mayor resiliencia
 - WebKit requiere hacer clic en el input antes de llenar (enfoque explícito)
 - Backend debe estar corriendo en puerto 4000 para ejecutar los tests
+- El middleware usa cookies para acceder al token en el servidor (SSR compatible)
 
 **Tiempo estimado:** 3 horas  
-**Tiempo real:** ~2 horas ✅
+**Tiempo real:** ~3 horas ✅
 
 ---
 

@@ -50,11 +50,16 @@ test.describe('Manual Testing Automation - Point 5.3', () => {
     expect(parsed.state?.token).toBeTruthy();
   });
 
-  // Route protection not yet implemented – skip this test for now
-  test.skip('Protected route redirects to login when not authenticated', async ({ page }) => {
-    await page.evaluate(() => localStorage.removeItem('auth-storage'));
+  test('Protected route redirects to login when not authenticated', async ({ page }) => {
+    // Clear all cookies first
+    await page.context().clearCookies();
+
+    // Navigate to protected route (root)
     await page.goto('/');
+
+    // Should redirect to login with callbackUrl parameter
     await expect(page).toHaveURL(/\/login/);
+    await expect(page).toHaveURL(/callbackUrl=%2F/);
   });
 
   // Logout functionality not yet implemented in UI, test will be added later
