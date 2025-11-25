@@ -42,7 +42,10 @@ describe('POST /api/auth/login', () => {
       .set('Accept', 'application/json');
 
     expect(response.status).toBe(200);
-    expect(response.body).toEqual({ access_token: 'jwt-token' });
+    expect(response.body).toEqual({
+      user: { id_usuario: 1, username: 'admin' },
+      token: 'jwt-token',
+    });
     expect(mockValidateUser).toHaveBeenCalledWith('admin', 'admin123');
     expect(mockLogin).toHaveBeenCalledWith(fakeUser);
   });

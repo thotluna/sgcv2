@@ -83,7 +83,10 @@ describe('AuthController', () => {
 
       await authController.login(req, res);
 
-      expect(res.json).toHaveBeenCalledWith({ access_token: 'jwt-token' });
+      expect(res.json).toHaveBeenCalledWith({
+        user: { id_usuario: 1, username: 'admin' },
+        token: 'jwt-token',
+      });
       expect(mockValidateUser).toHaveBeenCalledWith('admin', 'admin123');
       expect(mockLogin).toHaveBeenCalledWith({
         id_usuario: 1,
