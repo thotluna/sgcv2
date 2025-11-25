@@ -26,12 +26,17 @@ export class AuthController {
         return res.status(401).json({ error: 'Invalid credentials' });
       }
 
-      const token = await this.authService.login({
+      const tokenData = await this.authService.login({
         id_usuario: user.id_usuario,
         username: user.username,
       });
 
-      return res.json(token);
+      const { password_hash, ...userWithoutPassword } = user;
+
+      return res.json({
+        user: userWithoutPassword,
+        token: tokenData.access_token,
+      });
     } catch (error) {
       console.error('Login error:', error);
       return res.status(500).json({
