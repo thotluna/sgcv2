@@ -16,11 +16,17 @@
     "lint:fix": "eslint . --ext .ts,.tsx,.js,.jsx --fix",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
-    "test": "cd backend && npm test"
+    "test": "cd backend && npm test && cd .."
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,json,md}": [
       "prettier --write"
+    ],
+    "frontend/**/*.{ts,tsx}": [
+      "sh -c 'cd frontend && npm run lint'"
+    ],
+    "backend/**/*.ts": [
+      "sh -c 'cd backend && npm test -- --passWithNoTests --findRelatedTests'"
     ]
   }
 }

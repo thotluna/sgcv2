@@ -4,9 +4,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { useAuthStore } from '@/stores/auth.store';
+import { useAuth } from '@/hooks/use-auth';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -21,9 +20,8 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuthStore();
+  const { login } = useAuth();
 
   const {
     register,
@@ -44,7 +42,6 @@ export default function LoginPage() {
       toast.success('Login successful!', {
         description: 'Welcome back!',
       });
-      router.push('/');
     } catch (error: unknown) {
       let errorMessage = 'Invalid credentials. Please try again.';
       if (error && typeof error === 'object' && 'response' in error) {

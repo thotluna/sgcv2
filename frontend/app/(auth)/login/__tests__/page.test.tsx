@@ -1,11 +1,11 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import LoginPage from '../page';
-import { useAuthStore } from '@/stores/auth.store';
+import { useAuth } from '@/hooks/use-auth';
 
-// Mock the auth store
-jest.mock('@/stores/auth.store', () => ({
-  useAuthStore: jest.fn(),
+// Mock the auth hook
+jest.mock('@/hooks/use-auth', () => ({
+  useAuth: jest.fn(),
 }));
 
 // Mock toast
@@ -16,28 +16,12 @@ jest.mock('sonner', () => ({
   },
 }));
 
-// Mock next/navigation
-const mockPush = jest.fn();
-jest.mock('next/navigation', () => ({
-  useRouter: () => ({
-    push: mockPush,
-    replace: jest.fn(),
-    prefetch: jest.fn(),
-    back: jest.fn(),
-    pathname: '/',
-    query: {},
-    asPath: '/',
-  }),
-  usePathname: () => '/',
-  useSearchParams: () => new URLSearchParams(),
-}));
-
 describe('LoginPage', () => {
   const mockLogin = jest.fn();
 
   beforeEach(() => {
     jest.clearAllMocks();
-    (useAuthStore as unknown as jest.Mock).mockReturnValue({
+    (useAuth as unknown as jest.Mock).mockReturnValue({
       login: mockLogin,
     });
   });
@@ -135,25 +119,6 @@ describe('LoginPage', () => {
       });
     });
 
-    it('should redirect to dashboard on successful login', async () => {
-      const user = userEvent.setup();
-      mockLogin.mockResolvedValue(undefined);
-
-      render(<LoginPage />);
-
-      const usernameInput = screen.getByLabelText(/username/i);
-      const passwordInput = screen.getByLabelText(/password/i);
-      const submitButton = screen.getByRole('button', { name: /sign in/i });
-
-      await user.type(usernameInput, 'admin');
-      await user.type(passwordInput, 'admin123');
-      await user.click(submitButton);
-
-      await waitFor(() => {
-        expect(mockPush).toHaveBeenCalledWith('/');
-      });
-    });
-
     it('should show loading state during login', async () => {
       const user = userEvent.setup();
       let resolveLogin: () => void;
@@ -213,9 +178,6 @@ describe('LoginPage', () => {
       await waitFor(() => {
         expect(mockLogin).toHaveBeenCalled();
       });
-
-      // Should not redirect on error
-      expect(mockPush).not.toHaveBeenCalled();
     });
   });
 
