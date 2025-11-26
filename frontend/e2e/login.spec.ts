@@ -37,9 +37,7 @@ async function login(page: Page) {
 }
 
 test.describe('Manual Testing Automation - Point 5.3', () => {
-  test('Login flow redirects to dashboard and persists token', async ({ page, browserName }) => {
-    // test.skip(browserName === 'webkit', 'WebKit has connectivity issues with backend');
-
+  test('Login flow redirects to dashboard and persists token', async ({ page }) => {
     await login(page);
     await expect(page).toHaveURL(/\/$/);
     const storage = await page.evaluate(() => localStorage.getItem('auth-storage'));
