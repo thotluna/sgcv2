@@ -21,6 +21,12 @@
   "lint-staged": {
     "*.{ts,tsx,js,jsx,json,md}": [
       "prettier --write"
+    ],
+    "frontend/**/*.{ts,tsx}": [
+      "cd frontend && npm run lint"
+    ],
+    "backend/**/*.ts": [
+      "cd backend && npm test -- --passWithNoTests --findRelatedTests"
     ]
   }
 }
