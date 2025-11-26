@@ -353,23 +353,21 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 
 ---
 
-#### 3.3 Protección de Rutas
+#### 3.3 Protección de Rutas ✅ COMPLETADA
 
-- [ ] Crear middleware de autenticación:
+- [x] Crear middleware de autenticación:
   ```typescript
   // middleware.ts
-  - Verificar token en cookies
-  - Redirect a /login si no autenticado
-  - Permitir rutas públicas (/login)
+  - Verificar token en cookies ✅
+  - Redirect a /login si no autenticado ✅
+  - Permitir rutas públicas (/login) ✅
   ```
-- [ ] Crear componente `ProtectedRoute`:
-  - Verificar autenticación
-  - Verificar permisos (opcional)
-  - Redirect si no autorizado
-- [ ] Implementar en layout de dashboard
-- [ ] Probar que funciona correctamente
+- [x] Implementar redirección si ya está autenticado (de /login a /)
+- [x] Implementar callbackUrl para redirección post-login
+- [x] Probar que funciona correctamente ✅
 
 **Tiempo estimado:** 3 horas
+**Tiempo real:** ~2 horas ✅
 
 ---
 
@@ -464,7 +462,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
   - ✅ Manejo de errores
   - ✅ Loading states
   - ✅ Accessibility
-- [x] Crear tests para auth store:
+- [x] Crear tests para auth store/hook:
   - ✅ Initial state
   - ✅ Login success/failure
   - ✅ Logout
@@ -474,9 +472,10 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 
 **Resultados:**
 
-- ✅ 2 test suites pasando
-- ✅ 18 tests pasando
-- ✅ Login component: 11 tests
+- ✅ 3 test suites pasando
+- ✅ 22 tests pasando
+- ✅ Login component: 10 tests
+- ✅ Auth hook: 5 tests
 - ✅ Auth store: 7 tests
 - ✅ Cobertura completa de funcionalidad crítica
 
@@ -486,17 +485,18 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 - `jest.setup.ts` - Setup y mocks globales
 - `app/(auth)/login/__tests__/page.test.tsx` - Tests del componente Login
 - `stores/__tests__/auth.store.test.ts` - Tests del auth store
+- `hooks/__tests__/use-auth.test.ts` - Tests del auth hook
 
 **Tiempo estimado:** 4 horas  
-**Tiempo real:** ~2 horas ✅
+**Tiempo real:** ~3 horas ✅
 
 ---
 
-#### 5.3 Testing Manual (Automatizado con Playwright E2E)
+#### 5.3 Testing Manual (Automatizado con Playwright E2E) ✅ COMPLETADA
 
 - [x] Probar flujo completo de login (ingresar credenciales válidas, verificar redirección al dashboard y persistencia del token)
-- [x] Probar protección de rutas (intentar acceder a rutas protegidas sin estar autenticado y verificar redirección a /login) ✅
-- [ ] Probar logout (click en botón de logout, asegurar que el token se elimina y se redirige a /login) - **Pendiente: requiere implementar UI de logout**
+- [x] Probar protección de rutas (intentar acceder a rutas protegidas sin estar autenticado y verificar redirección a /login)
+- [x] Probar logout (click en botón de logout, asegurar que el token se elimina y se redirige a /login)
 - [x] Probar en diferentes navegadores (Chrome, Firefox, Safari/WebKit) y dispositivos (desktop, mobile) para validar UI responsiva
 - [x] Probar diseño responsive (verificar que el formulario y layout se adaptan correctamente en tamaños de pantalla pequeños)
 - [x] Documentar cualquier bug encontrado durante pruebas manuales
@@ -511,9 +511,10 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 
 **Tests implementados:**
 
-- ✅ Login flow con redirección y persistencia de token (Chromium, Firefox, WebKit)
-- ✅ Protección de rutas con redirección a /login + callbackUrl (Chromium, Firefox, WebKit)
-- ✅ Responsive layout en móvil (375x667) (Chromium, Firefox, WebKit)
+- ✅ Login flow con redirección y persistencia de token
+- ✅ Protección de rutas con redirección a /login + callbackUrl
+- ✅ Logout flow con redirección y limpieza de sesión
+- ✅ Responsive layout en móvil (375x667)
 
 **Funcionalidades implementadas:**
 
@@ -522,6 +523,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 - ✅ Redirección automática a `/` si ya está autenticado e intenta acceder a `/login`
 - ✅ Callback URL para redirigir al usuario a su destino original después del login
 - ✅ Sincronización de token entre localStorage y cookies (para SSR)
+- ✅ Refactorización de `useAuthStore` a `useAuth` hook para mejor encapsulamiento
 
 **Notas:**
 
@@ -531,7 +533,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 - El middleware usa cookies para acceder al token en el servidor (SSR compatible)
 
 **Tiempo estimado:** 3 horas  
-**Tiempo real:** ~3 horas ✅
+**Tiempo real:** ~3.5 horas ✅
 
 ---
 
@@ -567,48 +569,48 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 
 ## 📊 Resumen de Tiempo Estimado
 
-| Categoría         | Tiempo Estimado | Tiempo Real   | Estado            |
-| ----------------- | --------------- | ------------- | ----------------- |
-| 1. Setup Inicial  | 16 horas        | ~5.5 horas    | ✅ Completo       |
-| 2. Backend Auth   | 18 horas        | ~5 horas      | ✅ Completo       |
-| 3. Frontend Auth  | 10 horas        | ~3.5 horas    | ✅ Completo       |
-| 4. Dashboard Base | 10 horas        | -             | ⏳ Pendiente      |
-| 5. Testing        | 11 horas        | ~7 horas      | ✅ Completo       |
-| 6. Documentación  | 3-9 horas       | -             | ⏳ Pendiente      |
-| **TOTAL**         | **68-74 horas** | **~21 horas** | **~75% completo** |
+| Categoría         | Tiempo Estimado | Tiempo Real     | Estado            |
+| ----------------- | --------------- | --------------- | ----------------- |
+| 1. Setup Inicial  | 16 horas        | ~5.5 horas      | ✅ Completo       |
+| 2. Backend Auth   | 18 horas        | ~5 horas        | ✅ Completo       |
+| 3. Frontend Auth  | 10 horas        | ~5.5 horas      | ✅ Completo       |
+| 4. Dashboard Base | 10 horas        | -               | ⏳ Pendiente      |
+| 5. Testing        | 11 horas        | ~8.5 horas      | ✅ Completo       |
+| 6. Documentación  | 3-9 horas       | -               | ⏳ Pendiente      |
+| **TOTAL**         | **68-74 horas** | **~24.5 horas** | **~80% completo** |
 
 **Progreso actual:**
 
-- ✅ **Completado:** Setup, Backend Auth, Frontend Auth (Login), Testing (Backend + Frontend)
-- ⏳ **Pendiente:** Protección de rutas, Dashboard layout, Documentación
+- ✅ **Completado:** Setup, Backend Auth, Frontend Auth (Login + Protección), Testing (Backend + Frontend + E2E)
+- ⏳ **Pendiente:** Dashboard layout, Documentación
+- 🚀 **Próximo:** Implementar Layout del Dashboard y Componentes de Navegación
 
 **Con 1 developer:** ~2-3 semanas  
 **Con 2 developers:** ~1-2 semanas
 
 ---
 
-## 📈 Estado Actual del Proyecto (2025-11-25)
+## 📈 Estado Actual del Proyecto (2025-11-26)
 
-### ✅ Completado (~75%)
+### ✅ Completado (~80%)
 
 - Setup completo de backend y frontend
 - Base de datos PostgreSQL con schema
 - Sistema de autenticación JWT completo
 - RBAC implementado y testeado
 - Página de login funcional
+- **Protección de rutas (Middleware)**
 - **Testing completo:**
   - Backend: 69 tests (9 suites) - Unit + Integration
-  - Frontend: 18 tests (2 suites) - Unit + Component
-  - **E2E: 6 tests (Playwright) - Login flow + Responsive en 3 navegadores**
+  - Frontend: 22 tests (3 suites) - Unit + Component + Hook
+  - **E2E: 7 tests (Playwright) - Login, Logout, Protected Routes, Responsive**
 - API client con interceptores
-- Zustand store para autenticación
+- Refactorización de Auth Hook (`useAuth`)
 
-### ⏳ En Progreso / Pendiente (~25%)
+### ⏳ En Progreso / Pendiente (~20%)
 
-- Middleware de protección de rutas
 - Layout de dashboard
 - Componentes de navegación (Sidebar, Header)
-- Logout UI y funcionalidad
 - Documentación actualizada
 - Deploy (opcional)
 
@@ -624,11 +626,11 @@ Al finalizar esta iteración, debes tener:
 - ✅ JWT authentication implementado
 - ✅ RBAC básico funcionando
 - ⏳ Dashboard con layout principal (pendiente)
-- ⏳ Rutas protegidas (pendiente)
-- ✅ Tests básicos pasando (69 backend + 18 frontend + 6 E2E = 93 tests totales)
+- ✅ Rutas protegidas
+- ✅ Tests básicos pasando (69 backend + 22 frontend + 7 E2E = 98 tests totales)
 - ⏳ Documentación actualizada (pendiente)
 
-**Estado actual:** 6/9 criterios completados (67%)
+**Estado actual:** 7/9 criterios completados (78%)
 
 ---
 
