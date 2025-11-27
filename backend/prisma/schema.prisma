@@ -27,33 +27,55 @@ model auditoria {
 }
 
 /// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
-model cliente {
-  id_cliente       Int             @id @default(autoincrement())
-  nombre_comercial String          @db.VarChar(200)
-  razon_social     String          @db.VarChar(200)
-  rif              String          @unique @db.VarChar(20)
-  direccion        String?
-  telefono         String?         @db.VarChar(50)
+model client {
+  id               Int             @id @default(autoincrement()) @map("id_cliente")
+  trade_name       String          @map("nombre_comercial") @db.VarChar(200)
+  legal_name       String          @map("razon_social") @db.VarChar(200)
+  tax_id           String          @unique @map("rif") @db.VarChar(20)
+  address          String?         @map("direccion")
+  phone            String?         @map("telefono") @db.VarChar(50)
   email            String?         @db.VarChar(100)
-  estado           estado_cliente? @default(ACTIVO)
-  fecha_registro   DateTime?       @default(now()) @db.Timestamp(6)
+  status           client_status?  @default(ACTIVE) @map("estado")
+  registration_date DateTime?      @default(now()) @map("fecha_registro") @db.Timestamp(6)
   created_at       DateTime?       @default(now()) @db.Timestamp(6)
   updated_at       DateTime?       @default(now()) @db.Timestamp(6)
-  equipo           equipo[]
-  factura          factura[]
-  ods              ods[]
-  proforma         proforma[]
+  equipment        equipo[]
+  invoices         factura[]
+  service_orders   ods[]
+  quotes           proforma[]
+  contacts         client_contact[]
+
+  @@map("cliente")
 }
 
-model cliente_final {
-  id_cliente_final Int         @id @default(autoincrement())
-  nombre           String      @db.VarChar(200)
-  sector_industria String?     @db.VarChar(100)
-  observaciones    String?
+model client_contact {
+  id           Int       @id @default(autoincrement()) @map("id_contacto")
+  client_id    Int       @map("id_cliente")
+  first_name   String    @map("nombre") @db.VarChar(100)
+  last_name    String?   @map("apellido") @db.VarChar(100)
+  position     String?   @map("cargo") @db.VarChar(100)
+  phone        String?   @map("telefono") @db.VarChar(50)
+  email        String?   @db.VarChar(100)
+  is_primary   Boolean?  @default(false) @map("es_principal")
+  created_at   DateTime? @default(now()) @db.Timestamp(6)
+  updated_at   DateTime? @default(now()) @db.Timestamp(6)
+  client       client    @relation(fields: [client_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([client_id], map: "idx_cliente_contacto_cliente")
+  @@map("cliente_contacto")
+}
+
+model end_customer {
+  id               Int         @id @default(autoincrement()) @map("id_cliente_final")
+  name             String      @map("nombre") @db.VarChar(200)
+  industry_sector  String?     @map("sector_industria") @db.VarChar(100)
+  notes            String?     @map("observaciones")
   created_at       DateTime?   @default(now()) @db.Timestamp(6)
   updated_at       DateTime?   @default(now()) @db.Timestamp(6)
-  localidad        localidad[]
-  ods              ods[]
+  locations        location[]
+  service_orders   ods[]
+
+  @@map("cliente_final")
 }
 
 model configuracion {
@@ -109,8 +131,8 @@ model equipo {
   observaciones          String?
   created_at             DateTime?              @default(now()) @db.Timestamp(6)
   updated_at             DateTime?              @default(now()) @db.Timestamp(6)
-  cliente                cliente                @relation(fields: [id_cliente_propietario], references: [id_cliente], onDelete: NoAction, onUpdate: NoAction)
-  localidad              localidad?             @relation(fields: [id_localidad_instalado], references: [id_localidad], onDelete: NoAction, onUpdate: NoAction)
+  client                 client                 @relation(fields: [id_cliente_propietario], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  location               location?              @relation(fields: [id_localidad_instalado], references: [id], onDelete: NoAction, onUpdate: NoAction)
   tecnologia             tecnologia?            @relation(fields: [id_tecnologia], references: [id_tecnologia], onDelete: NoAction, onUpdate: NoAction)
   equipo_movimiento      equipo_movimiento[]
   nota_entrega_detalle   nota_entrega_detalle[]
@@ -150,7 +172,7 @@ model factura {
   archivo_pdf       String?         @db.VarChar(255)
   created_at        DateTime?       @default(now()) @db.Timestamp(6)
   updated_at        DateTime?       @default(now()) @db.Timestamp(6)
-  cliente           cliente         @relation(fields: [id_cliente], references: [id_cliente], onDelete: NoAction, onUpdate: NoAction)
+  client            client          @relation(fields: [id_cliente], references: [id], onDelete: NoAction, onUpdate: NoAction)
   proforma          proforma?       @relation(fields: [id_proforma], references: [id_proforma], onDelete: NoAction, onUpdate: NoAction)
   pago              pago[]
 
@@ -236,24 +258,43 @@ model insumo {
 }
 
 /// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
-model localidad {
-  id_localidad           Int           @id @default(autoincrement())
-  id_cliente_final       Int
-  nombre_sitio           String        @db.VarChar(200)
-  direccion_completa     String
-  coordenadas_gps        String?       @db.VarChar(100)
-  persona_contacto       String?       @db.VarChar(200)
-  telefono_contacto      String?       @db.VarChar(50)
-  horario_acceso         String?
-  restricciones_permisos String?
-  observaciones          String?
-  created_at             DateTime?     @default(now()) @db.Timestamp(6)
-  updated_at             DateTime?     @default(now()) @db.Timestamp(6)
-  equipo                 equipo[]
-  cliente_final          cliente_final @relation(fields: [id_cliente_final], references: [id_cliente_final], onDelete: NoAction, onUpdate: NoAction)
-  ods                    ods[]
+model location {
+  id                    Int              @id @default(autoincrement()) @map("id_localidad")
+  end_customer_id       Int              @map("id_cliente_final")
+  site_name             String           @map("nombre_sitio") @db.VarChar(200)
+  full_address          String           @map("direccion_completa")
+  gps_coordinates       String?          @map("coordenadas_gps") @db.VarChar(100)
+  contact_person        String?          @map("persona_contacto") @db.VarChar(200)
+  contact_phone         String?          @map("telefono_contacto") @db.VarChar(50)
+  access_schedule       String?          @map("horario_acceso")
+  access_restrictions   String?          @map("restricciones_permisos")
+  notes                 String?          @map("observaciones")
+  created_at            DateTime?        @default(now()) @db.Timestamp(6)
+  updated_at            DateTime?        @default(now()) @db.Timestamp(6)
+  equipment             equipo[]
+  end_customer          end_customer     @relation(fields: [end_customer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  service_orders        ods[]
+  contacts              location_contact[]
 
-  @@index([id_cliente_final], map: "idx_localidad_cliente_final")
+  @@index([end_customer_id], map: "idx_localidad_cliente_final")
+  @@map("localidad")
+}
+
+model location_contact {
+  id           Int        @id @default(autoincrement()) @map("id_contacto")
+  location_id  Int        @map("id_localidad")
+  first_name   String     @map("nombre") @db.VarChar(100)
+  last_name    String?    @map("apellido") @db.VarChar(100)
+  position     String?    @map("cargo") @db.VarChar(100)
+  phone        String?    @map("telefono") @db.VarChar(50)
+  email        String?    @db.VarChar(100)
+  is_primary   Boolean?   @default(false) @map("es_principal")
+  created_at   DateTime?  @default(now()) @db.Timestamp(6)
+  updated_at   DateTime?  @default(now()) @db.Timestamp(6)
+  location     location   @relation(fields: [location_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([location_id], map: "idx_localidad_contacto_localidad")
+  @@map("localidad_contacto")
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -336,9 +377,9 @@ model ods {
   informe_tecnico           informe_tecnico[]
   modificacion_ods          modificacion_ods[]
   nota_entrega              nota_entrega[]
-  cliente_final             cliente_final               @relation(fields: [id_cliente_final], references: [id_cliente_final], onDelete: NoAction, onUpdate: NoAction)
-  cliente                   cliente                     @relation(fields: [id_cliente], references: [id_cliente], onDelete: NoAction, onUpdate: NoAction)
-  localidad                 localidad                   @relation(fields: [id_localidad], references: [id_localidad], onDelete: NoAction, onUpdate: NoAction)
+  end_customer              end_customer                @relation(fields: [id_cliente_final], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  client                    client                      @relation(fields: [id_cliente], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  location                  location                    @relation(fields: [id_localidad], references: [id], onDelete: NoAction, onUpdate: NoAction)
   tipo_servicio             tipo_servicio               @relation(fields: [id_tipo_servicio], references: [id_tipo_servicio], onDelete: NoAction, onUpdate: NoAction)
   usuario                   usuario                     @relation(fields: [usuario_creador], references: [id_usuario], onDelete: NoAction, onUpdate: NoAction)
   ods_estado_historial      ods_estado_historial[]
@@ -453,7 +494,7 @@ model proforma {
   created_at            DateTime?          @default(now()) @db.Timestamp(6)
   updated_at            DateTime?          @default(now()) @db.Timestamp(6)
   factura               factura[]
-  cliente               cliente            @relation(fields: [id_cliente], references: [id_cliente], onDelete: NoAction, onUpdate: NoAction)
+  client                client             @relation(fields: [id_cliente], references: [id], onDelete: NoAction, onUpdate: NoAction)
   proforma_detalle      proforma_detalle[]
 }
 
@@ -682,10 +723,12 @@ enum condicion_equipo {
   DEFECTUOSO
 }
 
-enum estado_cliente {
-  ACTIVO
-  INACTIVO
-  SUSPENDIDO
+enum client_status {
+  ACTIVE     @map("ACTIVO")
+  INACTIVE   @map("INACTIVO")
+  SUSPENDED  @map("SUSPENDIDO")
+
+  @@map("estado_cliente")
 }
 
 enum estado_configuracion {
