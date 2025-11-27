@@ -398,19 +398,16 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 
 ---
 
-#### 4.2 Página de Dashboard
+#### 4.2 Página de Dashboard ⏭️ POSPUESTA
 
-- [ ] Crear `app/(dashboard)/dashboard/page.tsx`
-- [ ] Agregar cards de métricas básicas:
-  - Total de ODS
-  - ODS en progreso
-  - ODS completadas este mes
-  - Técnicos disponibles
-- [ ] Agregar gráfico simple (placeholder)
-- [ ] Agregar tabla de ODS recientes (placeholder)
-- [ ] Estilizar con shadcn/ui Cards
+> **Nota:** Se decidió posponer la implementación de métricas y gráficos hasta tener los módulos core (Clientes, ODS) funcionales para mostrar datos reales. Se retomará en una fase posterior.
 
-**Tiempo estimado:** 4 horas
+- [ ] Crear `app/(dashboard)/dashboard/page.tsx` (Placeholder creado ✅)
+- [ ] Agregar cards de métricas básicas (Pospuesto)
+- [ ] Agregar gráfico simple (Pospuesto)
+- [ ] Agregar tabla de ODS recientes (Pospuesto)
+
+**Estado:** Movido a fases posteriores.
 
 ---
 
