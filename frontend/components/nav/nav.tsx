@@ -6,7 +6,7 @@ export function Nav() {
   const { logout, user } = useAuth();
 
   return (
-    <nav className="flex justify-end">
+    <>
       {user && (
         <button onClick={logout} aria-label="Logout">
           <Avatar>
@@ -15,6 +15,6 @@ export function Nav() {
           </Avatar>
         </button>
       )}
-    </nav>
+    </>
   );
 }
