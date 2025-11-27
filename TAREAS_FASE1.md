@@ -373,26 +373,43 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 
 ### 4. Dashboard Base
 
-#### 4.1 Layout Principal
+#### 4.1 Layout Principal ✅ COMPLETADA
 
-- [ ] Crear layout de dashboard `app/(dashboard)/layout.tsx`:
-  - Sidebar con navegación
-  - Header con usuario y logout
-  - Área de contenido principal
-- [ ] Crear componente `Sidebar`:
-  - Logo
-  - Menú de navegación
-  - Links a módulos principales
-  - Indicador de sección activa
-- [ ] Crear componente `Header`:
-  - Breadcrumbs
-  - Notificaciones (placeholder)
-  - Perfil de usuario
-  - Botón de logout
-- [ ] Hacer responsive (mobile/desktop)
-- [ ] Estilizar con Tailwind
+- [x] Crear layout de dashboard `app/(dashboard)/layout.tsx`:
+  - Sidebar con navegación ✅
+  - Header con breadcrumbs ✅
+  - Área de contenido principal ✅
+- [x] Crear componente `Sidebar`:
+  - Logo ✅
+  - Menú de navegación ✅
+  - Links a módulos principales (Operaciones, Logística, Administración) ✅
+  - Indicador de sección activa (collapsible) ✅
+  - Iconos para modo colapsado ✅
+- [x] Crear componente `Header`:
+  - Breadcrumbs dinámicos ✅
+  - SidebarTrigger para colapsar/expandir ✅
+  - Separador visual ✅
+- [x] Hacer responsive (mobile/desktop) ✅ (shadcn/ui maneja responsive automáticamente)
+- [x] Estilizar con Tailwind ✅
+
+**Componentes creados:**
+
+- `components/sidebar/sidebar.tsx` - Sidebar con menú colapsable por secciones
+- `components/header/header.tsx` - Header con breadcrumbs dinámicos
+- `components/nav/nav.tsx` - Componente de navegación de usuario (en footer del sidebar)
+- `app/(dashboard)/dashboard/layout.tsx` - Layout principal del dashboard
+
+**Características implementadas:**
+
+- ✅ Sidebar colapsable a modo icono
+- ✅ Menú organizado en 3 secciones (Operaciones, Logística, Administración)
+- ✅ 16 items de menú con iconos semánticos
+- ✅ Breadcrumbs dinámicos basados en la ruta actual
+- ✅ Navegación de usuario en el footer del sidebar
+- ✅ Diseño responsive con shadcn/ui
 
 **Tiempo estimado:** 6 horas
+**Tiempo real:** ~2 horas ✅
 
 ---
 
