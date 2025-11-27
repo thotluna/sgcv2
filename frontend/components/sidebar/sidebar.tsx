@@ -1,10 +1,8 @@
+'use client';
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -31,7 +29,7 @@ import {
   Wallet,
   UserCog,
 } from 'lucide-react';
-import { Nav } from '../nav/nav';
+import { AvatarUser } from '../avatar/avatar';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
 
 export default function SidebarApp() {
@@ -169,7 +167,7 @@ export default function SidebarApp() {
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter>
-        <Nav />
+        <AvatarUser />
       </SidebarFooter>
     </Sidebar>
   );
