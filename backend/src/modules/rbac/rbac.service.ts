@@ -1,23 +1,21 @@
 // src/modules/rbac/rbac.service.ts
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { prisma } from '../../config/prisma';
 
 export class RbacService {
   /**
    * Retrieve all permissions assigned to a user (through its roles).
-   * Returns an array of objects { modulo: string, accion: string }.
+   * Returns an array of objects { resource: string, action: string }.
    */
   async getUserPermissions(userId: number) {
-    const user = await prisma.usuario.findUnique({
-      where: { id_usuario: userId },
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
       include: {
-        usuario_rol: {
+        roles: {
           include: {
-            rol: {
+            role: {
               include: {
-                rol_permiso: {
-                  include: { permiso: true },
+                permissions: {
+                  include: { permission: true },
                 },
               },
             },
@@ -26,40 +24,40 @@ export class RbacService {
       },
     });
     if (!user) return [];
-    const permissions = user.usuario_rol.flatMap(
+    const permissions = user.roles.flatMap(
       ur =>
-        ur.rol?.rol_permiso?.map((rp: any) => ({
-          modulo: rp.permiso.modulo,
-          accion: rp.permiso.accion,
+        ur.role?.permissions?.map(rp => ({
+          resource: rp.permission.resource,
+          action: rp.permission.action,
         })) ?? []
     );
     // Remove duplicates
-    return Array.from(new Set(permissions.map(p => `${p.modulo}.${p.accion}`))).map(key => {
-      const [modulo, accion] = key.split('.');
-      return { modulo, accion };
-    });
+    return Array.from(new Set(permissions.map(p => `${p.resource}.${p.action}`))).map(
+      (key: string) => {
+        const [resource, action] = key.split('.');
+        return { resource, action };
+      }
+    );
   }
 
   /**
    * Check if a user has a specific permission.
    */
-  async hasPermission(userId: number, module: string, action: string): Promise<boolean> {
+  async hasPermission(userId: number, resource: string, action: string): Promise<boolean> {
     const perms = await this.getUserPermissions(userId);
-    return perms.some(p => p.modulo === module && p.accion === action);
+    return perms.some(p => p.resource === resource && p.action === action);
   }
 
   /**
    * Check if a user has at least one of the specified roles.
    */
   async hasRole(userId: number, ...roleNames: string[]): Promise<boolean> {
-    const user = await prisma.usuario.findUnique({
-      where: { id_usuario: userId },
-      include: { usuario_rol: { include: { rol: true } } },
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: { roles: { include: { role: true } } },
     });
     if (!user) return false;
-    const userRoles = (user.usuario_rol as any[])
-      .map(ur => ur.rol?.nombre)
-      .filter(Boolean) as string[];
+    const userRoles = user.roles.map(ur => ur.role?.name).filter(Boolean) as string[];
     return roleNames.some(r => userRoles.includes(r));
   }
 }

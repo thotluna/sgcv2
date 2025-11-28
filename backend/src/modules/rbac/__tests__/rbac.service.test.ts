@@ -1,33 +1,33 @@
 // src/modules/rbac/__tests__/rbac.service.test.ts
 import { rbacService } from '../rbac.service';
 
-jest.mock('@prisma/client', () => {
+jest.mock('../../../config/prisma', () => {
   const mockUser = {
-    id_usuario: 1,
-    usuario_rol: [
+    id: 1,
+    roles: [
       {
-        rol: {
-          nombre: 'Administrador',
-          rol_permiso: [
-            { permiso: { modulo: 'ODS', accion: 'CREAR' } },
-            { permiso: { modulo: 'ODS', accion: 'LEER' } },
+        role: {
+          name: 'admin',
+          permissions: [
+            { permission: { resource: 'ODS', action: 'CREATE' } },
+            { permission: { resource: 'ODS', action: 'READ' } },
           ],
         },
       },
       {
-        rol: {
-          nombre: 'Gerente',
-          rol_permiso: [{ permiso: { modulo: 'REPORT', accion: 'VER' } }],
+        role: {
+          name: 'manager',
+          permissions: [{ permission: { resource: 'REPORT', action: 'VIEW' } }],
         },
       },
     ],
   };
   return {
-    PrismaClient: jest.fn().mockImplementation(() => ({
-      usuario: {
+    prisma: {
+      user: {
         findUnique: jest.fn().mockResolvedValue(mockUser),
       },
-    })),
+    },
   };
 });
 
@@ -36,33 +36,33 @@ describe('RbacService', () => {
     const perms = await rbacService.getUserPermissions(1);
     expect(perms).toEqual(
       expect.arrayContaining([
-        { modulo: 'ODS', accion: 'CREAR' },
-        { modulo: 'ODS', accion: 'LEER' },
-        { modulo: 'REPORT', accion: 'VER' },
+        { resource: 'ODS', action: 'CREATE' },
+        { resource: 'ODS', action: 'READ' },
+        { resource: 'REPORT', action: 'VIEW' },
       ])
     );
     // No duplicates
-    const keys = perms.map(p => `${p.modulo}.${p.accion}`);
+    const keys = perms.map(p => `${p.resource}.${p.action}`);
     expect(new Set(keys).size).toBe(keys.length);
   });
 
   it('should detect existing permission', async () => {
-    const has = await rbacService.hasPermission(1, 'ODS', 'CREAR');
+    const has = await rbacService.hasPermission(1, 'ODS', 'CREATE');
     expect(has).toBe(true);
   });
 
   it('should detect missing permission', async () => {
-    const has = await rbacService.hasPermission(1, 'ODS', 'ELIMINAR');
+    const has = await rbacService.hasPermission(1, 'ODS', 'DELETE');
     expect(has).toBe(false);
   });
 
   it('should detect role presence', async () => {
-    const hasRole = await rbacService.hasRole(1, 'Administrador');
+    const hasRole = await rbacService.hasRole(1, 'admin');
     expect(hasRole).toBe(true);
   });
 
   it('should detect role absence', async () => {
-    const hasRole = await rbacService.hasRole(1, 'SuperAdmin');
+    const hasRole = await rbacService.hasRole(1, 'superadmin');
     expect(hasRole).toBe(false);
   });
 });

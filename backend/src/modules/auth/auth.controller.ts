@@ -27,11 +27,11 @@ export class AuthController {
       }
 
       const tokenData = await this.authService.login({
-        id_usuario: user.id_usuario,
+        id: user.id,
         username: user.username,
       });
 
-      const { password_hash, ...userWithoutPassword } = user;
+      const { passwordHash, ...userWithoutPassword } = user;
 
       return res.json({
         user: userWithoutPassword,
@@ -61,13 +61,13 @@ export class AuthController {
         return res.status(401).json({ error: 'Unauthorized' });
       }
 
-      const userWithRoles = await this.authService.getUserWithRoles(user.id_usuario);
+      const userWithRoles = await this.authService.getUserWithRoles(user.id);
 
       if (!userWithRoles) {
         return res.status(404).json({ error: 'User not found' });
       }
 
-      const { password_hash, ...userWithoutPassword } = userWithRoles;
+      const { passwordHash, ...userWithoutPassword } = userWithRoles;
 
       return res.json(userWithoutPassword);
     } catch (error) {

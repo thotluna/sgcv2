@@ -57,7 +57,7 @@ describe('useAuthStore', () => {
   describe('login', () => {
     it('should login successfully and update state', async () => {
       const mockUser = {
-        id_usuario: 1,
+        id: 1,
         username: 'testuser',
         email: 'test@example.com',
         roles: [],
@@ -104,7 +104,7 @@ describe('useAuthStore', () => {
     it('should clear user state on logout', async () => {
       // First login
       const mockUser = {
-        id_usuario: 1,
+        id: 1,
         username: 'testuser',
         email: 'test@example.com',
         roles: [],
@@ -150,7 +150,7 @@ describe('useAuthStore', () => {
   describe('checkAuth', () => {
     it('should fetch user data and update state', async () => {
       const mockUser = {
-        id_usuario: 1,
+        id: 1,
         username: 'testuser',
         email: 'test@example.com',
         roles: [],
@@ -179,7 +179,7 @@ describe('useAuthStore', () => {
   describe('persistence', () => {
     it('should update state correctly on login for persistence', async () => {
       const mockUser = {
-        id_usuario: 1,
+        id: 1,
         username: 'testuser',
         email: 'test@example.com',
         roles: [],

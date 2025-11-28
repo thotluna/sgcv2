@@ -1,6 +1,6 @@
 export class UpdateUserDto {
   email?: string;
   password?: string; // Only if changing password
-  estado?: 'ACTIVO' | 'INACTIVO' | 'BLOQUEADO'; // Status
+  isActive?: boolean; // Status
   roleIds?: number[]; // Role IDs to update
 }

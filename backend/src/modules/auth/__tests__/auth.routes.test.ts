@@ -32,7 +32,7 @@ describe('POST /api/auth/login', () => {
   });
 
   it('must return a 200 status code and the token when the credentials are valid', async () => {
-    const fakeUser = { id_usuario: 1, username: 'admin' };
+    const fakeUser = { id: 1, username: 'admin' };
     mockValidateUser.mockResolvedValue(fakeUser);
     mockLogin.mockResolvedValue({ access_token: 'jwt-token' });
 
@@ -43,7 +43,7 @@ describe('POST /api/auth/login', () => {
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
-      user: { id_usuario: 1, username: 'admin' },
+      user: { id: 1, username: 'admin' },
       token: 'jwt-token',
     });
     expect(mockValidateUser).toHaveBeenCalledWith('admin', 'admin123');

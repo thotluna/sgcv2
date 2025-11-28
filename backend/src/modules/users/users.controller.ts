@@ -21,7 +21,7 @@ export class UsersController {
         return res.status(401).json({ error: 'Unauthorized' });
       }
 
-      const userWithRoles = await this.usersService.getUserWithRoles(user.id_usuario);
+      const userWithRoles = await this.usersService.getUserWithRoles(user.id);
 
       if (!userWithRoles) {
         return res.status(404).json({ error: 'User not found' });
@@ -44,9 +44,13 @@ export class UsersController {
     try {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 10;
-      const estado = req.query.estado as 'ACTIVO' | 'INACTIVO' | 'BLOQUEADO' | undefined;
+      const isActiveQuery = req.query.isActive as string | undefined;
+      let isActive: boolean | undefined = undefined;
 
-      const result = await this.usersService.findAll(page, limit, { estado });
+      if (isActiveQuery === 'true') isActive = true;
+      if (isActiveQuery === 'false') isActive = false;
+
+      const result = await this.usersService.findAll(page, limit, { isActive });
 
       return res.json(result);
     } catch (error) {
@@ -151,9 +155,9 @@ export class UsersController {
       }
 
       // Users can only update their own profile unless they're admin
-      const isAdmin = currentUser.roles?.some((role: any) => role.name === 'Administrador');
+      const isAdmin = currentUser.roles?.some((role: any) => role.name === 'admin');
 
-      if (!isAdmin && currentUser.id_usuario !== id) {
+      if (!isAdmin && currentUser.id !== id) {
         return res.status(403).json({
           error: 'Forbidden',
           message: 'You can only update your own profile',

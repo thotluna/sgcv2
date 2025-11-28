@@ -6,14 +6,14 @@ export class AuthService {
   private readonly SALT_ROUNDS = 10;
 
   async validateUser(username: string, password: string) {
-    const user = await prisma.usuario.findUnique({ where: { username } });
+    const user = await prisma.user.findUnique({ where: { username } });
     if (!user) return null;
-    const valid = await this.comparePassword(password, user.password_hash);
+    const valid = await this.comparePassword(password, user.passwordHash);
     return valid ? user : null;
   }
 
-  async login(user: { id_usuario: number; username: string }) {
-    const payload = { sub: user.id_usuario, username: user.username };
+  async login(user: { id: number; username: string }) {
+    const payload = { sub: user.id, username: user.username };
     const token = jwt.sign(payload, process.env.JWT_SECRET as string, { expiresIn: '1d' });
     return { access_token: token };
   }
@@ -27,16 +27,16 @@ export class AuthService {
   }
 
   async getUserWithRoles(userId: number) {
-    const user = await prisma.usuario.findUnique({
-      where: { id_usuario: userId },
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
       include: {
-        usuario_rol: {
+        roles: {
           include: {
-            rol: {
+            role: {
               include: {
-                rol_permiso: {
+                permissions: {
                   include: {
-                    permiso: true,
+                    permission: true,
                   },
                 },
               },
@@ -48,8 +48,8 @@ export class AuthService {
 
     if (!user) return null;
 
-    const roles = user.usuario_rol.map(ur => ur.rol);
-    const permissions = roles.flatMap(role => role.rol_permiso.map(rp => rp.permiso));
+    const roles = user.roles.map(ur => ur.role);
+    const permissions = roles.flatMap(role => role.permissions.map(rp => rp.permission));
 
     return {
       ...user,
