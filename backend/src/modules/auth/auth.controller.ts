@@ -19,7 +19,6 @@ export class AuthController {
           message: 'Username and password are required',
         });
       }
-
       const user = await this.authService.validateUser(dto.username, dto.password);
 
       if (!user) {

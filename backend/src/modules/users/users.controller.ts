@@ -45,10 +45,11 @@ export class UsersController {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 10;
       const isActiveQuery = req.query.isActive as string | undefined;
-      let isActive: boolean | undefined = undefined;
+      let isActive: 'ACTIVE' | 'INACTIVE' | 'BLOCKED' | undefined = undefined;
 
-      if (isActiveQuery === 'true') isActive = true;
-      if (isActiveQuery === 'false') isActive = false;
+      if (isActiveQuery === 'ACTIVE') isActive = 'ACTIVE';
+      if (isActiveQuery === 'INACTIVE') isActive = 'INACTIVE';
+      if (isActiveQuery === 'BLOCKED') isActive = 'BLOCKED';
 
       const result = await this.usersService.findAll(page, limit, { isActive });
 

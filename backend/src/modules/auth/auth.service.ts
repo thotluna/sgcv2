@@ -9,6 +9,7 @@ export class AuthService {
     const user = await prisma.user.findUnique({ where: { username } });
     if (!user) return null;
     const valid = await this.comparePassword(password, user.passwordHash);
+
     return valid ? user : null;
   }
 

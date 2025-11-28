@@ -222,14 +222,14 @@ describe('UsersService', () => {
 
   describe('deleteUser', () => {
     it('should soft delete user', async () => {
-      const mockDeletedUser = { id: 1, isActive: false };
+      const mockDeletedUser = { id: 1, isActive: 'INACTIVE' };
       (prisma.user.update as jest.Mock).mockResolvedValue(mockDeletedUser);
 
       const result = await service.deleteUser(1);
 
       expect(prisma.user.update).toHaveBeenCalledWith({
         where: { id: 1 },
-        data: { isActive: false },
+        data: { isActive: 'INACTIVE' },
         select: expect.any(Object),
       });
       expect(result).toEqual(mockDeletedUser);

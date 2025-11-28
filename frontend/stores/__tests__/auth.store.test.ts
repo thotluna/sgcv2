@@ -156,12 +156,8 @@ describe('useAuthStore', () => {
         roles: [],
         permissions: [],
       };
-      const mockToken = 'existing-token';
 
-      (authService.getMe as jest.Mock).mockResolvedValue({
-        user: mockUser,
-        token: mockToken,
-      });
+      (authService.getMe as jest.Mock).mockResolvedValue(mockUser);
 
       const { result } = renderHook(() => useAuthStore());
 
@@ -171,7 +167,6 @@ describe('useAuthStore', () => {
 
       expect(authService.getMe).toHaveBeenCalled();
       expect(result.current.user).toEqual(mockUser);
-      expect(result.current.token).toBe(mockToken);
       expect(result.current.isAuthenticated).toBe(true);
     });
   });

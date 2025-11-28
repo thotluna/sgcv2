@@ -111,7 +111,7 @@ export class UsersService {
   /**
    * Get all users (with pagination)
    */
-  async findAll(page = 1, limit = 10, filters?: { isActive?: boolean }) {
+  async findAll(page = 1, limit = 10, filters?: { isActive?: 'ACTIVE' | 'INACTIVE' | 'BLOCKED' }) {
     const skip = (page - 1) * limit;
 
     const where = filters?.isActive !== undefined ? { isActive: filters.isActive } : {};
@@ -176,7 +176,7 @@ export class UsersService {
         username: data.username,
         email: data.email,
         passwordHash,
-        isActive: true,
+        isActive: 'ACTIVE',
       },
       select: {
         id: true,
@@ -275,7 +275,7 @@ export class UsersService {
   async deleteUser(id: number) {
     return await prisma.user.update({
       where: { id },
-      data: { isActive: false },
+      data: { isActive: 'INACTIVE' },
       select: {
         id: true,
         username: true,
