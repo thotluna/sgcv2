@@ -165,6 +165,58 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 
 ---
 
+#### 1.7 Refactorización de Prisma Schema ✅ COMPLETADA
+
+- [x] Migrar schema de Prisma 7 a estructura modular
+  - ✅ Crear directorio `prisma/schema/`
+  - ✅ Separar configuración en `base.prisma`
+  - ✅ Modularizar modelos por dominio (`auth.prisma`)
+- [x] Traducir nombres de modelos y campos de español a inglés
+  - ✅ `usuario` → `User` (con `@map("users")`)
+  - ✅ `rol` → `Role` (con `@map("roles")`)
+  - ✅ `permiso` → `Permission` (con `@map("permissions")`)
+  - ✅ `usuario_rol` → `UserRole` (con `@map("user_roles")`)
+  - ✅ `rol_permiso` → `RolePermission` (con `@map("role_permissions")`)
+- [x] Actualizar campos a camelCase en Prisma
+  - ✅ `id_usuario` → `id`
+  - ✅ `password_hash` → `passwordHash` (con `@map("password_hash")`)
+  - ✅ `created_at` → `createdAt` (con `@map("created_at")`)
+  - ✅ `is_active` → `isActive` (con `@map("user_state")`)
+- [x] Configurar Prisma 7 con adaptador PostgreSQL
+  - ✅ Instalar `@prisma/adapter-pg` y `pg`
+  - ✅ Configurar `PrismaPg` adapter en `src/config/prisma.ts`
+  - ✅ Actualizar `prisma.config.ts` con configuración correcta
+- [x] Actualizar código existente para usar nuevos nombres
+  - ✅ `auth.service.ts` - actualizado a nombres en inglés
+  - ✅ `auth.controller.ts` - actualizado a nombres en inglés
+  - ✅ `users.service.ts` - actualizado completamente
+  - ✅ `users.controller.ts` - actualizado completamente
+  - ✅ `jwt.strategy.ts` - actualizado a nombres en inglés
+  - ✅ DTOs actualizados (`create-user.dto.ts`, `update-user.dto.ts`)
+- [x] Actualizar seed script
+  - ✅ Crear roles 'admin' y 'user'
+  - ✅ Crear usuario admin con rol asignado
+  - ✅ Configurar comando de seed en `prisma.config.ts`
+- [x] Ejecutar migraciones
+  - ✅ `npx prisma migrate dev --name init_english_schema`
+  - ✅ `npx prisma db seed` ejecutado correctamente
+- [x] Actualizar archivos SQL de base de datos
+  - ✅ `database/schema.sql` actualizado a estructura simplificada (solo Auth) y en inglés
+  - ✅ `database/seed_data.sql` actualizado con datos iniciales en inglés
+
+**Cambios principales:**
+
+- Schema modular en `prisma/schema/` (base.prisma + auth.prisma)
+- Nombres en inglés en código TypeScript y Base de Datos
+- Tablas simplificadas a solo módulo de Autenticación (`users`, `roles`, `permissions`, `user_roles`, `role_permissions`)
+- Prisma 7 con adaptador PostgreSQL configurado
+- Seed script funcional con roles y usuario admin
+
+**Tiempo estimado:** 4 horas
+**Tiempo real:** ~3 horas ✅
+
+---
+
 ### 2. Módulo de Autenticación
 
 #### 2.1 Backend - Autenticación ✅ COMPLETADA
@@ -413,19 +465,16 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 
 ---
 
-#### 4.2 Página de Dashboard
+#### 4.2 Página de Dashboard ⏭️ POSPUESTA
 
-- [ ] Crear `app/(dashboard)/dashboard/page.tsx`
-- [ ] Agregar cards de métricas básicas:
-  - Total de ODS
-  - ODS en progreso
-  - ODS completadas este mes
-  - Técnicos disponibles
-- [ ] Agregar gráfico simple (placeholder)
-- [ ] Agregar tabla de ODS recientes (placeholder)
-- [ ] Estilizar con shadcn/ui Cards
+> **Nota:** Se decidió posponer la implementación de métricas y gráficos hasta tener los módulos core (Clientes, ODS) funcionales para mostrar datos reales. Se retomará en una fase posterior.
 
-**Tiempo estimado:** 4 horas
+- [ ] Crear `app/(dashboard)/dashboard/page.tsx` (Placeholder creado ✅)
+- [ ] Agregar cards de métricas básicas (Pospuesto)
+- [ ] Agregar gráfico simple (Pospuesto)
+- [ ] Agregar tabla de ODS recientes (Pospuesto)
+
+**Estado:** Movido a fases posteriores.
 
 ---
 

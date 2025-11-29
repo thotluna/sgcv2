@@ -1,0 +1,188 @@
+import { prisma } from '../../config/prisma';
+import { CreateCustomerDto } from './dto/create-customer.dto';
+import { UpdateCustomerDto } from './dto/update-customer.dto';
+
+export class CustomerService {
+  async create(createCustomerDto: CreateCustomerDto) {
+    const existingCustomerCode = await prisma.customer.findUnique({
+      where: {
+        code: createCustomerDto.code,
+      },
+    });
+
+    if (existingCustomerCode) {
+      throw new Error('Customer code already exists');
+    }
+
+    const existingCustomerTaxId = await prisma.customer.findUnique({
+      where: {
+        taxId: createCustomerDto.taxId,
+      },
+    });
+
+    if (existingCustomerTaxId) {
+      throw new Error('Customer tax id already exists');
+    }
+
+    const customer = await prisma.customer.create({
+      data: {
+        code: createCustomerDto.code,
+        businessName: createCustomerDto.businessName,
+        legalName: createCustomerDto.legalName,
+        taxId: createCustomerDto.taxId,
+        address: createCustomerDto.address,
+        phone: createCustomerDto.phone,
+        state: 'ACTIVE',
+      },
+      select: {
+        id: true,
+        code: true,
+        businessName: true,
+        legalName: true,
+        taxId: true,
+        address: true,
+        phone: true,
+        state: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+    return customer;
+  }
+
+  async findAll(page = 1, limit = 10, filter?: { state?: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED' }) {
+    const skip = (page - 1) * limit;
+
+    const where = filter?.state !== undefined ? { state: filter.state } : {};
+
+    const [customers, total] = await Promise.all([
+      prisma.customer.findMany({
+        skip,
+        take: limit,
+        where,
+        select: {
+          id: true,
+          code: true,
+          businessName: true,
+          legalName: true,
+          taxId: true,
+          address: true,
+          phone: true,
+          state: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+        orderBy: { createdAt: 'desc' },
+      }),
+      prisma.customer.count({ where }),
+    ]);
+
+    return {
+      customers,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
+  }
+
+  async findById(id: string) {
+    const customer = await prisma.customer.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        code: true,
+        businessName: true,
+        legalName: true,
+        taxId: true,
+        address: true,
+        phone: true,
+        state: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    if (!customer) {
+      throw new Error('Customer not found');
+    }
+
+    return customer;
+  }
+
+  async findByCode(code: string) {
+    const customer = await prisma.customer.findUnique({
+      where: { code },
+      select: {
+        id: true,
+        code: true,
+        businessName: true,
+        legalName: true,
+        taxId: true,
+        address: true,
+        phone: true,
+        state: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    if (!customer) {
+      throw new Error('Customer not found');
+    }
+
+    return customer;
+  }
+
+  async update(id: string, updateCustomerDto: UpdateCustomerDto) {
+    const customer = await prisma.customer.findUnique({ where: { id } });
+    if (!customer) {
+      throw new Error('Customer not found');
+    }
+
+    const updatedCustomer = await prisma.customer.update({
+      where: { id },
+      data: {
+        ...updateCustomerDto,
+        updatedAt: new Date(),
+      },
+      select: {
+        id: true,
+        code: true,
+        businessName: true,
+        legalName: true,
+        taxId: true,
+        address: true,
+        phone: true,
+        state: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+    return updatedCustomer;
+  }
+
+  async delete(id: string) {
+    const customer = await prisma.customer.findUnique({ where: { id } });
+    if (!customer) {
+      throw new Error('Customer not found');
+    }
+
+    // Soft delete
+    const deletedCustomer = await prisma.customer.update({
+      where: { id },
+      data: {
+        state: 'INACTIVE', // Or SUSPENDED, depending on business logic, usually INACTIVE for soft delete
+        updatedAt: new Date(),
+      },
+      select: {
+        id: true,
+        state: true,
+      },
+    });
+
+    return deletedCustomer;
+  }
+}

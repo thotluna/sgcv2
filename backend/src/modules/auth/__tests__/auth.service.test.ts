@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 
 jest.mock('@config/prisma', () => ({
   prisma: {
-    usuario: {
+    user: {
       findUnique: jest.fn(),
     },
   },
@@ -24,34 +24,34 @@ describe('AuthService', () => {
   describe('validateUser', () => {
     it('must return the user when the credentials are correct', async () => {
       const fakeUser = {
-        id_usuario: 1,
+        id: 1,
         username: 'admin',
-        password_hash: 'hashed',
+        passwordHash: 'hashed',
       };
-      (prisma.usuario.findUnique as jest.Mock).mockResolvedValue(fakeUser);
+      (prisma.user.findUnique as jest.Mock).mockResolvedValue(fakeUser);
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
 
       const result = await service.validateUser('admin', 'admin123');
       expect(result).toEqual(fakeUser);
-      expect(prisma.usuario.findUnique).toHaveBeenCalledWith({
+      expect(prisma.user.findUnique).toHaveBeenCalledWith({
         where: { username: 'admin' },
       });
       expect(bcrypt.compare).toHaveBeenCalledWith('admin123', 'hashed');
     });
 
     it('must return null when the user does not exist', async () => {
-      (prisma.usuario.findUnique as jest.Mock).mockResolvedValue(null);
+      (prisma.user.findUnique as jest.Mock).mockResolvedValue(null);
       const result = await service.validateUser('noexiste', 'pwd');
       expect(result).toBeNull();
     });
 
     it('must return null when the password is incorrect', async () => {
       const fakeUser = {
-        id_usuario: 1,
+        id: 1,
         username: 'admin',
-        password_hash: 'hashed',
+        passwordHash: 'hashed',
       };
-      (prisma.usuario.findUnique as jest.Mock).mockResolvedValue(fakeUser);
+      (prisma.user.findUnique as jest.Mock).mockResolvedValue(fakeUser);
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
       const result = await service.validateUser('admin', 'wrong');
@@ -62,7 +62,7 @@ describe('AuthService', () => {
   describe('login', () => {
     it('must return a signed JWT', async () => {
       process.env.JWT_SECRET = 'test_secret';
-      const user = { id_usuario: 1, username: 'admin' };
+      const user = { id: 1, username: 'admin' };
       const fakeToken = 'signed.jwt.token';
       (jwt.sign as jest.Mock).mockReturnValue(fakeToken);
 

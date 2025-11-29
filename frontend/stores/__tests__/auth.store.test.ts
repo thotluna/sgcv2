@@ -57,7 +57,7 @@ describe('useAuthStore', () => {
   describe('login', () => {
     it('should login successfully and update state', async () => {
       const mockUser = {
-        id_usuario: 1,
+        id: 1,
         username: 'testuser',
         email: 'test@example.com',
         roles: [],
@@ -104,7 +104,7 @@ describe('useAuthStore', () => {
     it('should clear user state on logout', async () => {
       // First login
       const mockUser = {
-        id_usuario: 1,
+        id: 1,
         username: 'testuser',
         email: 'test@example.com',
         roles: [],
@@ -150,18 +150,14 @@ describe('useAuthStore', () => {
   describe('checkAuth', () => {
     it('should fetch user data and update state', async () => {
       const mockUser = {
-        id_usuario: 1,
+        id: 1,
         username: 'testuser',
         email: 'test@example.com',
         roles: [],
         permissions: [],
       };
-      const mockToken = 'existing-token';
 
-      (authService.getMe as jest.Mock).mockResolvedValue({
-        user: mockUser,
-        token: mockToken,
-      });
+      (authService.getMe as jest.Mock).mockResolvedValue(mockUser);
 
       const { result } = renderHook(() => useAuthStore());
 
@@ -171,7 +167,6 @@ describe('useAuthStore', () => {
 
       expect(authService.getMe).toHaveBeenCalled();
       expect(result.current.user).toEqual(mockUser);
-      expect(result.current.token).toBe(mockToken);
       expect(result.current.isAuthenticated).toBe(true);
     });
   });
@@ -179,7 +174,7 @@ describe('useAuthStore', () => {
   describe('persistence', () => {
     it('should update state correctly on login for persistence', async () => {
       const mockUser = {
-        id_usuario: 1,
+        id: 1,
         username: 'testuser',
         email: 'test@example.com',
         roles: [],
