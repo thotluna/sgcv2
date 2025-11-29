@@ -37,9 +37,7 @@ async function login(page: Page) {
 }
 
 test.describe('Manual Testing Automation - Point 5.3', () => {
-  test('Login flow redirects to dashboard and persists token', async ({ page, browserName }) => {
-    // test.skip(browserName === 'webkit', 'WebKit has connectivity issues with backend');
-
+  test('Login flow redirects to dashboard and persists token', async ({ page }) => {
     await login(page);
     await expect(page).toHaveURL(/\/$/);
     const storage = await page.evaluate(() => localStorage.getItem('auth-storage'));
@@ -62,7 +60,25 @@ test.describe('Manual Testing Automation - Point 5.3', () => {
     await expect(page).toHaveURL(/callbackUrl=%2F/);
   });
 
-  // Logout functionality not yet implemented in UI, test will be added later
+  test('Logout flow redirects to login and clears session', async ({ page }) => {
+    await login(page);
+
+    // Find logout button and click it
+    const logoutButton = page.getByRole('button', { name: /logout/i });
+    await logoutButton.waitFor({ state: 'visible' });
+    await logoutButton.click();
+
+    // Verify redirect to login
+    await expect(page).toHaveURL(/\/login/);
+
+    // Verify token is removed from storage
+    const storage = await page.evaluate(() => localStorage.getItem('auth-storage'));
+    if (storage) {
+      const parsed = JSON.parse(storage);
+      expect(parsed.state?.token).toBeNull();
+      expect(parsed.state?.isAuthenticated).toBe(false);
+    }
+  });
 
   test('Responsive layout adapts for mobile', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 667 });
