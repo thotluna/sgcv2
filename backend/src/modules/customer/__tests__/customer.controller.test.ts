@@ -1,6 +1,6 @@
-import { CustomerState } from "@prisma/client";
-import { CustomerController } from "../customer.controller";
-import { CustomerService } from "../customer.service";
+import { CustomerState } from '@prisma/client';
+import { CustomerController } from '../customer.controller';
+import { CustomerService } from '../customer.service';
 import { Request, Response } from 'express';
 
 jest.mock('uuid', () => ({
@@ -58,13 +58,15 @@ describe('CustomerController', () => {
 
       expect(customerService.create).toHaveBeenCalledWith(customerDto);
       expect(statusMock).toHaveBeenCalledWith(201);
-      expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({
-        success: true,
-        data: createdCustomer,
-        metadata: expect.objectContaining({
-          requestId: 'test-uuid-1234'
+      expect(jsonMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: true,
+          data: createdCustomer,
+          metadata: expect.objectContaining({
+            requestId: 'test-uuid-1234',
+          }),
         })
-      }));
+      );
     });
 
     it('should return 422 when validation fails', async () => {
@@ -80,13 +82,15 @@ describe('CustomerController', () => {
       await customerController.create(req as Request, res as Response);
 
       expect(statusMock).toHaveBeenCalledWith(422);
-      expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({
-        success: false,
-        error: expect.objectContaining({
-          code: 'UNPROCESSABLE_ENTITY',
-          message: 'Validation failed'
+      expect(jsonMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: false,
+          error: expect.objectContaining({
+            code: 'UNPROCESSABLE_ENTITY',
+            message: 'Validation failed',
+          }),
         })
-      }));
+      );
       expect(customerService.create).not.toHaveBeenCalled();
     });
 
@@ -99,18 +103,22 @@ describe('CustomerController', () => {
         address: 'Test',
       };
       req = { body: customerDto };
-      (customerService.create as jest.Mock).mockRejectedValue(new Error('Customer code already exists'));
+      (customerService.create as jest.Mock).mockRejectedValue(
+        new Error('Customer code already exists')
+      );
 
       await customerController.create(req as Request, res as Response);
 
       expect(statusMock).toHaveBeenCalledWith(409);
-      expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({
-        success: false,
-        error: expect.objectContaining({
-          code: 'CONFLICT',
-          message: 'Customer code already exists'
+      expect(jsonMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: false,
+          error: expect.objectContaining({
+            code: 'CONFLICT',
+            message: 'Customer code already exists',
+          }),
         })
-      }));
+      );
     });
 
     it('should return 500 when service throws generic error', async () => {
@@ -127,12 +135,14 @@ describe('CustomerController', () => {
       await customerController.create(req as Request, res as Response);
 
       expect(statusMock).toHaveBeenCalledWith(500);
-      expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({
-        success: false,
-        error: expect.objectContaining({
-          code: 'INTERNAL_SERVER_ERROR'
+      expect(jsonMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: false,
+          error: expect.objectContaining({
+            code: 'INTERNAL_SERVER_ERROR',
+          }),
         })
-      }));
+      );
     });
   });
 
@@ -141,7 +151,7 @@ describe('CustomerController', () => {
       req = { query: { page: '1', limit: '10' } };
       const result = {
         customers: [],
-        pagination: { page: 1, limit: 10, total: 0, totalPages: 0 }
+        pagination: { page: 1, limit: 10, total: 0, totalPages: 0 },
       };
 
       (customerService.findAll as jest.Mock).mockResolvedValue(result);
@@ -149,16 +159,18 @@ describe('CustomerController', () => {
       await customerController.findAll(req as Request, res as Response);
 
       expect(customerService.findAll).toHaveBeenCalledWith(1, 10, { state: undefined });
-      expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({
-        success: true,
-        data: [],
-        metadata: expect.objectContaining({
-          pagination: expect.objectContaining({
-            page: 1,
-            perPage: 10
-          })
+      expect(jsonMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: true,
+          data: [],
+          metadata: expect.objectContaining({
+            pagination: expect.objectContaining({
+              page: 1,
+              perPage: 10,
+            }),
+          }),
         })
-      }));
+      );
     });
 
     it('should return 500 on error', async () => {
@@ -180,10 +192,12 @@ describe('CustomerController', () => {
       await customerController.findOne(req as Request, res as Response);
 
       expect(customerService.findById).toHaveBeenCalledWith('1');
-      expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({
-        success: true,
-        data: customer
-      }));
+      expect(jsonMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: true,
+          data: customer,
+        })
+      );
     });
 
     it('should return 404 when not found', async () => {
@@ -193,12 +207,14 @@ describe('CustomerController', () => {
       await customerController.findOne(req as Request, res as Response);
 
       expect(statusMock).toHaveBeenCalledWith(404);
-      expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({
-        success: false,
-        error: expect.objectContaining({
-          code: 'NOT_FOUND'
+      expect(jsonMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: false,
+          error: expect.objectContaining({
+            code: 'NOT_FOUND',
+          }),
         })
-      }));
+      );
     });
   });
 
@@ -213,10 +229,12 @@ describe('CustomerController', () => {
       await customerController.update(req as Request, res as Response);
 
       expect(customerService.update).toHaveBeenCalledWith('1', updateDto);
-      expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({
-        success: true,
-        data: updatedCustomer
-      }));
+      expect(jsonMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: true,
+          data: updatedCustomer,
+        })
+      );
     });
 
     it('should return 404 when not found', async () => {
@@ -239,10 +257,12 @@ describe('CustomerController', () => {
       await customerController.delete(req as Request, res as Response);
 
       expect(customerService.delete).toHaveBeenCalledWith('1');
-      expect(jsonMock).toHaveBeenCalledWith(expect.objectContaining({
-        success: true,
-        data: deletedCustomer
-      }));
+      expect(jsonMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: true,
+          data: deletedCustomer,
+        })
+      );
     });
 
     it('should return 404 when not found', async () => {
