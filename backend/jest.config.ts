@@ -9,6 +9,8 @@ module.exports = {
     '^@config/(.*)$': '<rootDir>/src/config/$1',
     '^@modules/(.*)$': '<rootDir>/src/modules/$1',
   },
+  // Permite transformar uuid que es un módulo ESM
+  transformIgnorePatterns: ['node_modules/(?!(uuid)/)'],
   // Opcional: muestra cobertura
   collectCoverage: true,
   collectCoverageFrom: ['src/**/*.ts'],

@@ -6,6 +6,7 @@ import { jwtStrategy } from './modules/auth/strategies/jwt.strategy';
 import { localStrategy } from './modules/auth/strategies/local.strategy';
 import authRouter from './modules/auth/auth.routes';
 import usersRouter from './modules/users/users.routes';
+import customersRouter from './modules/customer/customer.routes';
 import { prisma } from './config/prisma';
 
 // Load environment variables
@@ -70,6 +71,7 @@ const API_PREFIX = process.env.API_PREFIX || '/api';
 // Mount routes
 app.use(`${API_PREFIX}/auth`, authRouter);
 app.use(`${API_PREFIX}/users`, usersRouter);
+app.use(`${API_PREFIX}/customers`, customersRouter);
 
 app.get(`${API_PREFIX}/`, (_req: Request, res: Response) => {
   res.json({

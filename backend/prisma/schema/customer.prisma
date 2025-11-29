@@ -1,0 +1,20 @@
+model Customer {
+    id           String        @id @default(uuid())
+    code         String        @unique @db.VarChar(5)
+    businessName String?       @unique @db.VarChar(50)
+    legalName    String        @db.VarChar(100)
+    taxId        String        @unique @db.VarChar(20)
+    address      String?       @db.VarChar(255)
+    phone        String?       @db.VarChar(20)
+    state        CustomerState @default(ACTIVE) @map("customer_state")
+    createdAt    DateTime      @default(now()) @map("created_at")
+    updatedAt    DateTime      @updatedAt @map("updated_at")
+
+    @@map("customers")
+}
+
+enum CustomerState {
+    ACTIVE
+    INACTIVE
+    SUSPENDED
+}
