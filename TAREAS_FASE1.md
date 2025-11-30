@@ -298,6 +298,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
   - ✅ `POST /api/users` → crear usuario (admin)
   - ✅ `PUT /api/users/:id` → actualizar usuario
   - ✅ `DELETE /api/users/:id` → eliminar usuario (admin)
+  - ✅ Refactorizar respuestas a formato estándar AppResponse
 - [x] Probar endpoints con tests automatizados ✅ (Tests unitarios y de integración)
 
 **Tiempo estimado:** 4 horas

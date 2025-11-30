@@ -4,6 +4,9 @@ module.exports = {
   testEnvironment: 'node',
   roots: ['<rootDir>/src'],
   moduleFileExtensions: ['ts', 'js', 'json'],
+  transform: {
+    '^.+\\.(ts|js)$': 'ts-jest',
+  },
   // Permite usar los alias de tsconfig
   moduleNameMapper: {
     '^@config/(.*)$': '<rootDir>/src/config/$1',
