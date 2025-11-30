@@ -22,6 +22,7 @@ const config: Config = {
     '!**/node_modules/**',
     '!**/.next/**',
   ],
+  testPathIgnorePatterns: ['<rootDir>/e2e/', '<rootDir>/node_modules/', '<rootDir>/.next/'],
 };
 
 export default createJestConfig(config);

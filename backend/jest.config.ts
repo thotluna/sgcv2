@@ -14,4 +14,12 @@ module.exports = {
   // Opcional: muestra cobertura
   collectCoverage: true,
   collectCoverageFrom: ['src/**/*.ts'],
+  coveragePathIgnorePatterns: [
+    'node_modules',
+    'dist',
+    'src/config',
+    'src/generated',
+    'src/app.ts',
+    'src/server.ts',
+  ],
 };
