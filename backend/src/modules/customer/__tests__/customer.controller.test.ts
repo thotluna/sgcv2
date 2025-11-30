@@ -16,6 +16,7 @@ describe('CustomerController', () => {
   let res: Partial<Response>;
   let statusMock: jest.Mock;
   let jsonMock: jest.Mock;
+  let consoleErrorSpy: jest.SpyInstance;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -27,8 +28,14 @@ describe('CustomerController', () => {
       json: jsonMock,
     };
 
+    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
     customerController = new CustomerController();
     customerService = (customerController as any).customerService;
+  });
+
+  afterEach(() => {
+    consoleErrorSpy.mockRestore();
   });
 
   describe('create', () => {

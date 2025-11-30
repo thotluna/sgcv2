@@ -254,6 +254,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
   - ✅ `POST /api/auth/login` → login
   - ✅ `POST /api/auth/logout` → logout
   - ✅ `GET /api/auth/me` → obtener usuario actual
+  - ✅ Refactorizar respuestas a formato estándar AppResponse
 - [x] Configurar Passport strategies:
   - ✅ Local strategy para login
   - ✅ JWT strategy para proteger rutas
@@ -265,7 +266,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
   - ✅ `requirePermission(module, action)` → requiere permisos específicos
 - [x] Crear documentación (README.md)
 - [x] Crear ejemplos de uso (protected.routes.example.ts)
-- [x] Probar con tests automatizados ✅ (6 tests pasando)
+- [x] Probar con tests automatizados ✅ (48 tests pasando en 7 suites)
 
 **Tiempo estimado:** 8 horas  
 **Tiempo real:** ~2 horas ✅
@@ -298,6 +299,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
   - ✅ `POST /api/users` → crear usuario (admin)
   - ✅ `PUT /api/users/:id` → actualizar usuario
   - ✅ `DELETE /api/users/:id` → eliminar usuario (admin)
+  - ✅ Refactorizar respuestas a formato estándar AppResponse
 - [x] Probar endpoints con tests automatizados ✅ (Tests unitarios y de integración)
 
 **Tiempo estimado:** 4 horas

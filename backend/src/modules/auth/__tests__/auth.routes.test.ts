@@ -42,9 +42,16 @@ describe('POST /api/auth/login', () => {
       .set('Accept', 'application/json');
 
     expect(response.status).toBe(200);
-    expect(response.body).toEqual({
-      user: { id: 1, username: 'admin' },
-      token: 'jwt-token',
+    expect(response.body).toMatchObject({
+      success: true,
+      data: {
+        user: { id: 1, username: 'admin' },
+        token: 'jwt-token',
+      },
+      metadata: expect.objectContaining({
+        timestamp: expect.any(String),
+        requestId: expect.any(String),
+      }),
     });
     expect(mockValidateUser).toHaveBeenCalledWith('admin', 'admin123');
     expect(mockLogin).toHaveBeenCalledWith(fakeUser);
@@ -59,7 +66,17 @@ describe('POST /api/auth/login', () => {
       .set('Accept', 'application/json');
 
     expect(response.status).toBe(401);
-    expect(response.body).toEqual({ error: 'Invalid credentials' });
+    expect(response.body).toMatchObject({
+      success: false,
+      error: {
+        code: 'UNAUTHORIZED',
+        message: 'Invalid credentials',
+      },
+      metadata: expect.objectContaining({
+        timestamp: expect.any(String),
+        requestId: expect.any(String),
+      }),
+    });
     expect(mockValidateUser).toHaveBeenCalledWith('admin', 'wrong');
     expect(mockLogin).not.toHaveBeenCalled();
   });
@@ -71,7 +88,13 @@ describe('POST /api/auth/login', () => {
       .set('Accept', 'application/json');
 
     expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty('error', 'Bad Request');
+    expect(response.body).toMatchObject({
+      success: false,
+      error: {
+        code: 'BAD_REQUEST',
+        message: 'Username and password are required',
+      },
+    });
     expect(mockValidateUser).not.toHaveBeenCalled();
   });
 
@@ -82,7 +105,13 @@ describe('POST /api/auth/login', () => {
       .set('Accept', 'application/json');
 
     expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty('error', 'Bad Request');
+    expect(response.body).toMatchObject({
+      success: false,
+      error: {
+        code: 'BAD_REQUEST',
+        message: 'Username and password are required',
+      },
+    });
     expect(mockValidateUser).not.toHaveBeenCalled();
   });
 });
