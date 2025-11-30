@@ -6,11 +6,6 @@ interface LoginResponse {
   token: string;
 }
 
-interface MeResponse {
-  user: User;
-  token: string;
-}
-
 export const authService = {
   login: async (username: string, password: string) => {
     const response = await apiClient.post<LoginResponse>(`/auth/login`, { username, password });
@@ -21,7 +16,7 @@ export const authService = {
     return response.data;
   },
   getMe: async () => {
-    const response = await apiClient.get<MeResponse>(`/users/me`);
+    const response = await apiClient.get<User>(`/users/me`);
     return response.data;
   },
 };

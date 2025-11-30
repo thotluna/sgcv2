@@ -6,6 +6,7 @@ import { jwtStrategy } from './modules/auth/strategies/jwt.strategy';
 import { localStrategy } from './modules/auth/strategies/local.strategy';
 import authRouter from './modules/auth/auth.routes';
 import usersRouter from './modules/users/users.routes';
+import customersRouter from './modules/customer/customer.routes';
 import { prisma } from './config/prisma';
 
 // Load environment variables
@@ -16,7 +17,22 @@ const app: Application = express();
 // ---------- Middleware ----------
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        process.env.CORS_ORIGIN || 'http://localhost:3000',
+        'http://localhost:3000',
+        'http://localhost:3001',
+      ];
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) {
+        return callback(null, true);
+      }
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
   })
 );
@@ -55,6 +71,7 @@ const API_PREFIX = process.env.API_PREFIX || '/api';
 // Mount routes
 app.use(`${API_PREFIX}/auth`, authRouter);
 app.use(`${API_PREFIX}/users`, usersRouter);
+app.use(`${API_PREFIX}/customers`, customersRouter);
 
 app.get(`${API_PREFIX}/`, (_req: Request, res: Response) => {
   res.json({

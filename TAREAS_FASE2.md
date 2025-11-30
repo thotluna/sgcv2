@@ -14,7 +14,7 @@ Implementar el módulo completo de Gestión de Clientes, permitiendo administrar
 
 #### 1.1 Modelo de Datos y Migraciones
 
-- [ ] Definir schema Prisma para `Client` (Empresa)
+- [x] Definir schema Prisma para `Client` (Empresa)
   - Razón Social, RIF/NIT, Dirección Fiscal, Teléfono, Email, Estado (Activo/Inactivo)
 - [ ] Definir schema Prisma para `ClientLocation` (Localidades/Sedes)
   - Nombre, Dirección, Coordenadas (opcional), Ciudad, Estado/Provincia
@@ -22,19 +22,24 @@ Implementar el módulo completo de Gestión de Clientes, permitiendo administrar
   - Nombre, Cargo, Teléfono, Email
 - [ ] Ejecutar migraciones
 
+### URGENTE
+
+- [ ] sistema de respuesta unica del api, ApiResponse<T>
+- [ ] Sistema de manejo de errores
+
 #### 1.2 Módulo de Clientes (CRUD)
 
 - [ ] Crear módulo `clients/`:
-  - `clients.controller.ts`
-  - `clients.service.ts`
-  - `clients.routes.ts`
-  - DTOs (`create-client.dto.ts`, `update-client.dto.ts`)
+  - [ ] `clients.controller.ts`
+  - [x] `clients.service.ts`
+  - [ ] `clients.routes.ts`
+  - [ ] DTOs (`create-client.dto.ts`, `update-client.dto.ts`)
 - [ ] Implementar endpoints:
-  - `GET /api/clients` (Listado con paginación y filtros)
-  - `GET /api/clients/:id` (Detalle con localidades)
-  - `POST /api/clients` (Crear)
-  - `PUT /api/clients/:id` (Actualizar)
-  - `DELETE /api/clients/:id` (Soft delete o desactivación)
+  - [x] `GET /api/clients` (Listado con paginación y filtros)
+  - [x] `GET /api/clients/:id` (Detalle con localidades)
+  - [x] `POST /api/clients` (Crear)
+  - [x] `PUT /api/clients/:id` (Actualizar)
+  - [x] `DELETE /api/clients/:id` (Soft delete o desactivación)
 
 #### 1.3 Sub-recursos (Localidades y Contactos)
 
@@ -49,8 +54,8 @@ Implementar el módulo completo de Gestión de Clientes, permitiendo administrar
 
 #### 1.4 Testing Backend
 
-- [ ] Unit tests para `ClientsService`
-- [ ] Integration tests para endpoints de Clientes
+- [x] Unit tests para `ClientsService`
+- [x] Integration tests para endpoints de Clientes
 
 ---
 

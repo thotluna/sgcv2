@@ -37,10 +37,10 @@ describe('UsersController', () => {
   describe('me', () => {
     it('should return current user profile', async () => {
       mockReq = {
-        user: { id_usuario: 1 } as any,
+        user: { id: 1 } as any,
       };
 
-      const mockUser = { id_usuario: 1, username: 'test' };
+      const mockUser = { id: 1, username: 'test' };
       mockService.getUserWithRoles.mockResolvedValue(mockUser as any);
 
       await controller.me(mockReq as Request, mockRes as Response);
@@ -81,7 +81,7 @@ describe('UsersController', () => {
   describe('getById', () => {
     it('should return user if found', async () => {
       mockReq = { params: { id: '1' } };
-      const mockUser = { id_usuario: 1, username: 'test' };
+      const mockUser = { id: 1, username: 'test' };
       mockService.getUserWithRoles.mockResolvedValue(mockUser as any);
 
       await controller.getById(mockReq as Request, mockRes as Response);
@@ -129,7 +129,7 @@ describe('UsersController', () => {
         },
       };
 
-      const mockUser = { id_usuario: 1, ...mockReq.body };
+      const mockUser = { id: 1, ...mockReq.body };
       mockService.createUser.mockResolvedValue(mockUser);
 
       await controller.create(mockReq as Request, mockRes as Response);
@@ -219,10 +219,10 @@ describe('UsersController', () => {
       mockReq = {
         params: { id: '1' },
         body: { email: 'updated@example.com' },
-        user: { id_usuario: 1 } as any, // Own profile
+        user: { id: 1 } as any, // Own profile
       };
 
-      const mockUser = { id_usuario: 1, email: 'updated@example.com' };
+      const mockUser = { id: 1, email: 'updated@example.com' };
       mockService.updateUser.mockResolvedValue(mockUser as any);
 
       await controller.update(mockReq as Request, mockRes as Response);
@@ -247,7 +247,7 @@ describe('UsersController', () => {
     });
 
     it('should return 400 if invalid ID', async () => {
-      mockReq = { params: { id: 'invalid' }, user: { id_usuario: 1 } as any };
+      mockReq = { params: { id: 'invalid' }, user: { id: 1 } as any };
 
       await controller.update(mockReq as Request, mockRes as Response);
 
@@ -258,7 +258,7 @@ describe('UsersController', () => {
       mockReq = {
         params: { id: '1' },
         body: { email: 'invalid' },
-        user: { id_usuario: 1 } as any,
+        user: { id: 1 } as any,
       };
 
       await controller.update(mockReq as Request, mockRes as Response);
@@ -270,7 +270,7 @@ describe('UsersController', () => {
       mockReq = {
         params: { id: '1' },
         body: { password: '123' },
-        user: { id_usuario: 1 } as any,
+        user: { id: 1 } as any,
       };
 
       await controller.update(mockReq as Request, mockRes as Response);
@@ -282,7 +282,7 @@ describe('UsersController', () => {
       mockReq = {
         params: { id: '1' },
         body: { roleIds: [1] },
-        user: { id_usuario: 1, roles: [] } as any,
+        user: { id: 1, roles: [] } as any,
       };
 
       await controller.update(mockReq as Request, mockRes as Response);
@@ -294,7 +294,7 @@ describe('UsersController', () => {
       mockReq = {
         params: { id: '1' },
         body: { email: 'test@example.com' },
-        user: { id_usuario: 1 } as any,
+        user: { id: 1 } as any,
       };
       mockService.updateUser.mockRejectedValue(new Error('User not found'));
 
@@ -307,7 +307,7 @@ describe('UsersController', () => {
       mockReq = {
         params: { id: '1' },
         body: { email: 'test@example.com' },
-        user: { id_usuario: 1 } as any,
+        user: { id: 1 } as any,
       };
       mockService.updateUser.mockRejectedValue(new Error('Email already exists'));
 
@@ -320,7 +320,7 @@ describe('UsersController', () => {
       mockReq = {
         params: { id: '1' },
         body: { email: 'test@example.com' },
-        user: { id_usuario: 1 } as any,
+        user: { id: 1 } as any,
       };
       mockService.updateUser.mockRejectedValue(new Error('DB Error'));
 
@@ -336,7 +336,7 @@ describe('UsersController', () => {
         params: { id: '1' },
       };
 
-      const mockUser = { id_usuario: 1, estado: 'INACTIVO' };
+      const mockUser = { id: 1, state: 'INACTIVE' };
       mockService.deleteUser.mockResolvedValue(mockUser as any);
 
       await controller.delete(mockReq as Request, mockRes as Response);

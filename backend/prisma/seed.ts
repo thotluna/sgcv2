@@ -1,25 +1,47 @@
-import { PrismaClient } from '@prisma/client';
+import 'dotenv/config';
+import { prisma } from '../src/config/prisma';
 import bcrypt from 'bcrypt';
-
-const prisma = new PrismaClient();
 
 async function main() {
   const password = 'admin123';
   const passwordHash = await bcrypt.hash(password, 10);
 
-  // Remove any existing admin user to avoid duplicates
-  await prisma.usuario.deleteMany({ where: { username: 'admin' } });
+  // Clean up
+  await prisma.userRole.deleteMany();
+  await prisma.user.deleteMany();
+  await prisma.role.deleteMany();
 
-  await prisma.usuario.create({
+  // Create Roles
+  const adminRole = await prisma.role.create({
     data: {
-      username: 'admin',
-      password_hash: passwordHash,
-      email: 'admin@example.com',
-      // Ajusta los campos obligatorios del modelo `usuario` si existen
+      name: 'admin',
+      description: 'Administrator with full access',
     },
   });
 
-  console.log('✅ Usuario admin creado');
+  await prisma.role.create({
+    data: {
+      name: 'user',
+      description: 'Standard user',
+    },
+  });
+
+  // Create Admin User
+  await prisma.user.create({
+    data: {
+      username: 'admin',
+      email: 'admin@example.com',
+      passwordHash,
+      isActive: 'ACTIVE',
+      roles: {
+        create: {
+          roleId: adminRole.id,
+        },
+      },
+    },
+  });
+
+  console.log('✅ Database seeded with admin user and roles');
 }
 
 main()

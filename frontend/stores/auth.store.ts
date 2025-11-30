@@ -35,7 +35,6 @@ export const useAuthStore = create<AuthState>()(
       login: async (username, password) => {
         try {
           const { user, token } = await authService.login(username, password);
-
           // Set token in cookie for middleware access
           setCookie('auth-token', token);
 
@@ -56,14 +55,9 @@ export const useAuthStore = create<AuthState>()(
       },
 
       checkAuth: async () => {
-        const { user, token } = await authService.getMe();
+        const user = await authService.getMe();
 
-        // Sync token with cookie
-        if (token) {
-          setCookie('auth-token', token);
-        }
-
-        set({ user, token, isAuthenticated: true });
+        set({ user, isAuthenticated: true });
       },
     }),
     {

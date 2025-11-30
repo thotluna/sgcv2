@@ -71,7 +71,7 @@ describe('AuthController', () => {
     });
 
     it('should return 200 with token when credentials are valid', async () => {
-      const fakeUser = { id_usuario: 1, username: 'admin' };
+      const fakeUser = { id: 1, username: 'admin' };
       mockValidateUser.mockResolvedValue(fakeUser);
       mockLogin.mockResolvedValue({ access_token: 'jwt-token' });
 
@@ -84,12 +84,12 @@ describe('AuthController', () => {
       await authController.login(req, res);
 
       expect(res.json).toHaveBeenCalledWith({
-        user: { id_usuario: 1, username: 'admin' },
+        user: { id: 1, username: 'admin' },
         token: 'jwt-token',
       });
       expect(mockValidateUser).toHaveBeenCalledWith('admin', 'admin123');
       expect(mockLogin).toHaveBeenCalledWith({
-        id_usuario: 1,
+        id: 1,
         username: 'admin',
       });
     });
@@ -128,7 +128,7 @@ describe('AuthController', () => {
     it('should return 404 when user is not found in database', async () => {
       mockGetUserWithRoles.mockResolvedValue(null);
 
-      const req = { user: { id_usuario: 999 } } as any;
+      const req = { user: { id: 999 } } as any;
       const res = {
         status: jest.fn().mockReturnThis(),
         json: jest.fn().mockReturnThis(),
@@ -143,17 +143,16 @@ describe('AuthController', () => {
 
     it('should return user data without password when authenticated', async () => {
       const fakeUserWithRoles = {
-        id_usuario: 1,
+        id: 1,
         username: 'admin',
         email: 'admin@test.com',
-        password_hash: 'hashed_password',
-        roles: [{ id: 1, nombre: 'Admin' }],
-        permissions: [{ id: 1, modulo: 'ODS', accion: 'CREAR' }],
+        roles: [{ id: 1, name: 'Admin' }],
+        permissions: [{ id: 1, resource: 'ODS', action: 'CREAR' }],
       };
 
       mockGetUserWithRoles.mockResolvedValue(fakeUserWithRoles);
 
-      const req = { user: { id_usuario: 1 } } as any;
+      const req = { user: { id: 1 } } as any;
       const res = {
         status: jest.fn().mockReturnThis(),
         json: jest.fn().mockReturnThis(),
@@ -162,11 +161,11 @@ describe('AuthController', () => {
       await authController.me(req, res);
 
       expect(res.json).toHaveBeenCalledWith({
-        id_usuario: 1,
+        id: 1,
         username: 'admin',
         email: 'admin@test.com',
-        roles: [{ id: 1, nombre: 'Admin' }],
-        permissions: [{ id: 1, modulo: 'ODS', accion: 'CREAR' }],
+        roles: [{ id: 1, name: 'Admin' }],
+        permissions: [{ id: 1, resource: 'ODS', action: 'CREAR' }],
       });
       expect(mockGetUserWithRoles).toHaveBeenCalledWith(1);
     });
