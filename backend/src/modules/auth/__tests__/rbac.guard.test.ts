@@ -5,6 +5,7 @@ describe('RBAC Guards', () => {
   let mockRequest: Partial<Request>;
   let mockResponse: Partial<Response>;
   let nextFunction: NextFunction;
+  let consoleErrorSpy: jest.SpyInstance;
 
   beforeEach(() => {
     mockRequest = {};
@@ -13,6 +14,11 @@ describe('RBAC Guards', () => {
       json: jest.fn(),
     };
     nextFunction = jest.fn();
+    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    consoleErrorSpy.mockRestore();
   });
 
   describe('requireRoles', () => {
