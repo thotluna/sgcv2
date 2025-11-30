@@ -32,10 +32,15 @@ describe('AuthController', () => {
       await authController.login(req, res);
 
       expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({
-        error: 'Bad Request',
-        message: 'Username and password are required',
-      });
+      expect(res.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: false,
+          error: expect.objectContaining({
+            code: 'BAD_REQUEST',
+            message: 'Username and password are required',
+          }),
+        })
+      );
     });
 
     it('should return 400 when password is missing', async () => {
@@ -48,10 +53,15 @@ describe('AuthController', () => {
       await authController.login(req, res);
 
       expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({
-        error: 'Bad Request',
-        message: 'Username and password are required',
-      });
+      expect(res.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: false,
+          error: expect.objectContaining({
+            code: 'BAD_REQUEST',
+            message: 'Username and password are required',
+          }),
+        })
+      );
     });
 
     it('should return 401 when credentials are invalid', async () => {
@@ -66,7 +76,15 @@ describe('AuthController', () => {
       await authController.login(req, res);
 
       expect(res.status).toHaveBeenCalledWith(401);
-      expect(res.json).toHaveBeenCalledWith({ error: 'Invalid credentials' });
+      expect(res.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: false,
+          error: expect.objectContaining({
+            code: 'UNAUTHORIZED',
+            message: 'Invalid credentials',
+          }),
+        })
+      );
       expect(mockValidateUser).toHaveBeenCalledWith('admin', 'wrong');
     });
 
@@ -83,10 +101,15 @@ describe('AuthController', () => {
 
       await authController.login(req, res);
 
-      expect(res.json).toHaveBeenCalledWith({
-        user: { id: 1, username: 'admin' },
-        token: 'jwt-token',
-      });
+      expect(res.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: true,
+          data: {
+            user: { id: 1, username: 'admin' },
+            token: 'jwt-token',
+          },
+        })
+      );
       expect(mockValidateUser).toHaveBeenCalledWith('admin', 'admin123');
       expect(mockLogin).toHaveBeenCalledWith({
         id: 1,
@@ -99,15 +122,21 @@ describe('AuthController', () => {
     it('should return success message', async () => {
       const req = {} as any;
       const res = {
+        status: jest.fn().mockReturnThis(),
         json: jest.fn().mockReturnThis(),
       } as any;
 
       await authController.logout(req, res);
 
-      expect(res.json).toHaveBeenCalledWith({
-        message: 'Logout successful',
-        note: 'Client should remove the token from storage',
-      });
+      expect(res.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: true,
+          data: {
+            message: 'Logout successful',
+            note: 'Client should remove the token from storage',
+          },
+        })
+      );
     });
   });
 
@@ -122,7 +151,15 @@ describe('AuthController', () => {
       await authController.me(req, res);
 
       expect(res.status).toHaveBeenCalledWith(401);
-      expect(res.json).toHaveBeenCalledWith({ error: 'Unauthorized' });
+      expect(res.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: false,
+          error: expect.objectContaining({
+            code: 'UNAUTHORIZED',
+            message: 'Unauthorized',
+          }),
+        })
+      );
     });
 
     it('should return 404 when user is not found in database', async () => {
@@ -137,7 +174,15 @@ describe('AuthController', () => {
       await authController.me(req, res);
 
       expect(res.status).toHaveBeenCalledWith(404);
-      expect(res.json).toHaveBeenCalledWith({ error: 'User not found' });
+      expect(res.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: false,
+          error: expect.objectContaining({
+            code: 'NOT_FOUND',
+            message: 'User not found',
+          }),
+        })
+      );
       expect(mockGetUserWithRoles).toHaveBeenCalledWith(999);
     });
 
@@ -160,13 +205,18 @@ describe('AuthController', () => {
 
       await authController.me(req, res);
 
-      expect(res.json).toHaveBeenCalledWith({
-        id: 1,
-        username: 'admin',
-        email: 'admin@test.com',
-        roles: [{ id: 1, name: 'Admin' }],
-        permissions: [{ id: 1, resource: 'ODS', action: 'CREAR' }],
-      });
+      expect(res.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: true,
+          data: {
+            id: 1,
+            username: 'admin',
+            email: 'admin@test.com',
+            roles: [{ id: 1, name: 'Admin' }],
+            permissions: [{ id: 1, resource: 'ODS', action: 'CREAR' }],
+          },
+        })
+      );
       expect(mockGetUserWithRoles).toHaveBeenCalledWith(1);
     });
   });

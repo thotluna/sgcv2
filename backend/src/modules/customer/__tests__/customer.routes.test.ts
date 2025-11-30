@@ -8,10 +8,19 @@ jest.mock('uuid', () => ({
 }));
 
 jest.mock('../customer.service');
+
+// Mock del middleware de autenticación: adjunta un usuario a la petición
 jest.mock('../../auth/middleware/auth.middleware', () => ({
   authenticate: (req: any, _res: any, next: any) => {
-    req.user = { id: 1, username: 'admin' };
+    req.user = { id: 'mock-admin-user-id', username: 'admin-test' };
     next();
+  },
+}));
+
+// Mock del servicio RBAC: simula que el usuario siempre tiene el rol requerido
+jest.mock('../../rbac/rbac.service', () => ({
+  rbacService: {
+    hasRole: jest.fn().mockResolvedValue(true),
   },
 }));
 
@@ -40,10 +49,16 @@ function createApp(): Application {
 }
 
 describe('Customer Routes', () => {
+  let consoleErrorSpy: jest.SpyInstance;
   const app = createApp();
+
+  beforeEach(() => {
+    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
 
   afterEach(() => {
     jest.clearAllMocks();
+    consoleErrorSpy.mockRestore();
   });
 
   describe('POST /api/customers', () => {

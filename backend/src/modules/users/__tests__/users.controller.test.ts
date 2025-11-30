@@ -46,7 +46,13 @@ describe('UsersController', () => {
       await controller.me(mockReq as Request, mockRes as Response);
 
       expect(mockService.getUserWithRoles).toHaveBeenCalledWith(1);
-      expect(mockJson).toHaveBeenCalledWith(mockUser);
+      expect(mockStatus).toHaveBeenCalledWith(200);
+      expect(mockJson).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: true,
+          data: mockUser,
+        })
+      );
     });
 
     it('should return 401 if no user in request', async () => {
@@ -55,7 +61,15 @@ describe('UsersController', () => {
       await controller.me(mockReq as Request, mockRes as Response);
 
       expect(mockStatus).toHaveBeenCalledWith(401);
-      expect(mockJson).toHaveBeenCalledWith({ error: 'Unauthorized' });
+      expect(mockJson).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: false,
+          error: expect.objectContaining({
+            code: 'UNAUTHORIZED',
+            message: 'Unauthorized',
+          }),
+        })
+      );
     });
   });
 
@@ -74,7 +88,19 @@ describe('UsersController', () => {
       await controller.getAll(mockReq as Request, mockRes as Response);
 
       expect(mockService.findAll).toHaveBeenCalledWith(1, 10, { estado: undefined });
-      expect(mockJson).toHaveBeenCalledWith(mockResult);
+      expect(mockJson).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: true,
+          data: {
+            users: [],
+          },
+          metadata: {
+            pagination: { page: 1, perPage: 10, total: 0, totalPages: 0 },
+            requestId: expect.any(String),
+            timestamp: expect.any(String),
+          },
+        })
+      );
     });
   });
 
@@ -87,7 +113,16 @@ describe('UsersController', () => {
       await controller.getById(mockReq as Request, mockRes as Response);
 
       expect(mockService.getUserWithRoles).toHaveBeenCalledWith(1);
-      expect(mockJson).toHaveBeenCalledWith(mockUser);
+      expect(mockJson).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: true,
+          data: mockUser,
+          metadata: {
+            requestId: expect.any(String),
+            timestamp: expect.any(String),
+          },
+        })
+      );
     });
 
     it('should return 404 if user not found', async () => {
@@ -97,7 +132,15 @@ describe('UsersController', () => {
       await controller.getById(mockReq as Request, mockRes as Response);
 
       expect(mockStatus).toHaveBeenCalledWith(404);
-      expect(mockJson).toHaveBeenCalledWith({ error: 'User not found' });
+      expect(mockJson).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: false,
+          error: expect.objectContaining({
+            code: 'NOT_FOUND',
+            message: 'User not found',
+          }),
+        })
+      );
     });
 
     it('should return 400 if invalid ID', async () => {
@@ -106,7 +149,15 @@ describe('UsersController', () => {
       await controller.getById(mockReq as Request, mockRes as Response);
 
       expect(mockStatus).toHaveBeenCalledWith(400);
-      expect(mockJson).toHaveBeenCalledWith({ error: 'Invalid user ID' });
+      expect(mockJson).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: false,
+          error: expect.objectContaining({
+            code: 'BAD_REQUEST',
+            message: 'Invalid user ID',
+          }),
+        })
+      );
     });
 
     it('should handle errors', async () => {
@@ -136,7 +187,16 @@ describe('UsersController', () => {
 
       expect(mockService.createUser).toHaveBeenCalledWith(mockReq.body);
       expect(mockStatus).toHaveBeenCalledWith(201);
-      expect(mockJson).toHaveBeenCalledWith(mockUser);
+      expect(mockJson).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: true,
+          data: mockUser,
+          metadata: {
+            requestId: expect.any(String),
+            timestamp: expect.any(String),
+          },
+        })
+      );
     });
 
     it('should return 400 if required fields missing', async () => {
@@ -162,7 +222,13 @@ describe('UsersController', () => {
 
       expect(mockStatus).toHaveBeenCalledWith(400);
       expect(mockJson).toHaveBeenCalledWith(
-        expect.objectContaining({ message: 'Invalid email format' })
+        expect.objectContaining({
+          success: false,
+          error: expect.objectContaining({
+            code: 'BAD_REQUEST',
+            message: 'Invalid email format',
+          }),
+        })
       );
     });
 
@@ -179,7 +245,13 @@ describe('UsersController', () => {
 
       expect(mockStatus).toHaveBeenCalledWith(400);
       expect(mockJson).toHaveBeenCalledWith(
-        expect.objectContaining({ message: 'Password must be at least 6 characters long' })
+        expect.objectContaining({
+          success: false,
+          error: expect.objectContaining({
+            code: 'BAD_REQUEST',
+            message: 'Password must be at least 6 characters long',
+          }),
+        })
       );
     });
 
@@ -228,7 +300,12 @@ describe('UsersController', () => {
       await controller.update(mockReq as Request, mockRes as Response);
 
       expect(mockService.updateUser).toHaveBeenCalledWith(1, mockReq.body);
-      expect(mockJson).toHaveBeenCalledWith(mockUser);
+      expect(mockJson).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: true,
+          data: mockUser,
+        })
+      );
     });
 
     it('should forbid update if not owner or admin', async () => {
@@ -244,6 +321,15 @@ describe('UsersController', () => {
       await controller.update(mockReq as Request, mockRes as Response);
 
       expect(mockStatus).toHaveBeenCalledWith(403);
+      expect(mockJson).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: false,
+          error: expect.objectContaining({
+            code: 'FORBIDDEN',
+            message: 'You can only update your own profile',
+          }),
+        })
+      );
     });
 
     it('should return 400 if invalid ID', async () => {
@@ -252,6 +338,15 @@ describe('UsersController', () => {
       await controller.update(mockReq as Request, mockRes as Response);
 
       expect(mockStatus).toHaveBeenCalledWith(400);
+      expect(mockJson).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: false,
+          error: expect.objectContaining({
+            code: 'BAD_REQUEST',
+            message: 'Invalid user ID',
+          }),
+        })
+      );
     });
 
     it('should return 400 if invalid email', async () => {
@@ -264,6 +359,15 @@ describe('UsersController', () => {
       await controller.update(mockReq as Request, mockRes as Response);
 
       expect(mockStatus).toHaveBeenCalledWith(400);
+      expect(mockJson).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: false,
+          error: expect.objectContaining({
+            code: 'BAD_REQUEST',
+            message: 'Invalid email format',
+          }),
+        })
+      );
     });
 
     it('should return 400 if password too short', async () => {
@@ -276,6 +380,15 @@ describe('UsersController', () => {
       await controller.update(mockReq as Request, mockRes as Response);
 
       expect(mockStatus).toHaveBeenCalledWith(400);
+      expect(mockJson).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: false,
+          error: expect.objectContaining({
+            code: 'BAD_REQUEST',
+            message: 'Password must be at least 6 characters long',
+          }),
+        })
+      );
     });
 
     it('should return 403 if non-admin tries to update roles', async () => {
@@ -288,6 +401,15 @@ describe('UsersController', () => {
       await controller.update(mockReq as Request, mockRes as Response);
 
       expect(mockStatus).toHaveBeenCalledWith(403);
+      expect(mockJson).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: false,
+          error: expect.objectContaining({
+            code: 'FORBIDDEN',
+            message: 'Only administrators can update user roles',
+          }),
+        })
+      );
     });
 
     it('should return 404 if user not found', async () => {
@@ -301,6 +423,15 @@ describe('UsersController', () => {
       await controller.update(mockReq as Request, mockRes as Response);
 
       expect(mockStatus).toHaveBeenCalledWith(404);
+      expect(mockJson).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: false,
+          error: expect.objectContaining({
+            code: 'NOT_FOUND',
+            message: 'User not found',
+          }),
+        })
+      );
     });
 
     it('should return 409 if email exists', async () => {
@@ -314,6 +445,15 @@ describe('UsersController', () => {
       await controller.update(mockReq as Request, mockRes as Response);
 
       expect(mockStatus).toHaveBeenCalledWith(409);
+      expect(mockJson).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: false,
+          error: expect.objectContaining({
+            code: 'CONFLICT',
+            message: 'Email already exists',
+          }),
+        })
+      );
     });
 
     it('should handle errors', async () => {
@@ -342,10 +482,15 @@ describe('UsersController', () => {
       await controller.delete(mockReq as Request, mockRes as Response);
 
       expect(mockService.deleteUser).toHaveBeenCalledWith(1);
-      expect(mockJson).toHaveBeenCalledWith({
-        message: 'User deactivated successfully',
-        user: mockUser,
-      });
+      expect(mockJson).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: true,
+          data: {
+            message: 'User deactivated successfully',
+            user: mockUser,
+          },
+        })
+      );
     });
 
     it('should return 400 if invalid ID', async () => {
@@ -354,6 +499,15 @@ describe('UsersController', () => {
       await controller.delete(mockReq as Request, mockRes as Response);
 
       expect(mockStatus).toHaveBeenCalledWith(400);
+      expect(mockJson).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: false,
+          error: expect.objectContaining({
+            code: 'BAD_REQUEST',
+            message: 'Invalid user ID',
+          }),
+        })
+      );
     });
 
     it('should handle errors', async () => {

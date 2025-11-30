@@ -20,13 +20,13 @@
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,json,md}": [
-      "prettier --write"
+      "node --max-old-space-size=4096 ./node_modules/.bin/prettier --write"
     ],
     "frontend/**/*.{ts,tsx}": [
       "sh -c 'cd frontend && npm run lint'"
     ],
     "backend/**/*.ts": [
-      "sh -c 'cd backend && npm test -- --passWithNoTests --findRelatedTests'"
+      "sh -c 'cd backend && npx jest --passWithNoTests --findRelatedTests $@'"
     ]
   }
 }

@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
+import { ResponseHelper } from '../../shared/utils/response.helpers';
 
 export class AuthController {
   private authService: AuthService;
@@ -14,15 +15,12 @@ export class AuthController {
       const dto: LoginDto = req.body;
 
       if (!dto.username || !dto.password) {
-        return res.status(400).json({
-          error: 'Bad Request',
-          message: 'Username and password are required',
-        });
+        return ResponseHelper.badRequest(res, 'Username and password are required');
       }
       const user = await this.authService.validateUser(dto.username, dto.password);
 
       if (!user) {
-        return res.status(401).json({ error: 'Invalid credentials' });
+        return ResponseHelper.unauthorized(res, 'Invalid credentials');
       }
 
       const tokenData = await this.authService.login({
@@ -32,21 +30,18 @@ export class AuthController {
 
       const { passwordHash, ...userWithoutPassword } = user;
 
-      return res.json({
+      return ResponseHelper.success(res, {
         user: userWithoutPassword,
         token: tokenData.access_token,
       });
     } catch (error) {
       console.error('Login error:', error);
-      return res.status(500).json({
-        error: 'Internal Server Error',
-        message: 'An error occurred during login',
-      });
+      return ResponseHelper.internalError(res, 'An error occurred during login');
     }
   }
 
   async logout(_req: Request, res: Response): Promise<Response> {
-    return res.json({
+    return ResponseHelper.success(res, {
       message: 'Logout successful',
       note: 'Client should remove the token from storage',
     });
@@ -57,24 +52,21 @@ export class AuthController {
       const user = req.user as any;
 
       if (!user) {
-        return res.status(401).json({ error: 'Unauthorized' });
+        return ResponseHelper.unauthorized(res, 'Unauthorized');
       }
 
       const userWithRoles = await this.authService.getUserWithRoles(user.id);
 
       if (!userWithRoles) {
-        return res.status(404).json({ error: 'User not found' });
+        return ResponseHelper.notFound(res, 'User not found');
       }
 
       const { passwordHash, ...userWithoutPassword } = userWithRoles;
 
-      return res.json(userWithoutPassword);
+      return ResponseHelper.success(res, userWithoutPassword);
     } catch (error) {
       console.error('Get user error:', error);
-      return res.status(500).json({
-        error: 'Internal Server Error',
-        message: 'An error occurred while fetching user data',
-      });
+      return ResponseHelper.internalError(res, 'An error occurred while fetching user data');
     }
   }
 }
