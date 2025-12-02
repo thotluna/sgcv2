@@ -6,8 +6,8 @@ import { ResponseHelper } from '../../shared/utils/response.helpers';
 export class AuthController {
   private authService: AuthService;
 
-  constructor() {
-    this.authService = new AuthService();
+  constructor(service: AuthService) {
+    this.authService = service;
   }
 
   async login(req: Request, res: Response): Promise<Response> {
@@ -61,9 +61,7 @@ export class AuthController {
         return ResponseHelper.notFound(res, 'User not found');
       }
 
-      const { passwordHash, ...userWithoutPassword } = userWithRoles;
-
-      return ResponseHelper.success(res, userWithoutPassword);
+      return ResponseHelper.success(res, userWithRoles);
     } catch (error) {
       console.error('Get user error:', error);
       return ResponseHelper.internalError(res, 'An error occurred while fetching user data');

@@ -4,10 +4,12 @@ import dotenv from 'dotenv';
 import passport from 'passport';
 import { jwtStrategy } from './modules/auth/strategies/jwt.strategy';
 import { localStrategy } from './modules/auth/strategies/local.strategy';
-import authRouter from './modules/auth/auth.routes';
+import { AuthRoutes } from './modules/auth/auth.routes';
 import usersRouter from './modules/users/users.routes';
 import customersRouter from './modules/customer/customer.routes';
 import { prisma } from './config/prisma';
+import { AuthController } from 'modules/auth/auth.controller';
+import { AuthServiceImp } from 'modules/auth/auth.service';
 
 // Load environment variables
 dotenv.config();
@@ -69,7 +71,7 @@ app.get('/health', async (_req: Request, res: Response) => {
 const API_PREFIX = process.env.API_PREFIX || '/api';
 
 // Mount routes
-app.use(`${API_PREFIX}/auth`, authRouter);
+app.use(`${API_PREFIX}/auth`, new AuthRoutes(new AuthController(new AuthServiceImp())).getRouter());
 app.use(`${API_PREFIX}/users`, usersRouter);
 app.use(`${API_PREFIX}/customers`, customersRouter);
 
