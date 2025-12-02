@@ -5,13 +5,15 @@ import passport from 'passport';
 import { jwtStrategy } from './modules/auth/strategies/jwt.strategy';
 import { localStrategy } from './modules/auth/strategies/local.strategy';
 import { UsersRoutes } from './modules/users/users.routes';
-import customersRouter from './modules/customer/customer.routes';
 import { prisma } from './config/prisma';
 import { authContainer } from './modules/auth/container';
 import { TYPES } from './modules/auth/types';
 import { usersContainer } from './modules/users/container';
 import { TYPES as UsersTypes } from './modules/users/types';
 import { AuthRoutes } from './modules/auth/auth.routes';
+import { TYPES as CustomerTypes } from './modules/customer/types';
+import { customerContainer } from './modules/customer/container';
+import { CustomerRoutes } from 'modules/customer/customer.routes';
 
 // Load environment variables
 dotenv.config();
@@ -77,7 +79,8 @@ const authRoutes = authContainer.get<AuthRoutes>(TYPES.AuthRoutes);
 app.use(`${API_PREFIX}/auth`, authRoutes.getRouter());
 const usersRoutes = usersContainer.get<UsersRoutes>(UsersTypes.UsersRoutes);
 app.use(`${API_PREFIX}/users`, usersRoutes.getRouter());
-app.use(`${API_PREFIX}/customers`, customersRouter);
+const customersRoutes = customerContainer.get<CustomerRoutes>(CustomerTypes.CustomerRoutes);
+app.use(`${API_PREFIX}/customers`, customersRoutes.getRouter());
 
 app.get(`${API_PREFIX}/`, (_req: Request, res: Response) => {
   res.json({
