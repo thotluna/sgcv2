@@ -1,5 +1,5 @@
 import { AuthServiceMock } from './auth.service.mock';
-import { createLocalStrategy } from '../strategies/local.strategy';
+import { LocalStrategy } from '../strategies/local.strategy';
 
 describe('Local Strategy', () => {
   let service: AuthServiceMock;
@@ -7,7 +7,7 @@ describe('Local Strategy', () => {
 
   beforeEach(() => {
     service = new AuthServiceMock();
-    strategy = createLocalStrategy(service);
+    strategy = new LocalStrategy(service);
     jest.clearAllMocks();
   });
 

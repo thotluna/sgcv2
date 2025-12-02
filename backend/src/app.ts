@@ -2,8 +2,8 @@ import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import passport from 'passport';
-import { jwtStrategy } from './modules/auth/strategies/jwt.strategy';
-import { localStrategy } from './modules/auth/strategies/local.strategy';
+import { JwtStrategy } from './modules/auth/strategies/jwt.strategy';
+import { LocalStrategy } from './modules/auth/strategies/local.strategy';
 import { UsersRoutes } from './modules/users/users.routes';
 import { prisma } from './config/prisma';
 import { authContainer } from './modules/auth/container';
@@ -13,7 +13,7 @@ import { TYPES as UsersTypes } from './modules/users/types';
 import { AuthRoutes } from './modules/auth/auth.routes';
 import { TYPES as CustomerTypes } from './modules/customer/types';
 import { customerContainer } from './modules/customer/container';
-import { CustomerRoutes } from 'modules/customer/customer.routes';
+import { CustomerRoutes } from './modules/customer/customer.routes';
 
 // Load environment variables
 dotenv.config();
@@ -46,6 +46,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // ---------- Passport ----------
+const jwtStrategy = authContainer.get<JwtStrategy>(TYPES.JwtStrategy);
+const localStrategy = authContainer.get<LocalStrategy>(TYPES.LocalStrategy);
 passport.use(jwtStrategy);
 passport.use(localStrategy);
 app.use(passport.initialize());

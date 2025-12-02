@@ -1,5 +1,5 @@
 // src/modules/rbac/__tests__/rbac.service.test.ts
-import { rbacService } from '../rbac.service';
+import { RbacService } from '../rbac.service';
 
 jest.mock('../../../config/prisma', () => {
   const mockUser = {
@@ -32,6 +32,12 @@ jest.mock('../../../config/prisma', () => {
 });
 
 describe('RbacService', () => {
+  let rbacService: RbacService;
+
+  beforeEach(() => {
+    rbacService = new RbacService();
+  });
+
   it('should return unique permissions for a user', async () => {
     const perms = await rbacService.getUserPermissions(1);
     expect(perms).toEqual(
@@ -42,7 +48,9 @@ describe('RbacService', () => {
       ])
     );
     // No duplicates
-    const keys = perms.map(p => `${p.resource}.${p.action}`);
+    const keys = perms.map(
+      (p: { resource: string; action: string }) => `${p.resource}.${p.action}`
+    );
     expect(new Set(keys).size).toBe(keys.length);
   });
 
