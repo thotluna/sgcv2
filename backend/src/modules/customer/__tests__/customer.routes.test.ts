@@ -22,13 +22,13 @@ jest.mock('../../auth/middleware/auth.middleware', () => ({
 // Mock RBAC service
 jest.mock('../../rbac/rbac.service', () => ({
   rbacService: {
-    hasRole: jest.fn().mockResolvedValue(true),
+    hasPermission: jest.fn().mockResolvedValue(true),
   },
 }));
 
-// Mock roles guard/decorator dependencies if needed
-jest.mock('../../rbac/guards/roles.guard', () => ({
-  requireRoles: jest.fn(() => (_req: any, _res: any, next: any) => next()),
+// Mock permissions guard
+jest.mock('../../rbac/guards/permissions.guard', () => ({
+  requirePermission: jest.fn(() => (_req: any, _res: any, next: any) => next()),
 }));
 
 // Create mock controller with mocked methods
@@ -54,7 +54,7 @@ describe('Customer Routes', () => {
   });
 
   describe('POST /api/customers', () => {
-    it('should require authentication and Admin role', async () => {
+    it('should require authentication and customers:create permission', async () => {
       await request(app).post('/api/customers').send({});
       expect(authenticate).toHaveBeenCalled();
       expect(mockCreate).toHaveBeenCalled();
@@ -62,7 +62,7 @@ describe('Customer Routes', () => {
   });
 
   describe('GET /api/customers', () => {
-    it('should require authentication and Admin role', async () => {
+    it('should require authentication and customers:read permission', async () => {
       await request(app).get('/api/customers');
       expect(authenticate).toHaveBeenCalled();
       expect(mockFindAll).toHaveBeenCalled();
@@ -70,7 +70,7 @@ describe('Customer Routes', () => {
   });
 
   describe('GET /api/customers/:id', () => {
-    it('should require authentication and Admin role', async () => {
+    it('should require authentication and customers:read permission', async () => {
       await request(app).get('/api/customers/1');
       expect(authenticate).toHaveBeenCalled();
       expect(mockFindOne).toHaveBeenCalled();
@@ -78,7 +78,7 @@ describe('Customer Routes', () => {
   });
 
   describe('PUT /api/customers/:id', () => {
-    it('should require authentication and Admin role', async () => {
+    it('should require authentication and customers:update permission', async () => {
       await request(app).put('/api/customers/1').send({});
       expect(authenticate).toHaveBeenCalled();
       expect(mockUpdate).toHaveBeenCalled();
@@ -86,7 +86,7 @@ describe('Customer Routes', () => {
   });
 
   describe('DELETE /api/customers/:id', () => {
-    it('should require authentication and Admin role', async () => {
+    it('should require authentication and customers:delete permission', async () => {
       await request(app).delete('/api/customers/1');
       expect(authenticate).toHaveBeenCalled();
       expect(mockDelete).toHaveBeenCalled();
