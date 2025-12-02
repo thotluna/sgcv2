@@ -4,11 +4,13 @@ import dotenv from 'dotenv';
 import passport from 'passport';
 import { jwtStrategy } from './modules/auth/strategies/jwt.strategy';
 import { localStrategy } from './modules/auth/strategies/local.strategy';
-import usersRouter from './modules/users/users.routes';
+import { UsersRoutes } from './modules/users/users.routes';
 import customersRouter from './modules/customer/customer.routes';
 import { prisma } from './config/prisma';
 import { authContainer } from './modules/auth/container';
 import { TYPES } from './modules/auth/types';
+import { usersContainer } from './modules/users/container';
+import { TYPES as UsersTypes } from './modules/users/types';
 import { AuthRoutes } from './modules/auth/auth.routes';
 
 // Load environment variables
@@ -73,7 +75,8 @@ const API_PREFIX = process.env.API_PREFIX || '/api';
 // Mount routes
 const authRoutes = authContainer.get<AuthRoutes>(TYPES.AuthRoutes);
 app.use(`${API_PREFIX}/auth`, authRoutes.getRouter());
-app.use(`${API_PREFIX}/users`, usersRouter);
+const usersRoutes = usersContainer.get<UsersRoutes>(UsersTypes.UsersRoutes);
+app.use(`${API_PREFIX}/users`, usersRoutes.getRouter());
 app.use(`${API_PREFIX}/customers`, customersRouter);
 
 app.get(`${API_PREFIX}/`, (_req: Request, res: Response) => {
