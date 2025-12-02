@@ -2,11 +2,14 @@ import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { ResponseHelper } from '../../shared/utils/response.helpers';
+import { inject, injectable } from 'inversify';
+import { TYPES } from './types';
 
+@injectable()
 export class AuthController {
   private authService: AuthService;
 
-  constructor(service: AuthService) {
+  constructor(@inject(TYPES.AuthService) service: AuthService) {
     this.authService = service;
   }
 
