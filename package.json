@@ -26,7 +26,7 @@
       "sh -c 'cd frontend && npm run lint'"
     ],
     "backend/**/*.ts": [
-      "sh -c 'cd backend && npx jest --passWithNoTests --findRelatedTests $@'"
+      "./scripts/run-backend-tests.sh"
     ]
   }
 }

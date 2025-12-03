@@ -1,32 +1,64 @@
 import 'dotenv/config';
 import { prisma } from '../src/config/prisma';
 import bcrypt from 'bcrypt';
+import { ROLES } from '../src/consts/roles';
+import { PERMISSIONS } from '../src/consts/permissions';
 
 async function main() {
   const password = 'admin123';
   const passwordHash = await bcrypt.hash(password, 10);
 
-  // Clean up
+  console.log('🧹 Cleaning up database...');
+  // Clean up in order to avoid foreign key constraints
+  await prisma.rolePermission.deleteMany();
   await prisma.userRole.deleteMany();
-  await prisma.user.deleteMany();
+  await prisma.permission.deleteMany();
   await prisma.role.deleteMany();
+  await prisma.user.deleteMany();
 
-  // Create Roles
-  const adminRole = await prisma.role.create({
-    data: {
-      name: 'admin',
-      description: 'Administrator with full access',
-    },
-  });
+  console.log('🌱 Seeding Permissions...');
+  const allPermissions = [];
+  for (const resourceKey in PERMISSIONS) {
+    const resourceActions = PERMISSIONS[resourceKey as keyof typeof PERMISSIONS];
+    for (const actionKey in resourceActions) {
+      const permissionData = resourceActions[actionKey as keyof typeof resourceActions];
+      const permission = await prisma.permission.create({
+        data: {
+          resource: permissionData.resource,
+          action: permissionData.action,
+          description: `${permissionData.action} on ${permissionData.resource}`,
+        },
+      });
+      allPermissions.push(permission);
+    }
+  }
 
-  await prisma.role.create({
-    data: {
-      name: 'user',
-      description: 'Standard user',
-    },
-  });
+  console.log('🌱 Seeding Roles...');
+  const createdRoles: Record<string, any> = {};
+  for (const roleName of Object.values(ROLES)) {
+    const role = await prisma.role.create({
+      data: {
+        name: roleName,
+        description: `Role ${roleName}`,
+      },
+    });
+    createdRoles[roleName] = role;
+  }
 
-  // Create Admin User
+  console.log('🔗 Assigning Permissions to Roles...');
+  // Assign ALL permissions to ADMIN role
+  if (createdRoles[ROLES.ADMIN]) {
+    for (const permission of allPermissions) {
+      await prisma.rolePermission.create({
+        data: {
+          roleId: createdRoles[ROLES.ADMIN].id,
+          permissionId: permission.id,
+        },
+      });
+    }
+  }
+
+  console.log('👤 Creating Admin User...');
   await prisma.user.create({
     data: {
       username: 'admin',
@@ -35,13 +67,13 @@ async function main() {
       isActive: 'ACTIVE',
       roles: {
         create: {
-          roleId: adminRole.id,
+          roleId: createdRoles[ROLES.ADMIN].id,
         },
       },
     },
   });
 
-  console.log('✅ Database seeded with admin user and roles');
+  console.log('✅ Database seeded successfully');
 }
 
 main()
