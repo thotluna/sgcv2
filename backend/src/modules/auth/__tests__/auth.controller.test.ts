@@ -1,23 +1,13 @@
-import { AuthService } from '../auth.service';
 import { AuthController } from '../auth.controller';
-
-jest.mock('../auth.service');
-
-const mockValidateUser = jest.fn();
-const mockLogin = jest.fn();
-const mockGetUserWithRoles = jest.fn();
-
-(AuthService as jest.Mock).mockImplementation(() => ({
-  validateUser: mockValidateUser,
-  login: mockLogin,
-  getUserWithRoles: mockGetUserWithRoles,
-}));
+import { AuthServiceMock } from './auth.service.mock';
 
 describe('AuthController', () => {
+  let service: AuthServiceMock;
   let authController: AuthController;
 
   beforeEach(() => {
-    authController = new AuthController();
+    service = new AuthServiceMock();
+    authController = new AuthController(service);
     jest.clearAllMocks();
   });
 
@@ -65,7 +55,7 @@ describe('AuthController', () => {
     });
 
     it('should return 401 when credentials are invalid', async () => {
-      mockValidateUser.mockResolvedValue(null);
+      service.validateUser.mockResolvedValue(null);
 
       const req = { body: { username: 'admin', password: 'wrong' } } as any;
       const res = {
@@ -85,13 +75,13 @@ describe('AuthController', () => {
           }),
         })
       );
-      expect(mockValidateUser).toHaveBeenCalledWith('admin', 'wrong');
+      expect(service.validateUser).toHaveBeenCalledWith('admin', 'wrong');
     });
 
     it('should return 200 with token when credentials are valid', async () => {
       const fakeUser = { id: 1, username: 'admin' };
-      mockValidateUser.mockResolvedValue(fakeUser);
-      mockLogin.mockResolvedValue({ access_token: 'jwt-token' });
+      service.validateUser.mockResolvedValue(fakeUser);
+      service.login.mockResolvedValue({ access_token: 'jwt-token' });
 
       const req = { body: { username: 'admin', password: 'admin123' } } as any;
       const res = {
@@ -110,8 +100,8 @@ describe('AuthController', () => {
           },
         })
       );
-      expect(mockValidateUser).toHaveBeenCalledWith('admin', 'admin123');
-      expect(mockLogin).toHaveBeenCalledWith({
+      expect(service.validateUser).toHaveBeenCalledWith('admin', 'admin123');
+      expect(service.login).toHaveBeenCalledWith({
         id: 1,
         username: 'admin',
       });
@@ -163,7 +153,7 @@ describe('AuthController', () => {
     });
 
     it('should return 404 when user is not found in database', async () => {
-      mockGetUserWithRoles.mockResolvedValue(null);
+      service.getUserWithRoles.mockResolvedValue(null);
 
       const req = { user: { id: 999 } } as any;
       const res = {
@@ -183,7 +173,7 @@ describe('AuthController', () => {
           }),
         })
       );
-      expect(mockGetUserWithRoles).toHaveBeenCalledWith(999);
+      expect(service.getUserWithRoles).toHaveBeenCalledWith(999);
     });
 
     it('should return user data without password when authenticated', async () => {
@@ -195,7 +185,7 @@ describe('AuthController', () => {
         permissions: [{ id: 1, resource: 'ODS', action: 'CREAR' }],
       };
 
-      mockGetUserWithRoles.mockResolvedValue(fakeUserWithRoles);
+      service.getUserWithRoles.mockResolvedValue(fakeUserWithRoles);
 
       const req = { user: { id: 1 } } as any;
       const res = {
@@ -217,7 +207,7 @@ describe('AuthController', () => {
           },
         })
       );
-      expect(mockGetUserWithRoles).toHaveBeenCalledWith(1);
+      expect(service.getUserWithRoles).toHaveBeenCalledWith(1);
     });
   });
 });

@@ -1,55 +1,60 @@
 import { Router } from 'express';
 import { CustomerController } from './customer.controller';
 import { authenticate } from '../auth/middleware/auth.middleware';
-import { Roles } from '../rbac/decorators/roles.decorator';
-import { ROLES } from '../../consts/roles';
+import { Permission } from '../rbac/decorators/permissions.decorator';
+import { PERMISSIONS } from '../../consts/permissions';
+import { inject, injectable } from 'inversify';
+import { TYPES } from './types';
 
-const router = Router();
-const customerController = new CustomerController();
+@injectable()
+export class CustomerRoutes {
+  private controller: CustomerController;
+  private router: Router;
 
-/**
- * @route   POST /api/customers
- * @desc    Create new customer
- * @access  Private (Admin only)
- */
-router.post('/', authenticate, Roles(ROLES.ADMIN), (req, res) =>
-  customerController.create(req, res)
-);
+  constructor(@inject(TYPES.CustomerController) controller: CustomerController) {
+    this.controller = controller;
+    this.router = Router();
+    this.initRoutes();
+  }
 
-/**
- * @route   GET /api/customers
- * @desc    Get all customers (with pagination)
- * @access  Private (Admin only)
- */
-router.get('/', authenticate, Roles(ROLES.ADMIN), (req, res) =>
-  customerController.findAll(req, res)
-);
+  private initRoutes() {
+    this.router.post(
+      '/',
+      authenticate,
+      Permission(PERMISSIONS.CUSTOMERS.CREATE.resource, PERMISSIONS.CUSTOMERS.CREATE.action),
+      (req, res) => this.controller.create(req, res)
+    );
 
-/**
- * @route   GET /api/customers/:id
- * @desc    Get customer by ID
- * @access  Private (Admin only)
- */
-router.get('/:id', authenticate, Roles(ROLES.ADMIN), (req, res) =>
-  customerController.findOne(req, res)
-);
+    this.router.get(
+      '/',
+      authenticate,
+      Permission(PERMISSIONS.CUSTOMERS.READ.resource, PERMISSIONS.CUSTOMERS.READ.action),
+      (req, res) => this.controller.findAll(req, res)
+    );
 
-/**
- * @route   PUT /api/customers/:id
- * @desc    Update customer
- * @access  Private (Admin only)
- */
-router.put('/:id', authenticate, Roles(ROLES.ADMIN), (req, res) =>
-  customerController.update(req, res)
-);
+    this.router.get(
+      '/:id',
+      authenticate,
+      Permission(PERMISSIONS.CUSTOMERS.READ.resource, PERMISSIONS.CUSTOMERS.READ.action),
+      (req, res) => this.controller.findOne(req, res)
+    );
 
-/**
- * @route   DELETE /api/customers/:id
- * @desc    Delete customer (soft delete)
- * @access  Private (Admin only)
- */
-router.delete('/:id', authenticate, Roles(ROLES.ADMIN), (req, res) =>
-  customerController.delete(req, res)
-);
+    this.router.put(
+      '/:id',
+      authenticate,
+      Permission(PERMISSIONS.CUSTOMERS.UPDATE.resource, PERMISSIONS.CUSTOMERS.UPDATE.action),
+      (req, res) => this.controller.update(req, res)
+    );
 
-export default router;
+    this.router.delete(
+      '/:id',
+      authenticate,
+      Permission(PERMISSIONS.CUSTOMERS.DELETE.resource, PERMISSIONS.CUSTOMERS.DELETE.action),
+      (req, res) => this.controller.delete(req, res)
+    );
+  }
+
+  public getRouter(): Router {
+    return this.router;
+  }
+}

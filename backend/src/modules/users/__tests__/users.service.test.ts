@@ -1,4 +1,4 @@
-import { UsersService } from '../users.service';
+import { UsersServiceImp } from '../users.service';
 import { prisma } from '../../../config/prisma';
 import bcrypt from 'bcrypt';
 
@@ -26,10 +26,10 @@ jest.mock('bcrypt', () => ({
 }));
 
 describe('UsersService', () => {
-  let service: UsersService;
+  let service: UsersServiceImp;
 
   beforeEach(() => {
-    service = new UsersService();
+    service = new UsersServiceImp();
     jest.clearAllMocks();
   });
 
@@ -179,7 +179,13 @@ describe('UsersService', () => {
       const mockUser = {
         id: 1,
         username: 'test',
+        email: 'test@example.com',
+        isActive: 'ACTIVE',
+        createdAt: new Date(),
+        updatedAt: new Date(),
         passwordHash: 'hash',
+        firstName: null,
+        lastName: null,
         roles: [
           {
             role: {
@@ -206,6 +212,7 @@ describe('UsersService', () => {
       const result = await service.getUserWithRoles(1);
 
       expect(result).toBeDefined();
+      expect(result?.user).toBeDefined();
       expect(result?.roles).toHaveLength(1);
       expect(result?.permissions).toHaveLength(1);
       expect(result?.roles[0].name).toBe('Admin');

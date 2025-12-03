@@ -2,10 +2,39 @@ import { prisma } from '../../config/prisma';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import bcrypt from 'bcrypt';
+import { PermissionBasic, RoleBasic, UserBasic, UserWithRoles } from 'shared/types/user.types';
 
 const SALT_ROUNDS = 10;
 
-export class UsersService {
+export interface Pagination {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
+
+export interface UserDelete {
+  id: number;
+  username: string;
+  isActive: ('ACTIVE' | 'INACTIVE' | 'BLOCKED') | null;
+}
+
+export interface UsersService {
+  findById(id: number): Promise<UserBasic | null>;
+  findByUsername(username: string): Promise<UserBasic | null>;
+  findByEmail(email: string): Promise<UserBasic | null>;
+  getUserWithRoles(id: number): Promise<UserWithRoles | null>;
+  findAll(
+    page: number,
+    limit: number,
+    filters?: { isActive?: 'ACTIVE' | 'INACTIVE' | 'BLOCKED' }
+  ): Promise<{ users: UserBasic[]; pagination: Pagination }>;
+  createUser(data: CreateUserDto): Promise<UserBasic>;
+  updateUser(id: number, data: UpdateUserDto): Promise<UserBasic>;
+  deleteUser(id: number): Promise<UserDelete>;
+}
+
+export class UsersServiceImp implements UsersService {
   /**
    * Find user by ID
    */
@@ -35,6 +64,7 @@ export class UsersService {
         email: true,
         isActive: true,
         createdAt: true,
+        updatedAt: true,
       },
     });
   }
@@ -51,6 +81,7 @@ export class UsersService {
         email: true,
         isActive: true,
         createdAt: true,
+        updatedAt: true,
       },
     });
   }
@@ -81,13 +112,13 @@ export class UsersService {
     if (!user) return null;
 
     // Transform to a cleaner structure
-    const roles = user.roles.map(ur => ({
+    const roles: RoleBasic[] = user.roles.map(ur => ({
       id: ur.role.id,
       name: ur.role.name,
       description: ur.role.description,
     }));
 
-    const permissions = user.roles.flatMap(ur =>
+    const permissions: PermissionBasic[] = user.roles.flatMap(ur =>
       ur.role.permissions.map(rp => ({
         id: rp.permission.id,
         resource: rp.permission.resource,
@@ -99,10 +130,12 @@ export class UsersService {
     // Remove duplicates from permissions
     const uniquePermissions = Array.from(new Map(permissions.map(p => [p.id, p])).values());
 
-    const { passwordHash, roles: userRoles, ...userData } = user;
+    const { passwordHash, firstName, lastName, roles: userRoles, ...userData } = user;
+
+    userData satisfies UserBasic;
 
     return {
-      ...userData,
+      user: userData,
       roles,
       permissions: uniquePermissions,
     };
@@ -184,6 +217,7 @@ export class UsersService {
         email: true,
         isActive: true,
         createdAt: true,
+        updatedAt: true,
       },
     });
 
@@ -244,6 +278,7 @@ export class UsersService {
         username: true,
         email: true,
         isActive: true,
+        createdAt: true,
         updatedAt: true,
       },
     });
@@ -272,7 +307,7 @@ export class UsersService {
   /**
    * Delete user (soft delete by setting isActive = false)
    */
-  async deleteUser(id: number) {
+  async deleteUser(id: number): Promise<UserDelete> {
     return await prisma.user.update({
       where: { id },
       data: { isActive: 'INACTIVE' },

@@ -1,4 +1,4 @@
-import { AuthService } from '../auth.service';
+import { AuthServiceImp } from '../auth.service';
 import { prisma } from '@config/prisma';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -15,7 +15,7 @@ jest.mock('bcrypt');
 jest.mock('jsonwebtoken');
 
 describe('AuthService', () => {
-  const service = new AuthService();
+  const service = new AuthServiceImp();
 
   afterEach(() => {
     jest.clearAllMocks();

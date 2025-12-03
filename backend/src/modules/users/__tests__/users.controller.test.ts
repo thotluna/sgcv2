@@ -2,9 +2,6 @@ import { Request, Response } from 'express';
 import { UsersController } from '../users.controller';
 import { UsersService } from '../users.service';
 
-// Mock UsersService
-jest.mock('../users.service');
-
 describe('UsersController', () => {
   let controller: UsersController;
   let mockService: jest.Mocked<UsersService>;
@@ -14,10 +11,19 @@ describe('UsersController', () => {
   let mockStatus: jest.Mock;
 
   beforeEach(() => {
-    mockService = new UsersService() as jest.Mocked<UsersService>;
-    controller = new UsersController();
-    // Inject mock service (since it's private, we cast to any)
-    (controller as any).usersService = mockService;
+    // Create a proper mock object for the UsersService interface
+    mockService = {
+      findById: jest.fn(),
+      findByUsername: jest.fn(),
+      findByEmail: jest.fn(),
+      getUserWithRoles: jest.fn(),
+      findAll: jest.fn(),
+      createUser: jest.fn(),
+      updateUser: jest.fn(),
+      deleteUser: jest.fn(),
+    } as jest.Mocked<UsersService>;
+
+    controller = new UsersController(mockService);
 
     mockJson = jest.fn();
     mockStatus = jest.fn().mockReturnValue({ json: mockJson });

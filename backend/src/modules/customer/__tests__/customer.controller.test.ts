@@ -7,7 +7,7 @@ jest.mock('uuid', () => ({
   v4: () => 'test-uuid-1234',
 }));
 
-jest.mock('../customer.service');
+// jest.mock('../customer.service');
 
 describe('CustomerController', () => {
   let customerController: CustomerController;
@@ -21,6 +21,15 @@ describe('CustomerController', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
+    customerService = {
+      create: jest.fn(),
+      findById: jest.fn(),
+      findByCode: jest.fn(),
+      findAll: jest.fn(),
+      update: jest.fn(),
+      delete: jest.fn(),
+    } as jest.Mocked<CustomerService>;
+
     statusMock = jest.fn().mockReturnThis();
     jsonMock = jest.fn().mockReturnThis();
     res = {
@@ -30,8 +39,7 @@ describe('CustomerController', () => {
 
     consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
-    customerController = new CustomerController();
-    customerService = (customerController as any).customerService;
+    customerController = new CustomerController(customerService);
   });
 
   afterEach(() => {
@@ -158,10 +166,10 @@ describe('CustomerController', () => {
       req = { query: { page: '1', limit: '10' } };
       const result = {
         customers: [],
-        pagination: { page: 1, limit: 10, total: 0, totalPages: 0 },
+        pagination: { page: 1, perPage: 10, total: 0, totalPages: 0 },
       };
 
-      (customerService.findAll as jest.Mock).mockResolvedValue(result);
+      customerService.findAll.mockResolvedValue(result);
 
       await customerController.findAll(req as Request, res as Response);
 

@@ -1,5 +1,6 @@
 import { jwtOptions } from '../strategies/jwt.options';
 import { prisma } from '../../../config/prisma';
+import { JwtStrategy } from '../strategies/jwt.strategy';
 
 // Mock prisma before importing the strategy
 jest.mock('../../../config/prisma', () => ({
@@ -37,8 +38,8 @@ describe('JWT Strategy', () => {
   });
 
   describe('JWT Strategy Verify Function', () => {
-    it('should create a valid JWT strategy instance', async () => {
-      const { jwtStrategy } = await import('../strategies/jwt.strategy');
+    it('should create a valid JWT strategy instance', () => {
+      const jwtStrategy = new JwtStrategy();
 
       expect(jwtStrategy).toBeDefined();
       expect(jwtStrategy.name).toBe('jwt');
@@ -59,8 +60,7 @@ describe('JWT Strategy', () => {
 
       (prisma.user.findUnique as jest.Mock).mockResolvedValue(mockUser);
 
-      // Import strategy and get verify function
-      const { jwtStrategy } = await import('../strategies/jwt.strategy');
+      const jwtStrategy = new JwtStrategy();
       const verifyFn = (jwtStrategy as any)._verify;
 
       const mockDone = jest.fn();
@@ -75,7 +75,7 @@ describe('JWT Strategy', () => {
     it('should return false when user is not found in database', async () => {
       (prisma.user.findUnique as jest.Mock).mockResolvedValue(null);
 
-      const { jwtStrategy } = await import('../strategies/jwt.strategy');
+      const jwtStrategy = new JwtStrategy();
       const verifyFn = (jwtStrategy as any)._verify;
 
       const mockDone = jest.fn();
@@ -91,7 +91,7 @@ describe('JWT Strategy', () => {
       const mockError = new Error('Database connection error');
       (prisma.user.findUnique as jest.Mock).mockRejectedValue(mockError);
 
-      const { jwtStrategy } = await import('../strategies/jwt.strategy');
+      const jwtStrategy = new JwtStrategy();
       const verifyFn = (jwtStrategy as any)._verify;
 
       const mockDone = jest.fn();
@@ -106,7 +106,7 @@ describe('JWT Strategy', () => {
       const userId = 42;
       (prisma.user.findUnique as jest.Mock).mockResolvedValue(null);
 
-      const { jwtStrategy } = await import('../strategies/jwt.strategy');
+      const jwtStrategy = new JwtStrategy();
       const verifyFn = (jwtStrategy as any)._verify;
 
       const mockDone = jest.fn();
