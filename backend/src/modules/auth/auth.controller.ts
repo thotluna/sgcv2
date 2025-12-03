@@ -2,12 +2,15 @@ import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { ResponseHelper } from '../../shared/utils/response.helpers';
+import { inject, injectable } from 'inversify';
+import { TYPES } from './types';
 
+@injectable()
 export class AuthController {
   private authService: AuthService;
 
-  constructor() {
-    this.authService = new AuthService();
+  constructor(@inject(TYPES.AuthService) service: AuthService) {
+    this.authService = service;
   }
 
   async login(req: Request, res: Response): Promise<Response> {
@@ -61,9 +64,7 @@ export class AuthController {
         return ResponseHelper.notFound(res, 'User not found');
       }
 
-      const { passwordHash, ...userWithoutPassword } = userWithRoles;
-
-      return ResponseHelper.success(res, userWithoutPassword);
+      return ResponseHelper.success(res, userWithRoles);
     } catch (error) {
       console.error('Get user error:', error);
       return ResponseHelper.internalError(res, 'An error occurred while fetching user data');

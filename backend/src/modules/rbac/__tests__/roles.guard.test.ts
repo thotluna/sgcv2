@@ -1,9 +1,15 @@
 // src/modules/rbac/__tests__/roles.guard.test.ts
 import { requireRoles } from '../guards/roles.guard';
-import { rbacService } from '../rbac.service';
 import { Request, Response, NextFunction } from 'express';
 
-jest.mock('../rbac.service');
+// Mock the entire rbac.service module
+jest.mock('../rbac.service', () => ({
+  rbacService: {
+    hasRole: jest.fn(),
+  },
+}));
+
+import { rbacService } from '../rbac.service';
 
 const mockReq = { user: { id: 1 } } as unknown as Request;
 const mockRes = {
@@ -13,6 +19,10 @@ const mockRes = {
 const nextFn = jest.fn() as NextFunction;
 
 describe('Roles Guard', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('allows request when role matches', async () => {
     (rbacService.hasRole as jest.Mock).mockResolvedValue(true);
     await requireRoles('Administrador')(mockReq, mockRes, nextFn);

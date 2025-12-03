@@ -1,8 +1,20 @@
+import { User } from '@prisma/client';
 import { prisma } from '../../config/prisma';
+import { UserWithRoles } from '../../shared/types/user.types';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { injectable } from 'inversify';
 
-export class AuthService {
+export interface AuthService {
+  validateUser(username: string, password: string): Promise<User | null>;
+  login(user: { id: number; username: string }): Promise<{ access_token: string }>;
+  hashPassword(password: string): Promise<string>;
+  comparePassword(plainPassword: string, hashedPassword: string): Promise<boolean>;
+  getUserWithRoles(userId: number): Promise<UserWithRoles | null>;
+}
+
+@injectable()
+export class AuthServiceImp implements AuthService {
   private readonly SALT_ROUNDS = 10;
 
   async validateUser(username: string, password: string) {
@@ -53,9 +65,9 @@ export class AuthService {
     const permissions = roles.flatMap(role => role.permissions.map(rp => rp.permission));
 
     return {
-      ...user,
       roles,
       permissions,
-    };
+      user: user,
+    } as UserWithRoles;
   }
 }

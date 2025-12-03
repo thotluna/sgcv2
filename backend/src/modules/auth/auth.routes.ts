@@ -1,18 +1,34 @@
 import { Router } from 'express';
 import passport from 'passport';
 import { AuthController } from './auth.controller';
+import { inject, injectable } from 'inversify';
+import { TYPES } from './types';
 
-const router = Router();
-const authController = new AuthController();
+@injectable()
+export class AuthRoutes {
+  private controller: AuthController;
+  private router: Router;
+  constructor(@inject(TYPES.AuthController) controller: AuthController) {
+    this.controller = controller;
+    this.router = Router();
+    this.createRoutes();
+  }
 
-router.post('/login', (req, res) => authController.login(req, res));
+  createRoutes(): void {
+    this.router.post('/login', (req, res) => {
+      return this.controller.login(req, res);
+    });
 
-router.post('/logout', passport.authenticate('jwt', { session: false }), (req, res) =>
-  authController.logout(req, res)
-);
+    this.router.post('/logout', passport.authenticate('jwt', { session: false }), (req, res) => {
+      return this.controller.logout(req, res);
+    });
 
-router.get('/me', passport.authenticate('jwt', { session: false }), (req, res) =>
-  authController.me(req, res)
-);
+    this.router.get('/me', passport.authenticate('jwt', { session: false }), (req, res) => {
+      return this.controller.me(req, res);
+    });
+  }
 
-export default router;
+  getRouter() {
+    return this.router;
+  }
+}

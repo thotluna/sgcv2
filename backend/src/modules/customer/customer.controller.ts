@@ -3,6 +3,8 @@ import { CustomerService } from './customer.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { ResponseHelper } from '../../shared/utils/response.helpers';
 import { z } from 'zod';
+import { inject, injectable } from 'inversify';
+import { TYPES } from './types';
 
 const createCustomerDtoSchema = z.object({
   code: z
@@ -21,11 +23,12 @@ export function validateCreateCustomerDto(dto: CreateCustomerDto) {
   return createCustomerDtoSchema.safeParse(dto);
 }
 
+@injectable()
 export class CustomerController {
   private customerService: CustomerService;
 
-  constructor() {
-    this.customerService = new CustomerService();
+  constructor(@inject(TYPES.CustomerService) service: CustomerService) {
+    this.customerService = service;
   }
 
   async create(req: Request, res: Response): Promise<Response> {
@@ -76,7 +79,7 @@ export class CustomerController {
 
       return ResponseHelper.paginated(res, result.customers, {
         page: result.pagination.page,
-        perPage: result.pagination.limit,
+        perPage: result.pagination.perPage,
         total: result.pagination.total,
         totalPages: result.pagination.totalPages,
       });

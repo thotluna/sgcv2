@@ -1,8 +1,27 @@
+import { Customer } from '@prisma/client';
 import { prisma } from '../../config/prisma';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
+import { Pagination } from '../../shared/utils/app.response';
+import { injectable } from 'inversify';
 
-export class CustomerService {
+export type CustomerDelete = Pick<Customer, 'id'>;
+
+export interface CustomerService {
+  create(createCustomerDto: CreateCustomerDto): Promise<Customer>;
+  findById(id: string): Promise<Customer>;
+  findByCode(code: string): Promise<Customer>;
+  findAll(
+    page: number,
+    limit: number,
+    filters?: { state?: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED' }
+  ): Promise<{ customers: Customer[]; pagination: Pagination }>;
+  update(id: string, data: UpdateCustomerDto): Promise<Customer>;
+  delete(id: string): Promise<CustomerDelete>;
+}
+
+@injectable()
+export class CustomerServiceImp implements CustomerService {
   async create(createCustomerDto: CreateCustomerDto) {
     const existingCustomerCode = await prisma.customer.findUnique({
       where: {
@@ -50,10 +69,10 @@ export class CustomerService {
     return customer;
   }
 
-  async findAll(page = 1, limit = 10, filter?: { state?: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED' }) {
+  async findAll(page = 1, limit = 10, filters?: { state?: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED' }) {
     const skip = (page - 1) * limit;
 
-    const where = filter?.state !== undefined ? { state: filter.state } : {};
+    const where = filters?.state !== undefined ? { state: filters.state } : {};
 
     const [customers, total] = await Promise.all([
       prisma.customer.findMany({
@@ -81,7 +100,7 @@ export class CustomerService {
       customers,
       pagination: {
         page,
-        limit,
+        perPage: limit,
         total,
         totalPages: Math.ceil(total / limit),
       },

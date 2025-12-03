@@ -1,24 +1,29 @@
-import { Strategy as LocalStrategy } from 'passport-local';
+import { Strategy as PassportLocalStrategy } from 'passport-local';
+import { inject, injectable } from 'inversify';
 import { AuthService } from '../auth.service';
+import { TYPES } from '../types';
 
-const authService = new AuthService();
+@injectable()
+export class LocalStrategy extends PassportLocalStrategy {
+  constructor(@inject(TYPES.AuthService) private authService: AuthService) {
+    super(
+      {
+        usernameField: 'username',
+        passwordField: 'password',
+      },
+      async (username, password, done) => {
+        try {
+          const user = await this.authService.validateUser(username, password);
 
-export const localStrategy = new LocalStrategy(
-  {
-    usernameField: 'username',
-    passwordField: 'password',
-  },
-  async (username: string, password: string, done) => {
-    try {
-      const user = await authService.validateUser(username, password);
+          if (!user) {
+            return done(null, false, { message: 'Invalid credentials' });
+          }
 
-      if (!user) {
-        return done(null, false, { message: 'Invalid credentials' });
+          return done(null, user);
+        } catch (err) {
+          return done(err);
+        }
       }
-
-      return done(null, user);
-    } catch (err) {
-      return done(err);
-    }
+    );
   }
-);
+}

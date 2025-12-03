@@ -1,7 +1,8 @@
 import request from 'supertest';
 import express from 'express';
 import { authenticate } from '../../auth/middleware/auth.middleware';
-// import { requireRoles } from '../../auth/guards/rbac.guard';
+import { UsersRoutes } from '../users.routes';
+import { UsersController } from '../users.controller';
 
 // Define mock controller methods
 const mockMe = jest.fn((_req, res) => res.json({}));
@@ -11,27 +12,15 @@ const mockCreate = jest.fn((_req, res) => res.status(201).json({}));
 const mockUpdate = jest.fn((_req, res) => res.json({}));
 const mockDelete = jest.fn((_req, res) => res.json({}));
 
-// Mock dependencies
-jest.mock('../users.controller', () => {
-  return {
-    UsersController: jest.fn().mockImplementation(() => ({
-      me: mockMe,
-      getAll: mockGetAll,
-      getById: mockGetById,
-      create: mockCreate,
-      update: mockUpdate,
-      delete: mockDelete,
-    })),
-  };
-});
-
+// Mock authenticate middleware
 jest.mock('../../auth/middleware/auth.middleware', () => ({
   authenticate: jest.fn((req, _res, next) => {
-    req.user = { id_usuario: 1, roles: [{ name: 'Administrador' }] };
+    req.user = { id: 1, roles: [{ name: 'Admin' }] };
     next();
   }),
 }));
 
+// Mock RBAC service
 jest.mock('../../rbac/rbac.service', () => ({
   rbacService: {
     hasRole: jest.fn().mockResolvedValue(true),
@@ -40,16 +29,28 @@ jest.mock('../../rbac/rbac.service', () => ({
   },
 }));
 
+// Mock roles guard
 jest.mock('../../rbac/guards/roles.guard', () => ({
   requireRoles: jest.fn(() => (_req: any, _res: any, next: any) => next()),
 }));
 
-// Import router AFTER mocks are defined
-import usersRouter from '../users.routes';
+// Create mock controller with mocked methods
+const mockController = {
+  me: mockMe,
+  getAll: mockGetAll,
+  getById: mockGetById,
+  create: mockCreate,
+  update: mockUpdate,
+  delete: mockDelete,
+} as unknown as UsersController;
+
+// Create routes instance with mock controller
+const usersRoutes = new UsersRoutes(mockController);
+const router = usersRoutes.getRouter();
 
 const app = express();
 app.use(express.json());
-app.use('/api/users', usersRouter);
+app.use('/api/users', router);
 
 describe('Users Routes', () => {
   beforeEach(() => {

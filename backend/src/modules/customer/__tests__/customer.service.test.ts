@@ -1,4 +1,4 @@
-import { CustomerService } from '../customer.service';
+import { CustomerServiceImp } from '../customer.service';
 import { prisma } from '../../../config/prisma';
 
 jest.mock('../../../config/prisma', () => ({
@@ -14,10 +14,10 @@ jest.mock('../../../config/prisma', () => ({
 }));
 
 describe('CustomerService', () => {
-  let service: CustomerService;
+  let service: CustomerServiceImp;
 
   beforeEach(() => {
-    service = new CustomerService();
+    service = new CustomerServiceImp();
     jest.resetAllMocks();
   });
 

@@ -1,6 +1,8 @@
 // src/modules/rbac/rbac.service.ts
 import { prisma } from '../../config/prisma';
+import { injectable } from 'inversify';
 
+@injectable()
 export class RbacService {
   /**
    * Retrieve all permissions assigned to a user (through its roles).
@@ -62,4 +64,6 @@ export class RbacService {
   }
 }
 
+// Export a singleton instance for backwards compatibility with guards
+// This will be replaced with proper DI in the future
 export const rbacService = new RbacService();

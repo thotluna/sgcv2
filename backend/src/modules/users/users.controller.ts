@@ -1,14 +1,17 @@
 import { Request, Response } from 'express';
-import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ResponseHelper } from '../../shared/utils/response.helpers';
+import { UsersService } from './users.service';
+import { injectable, inject } from 'inversify';
+import { TYPES } from './types';
 
+@injectable()
 export class UsersController {
   private usersService: UsersService;
 
-  constructor() {
-    this.usersService = new UsersService();
+  constructor(@inject(TYPES.UsersService) usersService: UsersService) {
+    this.usersService = usersService;
   }
 
   /**
