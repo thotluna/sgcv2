@@ -97,6 +97,25 @@ app.get(`${API_PREFIX}/`, (_req: Request, res: Response) => {
   });
 });
 
+// ---------- Testing Endpoints ----------
+if (process.env.NODE_ENV !== 'production') {
+  app.post(`${API_PREFIX}/testing/cleanup-customers`, async (_req: Request, res: Response) => {
+    try {
+      // Delete customers created by E2E tests
+      const { count } = await prisma.customer.deleteMany({
+        where: {
+          OR: [{ legalName: { startsWith: 'E2E ' } }, { businessName: { startsWith: 'E2E ' } }],
+        },
+      });
+      console.log(`🧹 E2E Cleanup: Deleted ${count} test customers`);
+      res.json({ success: true, count });
+    } catch (error) {
+      console.error('E2E Cleanup Error:', error);
+      res.status(500).json({ error: 'Failed to cleanup' });
+    }
+  });
+}
+
 // ---------- 404 handler ----------
 app.use((req: Request, res: Response) => {
   res.status(404).json({
