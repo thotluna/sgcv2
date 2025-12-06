@@ -53,9 +53,16 @@ export const useAuthStore = create<AuthState>()(
 
       login: async (username, password) => {
         try {
-          const { user, token } = await authService.login(username, password);
+          const response = await authService.login(username, password);
 
-          setCookie('auth-token', token);
+          if (!response.success) {
+            throw new Error(response.error?.message || 'Login failed');
+          }
+
+          const user = response.data?.user;
+          const token = response.data?.token;
+
+          setCookie('auth-token', token || '');
 
           set({ user, token, isAuthenticated: true });
         } catch (error) {
