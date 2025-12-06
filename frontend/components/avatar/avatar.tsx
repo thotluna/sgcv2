@@ -1,10 +1,8 @@
 'use client';
-import { useRouter } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { useAuth } from '@/hooks/use-auth';
 
 export function AvatarUser() {
-  const router = useRouter();
   const { logout, user } = useAuth();
 
   // Don't render anything if user data is not available

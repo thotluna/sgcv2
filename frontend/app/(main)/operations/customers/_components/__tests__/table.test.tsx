@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { CustomersTable } from '../table';
-import { Customer } from '@/types/customer';
+import { Customer } from '../../types/types';
 
 // Mocks
 jest.mock('../customerDropMenu', () => ({

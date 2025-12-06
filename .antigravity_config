@@ -1,0 +1,10 @@
+# Contenido del archivo de configuración del Agente
+AgentContext:
+  DocumentationSources:
+    - https://nextjs.org/docs
+    - https://react.dev/reference/react
+    - https://tailwindcss.com/docs
+    - https://ui.shadcn.com/docs
+    - https://sonner.shadcn.com/docs
+    - https://expressjs.com/en/5x/api.html
+    - https://www.prisma.io/docs

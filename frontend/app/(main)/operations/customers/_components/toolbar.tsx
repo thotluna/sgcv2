@@ -3,12 +3,13 @@
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search, Plus } from 'lucide-react';
+import { StateCustomer } from '../types/types';
 
 interface CustomersToolbarProps {
   search: string;
   onSearchChange: (value: string) => void;
-  status: string;
-  onStatusChange: (value: string) => void;
+  status: StateCustomer | undefined;
+  onStatusChange: (value: StateCustomer) => void;
   onCreateClick: () => void;
 }
 
@@ -33,8 +34,8 @@ export function CustomersToolbar({
         </div>
         <div className="relative">
           <select
-            value={status}
-            onChange={e => onStatusChange(e.target.value)}
+            value={status || ''}
+            onChange={e => onStatusChange(e.target.value as StateCustomer)}
             className="h-9 w-[150px] rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
           >
             <option value="">Todos los estados</option>

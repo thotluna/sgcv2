@@ -14,7 +14,7 @@ import {
   Phone,
   Calendar,
 } from 'lucide-react';
-import { Customer } from '@/types/customer';
+import { Customer } from '../types/types';
 import { statusMap } from '../_const/const';
 
 export default async function CustomerViewPage({ params }: { params: Promise<{ id: string }> }) {
@@ -26,7 +26,7 @@ export default async function CustomerViewPage({ params }: { params: Promise<{ i
     notFound();
   }
 
-  const customer: Customer = response.data;
+  const customer: Customer = response.data!;
 
   return (
     <div className="max-w-5xl mx-auto p-6 space-y-6">

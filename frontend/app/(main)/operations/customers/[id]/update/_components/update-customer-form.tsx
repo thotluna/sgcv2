@@ -1,21 +1,24 @@
 'use client';
 
-import { Customer } from '@/types/customer';
+import { Customer } from '../../../types/types';
 import { useRouter } from 'next/navigation';
 import { CustomerForm } from '../../../_components/customer-form';
 import { updateSchema } from '../../../_schemas/schemas';
 import { useState } from 'react';
 import { customersService } from '@/lib/api/customers.service';
 import { toast } from 'sonner';
+import { UpdateCustomerFormData, CustomerFormData } from '../../../types/types';
 
 export function UpdateCustomerForm({ customer }: { customer: Customer }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: CustomerFormData) => {
+    // We know it's update data because we passed updateSchema
+    const updateData = data as UpdateCustomerFormData;
     setIsLoading(true);
     try {
-      await customersService.update(customer.id, data);
+      await customersService.update(customer.id, updateData);
       toast.success('Cliente actualizado exitosamente');
       router.back();
     } catch (error) {

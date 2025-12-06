@@ -9,7 +9,6 @@ import {
   SidebarMenuItem,
   SidebarMenuSub,
   SidebarMenuSubItem,
-  SidebarSeparator,
 } from '@/components/ui/sidebar';
 import {
   ChevronDown,

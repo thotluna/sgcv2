@@ -1,31 +1,26 @@
 import { apiClient } from './client';
 import { User } from '@/types/auth';
+import { AppResponse } from '@/types/response.type';
 
 interface LoginResponse {
   user: User;
   token: string;
 }
 
-interface ApiResponse<T> {
-  success: boolean;
-  data: T;
-  metadata: any;
-}
-
 export const authService = {
   login: async (username: string, password: string) => {
-    const response = await apiClient.post<ApiResponse<LoginResponse>>(`/auth/login`, {
+    const response = await apiClient.post<AppResponse<LoginResponse>>(`/auth/login`, {
       username,
       password,
     });
-    return response.data.data;
+    return response.data;
   },
   logout: async () => {
     const response = await apiClient.post(`/auth/logout`);
     return response.data;
   },
   getMe: async () => {
-    const response = await apiClient.get<ApiResponse<User>>(`/users/me`);
+    const response = await apiClient.get<AppResponse<User>>(`/users/me`);
     return response.data.data;
   },
 };

@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Customer } from '@/types/customer';
+import { Customer } from '../types/types';
 import { CustomerDropMenu } from './customerDropMenu';
 import { statusMap } from '../_const/const';
 import { Badge } from '@/components/ui/badge';
