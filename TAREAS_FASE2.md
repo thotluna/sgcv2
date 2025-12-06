@@ -24,17 +24,17 @@ Implementar el módulo completo de Gestión de Clientes, permitiendo administrar
 
 ### URGENTE
 
-- [ ] sistema de respuesta unica del api, ApiResponse<T>
-- [ ] Sistema de manejo de errores
+- [x] sistema de respuesta unica del api, ApiResponse<T>
+- [x] Sistema de manejo de errores
 
 #### 1.2 Módulo de Clientes (CRUD)
 
-- [ ] Crear módulo `clients/`:
-  - [ ] `clients.controller.ts`
+- [x] Crear módulo `clients/`:
+  - [x] `clients.controller.ts`
   - [x] `clients.service.ts`
-  - [ ] `clients.routes.ts`
-  - [ ] DTOs (`create-client.dto.ts`, `update-client.dto.ts`)
-- [ ] Implementar endpoints:
+  - [x] `clients.routes.ts`
+  - [x] DTOs (`create-client.dto.ts`, `update-client.dto.ts`)
+- [x] Implementar endpoints:
   - [x] `GET /api/clients` (Listado con paginación y filtros)
   - [x] `GET /api/clients/:id` (Detalle con localidades)
   - [x] `POST /api/clients` (Crear)
@@ -63,30 +63,30 @@ Implementar el módulo completo de Gestión de Clientes, permitiendo administrar
 
 #### 2.1 Servicios y Tipos
 
-- [ ] Definir interfaces TypeScript (`Client`, `Location`, `Contact`)
-- [ ] Crear servicio `client.service.ts` en frontend (Axios)
-- [ ] Crear hooks (React Query o useEffect custom) para fetching de datos
+- [x] Definir interfaces TypeScript (`Client`, `Location`, `Contact`)
+- [x] Crear servicio `client.service.ts` en frontend (Axios)
+- [x] Crear hooks (React Query o useEffect custom) para fetching de datos
 
 #### 2.2 Listado de Clientes
 
-- [ ] Crear página `app/(dashboard)/operations/clients/page.tsx`
-- [ ] Implementar tabla de datos (DataTable de shadcn/ui):
+- [x] Crear página `app/(main)/operations/customers/page.tsx`
+- [x] Implementar tabla de datos (DataTable de shadcn/ui):
   - Columnas: Razón Social, RIF, Contacto Principal, Estado, Acciones
   - Paginación
-  - Buscador/Filtros
-- [ ] Header de sección con botón "Nuevo Cliente"
+  - [x] Buscador/Filtros
+- [x] Header de sección con botón "Nuevo Cliente"
 
 #### 2.3 Formulario de Cliente (Crear/Editar)
 
-- [ ] Crear formulario con `react-hook-form` + `zod`:
+- [x] Crear formulario con `react-hook-form` + `zod`:
   - Datos básicos de la empresa
   - Validación de campos requeridos
-- [ ] Implementar vista de creación (Modal o Página dedicada)
-- [ ] Implementar vista de edición
+- [x] Implementar vista de creación (Modal o Página dedicada)
+- [x] Implementar vista de edición
 
 #### 2.4 Gestión de Detalles (Localidades y Contactos)
 
-- [ ] Crear vista de detalle de cliente `app/(dashboard)/operations/clients/[id]/page.tsx`
+- [x] Crear vista de detalle de cliente `app/(main)/operations/customers/[id]/page.tsx`
 - [ ] Tab/Sección para Localidades:
   - Lista de localidades
   - Formulario para agregar/editar localidad
@@ -96,14 +96,14 @@ Implementar el módulo completo de Gestión de Clientes, permitiendo administrar
 
 #### 2.5 Testing Frontend
 
-- [ ] Tests de renderizado de tabla
-- [ ] Tests de formulario (validaciones)
+- [x] Tests de renderizado de tabla
+- [x] Tests de formulario (validaciones)
 
 ---
 
 ## 📊 Criterios de Aceptación
 
-- [ ] Se pueden crear, leer, actualizar y "eliminar" (desactivar) Clientes.
+- [x] Se pueden crear, leer, actualizar y "eliminar" (desactivar) Clientes.
 - [ ] Un Cliente puede tener múltiples Localidades.
 - [ ] Un Cliente puede tener múltiples Contactos.
 - [ ] Las validaciones de backend y frontend funcionan correctamente.
