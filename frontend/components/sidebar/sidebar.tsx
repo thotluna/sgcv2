@@ -45,22 +45,22 @@ export default function SidebarApp() {
         },
         {
           title: 'Órdenes de Servicio',
-          href: '/dashboard/operations/service-orders',
+          href: '/operations/service-orders',
           icon: ClipboardList,
         },
         {
           title: 'Clientes',
-          href: '/dashboard/operations/clients',
+          href: '/operations/customers',
           icon: Users,
         },
         {
           title: 'Cronograma',
-          href: '/dashboard/operations/schedule',
+          href: '/operations/schedule',
           icon: Calendar,
         },
         {
           title: 'Reportes',
-          href: '/dashboard/operations/reports',
+          href: '/operations/reports',
           icon: FileText,
         },
       ],
