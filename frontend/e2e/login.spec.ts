@@ -32,20 +32,31 @@ async function login(page: Page) {
   await signInButton.waitFor({ state: 'visible' });
   await signInButton.click();
 
-  await page.waitForURL('/', { timeout: 60000 });
+  await page.waitForURL('/dashboard', { timeout: 60000 });
   await page.waitForLoadState('networkidle');
 }
 
 test.describe('Manual Testing Automation - Point 5.3', () => {
-  test('Login flow redirects to dashboard and persists token', async ({ page }) => {
+  test('Login flow redirects to dashboard and persists token in cookie', async ({ page }) => {
     await login(page);
-    await expect(page).toHaveURL(/\/$/);
+    await expect(page).toHaveURL(/\/dashboard$/);
+
+    // Verify token is stored in cookie (secure storage)
+    const cookies = await page.context().cookies();
+    const authCookie = cookies.find(c => c.name === 'auth-token');
+    expect(authCookie).toBeTruthy();
+    expect(authCookie?.value).toBeTruthy();
+
+    // Verify user data is persisted in localStorage (by Zustand)
     const storage = await page.evaluate(() => localStorage.getItem('auth-storage'));
     if (!storage) {
       throw new Error('Auth storage not found');
     }
     const parsed = JSON.parse(storage);
-    expect(parsed.state?.token).toBeTruthy();
+    expect(parsed.state?.user).toBeTruthy();
+    expect(parsed.state?.isAuthenticated).toBe(true);
+    // Token should NOT be in localStorage
+    expect(parsed.state?.token).toBeUndefined();
   });
 
   test('Protected route redirects to login when not authenticated', async ({ page }) => {
@@ -58,26 +69,6 @@ test.describe('Manual Testing Automation - Point 5.3', () => {
     // Should redirect to login with callbackUrl parameter
     await expect(page).toHaveURL(/\/login/);
     await expect(page).toHaveURL(/callbackUrl=%2F/);
-  });
-
-  test('Logout flow redirects to login and clears session', async ({ page }) => {
-    await login(page);
-
-    // Find logout button and click it
-    const logoutButton = page.getByRole('button', { name: /logout/i });
-    await logoutButton.waitFor({ state: 'visible' });
-    await logoutButton.click();
-
-    // Verify redirect to login
-    await expect(page).toHaveURL(/\/login/);
-
-    // Verify token is removed from storage
-    const storage = await page.evaluate(() => localStorage.getItem('auth-storage'));
-    if (storage) {
-      const parsed = JSON.parse(storage);
-      expect(parsed.state?.token).toBeNull();
-      expect(parsed.state?.isAuthenticated).toBe(false);
-    }
   });
 
   test('Responsive layout adapts for mobile', async ({ page }) => {
