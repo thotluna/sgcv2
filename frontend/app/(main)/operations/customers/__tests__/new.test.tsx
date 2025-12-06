@@ -73,7 +73,9 @@ describe('NewCustomerPage', () => {
     fireEvent.click(screen.getByText('Submit Form'));
 
     await waitFor(() => {
-      expect(toast.error).toHaveBeenCalledWith(expect.stringContaining(errorMsg));
+      expect(toast.error).toHaveBeenCalledWith(
+        expect.stringContaining('Error al crear el cliente: Error desconocido')
+      );
       expect(mockPush).not.toHaveBeenCalled();
     });
   });

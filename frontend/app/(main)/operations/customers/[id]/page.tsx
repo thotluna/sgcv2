@@ -26,7 +26,12 @@ export default async function CustomerViewPage({ params }: { params: Promise<{ i
     notFound();
   }
 
-  const customer: Customer = response.data!;
+  let customer: Customer = {} as Customer;
+  if (response.data) {
+    customer = response.data;
+  }
+
+  const status = statusMap[customer.state] ?? { label: 'Desconocido', variant: 'default' };
 
   return (
     <div className="max-w-5xl mx-auto p-6 space-y-6">
@@ -57,9 +62,7 @@ export default async function CustomerViewPage({ params }: { params: Promise<{ i
               <CardTitle className="text-2xl">{customer.legalName}</CardTitle>
               <CardDescription className="mt-2">Código: {customer.code}</CardDescription>
             </div>
-            <Badge variant={statusMap[customer.state].variant}>
-              {statusMap[customer.state].label}
-            </Badge>
+            <Badge variant={status.variant}>{status.label}</Badge>
           </div>
         </CardHeader>
         <CardContent className="space-y-6">

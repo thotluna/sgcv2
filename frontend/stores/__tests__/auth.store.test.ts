@@ -94,8 +94,12 @@ describe('useAuthStore', () => {
       const mockToken = 'mock-jwt-token';
 
       (authService.login as jest.Mock).mockResolvedValue({
-        user: mockUser,
-        token: mockToken,
+        success: true,
+        data: {
+          user: mockUser,
+          token: mockToken,
+        },
+        error: null,
       });
 
       const { result } = renderHook(() => useAuthStore());
@@ -121,8 +125,12 @@ describe('useAuthStore', () => {
       const mockToken = 'mock-jwt-token';
 
       (authService.login as jest.Mock).mockResolvedValue({
-        user: mockUser,
-        token: mockToken,
+        success: true,
+        data: {
+          user: mockUser,
+          token: mockToken,
+        },
+        error: null,
       });
 
       const { result } = renderHook(() => useAuthStore());
@@ -162,8 +170,12 @@ describe('useAuthStore', () => {
         permissions: [],
       };
       (authService.login as jest.Mock).mockResolvedValue({
-        user: mockUser,
-        token: 'mock-token',
+        success: true,
+        data: {
+          user: mockUser,
+          token: 'mock-token',
+        },
+        error: null,
       });
 
       const { result } = renderHook(() => useAuthStore());
@@ -194,8 +206,12 @@ describe('useAuthStore', () => {
         permissions: [],
       };
       (authService.login as jest.Mock).mockResolvedValue({
-        user: mockUser,
-        token: 'mock-token',
+        success: true,
+        data: {
+          user: mockUser,
+          token: 'mock-token',
+        },
+        error: null,
       });
 
       const { result } = renderHook(() => useAuthStore());
@@ -286,8 +302,11 @@ describe('useAuthStore', () => {
       const mockToken = 'mock-jwt-token';
 
       (authService.login as jest.Mock).mockResolvedValue({
-        user: mockUser,
-        token: mockToken,
+        success: true,
+        data: {
+          user: mockUser,
+          token: mockToken,
+        },
       });
 
       const { result } = renderHook(() => useAuthStore());

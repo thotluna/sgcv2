@@ -12,7 +12,8 @@ export const serverCustomersService = {
   getOne: async (id: string): Promise<AppResponse<Customer>> => {
     try {
       const client = await createServerApiClient();
-      return await client.get(`/customers/${id}`);
+      const response = await client.get(`/customers/${id}`);
+      return response.data;
     } catch (error) {
       console.error('Error fetching customer:', error);
       const isAxiosError = error instanceof AxiosError;
