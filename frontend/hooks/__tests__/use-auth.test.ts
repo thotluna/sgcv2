@@ -41,7 +41,7 @@ describe('useAuth', () => {
       });
 
       expect(mockStoreLogin).toHaveBeenCalledWith('testuser', 'password123');
-      expect(mockRouterPush).toHaveBeenCalledWith('/');
+      expect(mockRouterPush).toHaveBeenCalledWith('/dashboard');
     });
 
     it('should propagate login errors', async () => {

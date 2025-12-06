@@ -67,15 +67,19 @@ export class CustomerController {
   async findAll(req: Request, res: Response): Promise<Response> {
     try {
       const page = parseInt(req.query.page as string) || 1;
-      const limit = parseInt(req.query.limit as string) || 10;
+      const limit = parseInt(req.query.perPage as string) || 10;
       const stateQuery = req.query.state as string | undefined;
+      const searchQuery = req.query.search as string | undefined;
       let state: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED' | undefined = undefined;
 
       if (stateQuery === 'ACTIVE') state = 'ACTIVE';
       if (stateQuery === 'INACTIVE') state = 'INACTIVE';
       if (stateQuery === 'SUSPENDED') state = 'SUSPENDED';
 
-      const result = await this.customerService.findAll(page, limit, { state });
+      const result = await this.customerService.findAll(page, limit, {
+        state,
+        search: searchQuery,
+      });
 
       return ResponseHelper.paginated(res, result.customers, {
         page: result.pagination.page,

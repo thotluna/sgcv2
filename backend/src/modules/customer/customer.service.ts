@@ -14,7 +14,7 @@ export interface CustomerService {
   findAll(
     page: number,
     limit: number,
-    filters?: { state?: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED' }
+    filters?: { state?: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED'; search?: string }
   ): Promise<{ customers: Customer[]; pagination: Pagination }>;
   update(id: string, data: UpdateCustomerDto): Promise<Customer>;
   delete(id: string): Promise<CustomerDelete>;
@@ -69,10 +69,26 @@ export class CustomerServiceImp implements CustomerService {
     return customer;
   }
 
-  async findAll(page = 1, limit = 10, filters?: { state?: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED' }) {
+  async findAll(
+    page = 1,
+    limit = 10,
+    filters?: { state?: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED'; search?: string }
+  ) {
     const skip = (page - 1) * limit;
+    const where: any = {};
 
-    const where = filters?.state !== undefined ? { state: filters.state } : {};
+    if (filters?.state) {
+      where.state = filters.state;
+    }
+
+    if (filters?.search) {
+      where.OR = [
+        { code: { contains: filters.search, mode: 'insensitive' } },
+        { legalName: { contains: filters.search, mode: 'insensitive' } },
+        { businessName: { contains: filters.search, mode: 'insensitive' } },
+        { taxId: { contains: filters.search, mode: 'insensitive' } },
+      ];
+    }
 
     const [customers, total] = await Promise.all([
       prisma.customer.findMany({
