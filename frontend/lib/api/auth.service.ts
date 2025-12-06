@@ -1,5 +1,6 @@
 import { apiClient } from './client';
 import { User } from '@/types/auth';
+import { AppResponse } from '@/types/response.type';
 
 interface LoginResponse {
   user: User;
@@ -8,7 +9,10 @@ interface LoginResponse {
 
 export const authService = {
   login: async (username: string, password: string) => {
-    const response = await apiClient.post<LoginResponse>(`/auth/login`, { username, password });
+    const response = await apiClient.post<AppResponse<LoginResponse>>(`/auth/login`, {
+      username,
+      password,
+    });
     return response.data;
   },
   logout: async () => {
@@ -16,7 +20,7 @@ export const authService = {
     return response.data;
   },
   getMe: async () => {
-    const response = await apiClient.get<User>(`/users/me`);
-    return response.data;
+    const response = await apiClient.get<AppResponse<User>>(`/users/me`);
+    return response.data.data;
   },
 };

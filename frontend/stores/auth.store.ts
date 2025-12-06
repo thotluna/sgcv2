@@ -11,18 +11,37 @@ interface AuthState {
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;
   checkAuth: () => Promise<void>;
+  setUser: (user: User | null) => void;
 }
 
-// Helper to set cookie (for SSR middleware access)
 function setCookie(name: string, value: string, days: number = 7) {
+  if (typeof document === 'undefined') return;
+
   const expires = new Date();
   expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Strict`;
+
+  // Use Secure flag only in production (HTTPS)
+  const isProduction = process.env.NODE_ENV === 'production';
+  const secureFlag = isProduction ? ';Secure' : '';
+
+  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Lax${secureFlag}`;
 }
 
-// Helper to delete cookie
 function deleteCookie(name: string) {
+  if (typeof document === 'undefined') return;
+
   document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
+}
+
+function getCookie(name: string): string | null {
+  if (typeof document === 'undefined') return null;
+
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) {
+    return parts.pop()?.split(';').shift() || null;
+  }
+  return null;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -34,9 +53,16 @@ export const useAuthStore = create<AuthState>()(
 
       login: async (username, password) => {
         try {
-          const { user, token } = await authService.login(username, password);
-          // Set token in cookie for middleware access
-          setCookie('auth-token', token);
+          const response = await authService.login(username, password);
+
+          if (!response.success) {
+            throw new Error(response.error?.message || 'Login failed');
+          }
+
+          const user = response.data?.user;
+          const token = response.data?.token;
+
+          setCookie('auth-token', token || '');
 
           set({ user, token, isAuthenticated: true });
         } catch (error) {
@@ -47,21 +73,40 @@ export const useAuthStore = create<AuthState>()(
       },
 
       logout: () => {
-        // Remove token from cookie
         deleteCookie('auth-token');
 
         set({ user: null, token: null, isAuthenticated: false });
-        localStorage.removeItem('auth-storage');
       },
 
       checkAuth: async () => {
-        const user = await authService.getMe();
+        try {
+          const token = getCookie('auth-token');
 
-        set({ user, isAuthenticated: true });
+          if (!token) {
+            set({ user: null, token: null, isAuthenticated: false });
+            return;
+          }
+
+          const user = await authService.getMe();
+
+          set({ user, token, isAuthenticated: true });
+        } catch (error) {
+          console.error('Auth check failed:', error);
+          deleteCookie('auth-token');
+          set({ user: null, token: null, isAuthenticated: false });
+        }
+      },
+
+      setUser: user => {
+        set({ user });
       },
     }),
     {
       name: 'auth-storage',
+      partialize: state => ({
+        user: state.user,
+        isAuthenticated: state.isAuthenticated,
+      }),
     }
   )
 );

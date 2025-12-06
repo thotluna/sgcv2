@@ -57,7 +57,7 @@ export default function Header() {
       <div className="h-6 w-px bg-border" />
       <Breadcrumb>
         <BreadcrumbList>
-          {breadcrumbs.map((crumb, index) => (
+          {breadcrumbs.map(crumb => (
             <Fragment key={crumb.href}>
               <BreadcrumbItem>
                 {crumb.isLast ? (

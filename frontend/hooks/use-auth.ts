@@ -16,7 +16,7 @@ export function useAuth() {
   const login = useCallback(
     async (username: string, password: string) => {
       await storeLogin(username, password);
-      router.push('/');
+      router.push('/dashboard');
     },
     [storeLogin, router]
   );
