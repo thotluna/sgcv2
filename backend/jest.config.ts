@@ -1,5 +1,6 @@
-/** @type {import('ts-jest').JestConfigWithTsJest} */
-module.exports = {
+import type { Config } from 'jest';
+
+const config: Config = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   roots: ['<rootDir>/src'],
@@ -8,15 +9,13 @@ module.exports = {
   transform: {
     '^.+\\.(ts|js)$': 'ts-jest',
   },
-  // Permite usar los alias de tsconfig
   moduleNameMapper: {
     '^@config/(.*)$': '<rootDir>/src/config/$1',
     '^@modules/(.*)$': '<rootDir>/src/modules/$1',
   },
-  // Permite transformar uuid que es un módulo ESM
   transformIgnorePatterns: ['node_modules/(?!(uuid)/)'],
-  // Opcional: muestra cobertura
-  collectCoverage: true,
+  // IMPORTANTE: Deshabilita coverage por defecto
+  collectCoverage: false,
   collectCoverageFrom: ['src/**/*.ts'],
   coveragePathIgnorePatterns: [
     'node_modules',
@@ -27,3 +26,5 @@ module.exports = {
     'src/server.ts',
   ],
 };
+
+export default config;

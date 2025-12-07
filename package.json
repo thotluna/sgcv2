@@ -50,14 +50,14 @@
     "reset": "pnpm clean && pnpm install"
   },
   "lint-staged": {
-    "*.{ts,tsx,js,jsx,json,md}": [
-      "node --max-old-space-size=4096 ./node_modules/.bin/prettier --write"
-    ],
+    "*.{ts,tsx,js,jsx,json,md}": "prettier --write",
     "frontend/**/*.{ts,tsx}": [
-      "sh -c 'cd frontend && npm run lint'"
+      "pnpm --filter frontend lint --fix",
+      "pnpm --filter frontend test --bail --findRelatedTests"
     ],
     "backend/**/*.ts": [
-      "./scripts/run-backend-tests.sh"
+      "pnpm --filter backend lint --fix",
+      "pnpm --filter backend test --bail --findRelatedTests"
     ]
   },
   "dependencies": {
