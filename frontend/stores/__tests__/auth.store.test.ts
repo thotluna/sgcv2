@@ -1,6 +1,8 @@
 import { renderHook, act } from '@testing-library/react';
 import { useAuthStore } from '../auth.store';
 import { authService } from '@/lib/api/auth.service';
+import { AppResponse } from '@/types/response.type';
+import { success } from 'zod';
 
 // Mock the auth service
 jest.mock('@/lib/api/auth.service', () => ({
@@ -94,8 +96,11 @@ describe('useAuthStore', () => {
       const mockToken = 'mock-jwt-token';
 
       (authService.login as jest.Mock).mockResolvedValue({
-        user: mockUser,
-        token: mockToken,
+        success: true,
+        data: {
+          user: mockUser,
+          token: mockToken,
+        },
       });
 
       const { result } = renderHook(() => useAuthStore());
@@ -121,8 +126,11 @@ describe('useAuthStore', () => {
       const mockToken = 'mock-jwt-token';
 
       (authService.login as jest.Mock).mockResolvedValue({
-        user: mockUser,
-        token: mockToken,
+        success: true,
+        data: {
+          user: mockUser,
+          token: mockToken,
+        },
       });
 
       const { result } = renderHook(() => useAuthStore());
@@ -162,8 +170,11 @@ describe('useAuthStore', () => {
         permissions: [],
       };
       (authService.login as jest.Mock).mockResolvedValue({
-        user: mockUser,
-        token: 'mock-token',
+        success: true,
+        data: {
+          user: mockUser,
+          token: 'mock-token',
+        },
       });
 
       const { result } = renderHook(() => useAuthStore());
@@ -194,8 +205,11 @@ describe('useAuthStore', () => {
         permissions: [],
       };
       (authService.login as jest.Mock).mockResolvedValue({
-        user: mockUser,
-        token: 'mock-token',
+        success: true,
+        data: {
+          user: mockUser,
+          token: 'mock-token',
+        },
       });
 
       const { result } = renderHook(() => useAuthStore());
@@ -286,8 +300,11 @@ describe('useAuthStore', () => {
       const mockToken = 'mock-jwt-token';
 
       (authService.login as jest.Mock).mockResolvedValue({
-        user: mockUser,
-        token: mockToken,
+        success: true,
+        data: {
+          user: mockUser,
+          token: mockToken,
+        },
       });
 
       const { result } = renderHook(() => useAuthStore());

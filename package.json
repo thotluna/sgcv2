@@ -53,11 +53,11 @@
     "*.{ts,tsx,js,jsx,json,md}": "prettier --write",
     "frontend/**/*.{ts,tsx}": [
       "pnpm --filter frontend lint --fix",
-      "pnpm --filter frontend test --bail --findRelatedTests"
+      "./scripts/run-frontend-tests.sh"
     ],
     "backend/**/*.ts": [
       "pnpm --filter backend lint --fix",
-      "pnpm --filter backend test --bail --findRelatedTests"
+      "./scripts/run-backend-tests.sh"
     ]
   },
   "dependencies": {

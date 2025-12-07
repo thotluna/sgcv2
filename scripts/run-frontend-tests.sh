@@ -1,3 +1,3 @@
 #!/bin/bash
-cd backend
+cd frontend
 pnpm test --bail --findRelatedTests --passWithNoTests "$@"
