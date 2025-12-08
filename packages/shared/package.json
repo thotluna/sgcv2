@@ -7,14 +7,17 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
       "default": "./dist/index.js"
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc src/index.ts --outDir dist --declaration",
     "clean": "rm -rf dist",
     "dev": "tsc --watch"
   },

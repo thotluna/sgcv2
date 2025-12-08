@@ -6,17 +6,18 @@ const config: Config = {
   roots: ['<rootDir>/src'],
   moduleFileExtensions: ['ts', 'js', 'json'],
   testMatch: ['**/__tests__/**/*.test.ts'],
+  globals: {
+    'ts-jest': {
+      tsconfig: 'tsconfig.test.json',
+      isolatedModules: true,
+    },
+  },
   transform: {
-    '^.+\\.(ts|js)$': [
+    '^.+\\.ts$': [
       'ts-jest',
       {
-        tsconfig: {
-          // Configuración específica para tests
-          esModuleInterop: true,
-          allowSyntheticDefaultImports: true,
-          moduleResolution: 'node',
-          resolveJsonModule: true,
-        },
+        tsconfig: 'tsconfig.test.json',
+        isolatedModules: true,
       },
     ],
   },
@@ -24,13 +25,11 @@ const config: Config = {
     // Path aliases del backend
     '^@config/(.*)$': '<rootDir>/src/config/$1',
     '^@modules/(.*)$': '<rootDir>/src/modules/$1',
-    // Shared package - IMPORTANTE: mapear al código TypeScript fuente
-    '^@sgcv2/shared/?(.*)$': '<rootDir>/../packages/shared/src/$1',
+    // CRÍTICO: Mapear al código FUENTE de shared
     '^@sgcv2/shared$': '<rootDir>/../packages/shared/src/index.ts',
+    '^@sgcv2/shared/(.*)$': '<rootDir>/../packages/shared/src/$1',
   },
-  // CRÍTICO: No ignorar el paquete shared para que ts-jest lo transpile
   transformIgnorePatterns: ['node_modules/(?!(uuid)/)'],
-  // Configuración de coverage
   collectCoverage: false,
   collectCoverageFrom: [
     'src/**/*.ts',

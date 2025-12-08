@@ -57,9 +57,39 @@ jobs:
         env:
           DATABASE_URL: postgresql://sgcv2_user:sgcv2_password@localhost:5432/sgcv2_test
 
+      # NUEVO: Verificar estructura de shared antes de tests
+      - name: Debug - Check shared package structure
+        run: |
+          echo "=== Shared package structure ==="
+          ls -la packages/shared/src/
+          echo ""
+          echo "=== Shared index.ts ==="
+          cat packages/shared/src/index.ts
+          echo ""
+          echo "=== Types index.ts ==="
+          cat packages/shared/src/types/index.ts || echo "File not found"
+          echo ""
+          echo "=== DTOs index.ts ==="
+          cat packages/shared/src/dtos/index.ts || echo "File not found"
+          echo ""
+          echo "=== Consts index.ts ==="
+          cat packages/shared/src/consts/index.ts || echo "File not found"
+
+      # NUEVO: Verificar que Jest puede resolver el módulo
+      - name: Debug - Test module resolution
+        working-directory: ./backend
+        run: |
+          echo "Testing @sgcv2/shared resolution..."
+          node -e "
+            const path = require('path');
+            const sharedPath = path.resolve(__dirname, '../packages/shared/src/index.ts');
+            console.log('Shared path:', sharedPath);
+            console.log('Exists:', require('fs').existsSync(sharedPath));
+          "
+
       - name: Run backend tests
         working-directory: ./backend
-        run: pnpm test -- --coverage
+        run: pnpm test --coverage --verbose
         env:
           DATABASE_URL: postgresql://sgcv2_user:sgcv2_password@localhost:5432/sgcv2_test
           JWT_SECRET: test-secret-key-for-ci
@@ -94,10 +124,6 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-
-      # CRÍTICO: Construir @sgcv2/shared primero
-      - name: Build shared package
-        run: pnpm --filter @sgcv2/shared build
 
       - name: Generate Prisma client
         run: pnpm prisma:generate
@@ -134,8 +160,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # CRÍTICO: Construir @sgcv2/shared primero
-      - name: Build shared package
+      - name: Build shared package first
         run: pnpm --filter @sgcv2/shared build
 
       - name: Generate Prisma client
