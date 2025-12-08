@@ -52,6 +52,11 @@ jobs:
         env:
           DATABASE_URL: postgresql://sgcv2_user:sgcv2_password@localhost:5432/sgcv2_test
 
+      - name: Generate Prisma client
+        run: pnpm prisma:generate
+        env:
+          DATABASE_URL: postgresql://sgcv2_user:sgcv2_password@localhost:5432/sgcv2_test
+
       - name: Run tests
         working-directory: ./backend
         run: pnpm test
@@ -92,6 +97,11 @@ jobs:
         env:
           DATABASE_URL: postgresql://sgcv2_user:sgcv2_password@localhost:5432/sgcv2_test
 
+      - name: Generate Prisma client
+        run: pnpm prisma:generate
+        env:
+          DATABASE_URL: postgresql://sgcv2_user:sgcv2_password@localhost:5432/sgcv2_test
+
       - name: Check formatting
         working-directory: ./backend
         run: pnpm prettier --check "src/**/*.{ts,tsx,js,jsx}"
@@ -120,9 +130,13 @@ jobs:
         env:
           DATABASE_URL: postgresql://sgcv2_user:sgcv2_password@localhost:5432/sgcv2_test
 
+      - name: Generate Prisma client
+        run: pnpm prisma:generate
+        env:
+          DATABASE_URL: postgresql://sgcv2_user:sgcv2_password@localhost:5432/sgcv2_test
+
       - name: Build
-        working-directory: ./backend
-        run: pnpm run build
+        run: pnpm run build:backend
         env:
           DATABASE_URL: postgresql://sgcv2_user:sgcv2_password@localhost:5432/sgcv2_test
 
