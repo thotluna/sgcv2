@@ -30,3 +30,12 @@ export class UserDto {
   updatedAt!: Date;
   isActive!: UserStatus;
 }
+
+export interface RoleDto {
+  id: number;
+  name: string;
+}
+
+export class UserWithRolesDto extends UserDto {
+  roles?: RoleDto[];
+}

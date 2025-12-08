@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { CreateUserDto, UpdateUserDto, UserDto } from '@sgcv2/shared';
+import { CreateUserDto, UpdateUserDto, UserWithRolesDto, RoleDto } from '@sgcv2/shared';
 import { ResponseHelper } from '../../shared/utils/response.helpers';
 import { UsersService } from './users.service';
 import { injectable, inject } from 'inversify';
@@ -18,7 +18,7 @@ export class UsersController {
    */
   async me(req: Request, res: Response): Promise<Response> {
     try {
-      const user = req.user as UserDto;
+      const user = req.user as UserWithRolesDto;
 
       if (!user) {
         return ResponseHelper.unauthorized(res);
@@ -140,17 +140,16 @@ export class UsersController {
     try {
       const id = parseInt(req.params.id);
       const dto: UpdateUserDto = req.body;
-      const currentUser = req.user as UserDto;
+      const currentUser = req.user as UserWithRolesDto;
 
       if (isNaN(id)) {
         return ResponseHelper.badRequest(res, 'Invalid user ID');
       }
 
       // Users can only update their own profile unless they're admin
-      // const isAdmin = currentUser.roles?.some((role: { name: string }) => role.name === 'admin');
+      const isAdmin = currentUser.roles?.some((role: RoleDto) => role.name === 'admin');
 
-      // if (!isAdmin && currentUser.id !== id) {
-      if (currentUser.id !== id) {
+      if (!isAdmin && currentUser.id !== id) {
         return ResponseHelper.forbidden(res, 'You can only update your own profile');
       }
 
@@ -168,9 +167,9 @@ export class UsersController {
       }
 
       // Only admins can update roles
-      // if (dto.roleIds && !isAdmin) {
-      //   return ResponseHelper.forbidden(res, 'Only administrators can update user roles');
-      // }
+      if (dto.roleIds && !isAdmin) {
+        return ResponseHelper.forbidden(res, 'Only administrators can update user roles');
+      }
 
       const user = await this.usersService.updateUser(id, dto);
 
