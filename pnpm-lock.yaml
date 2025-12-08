@@ -270,7 +270,11 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0
 
-  packages/shared: {}
+  packages/shared:
+    devDependencies:
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
 
 packages:
 
