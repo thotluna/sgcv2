@@ -95,20 +95,20 @@ reviewers:
 
 ```bash
 cd backend
-npm test
+pnpm test
 ```
 
 #### Frontend Lint
 
 ```bash
 cd frontend
-npm run lint
+pnpm run lint
 ```
 
 #### Format Check
 
 ```bash
-npm run format:check
+pnpm run format:check
 ```
 
 ### Triggering Workflows

@@ -8,13 +8,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Customer } from '../types/types';
+import { CustomerDto } from '@sgcv2/shared';
 import { CustomerDropMenu } from './customerDropMenu';
 import { statusMap } from '../_const/const';
 import { Badge } from '@/components/ui/badge';
 
 interface CustomersTableProps {
-  data: Customer[];
+  data: CustomerDto[];
   isLoading: boolean;
   onDelete: (id: string) => Promise<void>;
 }

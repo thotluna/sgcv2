@@ -1,5 +1,6 @@
 import { CustomerServiceImp } from '../customer.service';
 import { prisma } from '../../../config/prisma';
+import { UpdateCustomerDto } from '@sgcv2/shared';
 
 jest.mock('../../../config/prisma', () => ({
   prisma: {
@@ -133,7 +134,14 @@ describe('CustomerService', () => {
   });
 
   describe('update', () => {
-    const updateDto = { businessName: 'Updated Name' };
+    const updateDto: UpdateCustomerDto = {
+      code: 'C001',
+      businessName: 'Updated Name',
+      legalName: 'Updated Legal Name',
+      taxId: 'Updated Tax ID',
+      address: 'Updated Address',
+      phone: 'Updated Phone',
+    };
 
     it('should update a customer successfully', async () => {
       const existingCustomer = { id: '1', businessName: 'Old Name' };

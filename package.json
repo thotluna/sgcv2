@@ -1,32 +1,65 @@
 {
+  "name": "sgcv2",
+  "version": "1.0.0",
+  "private": true,
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.10.1",
     "@typescript-eslint/eslint-plugin": "^8.47.0",
     "@typescript-eslint/parser": "^8.47.0",
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
     "husky": "^9.1.7",
+    "jest": "^30.2.0",
     "lint-staged": "^16.2.7",
-    "prettier": "^3.6.2"
+    "prettier": "^3.6.2",
+    "ts-jest": "^29.4.5",
+    "typescript": "^5.9.3"
   },
   "scripts": {
     "prepare": "husky",
-    "lint": "eslint eslint.config.mjs",
-    "lint:fix": "eslint . --ext .ts,.tsx,.js,.jsx --fix",
-    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
-    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
-    "test": "cd backend && npm test && cd .."
+    "dev": "pnpm --parallel --filter backend --filter frontend dev",
+    "dev:frontend": "pnpm --filter frontend dev",
+    "dev:backend": "pnpm --filter backend dev",
+    "build": "pnpm --filter @sgcv2/shared build && pnpm --filter backend build && pnpm --filter frontend build",
+    "build:frontend": "pnpm --filter @sgcv2/shared build && pnpm --filter frontend build",
+    "build:backend": "pnpm --filter @sgcv2/shared build && pnpm --filter backend build",
+    "start": "pnpm --filter backend start",
+    "start:frontend": "pnpm --filter frontend start",
+    "start:backend": "pnpm --filter backend start",
+    "prisma:generate": "pnpm --filter backend prisma:generate",
+    "prisma:migrate": "pnpm --filter backend prisma:migrate",
+    "prisma:migrate:dev": "pnpm --filter backend prisma:migrate:dev",
+    "prisma:studio": "pnpm --filter backend prisma:studio",
+    "prisma:push": "pnpm --filter backend prisma:push",
+    "prisma:seed": "pnpm --filter backend prisma:seed",
+    "prisma:reset": "pnpm --filter backend prisma:reset",
+    "test:backend": "pnpm --filter backend test",
+    "test:frontend": "pnpm --filter frontend test",
+    "test:frontend:e2e": "pnpm --filter frontend test:e2e",
+    "test": "pnpm --recursive test",
+    "lint": "pnpm --recursive lint",
+    "lint:frontend": "pnpm --filter frontend lint",
+    "lint:backend": "pnpm --filter backend lint",
+    "format": "pnpm --recursive format",
+    "format:check": "pnpm --recursive format:check",
+    "clean": "pnpm --recursive clean && rm -rf node_modules",
+    "reset": "pnpm clean && pnpm install"
   },
   "lint-staged": {
-    "*.{ts,tsx,js,jsx,json,md}": [
-      "node --max-old-space-size=4096 ./node_modules/.bin/prettier --write"
-    ],
+    "*.{ts,tsx,js,jsx,json,md}": "prettier --write",
     "frontend/**/*.{ts,tsx}": [
-      "sh -c 'cd frontend && npm run lint'"
+      "pnpm --filter frontend lint --fix",
+      "./scripts/run-frontend-tests.sh"
     ],
     "backend/**/*.ts": [
+      "pnpm --filter backend lint --fix",
       "./scripts/run-backend-tests.sh"
     ]
+  },
+  "dependencies": {
+    "concurrently": "^9.2.1"
   }
 }

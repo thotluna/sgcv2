@@ -1,13 +1,9 @@
 import { apiClient } from './client';
-import {
-  Customer,
-  CreateCustomerDto,
-  UpdateCustomerDto,
-} from '@/app/(main)/operations/customers/types/types';
-import { AppResponse } from '@/types/response.type';
+import { CustomerDto as Customer, CreateCustomerDto, UpdateCustomerDto } from '@sgcv2/shared';
+import { AppResponse, CustomerState } from '@sgcv2/shared';
 
 interface Filters {
-  state?: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED';
+  state?: CustomerState;
   search?: string;
 }
 
@@ -24,6 +20,7 @@ export const customersService = {
   },
   getOne: async (id: string): Promise<AppResponse<Customer>> => {
     const response = await apiClient.get<AppResponse<Customer>>(`/customers/${id}`);
+    console.log(response.data);
     return response.data;
   },
   create: async (customer: CreateCustomerDto): Promise<AppResponse<Customer>> => {

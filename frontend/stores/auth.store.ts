@@ -1,5 +1,5 @@
 import { authService } from '@/lib/api/auth.service';
-import { User } from '@/types/auth';
+import { UserBasic as User } from '@sgcv2/shared';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 

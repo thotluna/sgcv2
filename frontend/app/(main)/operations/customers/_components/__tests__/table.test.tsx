@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { CustomersTable } from '../table';
-import { Customer } from '../../types/types';
+import { CustomerDto } from '@sgcv2/shared';
 
 // Mocks
 jest.mock('../customerDropMenu', () => ({
@@ -11,7 +11,7 @@ jest.mock('../customerDropMenu', () => ({
   ),
 }));
 
-const mockData: Customer[] = [
+const mockData: CustomerDto[] = [
   {
     id: '1',
     code: 'C001',
@@ -21,8 +21,8 @@ const mockData: Customer[] = [
     address: 'Address 1',
     phone: '111111',
     state: 'ACTIVE',
-    createdAt: new Date().toLocaleDateString(),
-    updatedAt: new Date().toLocaleDateString(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
   {
     id: '2',
@@ -33,8 +33,8 @@ const mockData: Customer[] = [
     address: 'Address 2',
     phone: '222222',
     state: 'INACTIVE',
-    createdAt: new Date().toLocaleDateString(),
-    updatedAt: new Date().toLocaleDateString(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
 ];
 
