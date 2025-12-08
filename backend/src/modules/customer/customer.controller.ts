@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { CustomerService } from './customer.service';
-import { CreateCustomerDto, UpdateCustomerDto } from '@sgcv2/shared/';
+import { CreateCustomerDto, UpdateCustomerDto } from '@sgcv2/shared';
 import { ResponseHelper } from '../../shared/utils/response.helpers';
 import { z } from 'zod';
 import { inject, injectable } from 'inversify';

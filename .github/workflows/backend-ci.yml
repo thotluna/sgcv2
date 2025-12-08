@@ -5,11 +5,13 @@ on:
     branches: [develop, master, main]
     paths:
       - 'backend/**'
+      - 'packages/shared/**'
       - '.github/workflows/backend-ci.yml'
   pull_request:
     branches: [develop, master, main]
     paths:
       - 'backend/**'
+      - 'packages/shared/**'
       - '.github/workflows/backend-ci.yml'
 
 jobs:
@@ -49,17 +51,15 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-        env:
-          DATABASE_URL: postgresql://sgcv2_user:sgcv2_password@localhost:5432/sgcv2_test
 
       - name: Generate Prisma client
         run: pnpm prisma:generate
         env:
           DATABASE_URL: postgresql://sgcv2_user:sgcv2_password@localhost:5432/sgcv2_test
 
-      - name: Run tests
+      - name: Run backend tests
         working-directory: ./backend
-        run: pnpm test
+        run: pnpm test --coverage
         env:
           DATABASE_URL: postgresql://sgcv2_user:sgcv2_password@localhost:5432/sgcv2_test
           JWT_SECRET: test-secret-key-for-ci
@@ -94,17 +94,23 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-        env:
-          DATABASE_URL: postgresql://sgcv2_user:sgcv2_password@localhost:5432/sgcv2_test
+
+      # CRÍTICO: Construir @sgcv2/shared primero
+      - name: Build shared package
+        run: pnpm --filter @sgcv2/shared build
 
       - name: Generate Prisma client
         run: pnpm prisma:generate
         env:
           DATABASE_URL: postgresql://sgcv2_user:sgcv2_password@localhost:5432/sgcv2_test
 
-      - name: Check formatting
+      - name: Check formatting (backend only)
         working-directory: ./backend
-        run: pnpm prettier --check "src/**/*.{ts,tsx,js,jsx}"
+        run: pnpm prettier --check "src/**/*.{ts,js}"
+
+      - name: Run ESLint (backend only)
+        working-directory: ./backend
+        run: pnpm lint
 
   build:
     name: Build Backend
@@ -127,15 +133,17 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-        env:
-          DATABASE_URL: postgresql://sgcv2_user:sgcv2_password@localhost:5432/sgcv2_test
+
+      # CRÍTICO: Construir @sgcv2/shared primero
+      - name: Build shared package
+        run: pnpm --filter @sgcv2/shared build
 
       - name: Generate Prisma client
         run: pnpm prisma:generate
         env:
           DATABASE_URL: postgresql://sgcv2_user:sgcv2_password@localhost:5432/sgcv2_test
 
-      - name: Build
+      - name: Build backend
         run: pnpm run build:backend
         env:
           DATABASE_URL: postgresql://sgcv2_user:sgcv2_password@localhost:5432/sgcv2_test

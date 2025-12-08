@@ -1,6 +1,6 @@
 import { Customer, Prisma } from '@prisma/client';
 import { prisma } from '../../config/prisma';
-import { CreateCustomerDto, UpdateCustomerDto, Pagination } from '@sgcv2/shared/';
+import { CreateCustomerDto, UpdateCustomerDto, Pagination } from '@sgcv2/shared';
 import { injectable } from 'inversify';
 
 export type CustomerDelete = Pick<Customer, 'id'>;
