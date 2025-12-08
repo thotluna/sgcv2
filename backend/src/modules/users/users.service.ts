@@ -1,23 +1,18 @@
 import { prisma } from '../../config/prisma';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import {
+  CreateUserDto,
+  Pagination,
+  UpdateUserDto,
+  UserStatus,
+  PermissionBasic,
+  RoleBasic,
+  UserBasic,
+  UserWithRoles,
+  UserDelete,
+} from '@sgcv2/shared';
 import bcrypt from 'bcrypt';
-import { PermissionBasic, RoleBasic, UserBasic, UserWithRoles } from 'shared/types/user.types';
 
 const SALT_ROUNDS = 10;
-
-export interface Pagination {
-  page: number;
-  limit: number;
-  total: number;
-  totalPages: number;
-}
-
-export interface UserDelete {
-  id: number;
-  username: string;
-  isActive: ('ACTIVE' | 'INACTIVE' | 'BLOCKED') | null;
-}
 
 export interface UsersService {
   findById(id: number): Promise<UserBasic | null>;
@@ -27,7 +22,7 @@ export interface UsersService {
   findAll(
     page: number,
     limit: number,
-    filters?: { isActive?: 'ACTIVE' | 'INACTIVE' | 'BLOCKED' }
+    filters?: { isActive?: UserStatus }
   ): Promise<{ users: UserBasic[]; pagination: Pagination }>;
   createUser(data: CreateUserDto): Promise<UserBasic>;
   updateUser(id: number, data: UpdateUserDto): Promise<UserBasic>;
@@ -130,12 +125,10 @@ export class UsersServiceImp implements UsersService {
     // Remove duplicates from permissions
     const uniquePermissions = Array.from(new Map(permissions.map(p => [p.id, p])).values());
 
-    const { passwordHash, firstName, lastName, roles: userRoles, ...userData } = user;
-
-    userData satisfies UserBasic;
+    const userRes = user as UserBasic;
 
     return {
-      user: userData,
+      user: userRes,
       roles,
       permissions: uniquePermissions,
     };
@@ -144,7 +137,7 @@ export class UsersServiceImp implements UsersService {
   /**
    * Get all users (with pagination)
    */
-  async findAll(page = 1, limit = 10, filters?: { isActive?: 'ACTIVE' | 'INACTIVE' | 'BLOCKED' }) {
+  async findAll(page = 1, limit = 10, filters?: { isActive?: UserStatus }) {
     const skip = (page - 1) * limit;
 
     const where = filters?.isActive !== undefined ? { isActive: filters.isActive } : {};
@@ -171,7 +164,7 @@ export class UsersServiceImp implements UsersService {
       users,
       pagination: {
         page,
-        limit,
+        perPage: limit,
         total,
         totalPages: Math.ceil(total / limit),
       },
@@ -308,7 +301,7 @@ export class UsersServiceImp implements UsersService {
    * Delete user (soft delete by setting isActive = false)
    */
   async deleteUser(id: number): Promise<UserDelete> {
-    return await prisma.user.update({
+    const deleted = await prisma.user.update({
       where: { id },
       data: { isActive: 'INACTIVE' },
       select: {
@@ -317,6 +310,12 @@ export class UsersServiceImp implements UsersService {
         isActive: true,
       },
     });
+
+    return {
+      id: deleted.id,
+      username: deleted.username,
+      isActive: deleted.isActive as UserStatus,
+    };
   }
 
   /**

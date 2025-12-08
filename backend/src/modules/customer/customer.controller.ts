@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { CustomerService } from './customer.service';
-import { CreateCustomerDto } from './dto/create-customer.dto';
+import { CreateCustomerDto, UpdateCustomerDto } from '@sgcv2/shared/';
 import { ResponseHelper } from '../../shared/utils/response.helpers';
 import { z } from 'zod';
 import { inject, injectable } from 'inversify';
@@ -38,10 +38,13 @@ export class CustomerController {
       const result = validateCreateCustomerDto(customerDto);
 
       if (!result.success) {
-        const errors = result.error.issues.reduce((acc: Record<string, string>, err: any) => {
-          acc[err.path.join('.')] = err.message;
-          return acc;
-        }, {});
+        const errors = result.error.issues.reduce(
+          (acc: Record<string, string>, err: z.ZodIssue) => {
+            acc[err.path.join('.')] = err.message;
+            return acc;
+          },
+          {}
+        );
 
         return ResponseHelper.unprocessableEntity(res, 'Validation failed', errors);
       }
@@ -49,15 +52,16 @@ export class CustomerController {
       const customer = await this.customerService.create(result.data);
 
       return ResponseHelper.created(res, customer);
-    } catch (error: any) {
-      console.error('Create customer error:', error);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error('Create customer error:', error);
+        if (error.message === 'Customer code already exists') {
+          return ResponseHelper.conflict(res, error.message);
+        }
 
-      if (error.message === 'Customer code already exists') {
-        return ResponseHelper.conflict(res, error.message);
-      }
-
-      if (error.message === 'Customer tax id already exists') {
-        return ResponseHelper.conflict(res, error.message);
+        if (error.message === 'Customer tax id already exists') {
+          return ResponseHelper.conflict(res, error.message);
+        }
       }
 
       return ResponseHelper.internalError(res, 'An error occurred while creating customer');
@@ -98,11 +102,13 @@ export class CustomerController {
       const { id } = req.params;
       const customer = await this.customerService.findById(id);
       return ResponseHelper.success(res, customer);
-    } catch (error: any) {
-      console.error('Find one customer error:', error);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error('Find one customer error:', error);
 
-      if (error.message === 'Customer not found') {
-        return ResponseHelper.notFound(res, error.message);
+        if (error.message === 'Customer not found') {
+          return ResponseHelper.notFound(res, error.message);
+        }
       }
 
       return ResponseHelper.internalError(res, 'An error occurred while fetching customer');
@@ -112,14 +118,16 @@ export class CustomerController {
   async update(req: Request, res: Response): Promise<Response> {
     try {
       const { id } = req.params;
-      const customerDto: CreateCustomerDto = req.body;
+      const customerDto: UpdateCustomerDto = req.body;
       const customer = await this.customerService.update(id, customerDto);
       return ResponseHelper.success(res, customer);
-    } catch (error: any) {
-      console.error('Update customer error:', error);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error('Update customer error:', error);
 
-      if (error.message === 'Customer not found') {
-        return ResponseHelper.notFound(res, error.message);
+        if (error.message === 'Customer not found') {
+          return ResponseHelper.notFound(res, error.message);
+        }
       }
 
       return ResponseHelper.internalError(res, 'An error occurred while updating customer');
@@ -131,11 +139,13 @@ export class CustomerController {
       const { id } = req.params;
       const customer = await this.customerService.delete(id);
       return ResponseHelper.success(res, customer);
-    } catch (error: any) {
-      console.error('Delete customer error:', error);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error('Delete customer error:', error);
 
-      if (error.message === 'Customer not found') {
-        return ResponseHelper.notFound(res, error.message);
+        if (error.message === 'Customer not found') {
+          return ResponseHelper.notFound(res, error.message);
+        }
       }
 
       return ResponseHelper.internalError(res, 'An error occurred while deleting customer');

@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { AppResponse, ErrorData, Metadata, Pagination } from './app.response';
+import { AppResponse, ErrorData, Metadata, Pagination } from '@sgcv2/shared';
 import { ErrorCodes } from '../enums/error-codes.enum';
 // import { v4 as uuidv4 } from 'uuid';
 

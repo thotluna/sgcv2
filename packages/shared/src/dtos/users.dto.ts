@@ -19,3 +19,14 @@ export class UserDelete {
   username!: string;
   isActive!: UserStatus;
 }
+
+export class UserDto {
+  id!: number;
+  username!: string;
+  email!: string;
+  firstName!: string | null;
+  lastName!: string | null;
+  createdAt!: Date;
+  updatedAt!: Date;
+  isActive!: UserStatus;
+}
