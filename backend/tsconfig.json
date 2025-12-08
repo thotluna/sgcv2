@@ -9,7 +9,7 @@
     "types": ["node", "jest", "supertest"],
     "baseUrl": "./src",
     "paths": {
-      "@sgcv2/shared": ["../../packages/shared/src"],
+      "@sgcv2/shared": ["../../packages/shared/dist"],
       "@config/*": ["./config/*"],
       "@modules/*": ["./modules/*"]
     }

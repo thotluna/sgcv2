@@ -18,7 +18,7 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@sgcv2/shared": ["../packages/shared/src"],
+      "@sgcv2/shared": ["../packages/shared/dist"],
       "@/*": ["./*"]
     }
   },
