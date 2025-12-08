@@ -40,10 +40,9 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-
-      - name: Generate Prisma Client
-        working-directory: ./backend
-        run: pnpm prisma generate
+        env:
+          # This should be a secret in a real environment
+          DATABASE_URL: postgresql://sgcv2_user:sgcv2_password@localhost:5432/sgcv2_test
 
       - name: Build
         working-directory: ./backend
