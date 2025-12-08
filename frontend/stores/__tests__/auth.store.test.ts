@@ -1,8 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
 import { useAuthStore } from '../auth.store';
 import { authService } from '@/lib/api/auth.service';
-import { AppResponse } from '@/types/response.type';
-import { success } from 'zod';
 
 // Mock the auth service
 jest.mock('@/lib/api/auth.service', () => ({

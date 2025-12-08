@@ -1,6 +1,6 @@
 'use client';
 
-import { Customer } from '../../../types/types';
+import { CustomerDto } from '@sgcv2/shared';
 import { useRouter } from 'next/navigation';
 import { CustomerForm } from '../../../_components/customer-form';
 import { updateSchema } from '../../../_schemas/schemas';
@@ -9,7 +9,7 @@ import { customersService } from '@/lib/api/customers.service';
 import { toast } from 'sonner';
 import { UpdateCustomerFormData, CustomerFormData } from '../../../types/types';
 
-export function UpdateCustomerForm({ customer }: { customer: Customer }) {
+export function UpdateCustomerForm({ customer }: { customer: CustomerDto }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 

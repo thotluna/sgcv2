@@ -1,18 +1,18 @@
 import { apiClient } from './client';
-import { User } from '@/types/auth';
-import { AppResponse } from '@/types/response.type';
+import { LoginDto, AppResponse, UserBasic } from '@sgcv2/shared';
 
 interface LoginResponse {
-  user: User;
+  user: UserBasic;
   token: string;
 }
 
 export const authService = {
   login: async (username: string, password: string) => {
-    const response = await apiClient.post<AppResponse<LoginResponse>>(`/auth/login`, {
+    const loginDto: LoginDto = {
       username,
       password,
-    });
+    };
+    const response = await apiClient.post<AppResponse<LoginResponse>>(`/auth/login`, loginDto);
     return response.data;
   },
   logout: async () => {
@@ -20,7 +20,7 @@ export const authService = {
     return response.data;
   },
   getMe: async () => {
-    const response = await apiClient.get<AppResponse<User>>(`/users/me`);
+    const response = await apiClient.get<AppResponse<UserBasic>>(`/users/me`);
     return response.data.data;
   },
 };
