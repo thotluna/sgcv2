@@ -33,7 +33,7 @@ describe('UsersController', () => {
     };
 
     // Silence console.error
-    jest.spyOn(console, 'error').mockImplementation(() => { });
+    jest.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   afterEach(() => {
