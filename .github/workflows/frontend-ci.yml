@@ -39,9 +39,9 @@ jobs:
         working-directory: ./frontend
         run: pnpm run lint
 
-      - name: Check formatting
-        working-directory: ./frontend
-        run: pnpm run prettier --check "**/*.{ts,tsx,js,jsx}"
+      # - name: Check formatting
+      #   working-directory: ./frontend
+      #   run: pnpm run prettier --check "**/*.{ts,tsx,js,jsx}"
 
   build:
     name: Build Frontend

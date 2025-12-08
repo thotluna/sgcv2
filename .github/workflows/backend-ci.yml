@@ -59,7 +59,7 @@ jobs:
 
       - name: Run backend tests
         working-directory: ./backend
-        run: pnpm test --coverage
+        run: pnpm test -- --coverage
         env:
           DATABASE_URL: postgresql://sgcv2_user:sgcv2_password@localhost:5432/sgcv2_test
           JWT_SECRET: test-secret-key-for-ci
