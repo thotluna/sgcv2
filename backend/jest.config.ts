@@ -12,6 +12,7 @@ const config: Config = {
   moduleNameMapper: {
     '^@config/(.*)$': '<rootDir>/src/config/$1',
     '^@modules/(.*)$': '<rootDir>/src/modules/$1',
+    '^@sgcv2/shared$': '<rootDir>/../packages/shared/dist',
     '^@sgcv2/shared/(.*)$': '<rootDir>/../packages/shared/dist/$1',
   },
   transformIgnorePatterns: ['node_modules/(?!(uuid)/)'],
