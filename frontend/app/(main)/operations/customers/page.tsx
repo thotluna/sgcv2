@@ -6,22 +6,21 @@ import { useRouter } from 'next/navigation';
 import { CustomersTable } from './_components/table';
 import { CustomersToolbar } from './_components/toolbar';
 import { customersService } from '@/lib/api/customers.service';
-import { Customer } from './types/types';
+import { CustomerDto, CustomerState } from '@sgcv2/shared';
 import { toast } from 'sonner';
 import { DataPagination } from '@/components/data-pagination';
-import { StateCustomer } from './types/types';
 
 interface FilterType {
   search?: string;
-  state?: StateCustomer;
+  state?: CustomerState;
 }
 
 export default function CustomersPage() {
   const router = useRouter();
-  const [data, setData] = useState<Customer[]>([]);
+  const [data, setData] = useState<CustomerDto[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState('');
-  const [status, setStatus] = useState<StateCustomer | undefined>(undefined);
+  const [status, setStatus] = useState<CustomerState | undefined>(undefined);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const itemsPerPage = 5;

@@ -1,6 +1,6 @@
 import { User } from '@prisma/client';
 import { prisma } from '../../config/prisma';
-import { UserWithRoles } from '../../shared/types/user.types';
+import { UserWithRoles } from '@sgcv2/shared';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { injectable } from 'inversify';

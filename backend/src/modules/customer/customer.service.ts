@@ -1,8 +1,6 @@
-import { Customer } from '@prisma/client';
+import { Customer, Prisma } from '@prisma/client';
 import { prisma } from '../../config/prisma';
-import { CreateCustomerDto } from './dto/create-customer.dto';
-import { UpdateCustomerDto } from './dto/update-customer.dto';
-import { Pagination } from '../../shared/utils/app.response';
+import { CreateCustomerDto, UpdateCustomerDto, Pagination } from '@sgcv2/shared';
 import { injectable } from 'inversify';
 
 export type CustomerDelete = Pick<Customer, 'id'>;
@@ -75,7 +73,7 @@ export class CustomerServiceImp implements CustomerService {
     filters?: { state?: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED'; search?: string }
   ) {
     const skip = (page - 1) * limit;
-    const where: any = {};
+    const where: Prisma.CustomerWhereInput = {};
 
     if (filters?.state) {
       where.state = filters.state;

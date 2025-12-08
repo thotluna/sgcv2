@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
-import { LoginDto } from './dto/login.dto';
+import { LoginDto, UserDto } from '@sgcv2/shared';
 import { ResponseHelper } from '../../shared/utils/response.helpers';
 import { inject, injectable } from 'inversify';
 import { TYPES } from './types';
@@ -20,7 +20,11 @@ export class AuthController {
       if (!dto.username || !dto.password) {
         return ResponseHelper.badRequest(res, 'Username and password are required');
       }
-      const user = await this.authService.validateUser(dto.username, dto.password);
+      const userRes = await this.authService.validateUser(dto.username, dto.password);
+      let user: UserDto | null = null;
+      if (userRes) {
+        user = userRes as UserDto;
+      }
 
       if (!user) {
         return ResponseHelper.unauthorized(res, 'Invalid credentials');
@@ -31,10 +35,8 @@ export class AuthController {
         username: user.username,
       });
 
-      const { passwordHash, ...userWithoutPassword } = user;
-
       return ResponseHelper.success(res, {
-        user: userWithoutPassword,
+        user,
         token: tokenData.access_token,
       });
     } catch (error) {
@@ -52,7 +54,7 @@ export class AuthController {
 
   async me(req: Request, res: Response): Promise<Response> {
     try {
-      const user = req.user as any;
+      const user = req.user as UserDto;
 
       if (!user) {
         return ResponseHelper.unauthorized(res, 'Unauthorized');

@@ -1,7 +1,7 @@
 import { Response } from 'express';
-import { AppResponse, ErrorData, Metadata, Pagination } from './app.response';
+import { AppResponse, ErrorData, Metadata, Pagination } from '@sgcv2/shared';
 import { ErrorCodes } from '../enums/error-codes.enum';
-import { v4 as uuidv4 } from 'uuid';
+// import { v4 as uuidv4 } from 'uuid';
 
 export class ResponseHelper {
   static success<T>(
@@ -15,7 +15,7 @@ export class ResponseHelper {
       data,
       metadata: {
         timestamp: new Date().toISOString(),
-        requestId: metadata?.requestId || uuidv4(),
+        // requestId: metadata?.requestId || uuidv4(),
         ...metadata,
       },
     };
@@ -34,7 +34,7 @@ export class ResponseHelper {
       data,
       metadata: {
         timestamp: new Date().toISOString(),
-        requestId: uuidv4(),
+        // requestId: uuidv4(),
         pagination,
       },
     };
@@ -60,7 +60,7 @@ export class ResponseHelper {
       error: errorData,
       metadata: {
         timestamp: new Date().toISOString(),
-        requestId: uuidv4(),
+        // requestId: uuidv4(),
       },
     };
 

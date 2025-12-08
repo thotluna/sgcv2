@@ -1,6 +1,5 @@
 import { createServerApiClient } from './server-client';
-import { Customer } from '@/app/(main)/operations/customers/types/types';
-import { AppResponse } from '@/types/response.type';
+import { CustomerDto as Customer, AppResponse } from '@sgcv2/shared';
 import { AxiosError } from 'axios';
 
 /**
@@ -12,7 +11,9 @@ export const serverCustomersService = {
   getOne: async (id: string): Promise<AppResponse<Customer>> => {
     try {
       const client = await createServerApiClient();
-      return await client.get(`/customers/${id}`);
+      const response = await client.get(`/customers/${id}`);
+      console.log(response.data);
+      return response.data;
     } catch (error) {
       console.error('Error fetching customer:', error);
       const isAxiosError = error instanceof AxiosError;

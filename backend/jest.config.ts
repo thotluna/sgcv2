@@ -1,23 +1,42 @@
-/** @type {import('ts-jest').JestConfigWithTsJest} */
-module.exports = {
+import type { Config } from 'jest';
+
+const config: Config = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   roots: ['<rootDir>/src'],
   moduleFileExtensions: ['ts', 'js', 'json'],
   testMatch: ['**/__tests__/**/*.test.ts'],
-  transform: {
-    '^.+\\.(ts|js)$': 'ts-jest',
+  globals: {
+    'ts-jest': {
+      tsconfig: 'tsconfig.test.json',
+      isolatedModules: true,
+    },
   },
-  // Permite usar los alias de tsconfig
+  transform: {
+    '^.+\\.ts$': [
+      'ts-jest',
+      {
+        tsconfig: 'tsconfig.test.json',
+        isolatedModules: true,
+      },
+    ],
+  },
   moduleNameMapper: {
+    // Path aliases del backend
     '^@config/(.*)$': '<rootDir>/src/config/$1',
     '^@modules/(.*)$': '<rootDir>/src/modules/$1',
+    // CRÍTICO: Mapear al código FUENTE de shared
+    '^@sgcv2/shared$': '<rootDir>/../packages/shared/src/index.ts',
+    '^@sgcv2/shared/(.*)$': '<rootDir>/../packages/shared/src/$1',
   },
-  // Permite transformar uuid que es un módulo ESM
   transformIgnorePatterns: ['node_modules/(?!(uuid)/)'],
-  // Opcional: muestra cobertura
-  collectCoverage: true,
-  collectCoverageFrom: ['src/**/*.ts'],
+  collectCoverage: false,
+  collectCoverageFrom: [
+    'src/**/*.ts',
+    '!src/**/*.d.ts',
+    '!src/**/*.test.ts',
+    '!src/**/__tests__/**',
+  ],
   coveragePathIgnorePatterns: [
     'node_modules',
     'dist',
@@ -26,4 +45,8 @@ module.exports = {
     'src/app.ts',
     'src/server.ts',
   ],
+  coverageDirectory: 'coverage',
+  coverageReporters: ['text', 'lcov', 'json-summary'],
 };
+
+export default config;
