@@ -1,4 +1,4 @@
-import { prisma } from '../../config/prisma';
+import { prisma } from '@config/prisma';
 import {
   CreateUserDto,
   Pagination,
@@ -13,6 +13,12 @@ import {
 import bcrypt from 'bcrypt';
 
 const SALT_ROUNDS = 10;
+
+interface UserUpdateLocal {
+  email?: string;
+  passwordHash?: string;
+  isActive?: UserStatus;
+}
 
 export interface UsersService {
   findById(id: number): Promise<UserBasic | null>;
@@ -255,7 +261,7 @@ export class UsersServiceImp implements UsersService {
     }
 
     // Prepare update data
-    const updateData: any = {
+    const updateData: UserUpdateLocal = {
       email: data.email,
       isActive: data.isActive,
     };

@@ -1,32 +1,24 @@
-// src/modules/rbac/guards/permissions.guard.ts
 import { Request, Response, NextFunction } from 'express';
 import { rbacService } from '../rbac.service';
+import { UserEntity } from '@modules/users/domain/user-entity';
+import { ResponseHelper } from '@shared/utils/response.helpers';
 
-/**
- * Middleware to ensure the user has a specific permission.
- * Usage in route definition:
- *   router.get('/ods/create', requirePermission('ODS', 'CREAR'), handler);
- */
 export const requirePermission = (module: string, action: string) => {
-  return async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+  return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const user = req.user as any;
+      const user = req.user as UserEntity;
+
       if (!user) {
-        return res.status(401).json({ error: 'Unauthorized', message: 'Authentication required' });
+        ResponseHelper.unauthorized(res, 'Authentication required');
       }
       const hasPerm = await rbacService.hasPermission(user.id, module, action);
       if (!hasPerm) {
-        return res.status(403).json({
-          error: 'Forbidden',
-          message: `Required permission: ${module}.${action}`,
-        });
+        ResponseHelper.forbidden(res, `Required permission: ${module}.${action}`);
       }
       return next();
     } catch (error) {
       console.error('Permission guard error:', error);
-      return res
-        .status(500)
-        .json({ error: 'Internal Server Error', message: 'Error checking permission' });
+      ResponseHelper.internalError(res, 'Error checking permission');
     }
   };
 };

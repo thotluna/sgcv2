@@ -54,10 +54,15 @@ describe('Auth Middleware', () => {
       authenticate(mockRequest as Request, mockResponse as Response, nextFunction);
 
       expect(mockResponse.status).toHaveBeenCalledWith(401);
-      expect(mockResponse.json).toHaveBeenCalledWith({
-        error: 'Unauthorized',
-        message: 'Invalid token',
-      });
+      expect(mockResponse.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: false,
+          error: expect.objectContaining({
+            code: 'UNAUTHORIZED',
+            message: 'Invalid token',
+          }),
+        })
+      );
       expect(nextFunction).not.toHaveBeenCalled();
     });
 
@@ -71,10 +76,15 @@ describe('Auth Middleware', () => {
       authenticate(mockRequest as Request, mockResponse as Response, nextFunction);
 
       expect(mockResponse.status).toHaveBeenCalledWith(401);
-      expect(mockResponse.json).toHaveBeenCalledWith({
-        error: 'Unauthorized',
-        message: 'Invalid or missing token',
-      });
+      expect(mockResponse.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: false,
+          error: expect.objectContaining({
+            code: 'UNAUTHORIZED',
+            message: 'Invalid or missing token',
+          }),
+        })
+      );
     });
 
     it('should return 500 if an error occurs during authentication', () => {
@@ -88,10 +98,15 @@ describe('Auth Middleware', () => {
       authenticate(mockRequest as Request, mockResponse as Response, nextFunction);
 
       expect(mockResponse.status).toHaveBeenCalledWith(500);
-      expect(mockResponse.json).toHaveBeenCalledWith({
-        error: 'Internal Server Error',
-        message: 'Authentication error',
-      });
+      expect(mockResponse.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: false,
+          error: expect.objectContaining({
+            code: 'INTERNAL_SERVER_ERROR',
+            message: 'Authentication error',
+          }),
+        })
+      );
       expect(nextFunction).not.toHaveBeenCalled();
     });
   });
