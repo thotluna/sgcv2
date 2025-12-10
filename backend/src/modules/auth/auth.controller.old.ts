@@ -1,15 +1,12 @@
 import { Request, Response } from 'express';
-import { AuthService } from './auth.service';
+import { AuthService } from '@auth/auth.service.old';
 import { LoginDto, UserDto } from '@sgcv2/shared';
-import { ResponseHelper } from '../../shared/utils/response.helpers';
-import { inject, injectable } from 'inversify';
-import { TYPES } from './types';
+import { ResponseHelper } from '@shared/utils/response.helpers';
 
-@injectable()
 export class AuthController {
   private authService: AuthService;
 
-  constructor(@inject(TYPES.AuthService) service: AuthService) {
+  constructor(service: AuthService) {
     this.authService = service;
   }
 

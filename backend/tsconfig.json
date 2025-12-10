@@ -6,16 +6,44 @@
     "rootDir": "./src",
     "declaration": true,
     "declarationMap": true,
-    "types": ["node", "jest", "supertest"],
+    "types": [
+      "node",
+      "jest",
+      "supertest"
+    ],
     "baseUrl": "./src",
     "paths": {
-      "@sgcv2/shared": ["../../packages/shared/dist"],
-      "@config/*": ["./config/*"],
-      "@modules/*": ["./modules/*"]
+      "@sgcv2/shared": [
+        "../../packages/shared/dist"
+      ],
+      "@config/*": [
+        "./config/*"
+      ],
+      "@const/*": [
+        "./const/*"
+      ],
+      "@modules/*": [
+        "./modules/*"
+      ],
+      "@auth/*": [
+        "./modules/auth/*"
+      ],
+      "@shared/*": [
+        "./shared/*"
+      ],
+      "@types/*": [
+        "./types/*"
+      ]
     }
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "dist", "tests"],
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "tests"
+  ],
   "references": [
     {
       "path": "../packages/shared"

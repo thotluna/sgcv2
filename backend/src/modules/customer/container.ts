@@ -1,11 +1,12 @@
-import { Container } from 'inversify';
+import { ContainerModule, ContainerModuleLoadOptions } from 'inversify';
 import { TYPES } from './types';
 import { CustomerServiceImp } from './customer.service';
 import { CustomerController } from './customer.controller';
 import { CustomerRoutes } from './customer.routes';
+import { CustomerService } from './customer.service';
 
-export const customerContainer = new Container();
-
-customerContainer.bind(TYPES.CustomerService).to(CustomerServiceImp);
-customerContainer.bind(TYPES.CustomerController).to(CustomerController);
-customerContainer.bind(TYPES.CustomerRoutes).to(CustomerRoutes);
+export const customerContainerModule = new ContainerModule((option: ContainerModuleLoadOptions) => {
+  option.bind<CustomerService>(TYPES.CustomerService).to(CustomerServiceImp);
+  option.bind(TYPES.CustomerController).to(CustomerController);
+  option.bind(TYPES.CustomerRoutes).to(CustomerRoutes);
+});

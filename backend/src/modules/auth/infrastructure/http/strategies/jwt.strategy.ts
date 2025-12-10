@@ -1,7 +1,7 @@
 import { Strategy as PassportJwtStrategy } from 'passport-jwt';
-import { jwtOptions } from './jwt.options';
-import { prisma } from '../../../config/prisma';
 import { injectable } from 'inversify';
+import { jwtOptions } from './jwt.options';
+import { prisma } from '@config/prisma';
 
 @injectable()
 export class JwtStrategy extends PassportJwtStrategy {

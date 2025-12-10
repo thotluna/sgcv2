@@ -1,14 +1,11 @@
 import { Router } from 'express';
 import passport from 'passport';
-import { AuthController } from './auth.controller';
-import { inject, injectable } from 'inversify';
-import { TYPES } from './types';
+import { AuthController } from '@auth/auth.controller.old';
 
-@injectable()
 export class AuthRoutes {
   private controller: AuthController;
   private router: Router;
-  constructor(@inject(TYPES.AuthController) controller: AuthController) {
+  constructor(controller: AuthController) {
     this.controller = controller;
     this.router = Router();
     this.createRoutes();

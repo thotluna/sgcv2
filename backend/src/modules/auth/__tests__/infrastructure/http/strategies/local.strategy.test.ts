@@ -1,5 +1,5 @@
-import { AuthServiceMock } from './auth.service.mock';
-import { LocalStrategy } from '../strategies/local.strategy';
+import { AuthServiceMock } from '../../../auth.service.mock';
+import { LocalStrategy } from '../../../../infrastructure/http/strategies/local.strategy';
 
 describe('Local Strategy', () => {
   let service: AuthServiceMock;

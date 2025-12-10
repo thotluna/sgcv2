@@ -1,21 +1,16 @@
 import { Request, Response, NextFunction } from 'express';
 import passport from 'passport';
+import { ResponseHelper } from '@shared/utils/response.helpers';
 
 export const authenticate = (req: Request, res: Response, next: NextFunction) => {
   return passport.authenticate('jwt', { session: false }, (err: any, user: any, info: any) => {
     if (err) {
-      res.status(500).json({
-        error: 'Internal Server Error',
-        message: 'Authentication error',
-      });
+      ResponseHelper.internalError(res, 'Authentication error');
       return;
     }
 
     if (!user) {
-      res.status(401).json({
-        error: 'Unauthorized',
-        message: info?.message || 'Invalid or missing token',
-      });
+      ResponseHelper.unauthorized(res, info?.message || 'Invalid or missing token');
       return;
     }
 

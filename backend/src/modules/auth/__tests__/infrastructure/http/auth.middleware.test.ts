@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import passport from 'passport';
-import { authenticate, optionalAuth } from '../middleware/auth.middleware';
+import { authenticate, optionalAuth } from '../../../infrastructure/http/auth.middleware';
 
 // Mock passport
 jest.mock('passport');

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { requireRoles, requirePermission } from '../guards/rbac.guard';
+import { requireRoles, requirePermission } from '../../../../infrastructure/http/rbac.guard';
 
 describe('RBAC Guards', () => {
   let mockRequest: Partial<Request>;
@@ -14,7 +14,7 @@ describe('RBAC Guards', () => {
       json: jest.fn(),
     };
     nextFunction = jest.fn();
-    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
   });
 
   afterEach(() => {

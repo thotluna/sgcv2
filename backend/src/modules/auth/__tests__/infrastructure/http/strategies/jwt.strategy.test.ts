@@ -1,9 +1,9 @@
-import { jwtOptions } from '../strategies/jwt.options';
-import { prisma } from '../../../config/prisma';
-import { JwtStrategy } from '../strategies/jwt.strategy';
+import { jwtOptions } from '../../../../infrastructure/http/strategies/jwt.options';
+import { prisma } from '../../../../../../config/prisma';
+import { JwtStrategy } from '../../../../infrastructure/http/strategies/jwt.strategy';
 
 // Mock prisma before importing the strategy
-jest.mock('../../../config/prisma', () => ({
+jest.mock('../../../../../../config/prisma', () => ({
   prisma: {
     user: {
       findUnique: jest.fn(),

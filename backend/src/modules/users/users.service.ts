@@ -29,6 +29,9 @@ export interface UsersService {
   deleteUser(id: number): Promise<UserDelete>;
 }
 
+import { injectable } from 'inversify';
+
+@injectable()
 export class UsersServiceImp implements UsersService {
   /**
    * Find user by ID
