@@ -3,17 +3,16 @@ import { InvalidPasswordException } from '@auth/domain/exceptions/invalid-passwo
 import { TYPES } from '@auth/di/types';
 import { AuthLoginService } from '@auth/domain/auth.login.service';
 import { UserNotFoundException } from '@modules/users/domain/exceptions/user-no-found.exception';
-import { TYPES as UserTypes } from '@modules/users/di/types';
-import { UserRepository } from '@modules/users/domain/user-repository';
 import { LoginDto, UserDto, UserTokenDto } from '@sgcv2/shared';
+import { UserFinderForAuth } from '../domain/user-finder-for-auth';
 
 @injectable()
 export class LoginUseCaseService {
-  private userRepository: UserRepository;
+  private userRepository: UserFinderForAuth;
   private authService: AuthLoginService;
 
   constructor(
-    @inject(UserTypes.UserRepository) userRepository: UserRepository,
+    @inject(TYPES.UserFinderForAuth) userRepository: UserFinderForAuth,
     @inject(TYPES.AuthLoginService) authLoginService: AuthLoginService
   ) {
     this.userRepository = userRepository;

@@ -6,4 +6,5 @@ export const TYPES = {
   AuthRoutes: Symbol.for('AuthRoutes'),
   LocalStrategy: Symbol.for('LocalStrategy'),
   JwtStrategy: Symbol.for('JwtStrategy'),
+  UserFinderForAuth: Symbol.for('UserFinderForAuth'),
 };
