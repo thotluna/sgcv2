@@ -110,6 +110,8 @@ export class UsersServiceImp implements UsersService {
 
     if (!user) return null;
 
+    // console.log({ user, roles: user.roles.map(ur => ur.role), permissions: user.roles.flatMap(ur => ur.role.permissions.map(rp => rp.permission)) });
+
     // Transform to a cleaner structure
     const roles: RoleBasic[] = user.roles.map(ur => ({
       id: ur.role.id,
@@ -125,6 +127,8 @@ export class UsersServiceImp implements UsersService {
         description: rp.permission.description,
       }))
     );
+
+    console.log({ roles, permissions });
 
     // Remove duplicates from permissions
     const uniquePermissions = Array.from(new Map(permissions.map(p => [p.id, p])).values());

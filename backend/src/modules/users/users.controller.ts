@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import { CreateUserDto, UpdateUserDto, UserWithRolesDto, RoleDto } from '@sgcv2/shared';
+import { UserWithRolesDto } from '@sgcv2/shared';
 import { ResponseHelper } from '../../shared/utils/response.helpers';
-import { UsersService } from './users.service';
+import { UsersService } from '@users/domain/user.service';
 import { injectable, inject } from 'inversify';
-import { TYPES } from './types';
+import { TYPES } from '@users/di/types';
 
 @injectable()
 export class UsersController {
@@ -40,177 +40,177 @@ export class UsersController {
   /**
    * GET /api/users - Get all users (admin only)
    */
-  async getAll(req: Request, res: Response): Promise<Response> {
-    try {
-      const page = parseInt(req.query.page as string) || 1;
-      const limit = parseInt(req.query.limit as string) || 10;
-      const isActiveQuery = req.query.isActive as string | undefined;
-      let isActive: 'ACTIVE' | 'INACTIVE' | 'BLOCKED' | undefined = undefined;
+  // async getAll(req: Request, res: Response): Promise<Response> {
+  //   try {
+  //     const page = parseInt(req.query.page as string) || 1;
+  //     const limit = parseInt(req.query.limit as string) || 10;
+  //     const isActiveQuery = req.query.isActive as string | undefined;
+  //     let isActive: 'ACTIVE' | 'INACTIVE' | 'BLOCKED' | undefined = undefined;
 
-      if (isActiveQuery === 'ACTIVE') isActive = 'ACTIVE';
-      if (isActiveQuery === 'INACTIVE') isActive = 'INACTIVE';
-      if (isActiveQuery === 'BLOCKED') isActive = 'BLOCKED';
+  //     if (isActiveQuery === 'ACTIVE') isActive = 'ACTIVE';
+  //     if (isActiveQuery === 'INACTIVE') isActive = 'INACTIVE';
+  //     if (isActiveQuery === 'BLOCKED') isActive = 'BLOCKED';
 
-      const result = await this.usersService.findAll(page, limit, { isActive });
+  //     const result = await this.usersService.findAll(page, limit, { isActive });
 
-      return ResponseHelper.paginated(
-        res,
-        { users: result.users },
-        {
-          page: result.pagination.page,
-          perPage: result.pagination.perPage,
-          total: result.pagination.total,
-          totalPages: result.pagination.totalPages,
-        }
-      );
-    } catch (error) {
-      console.error('Get all users error:', error);
-      return ResponseHelper.internalError(res, 'An error occurred while fetching users');
-    }
-  }
+  //     return ResponseHelper.paginated(
+  //       res,
+  //       { users: result.users },
+  //       {
+  //         page: result.pagination.page,
+  //         perPage: result.pagination.perPage,
+  //         total: result.pagination.total,
+  //         totalPages: result.pagination.totalPages,
+  //       }
+  //     );
+  //   } catch (error) {
+  //     console.error('Get all users error:', error);
+  //     return ResponseHelper.internalError(res, 'An error occurred while fetching users');
+  //   }
+  // }
 
   /**
    * GET /api/users/:id - Get user by ID (admin only)
    */
-  async getById(req: Request, res: Response): Promise<Response> {
-    try {
-      const id = parseInt(req.params.id);
+  // async getById(req: Request, res: Response): Promise<Response> {
+  //   try {
+  //     const id = parseInt(req.params.id);
 
-      if (isNaN(id)) {
-        return ResponseHelper.badRequest(res, 'Invalid user ID');
-      }
+  //     if (isNaN(id)) {
+  //       return ResponseHelper.badRequest(res, 'Invalid user ID');
+  //     }
 
-      const user = await this.usersService.getUserWithRoles(id);
+  //     const user = await this.usersService.getUserWithRoles(id);
 
-      if (!user) {
-        return ResponseHelper.notFound(res, 'User not found');
-      }
+  //     if (!user) {
+  //       return ResponseHelper.notFound(res, 'User not found');
+  //     }
 
-      return ResponseHelper.success(res, user);
-    } catch (error) {
-      console.error('Get user by ID error:', error);
-      return ResponseHelper.internalError(res, 'An error occurred while fetching user');
-    }
-  }
+  //     return ResponseHelper.success(res, user);
+  //   } catch (error) {
+  //     console.error('Get user by ID error:', error);
+  //     return ResponseHelper.internalError(res, 'An error occurred while fetching user');
+  //   }
+  // }
 
   /**
    * POST /api/users - Create new user (admin only)
    */
-  async create(req: Request, res: Response): Promise<Response> {
-    try {
-      const dto: CreateUserDto = req.body;
+  // async create(req: Request, res: Response): Promise<Response> {
+  //   try {
+  //     const dto: CreateUserDto = req.body;
 
-      // Validate required fields
-      if (!dto.username || !dto.email || !dto.password) {
-        return ResponseHelper.badRequest(res, 'Username, email, and password are required');
-      }
+  //     // Validate required fields
+  //     if (!dto.username || !dto.email || !dto.password) {
+  //       return ResponseHelper.badRequest(res, 'Username, email, and password are required');
+  //     }
 
-      // Validate email format
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(dto.email)) {
-        return ResponseHelper.badRequest(res, 'Invalid email format');
-      }
+  //     // Validate email format
+  //     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  //     if (!emailRegex.test(dto.email)) {
+  //       return ResponseHelper.badRequest(res, 'Invalid email format');
+  //     }
 
-      // Validate password length
-      if (dto.password.length < 6) {
-        return ResponseHelper.badRequest(res, 'Password must be at least 6 characters long');
-      }
+  //     // Validate password length
+  //     if (dto.password.length < 6) {
+  //       return ResponseHelper.badRequest(res, 'Password must be at least 6 characters long');
+  //     }
 
-      const user = await this.usersService.createUser(dto);
+  //     const user = await this.usersService.createUser(dto);
 
-      return ResponseHelper.created(res, user);
-    } catch (error: unknown) {
-      console.error('Create user error:', error);
+  //     return ResponseHelper.created(res, user);
+  //   } catch (error: unknown) {
+  //     console.error('Create user error:', error);
 
-      if (
-        error instanceof Error &&
-        (error.message === 'Username already exists' || error.message === 'Email already exists')
-      ) {
-        return ResponseHelper.conflict(res, error.message);
-      }
+  //     if (
+  //       error instanceof Error &&
+  //       (error.message === 'Username already exists' || error.message === 'Email already exists')
+  //     ) {
+  //       return ResponseHelper.conflict(res, error.message);
+  //     }
 
-      return ResponseHelper.internalError(res, 'An error occurred while creating user');
-    }
-  }
+  //     return ResponseHelper.internalError(res, 'An error occurred while creating user');
+  //   }
+  // }
 
   /**
    * PUT /api/users/:id - Update user
    */
-  async update(req: Request, res: Response): Promise<Response> {
-    try {
-      const id = parseInt(req.params.id);
-      const dto: UpdateUserDto = req.body;
-      const currentUser = req.user as UserWithRolesDto;
+  // async update(req: Request, res: Response): Promise<Response> {
+  //   try {
+  //     const id = parseInt(req.params.id);
+  //     const dto: UpdateUserDto = req.body;
+  //     const currentUser = req.user as UserWithRolesDto;
 
-      if (isNaN(id)) {
-        return ResponseHelper.badRequest(res, 'Invalid user ID');
-      }
+  //     if (isNaN(id)) {
+  //       return ResponseHelper.badRequest(res, 'Invalid user ID');
+  //     }
 
-      // Users can only update their own profile unless they're admin
-      const isAdmin = currentUser.roles?.some((role: RoleDto) => role.name === 'admin');
+  //     // Users can only update their own profile unless they're admin
+  //     const isAdmin = currentUser.roles?.some((role: RoleDto) => role.name === 'admin');
 
-      if (!isAdmin && currentUser.id !== id) {
-        return ResponseHelper.forbidden(res, 'You can only update your own profile');
-      }
+  //     if (!isAdmin && currentUser.id !== id) {
+  //       return ResponseHelper.forbidden(res, 'You can only update your own profile');
+  //     }
 
-      // Validate email format if provided
-      if (dto.email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(dto.email)) {
-          return ResponseHelper.badRequest(res, 'Invalid email format');
-        }
-      }
+  //     // Validate email format if provided
+  //     if (dto.email) {
+  //       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  //       if (!emailRegex.test(dto.email)) {
+  //         return ResponseHelper.badRequest(res, 'Invalid email format');
+  //       }
+  //     }
 
-      // Validate password length if provided
-      if (dto.password && dto.password.length < 6) {
-        return ResponseHelper.badRequest(res, 'Password must be at least 6 characters long');
-      }
+  //     // Validate password length if provided
+  //     if (dto.password && dto.password.length < 6) {
+  //       return ResponseHelper.badRequest(res, 'Password must be at least 6 characters long');
+  //     }
 
-      // Only admins can update roles
-      if (dto.roleIds && !isAdmin) {
-        return ResponseHelper.forbidden(res, 'Only administrators can update user roles');
-      }
+  //     // Only admins can update roles
+  //     if (dto.roleIds && !isAdmin) {
+  //       return ResponseHelper.forbidden(res, 'Only administrators can update user roles');
+  //     }
 
-      const user = await this.usersService.updateUser(id, dto);
+  //     const user = await this.usersService.updateUser(id, dto);
 
-      return ResponseHelper.success(res, user);
-    } catch (error: unknown) {
-      console.error('Update user error:', error);
+  //     return ResponseHelper.success(res, user);
+  //   } catch (error: unknown) {
+  //     console.error('Update user error:', error);
 
-      if (error instanceof Error) {
-        if (error.message === 'User not found') {
-          return ResponseHelper.notFound(res, error.message);
-        }
+  //     if (error instanceof Error) {
+  //       if (error.message === 'User not found') {
+  //         return ResponseHelper.notFound(res, error.message);
+  //       }
 
-        if (error.message === 'Email already exists') {
-          return ResponseHelper.conflict(res, error.message);
-        }
-      }
+  //       if (error.message === 'Email already exists') {
+  //         return ResponseHelper.conflict(res, error.message);
+  //       }
+  //     }
 
-      return ResponseHelper.internalError(res, 'An error occurred while updating user');
-    }
-  }
+  //     return ResponseHelper.internalError(res, 'An error occurred while updating user');
+  //   }
+  // }
 
   /**
    * DELETE /api/users/:id - Delete user (soft delete, admin only)
    */
-  async delete(req: Request, res: Response): Promise<Response> {
-    try {
-      const id = parseInt(req.params.id);
+  // async delete(req: Request, res: Response): Promise<Response> {
+  //   try {
+  //     const id = parseInt(req.params.id);
 
-      if (isNaN(id)) {
-        return ResponseHelper.badRequest(res, 'Invalid user ID');
-      }
+  //     if (isNaN(id)) {
+  //       return ResponseHelper.badRequest(res, 'Invalid user ID');
+  //     }
 
-      const user = await this.usersService.deleteUser(id);
+  //     const user = await this.usersService.deleteUser(id);
 
-      return ResponseHelper.success(res, {
-        message: 'User deactivated successfully',
-        user,
-      });
-    } catch (error) {
-      console.error('Delete user error:', error);
-      return ResponseHelper.internalError(res, 'An error occurred while deleting user');
-    }
-  }
+  //     return ResponseHelper.success(res, {
+  //       message: 'User deactivated successfully',
+  //       user,
+  //     });
+  //   } catch (error) {
+  //     console.error('Delete user error:', error);
+  //     return ResponseHelper.internalError(res, 'An error occurred while deleting user');
+  //   }
+  // }
 }

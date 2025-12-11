@@ -14,6 +14,7 @@
       "@const/*": ["./const/*"],
       "@modules/*": ["./modules/*"],
       "@auth/*": ["./modules/auth/*"],
+      "@users/*": ["./modules/users/*"],
       "@shared/*": ["./shared/*"],
       "@types/*": ["./types/*"]
     }
