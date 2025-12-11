@@ -1,6 +1,7 @@
 import { UsersServiceImp } from '../users.service';
 import { prisma } from '../../../config/prisma';
 import bcrypt from 'bcrypt';
+import { UpdateUserDto } from '@sgcv2/shared';
 
 // Mock prisma
 jest.mock('../../../config/prisma', () => ({
@@ -110,9 +111,9 @@ describe('UsersService', () => {
   });
 
   describe('updateUser', () => {
-    const updateDto = {
+    const updateDto: UpdateUserDto = {
       email: 'updated@example.com',
-      isActive: false,
+      isActive: 'ACTIVE',
     };
 
     it('should update user successfully', async () => {

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "SGCV2 Backend API - Sistema de Gestión y Control para XTEL Comunicaciones",
   "main": "dist/server.js",
+  "types": "module",
   "directories": {
     "test": "tests"
   },

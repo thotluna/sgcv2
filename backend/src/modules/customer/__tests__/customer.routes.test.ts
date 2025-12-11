@@ -1,6 +1,6 @@
 import request from 'supertest';
 import express from 'express';
-import { authenticate } from '../../auth/middleware/auth.middleware';
+import { authenticate } from '@modules/auth/infrastructure/http/auth.middleware';
 import { CustomerRoutes } from '../customer.routes';
 import { CustomerController } from '../customer.controller';
 
@@ -12,7 +12,7 @@ const mockUpdate = jest.fn((_req, res) => res.status(200).json({ success: true, 
 const mockDelete = jest.fn((_req, res) => res.status(200).json({ success: true, data: {} }));
 
 // Mock authenticate middleware
-jest.mock('../../auth/middleware/auth.middleware', () => ({
+jest.mock('@modules/auth/infrastructure/http/auth.middleware', () => ({
   authenticate: jest.fn((req, _res, next) => {
     req.user = { id: 'mock-admin-id', username: 'admin' };
     next();

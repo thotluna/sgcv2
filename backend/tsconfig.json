@@ -11,7 +11,11 @@
     "paths": {
       "@sgcv2/shared": ["../../packages/shared/dist"],
       "@config/*": ["./config/*"],
-      "@modules/*": ["./modules/*"]
+      "@const/*": ["./const/*"],
+      "@modules/*": ["./modules/*"],
+      "@auth/*": ["./modules/auth/*"],
+      "@shared/*": ["./shared/*"],
+      "@types/*": ["./types/*"]
     }
   },
   "include": ["src/**/*.ts"],

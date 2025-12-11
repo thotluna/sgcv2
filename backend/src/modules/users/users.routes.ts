@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { UsersController } from './users.controller';
-import { authenticate } from '../auth/middleware/auth.middleware';
+import { authenticate } from '../auth/infrastructure/http/auth.middleware';
 import { requireRoles } from '../rbac/guards/roles.guard';
 import { inject, injectable } from 'inversify';
 import { TYPES } from './types';

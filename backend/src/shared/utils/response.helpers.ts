@@ -128,6 +128,7 @@ export class ResponseHelper {
     message: string = 'Internal server error',
     details?: Record<string, string>
   ): Response {
+    console.log({ message, details });
     return this.error(res, ErrorCodes.INTERNAL_SERVER_ERROR, message, 500, details);
   }
 

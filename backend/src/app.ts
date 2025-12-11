@@ -2,18 +2,12 @@ import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import passport from 'passport';
-import { JwtStrategy } from './modules/auth/strategies/jwt.strategy';
-import { LocalStrategy } from './modules/auth/strategies/local.strategy';
-import { UsersRoutes } from './modules/users/users.routes';
+import { container } from './container';
+import { JwtStrategy } from './modules/auth/infrastructure/http/strategies/jwt.strategy';
+import { LocalStrategy } from './modules/auth/infrastructure/http/strategies/local.strategy';
+import { TYPES as AuthTypes } from './modules/auth/di/types';
 import { prisma } from './config/prisma';
-import { authContainer } from './modules/auth/container';
-import { TYPES } from './modules/auth/types';
-import { usersContainer } from './modules/users/container';
-import { TYPES as UsersTypes } from './modules/users/types';
-import { AuthRoutes } from './modules/auth/auth.routes';
-import { TYPES as CustomerTypes } from './modules/customer/types';
-import { customerContainer } from './modules/customer/container';
-import { CustomerRoutes } from './modules/customer/customer.routes';
+import { loadRoutes } from 'routes';
 
 // Load environment variables
 dotenv.config();
@@ -46,8 +40,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // ---------- Passport ----------
-const jwtStrategy = authContainer.get<JwtStrategy>(TYPES.JwtStrategy);
-const localStrategy = authContainer.get<LocalStrategy>(TYPES.LocalStrategy);
+const jwtStrategy = container.get<JwtStrategy>(AuthTypes.JwtStrategy);
+const localStrategy = container.get<LocalStrategy>(AuthTypes.LocalStrategy);
 passport.use(jwtStrategy);
 passport.use(localStrategy);
 app.use(passport.initialize());
@@ -77,12 +71,7 @@ app.get('/health', async (_req: Request, res: Response) => {
 const API_PREFIX = process.env.API_PREFIX || '/api';
 
 // Mount routes
-const authRoutes = authContainer.get<AuthRoutes>(TYPES.AuthRoutes);
-app.use(`${API_PREFIX}/auth`, authRoutes.getRouter());
-const usersRoutes = usersContainer.get<UsersRoutes>(UsersTypes.UsersRoutes);
-app.use(`${API_PREFIX}/users`, usersRoutes.getRouter());
-const customersRoutes = customerContainer.get<CustomerRoutes>(CustomerTypes.CustomerRoutes);
-app.use(`${API_PREFIX}/customers`, customersRoutes.getRouter());
+loadRoutes(app, API_PREFIX);
 
 app.get(`${API_PREFIX}/`, (_req: Request, res: Response) => {
   res.json({

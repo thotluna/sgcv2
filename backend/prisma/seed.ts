@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { prisma } from '../src/config/prisma';
-import { CustomerState } from '@prisma/client';
+import { CustomerState, Role } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import { ROLES } from '../src/consts/roles';
 import { PERMISSIONS } from '../src/consts/permissions';
@@ -36,7 +36,7 @@ async function main() {
   }
 
   console.log('🌱 Seeding Roles...');
-  const createdRoles: Record<string, any> = {};
+  const createdRoles: Record<string, Role> = {};
   for (const roleName of Object.values(ROLES)) {
     const role = await prisma.role.create({
       data: {
