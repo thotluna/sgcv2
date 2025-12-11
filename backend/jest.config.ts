@@ -6,12 +6,12 @@ const config: Config = {
   roots: ['<rootDir>/src'],
   moduleFileExtensions: ['ts', 'js', 'json'],
   testMatch: ['**/__tests__/**/*.test.ts'],
-  globals: {
-    'ts-jest': {
-      tsconfig: 'tsconfig.test.json',
-      isolatedModules: true,
-    },
-  },
+  // globals: {
+  //   'ts-jest': {
+  //     tsconfig: 'tsconfig.test.json',
+  //     isolatedModules: true,
+  //   },
+  // },
   transform: {
     '^.+\\.ts$': [
       'ts-jest',
@@ -25,6 +25,10 @@ const config: Config = {
     // Path aliases del backend
     '^@config/(.*)$': '<rootDir>/src/config/$1',
     '^@modules/(.*)$': '<rootDir>/src/modules/$1',
+    '^@auth/(.*)$': '<rootDir>/src/modules/auth/$1',
+    '^@const/(.*)$': '<rootDir>/src/const/$1',
+    '^@shared/(.*)$': '<rootDir>/src/shared/$1',
+    '^@types/(.*)$': '<rootDir>/src/types/$1',
     // CRÍTICO: Mapear al código FUENTE de shared
     '^@sgcv2/shared$': '<rootDir>/../packages/shared/src/index.ts',
     '^@sgcv2/shared/(.*)$': '<rootDir>/../packages/shared/src/$1',

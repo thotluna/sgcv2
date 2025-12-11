@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { CustomerController } from './customer.controller';
-import { authenticate } from '../auth/middleware/auth.middleware';
+import { authenticate } from '../auth/infrastructure/http/auth.middleware';
 import { Permission } from '../rbac/decorators/permissions.decorator';
 import { PERMISSIONS } from '../../consts/permissions';
 import { inject, injectable } from 'inversify';

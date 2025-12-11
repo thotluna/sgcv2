@@ -1,4 +1,5 @@
-import { prisma } from '../../config/prisma';
+import { prisma } from '@config/prisma';
+import { User } from '@prisma/client';
 import {
   CreateUserDto,
   Pagination,
@@ -29,6 +30,9 @@ export interface UsersService {
   deleteUser(id: number): Promise<UserDelete>;
 }
 
+import { injectable } from 'inversify';
+
+@injectable()
 export class UsersServiceImp implements UsersService {
   /**
    * Find user by ID
@@ -240,7 +244,6 @@ export class UsersServiceImp implements UsersService {
       throw new Error('User not found');
     }
 
-    // Check if email is being updated and if it already exists
     if (data.email && data.email !== user.email) {
       const existingEmail = await prisma.user.findUnique({
         where: { email: data.email },
@@ -252,9 +255,9 @@ export class UsersServiceImp implements UsersService {
     }
 
     // Prepare update data
-    const updateData: any = {
+    const updateData: Partial<User> = {
       email: data.email,
-      isActive: data.isActive,
+      isActive: data.isActive as UserStatus,
     };
 
     // Hash new password if provided

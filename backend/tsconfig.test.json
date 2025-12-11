@@ -6,6 +6,7 @@
     "lib": ["ES2020"],
     "types": ["node", "jest", "supertest"],
     "esModuleInterop": true,
+    "isolatedModules": true,
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
@@ -18,7 +19,11 @@
       "@sgcv2/shared": ["../packages/shared/src/index.ts"],
       "@sgcv2/shared/*": ["../packages/shared/src/*"],
       "@config/*": ["src/config/*"],
-      "@modules/*": ["src/modules/*"]
+      "@modules/*": ["src/modules/*"],
+      "@auth/*": ["src/modules/auth/*"],
+      "@const/*": ["src/const/*"],
+      "@shared/*": ["src/shared/*"],
+      "@types/*": ["src/types/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/__tests__/**/*.ts"],

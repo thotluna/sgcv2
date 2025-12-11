@@ -10,7 +10,7 @@ export class CreateUserDto {
 export class UpdateUserDto {
   email?: string;
   password?: string; // Only if changing password
-  isActive?: boolean; // Status
+  isActive?: UserStatus; // Status
   roleIds?: number[];
 }
 
