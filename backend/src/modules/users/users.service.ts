@@ -1,4 +1,5 @@
 import { prisma } from '@config/prisma';
+import { User } from '@prisma/client';
 import {
   CreateUserDto,
   Pagination,
@@ -13,12 +14,6 @@ import {
 import bcrypt from 'bcrypt';
 
 const SALT_ROUNDS = 10;
-
-interface UserUpdateLocal {
-  email?: string;
-  passwordHash?: string;
-  isActive?: UserStatus;
-}
 
 export interface UsersService {
   findById(id: number): Promise<UserBasic | null>;
@@ -249,7 +244,6 @@ export class UsersServiceImp implements UsersService {
       throw new Error('User not found');
     }
 
-    // Check if email is being updated and if it already exists
     if (data.email && data.email !== user.email) {
       const existingEmail = await prisma.user.findUnique({
         where: { email: data.email },
@@ -261,9 +255,9 @@ export class UsersServiceImp implements UsersService {
     }
 
     // Prepare update data
-    const updateData: UserUpdateLocal = {
+    const updateData: Partial<User> = {
       email: data.email,
-      isActive: data.isActive,
+      isActive: data.isActive as UserStatus,
     };
 
     // Hash new password if provided
