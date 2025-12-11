@@ -4,9 +4,9 @@ import nextTs from "eslint-config-next/typescript";
 import prettierConfig from "eslint-config-prettier";
 
 const eslintConfig = defineConfig([
-  ...nextVitals,
-  ...nextTs,
-  ...prettierConfig,
+  nextVitals,
+  nextTs,
+  prettierConfig,
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:
