@@ -13,7 +13,6 @@ export const authService = {
       password,
     };
     const response = await apiClient.post<AppResponse<LoginResponse>>(`/auth/login`, loginDto);
-    console.log(response.data);
     return response.data;
   },
   logout: async () => {
