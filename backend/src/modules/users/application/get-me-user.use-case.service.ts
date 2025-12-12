@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { UserNotFoundException } from '@users/domain/exceptions/user-no-found.exception';
-import { UsersService } from '@modules/users/users.service.old';
+import { UsersService } from '@modules/users/domain/user.service';
 import { TYPES } from '@users/di/types';
 
 @injectable()
