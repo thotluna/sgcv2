@@ -1,0 +1,152 @@
+import { prisma } from '@config/prisma';
+import { UsersPrismaRepository } from '@modules/users/infrastructure/persist/users-prisma.repository';
+import { UserWithRolesModel } from '@modules/users/infrastructure/persist/include';
+import { User } from '@prisma/client';
+import { UserEntityModelMapper } from '@modules/users/infrastructure/persist/user-entity-model.mapper';
+
+jest.mock('@config/prisma', () => ({
+  prisma: {
+    user: {
+      findUnique: jest.fn(),
+    },
+  },
+}));
+
+const mockPrismaUser = prisma.user as jest.Mocked<typeof prisma.user>;
+
+describe('UsersPrismaRepository', () => {
+  let repository: UsersPrismaRepository;
+
+  beforeEach(() => {
+    repository = new UsersPrismaRepository();
+    jest.resetAllMocks();
+  });
+
+  describe('getUserWithRoles', () => {
+    it('should return a user with roles when a valid id is provided', async () => {
+      const mockUserModel: UserWithRolesModel = {
+        id: 1,
+        username: 'testuser',
+        email: 'test@user.com',
+        passwordHash: 'hashedpassword',
+        firstName: 'Test',
+        lastName: 'User',
+        isActive: 'ACTIVE',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        roles: [
+          {
+            userId: 1,
+            roleId: 1,
+            assignedAt: new Date(),
+            role: {
+              id: 1,
+              name: 'ADMIN',
+              description: 'Administrator role',
+              createdAt: new Date(),
+              updatedAt: new Date(),
+              permissions: [
+                {
+                  roleId: 1,
+                  permissionId: 1,
+                  assignedAt: new Date(),
+                  permission: {
+                    id: 1,
+                    resource: 'user',
+                    action: 'create',
+                    description: 'Create users',
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      };
+
+      mockPrismaUser.findUnique.mockResolvedValue(mockUserModel);
+
+      const user = await repository.getUserWithRoles(1);
+
+      expect(user).toBeDefined();
+      expect(user).not.toBeNull();
+      expect(user?.id).toBe(1);
+      expect(user?.username).toBe('testuser');
+      expect(user?.roles).toHaveLength(1);
+      expect(user?.roles[0].name).toBe('ADMIN');
+      expect(user?.roles[0].permissions).toHaveLength(1);
+      expect(user?.roles[0].permissions[0].action).toBe('create');
+      expect(mockPrismaUser.findUnique).toHaveBeenCalledWith({
+        where: { id: 1 },
+        include: {
+          roles: {
+            include: {
+              role: {
+                include: {
+                  permissions: {
+                    include: {
+                      permission: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+    });
+
+    it('should return null when user is not found', async () => {
+      mockPrismaUser.findUnique.mockResolvedValue(null);
+
+      const user = await repository.getUserWithRoles(999);
+
+      expect(user).toBeNull();
+      expect(mockPrismaUser.findUnique).toHaveBeenCalledWith({
+        where: { id: 999 },
+        include: expect.any(Object),
+      });
+    });
+  });
+
+  describe('findByUsername', () => {
+    it('should return a user when a valid username is provided', async () => {
+      const mockUserModel: User = {
+        id: 1,
+        username: 'testuser',
+        email: 'test@user.com',
+        passwordHash: 'hashedpassword',
+        firstName: 'Test',
+        lastName: 'User',
+        isActive: 'ACTIVE',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      mockPrismaUser.findUnique.mockResolvedValue(mockUserModel);
+
+      const user = await repository.findByUsername('testuser');
+
+      expect(user).toBeDefined();
+      expect(user).not.toBeNull();
+      expect(user?.id).toBe(1);
+      expect(user?.username).toBe('testuser');
+      expect(mockPrismaUser.findUnique).toHaveBeenCalledWith({
+        where: { username: 'testuser' },
+      });
+      expect(user).toEqual(UserEntityModelMapper.toEntity(mockUserModel));
+    });
+
+    it('should return null when username does not exist', async () => {
+      mockPrismaUser.findUnique.mockResolvedValue(null);
+
+      const user = await repository.findByUsername('nonexistent');
+
+      expect(user).toBeNull();
+      expect(mockPrismaUser.findUnique).toHaveBeenCalledWith({
+        where: { username: 'nonexistent' },
+      });
+    });
+  });
+});

@@ -2,7 +2,7 @@ import { ContainerModule, ContainerModuleLoadOptions } from 'inversify';
 import { UserRepository } from '@users/domain/user-repository';
 import { UsersService } from '@users/domain/user.service';
 import { UserFinderForAuth } from '@auth/domain/user-finder-for-auth';
-import { UserServiceImpl } from '@users/infrastructure/http/services/user.service.impl';
+import { UserServiceImpl } from '@modules/users/infrastructure/http/user.service.impl';
 import { UsersController } from '@users/infrastructure/http/user.controller';
 import { UsersPrismaRepository } from '@users/infrastructure/persist/users-prisma.repository';
 import { UsersRoutes } from '@modules/users/infrastructure/http/users.routes';
