@@ -36,8 +36,19 @@ export class LoginUseCaseService {
 
     const token = await this.authService.generateToken({ id: user.id, username: user.username });
 
+    const userDto: UserDto = {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+      isActive: user.status,
+    };
+
     return {
-      user: user as unknown as UserDto,
+      user: userDto,
       token: token.access_token,
     } as UserTokenDto;
   }
