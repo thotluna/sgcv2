@@ -14,6 +14,7 @@ const mockAuthLoginService: jest.Mocked<AuthLoginService> = {
 
 const mockUserRepository: jest.Mocked<UserRepository> = {
   findByUsername: jest.fn(),
+  getUserWithRoles: jest.fn(),
 };
 
 describe('LoginUseCaseService', () => {

@@ -1,9 +1,8 @@
 import { Router } from 'express';
-import { UsersController } from './users.controller';
-import { authenticate } from '../auth/infrastructure/http/auth.middleware';
-import { requireRoles } from '../rbac/guards/roles.guard';
 import { inject, injectable } from 'inversify';
-import { TYPES } from './types';
+import { UsersController } from '@users/infrastructure/http/user.controller';
+import { authenticate } from '@auth/infrastructure/http/auth.middleware';
+import { TYPES } from '@users/di/types';
 
 // const router = Router();
 // const usersController = new UsersController();
@@ -74,19 +73,19 @@ export class UsersRoutes {
 
   createRoutes() {
     this.router.get('/me', authenticate, (req, res) => this.usersController.me(req, res));
-    this.router.get('/', authenticate, requireRoles('Administrador'), (req, res) =>
-      this.usersController.getAll(req, res)
-    );
-    this.router.get('/:id', authenticate, requireRoles('Administrador'), (req, res) =>
-      this.usersController.getById(req, res)
-    );
-    this.router.post('/', authenticate, requireRoles('Administrador'), (req, res) =>
-      this.usersController.create(req, res)
-    );
-    this.router.put('/:id', authenticate, (req, res) => this.usersController.update(req, res));
-    this.router.delete('/:id', authenticate, requireRoles('Administrador'), (req, res) =>
-      this.usersController.delete(req, res)
-    );
+    // this.router.get('/', authenticate, requireRoles('Administrador'), (req, res) =>
+    //   this.usersController.getAll(req, res)
+    // );
+    // this.router.get('/:id', authenticate, requireRoles('Administrador'), (req, res) =>
+    //   this.usersController.getById(req, res)
+    // );
+    // this.router.post('/', authenticate, requireRoles('Administrador'), (req, res) =>
+    //   this.usersController.create(req, res)
+    // );
+    // this.router.put('/:id', authenticate, (req, res) => this.usersController.update(req, res));
+    // this.router.delete('/:id', authenticate, requireRoles('Administrador'), (req, res) =>
+    //   this.usersController.delete(req, res)
+    // );
   }
 
   getRouter() {
