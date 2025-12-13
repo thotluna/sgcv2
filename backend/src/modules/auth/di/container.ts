@@ -8,6 +8,8 @@ import { LocalStrategy } from '@auth/infrastructure/http/strategies/local.strate
 import { JwtStrategy } from '@auth/infrastructure/http/strategies/jwt.strategy';
 import { AuthService } from '@auth/domain/auth-service';
 import { AuthLoginService } from '@auth/domain/auth.login.service';
+import { ValidationService } from '../domain/validation-service';
+import { ValidationServiceImpl } from '../infrastructure/http/validation.service-impl';
 
 export const authContainerModule = new ContainerModule((option: ContainerModuleLoadOptions) => {
   option.bind<AuthService>(TYPES.AuthService).to(AuthServiceImpl);
@@ -17,4 +19,5 @@ export const authContainerModule = new ContainerModule((option: ContainerModuleL
   option.bind<AuthRoutes>(TYPES.AuthRoutes).to(AuthRoutes);
   option.bind<LocalStrategy>(TYPES.LocalStrategy).to(LocalStrategy);
   option.bind<JwtStrategy>(TYPES.JwtStrategy).to(JwtStrategy);
+  option.bind<ValidationService>(TYPES.ValidationService).to(ValidationServiceImpl);
 });

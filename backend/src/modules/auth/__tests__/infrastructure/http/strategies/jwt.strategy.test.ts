@@ -50,12 +50,19 @@ describe('JWT Strategy', () => {
         id: 1,
         username: 'testuser',
         email: 'test@example.com',
-        passwordHash: 'hashed',
         firstName: 'Test',
         lastName: 'User',
-        isActive: 'ACTIVE' as any,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        isActive: 'ACTIVE',
+        roles: [
+          {
+            id: 1,
+            name: 'admin',
+            role: {
+              id: 1,
+              name: 'admin',
+            },
+          },
+        ],
       };
 
       (prisma.user.findUnique as jest.Mock).mockResolvedValue(mockUser);
@@ -68,8 +75,25 @@ describe('JWT Strategy', () => {
 
       await verifyFn(payload, mockDone);
 
-      expect(prisma.user.findUnique).toHaveBeenCalledWith({ where: { id: 1 } });
-      expect(mockDone).toHaveBeenCalledWith(null, mockUser);
+      expect(prisma.user.findUnique).toHaveBeenCalledWith({
+        where: { id: 1 },
+        include: {
+          roles: {
+            include: {
+              role: true,
+            },
+          },
+        },
+      });
+      expect(mockDone).toHaveBeenCalledWith(null, {
+        id: 1,
+        username: 'testuser',
+        email: 'test@example.com',
+        firstName: 'Test',
+        lastName: 'User',
+        isActive: 'ACTIVE',
+        roles: ['admin'],
+      });
     });
 
     it('should return false when user is not found in database', async () => {
@@ -83,7 +107,16 @@ describe('JWT Strategy', () => {
 
       await verifyFn(payload, mockDone);
 
-      expect(prisma.user.findUnique).toHaveBeenCalledWith({ where: { id: 999 } });
+      expect(prisma.user.findUnique).toHaveBeenCalledWith({
+        where: { id: 999 },
+        include: {
+          roles: {
+            include: {
+              role: true,
+            },
+          },
+        },
+      });
       expect(mockDone).toHaveBeenCalledWith(null, false);
     });
 
@@ -114,7 +147,16 @@ describe('JWT Strategy', () => {
 
       await verifyFn(payload, mockDone);
 
-      expect(prisma.user.findUnique).toHaveBeenCalledWith({ where: { id: userId } });
+      expect(prisma.user.findUnique).toHaveBeenCalledWith({
+        where: { id: userId },
+        include: {
+          roles: {
+            include: {
+              role: true,
+            },
+          },
+        },
+      });
     });
   });
 });

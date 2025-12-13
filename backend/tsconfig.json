@@ -6,7 +6,11 @@
     "rootDir": "./src",
     "declaration": true,
     "declarationMap": true,
-    "types": ["node", "jest", "supertest"],
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "types": ["jest", "node", "supertest"],
     "baseUrl": "./src",
     "paths": {
       "@sgcv2/shared": ["../../packages/shared/dist"],

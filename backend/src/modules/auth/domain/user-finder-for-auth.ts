@@ -1,5 +1,5 @@
-import { UserEntity } from '@modules/users/domain/user-entity';
+import { AuthUser } from './auth-user';
 
 export interface UserFinderForAuth {
-  findByUsername(username: string): Promise<UserEntity | null>;
+  findByUsernameForAuth(username: string): Promise<AuthUser | null>;
 }

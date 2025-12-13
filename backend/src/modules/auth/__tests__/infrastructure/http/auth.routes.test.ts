@@ -46,8 +46,7 @@ describe('AuthRoutes', () => {
         data: {
           user: {
             ...user,
-            createdAt: expect.any(String),
-            updatedAt: expect.any(String),
+            roles: ['admin'],
           },
           token: MOCK_USER_TOKEN_DTO.token,
         },

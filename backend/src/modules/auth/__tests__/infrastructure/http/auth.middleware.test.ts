@@ -22,7 +22,7 @@ describe('Auth Middleware', () => {
 
   describe('authenticate', () => {
     it('should call next if authentication is successful', () => {
-      const mockUser = { id: 1, username: 'test' };
+      const mockUser = { id: '1', username: 'test', roles: ['admin'], role: 'admin' };
 
       // Mock passport.authenticate to return a middleware that calls the callback with success
       (passport.authenticate as jest.Mock).mockImplementation((_strategy, _options, callback) => {
@@ -113,7 +113,7 @@ describe('Auth Middleware', () => {
 
   describe('optionalAuth', () => {
     it('should set user and call next if authentication is successful', () => {
-      const mockUser = { id: 1, username: 'test' };
+      const mockUser = { id: '1', username: 'test', roles: ['admin'], role: 'admin' };
 
       (passport.authenticate as jest.Mock).mockImplementation((_strategy, _options, callback) => {
         return (_req: Request, _res: Response, _next: NextFunction) => {

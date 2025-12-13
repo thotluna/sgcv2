@@ -3,11 +3,16 @@ import 'reflect-metadata';
 dotenv.config();
 
 import app from './app';
+import logger from '@config/logger';
 
 const PORT = process.env.PORT || 4000;
 const HOST = process.env.HOST || 'localhost';
 
 const server = app.listen(PORT, () => {
+  logger.info(`Server started on port ${PORT}`, {
+    environment: process.env.NODE_ENV,
+    logLevel: process.env.LOG_LEVEL,
+  });
   console.log('🚀 SGCV2 Backend Server');
   console.log(`📡 Server running on http://${HOST}:${PORT}`);
   console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
@@ -17,17 +22,17 @@ const server = app.listen(PORT, () => {
 
 // Graceful shutdown
 process.on('SIGTERM', () => {
-  console.log('SIGTERM signal received: closing HTTP server');
+  logger.info('SIGTERM signal received: closing HTTP server');
   server.close(() => {
-    console.log('HTTP server closed');
+    logger.info('HTTP server closed');
     process.exit(0);
   });
 });
 
 process.on('SIGINT', () => {
-  console.log('SIGINT signal received: closing HTTP server');
+  logger.info('SIGINT signal received: closing HTTP server');
   server.close(() => {
-    console.log('HTTP server closed');
+    logger.info('HTTP server closed');
     process.exit(0);
   });
 });

@@ -3,10 +3,10 @@ import { inject, injectable } from 'inversify';
 import { LoginUseCaseService } from '@auth/application/login.use-case.service';
 import { InvalidPasswordException } from '@auth/domain/exceptions/invalid-password.exception';
 import { TYPES } from '@auth/di/types';
-import { UserNotFoundException } from '@modules/users/domain/exceptions/user-no-found.exception';
+import { AuthUserNotFoundException } from '@auth/domain/exceptions/auth-user-not-found.exception';
 import { ResponseHelper } from '@shared/utils/response.helpers';
 import { LoginDto } from '@sgcv2/shared';
-import { TypedRequest } from 'types/express/types';
+import { TypedRequest } from 'types/app-express/types';
 
 @injectable()
 export class AuthController {
@@ -22,7 +22,7 @@ export class AuthController {
       const userTokenDto = await this.loginUseCaseService.execute(dto);
       return ResponseHelper.success(res, userTokenDto);
     } catch (error) {
-      if (error instanceof UserNotFoundException) {
+      if (error instanceof AuthUserNotFoundException) {
         return ResponseHelper.notFound(res, error.message);
       }
 

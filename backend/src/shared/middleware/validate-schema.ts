@@ -1,6 +1,6 @@
 import z from 'zod';
 import { NextFunction, RequestHandler, Response } from 'express';
-import { TypedRequest } from '../../types/express/types';
+import { TypedRequest } from '../../types/app-express/types';
 import { ResponseHelper } from '../utils/response.helpers';
 
 export const validateSchema = <T extends z.ZodTypeAny>(schema: T): RequestHandler => {
