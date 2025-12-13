@@ -29,9 +29,14 @@ describe('AuthController', () => {
 
     expect(mockLoginUseCaseService.execute).toHaveBeenCalledWith(MOCK_LOGIN_REQUEST);
 
-    expect(mockResponse.json).toHaveBeenCalledWith(expect.objectContaining(MOCK_USER_TOKEN_DTO));
+    expect(mockResponse.json).toHaveBeenCalledWith(
+      expect.objectContaining({
+        success: true,
+        data: MOCK_USER_TOKEN_DTO,
+      })
+    );
 
-    expect(mockResponse.status).not.toHaveBeenCalled();
+    expect(mockResponse.status).toHaveBeenCalledWith(200);
   });
 
   it('should handle UserNotFoundException and return 404', async () => {

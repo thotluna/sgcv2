@@ -20,7 +20,7 @@ export class AuthController {
 
     try {
       const userTokenDto = await this.loginUseCaseService.execute(dto);
-      return res.json(userTokenDto);
+      return ResponseHelper.success(res, userTokenDto);
     } catch (error) {
       if (error instanceof UserNotFoundException) {
         return ResponseHelper.notFound(res, error.message);

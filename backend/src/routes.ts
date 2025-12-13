@@ -1,12 +1,12 @@
 import { Application } from 'express';
 import { container } from './container';
 
-import { AuthRoutes } from './modules/auth/infrastructure/http/auth.routes';
-import { UsersRoutes } from './modules/users/users.routes';
-import { CustomerRoutes } from './modules/customer/customer.routes';
-import { TYPES as AuthTypes } from './modules/auth/di/types';
-import { TYPES as UsersTypes } from './modules/users/di/types';
-import { TYPES as CustomerTypes } from './modules/customer/types';
+import { AuthRoutes } from '@auth/infrastructure/http/auth.routes';
+import { UsersRoutes } from '@users/infrastructure/http/users.routes';
+import { CustomerRoutes } from '@modules/customer/customer.routes';
+import { TYPES as AuthTypes } from '@auth/di/types';
+import { TYPES as UsersTypes } from '@users/di/types';
+import { TYPES as CustomerTypes } from '@modules/customer/types';
 
 export function loadRoutes(app: Application, prefix: string = '') {
   const authRoutes = container.get<AuthRoutes>(AuthTypes.AuthRoutes);

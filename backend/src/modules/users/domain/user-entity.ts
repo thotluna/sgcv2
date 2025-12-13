@@ -1,3 +1,4 @@
+import { RoleEntity } from '@modules/roles/domain/roles.entity';
 import { UserState } from './types';
 
 export interface UserEntity {
@@ -10,4 +11,8 @@ export interface UserEntity {
   createdAt: Date;
   updatedAt: Date;
   status: UserState;
+}
+
+export interface UserWithRolesEntity extends UserEntity {
+  roles: RoleEntity[];
 }
