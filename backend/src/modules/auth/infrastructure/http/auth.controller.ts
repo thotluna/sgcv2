@@ -6,7 +6,7 @@ import { TYPES } from '@auth/di/types';
 import { AuthUserNotFoundException } from '@auth/domain/exceptions/auth-user-not-found.exception';
 import { ResponseHelper } from '@shared/utils/response.helpers';
 import { LoginDto } from '@sgcv2/shared';
-import { TypedRequest } from 'types/app-express/types';
+import { TypedRequest } from 'types/express-interfaces/types';
 
 @injectable()
 export class AuthController {

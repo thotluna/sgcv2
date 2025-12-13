@@ -19,11 +19,11 @@
       "@modules/*": ["./modules/*"],
       "@auth/*": ["./modules/auth/*"],
       "@users/*": ["./modules/users/*"],
-      "@shared/*": ["./shared/*"],
-      "@types/*": ["./types/*"]
+      "@shared/*": ["./shared/*"]
     }
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/types/**/*.d.ts"],
+  "files": ["src/types/express.d.ts"],
   "exclude": ["node_modules", "dist", "tests"],
   "references": [
     {
