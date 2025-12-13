@@ -23,7 +23,7 @@ describe('LoginUseCaseService', () => {
     loginUseCaseService = new LoginUseCaseService(mockUserRepository, mockAuthLoginService);
   });
 
-  afterEach(() => { });
+  afterEach(() => {});
   it('should login a user correctly', async () => {
     // We treat the mock as AuthUser, assuming getUserMock returns compatible shape
     const userFound = getUserMock(MOCK_LOGIN_REQUEST) as unknown as AuthUser;
@@ -43,7 +43,9 @@ describe('LoginUseCaseService', () => {
     expect(result.user.username).toBe(userFound.username);
 
     // 4. Verifica que los métodos de dependencia se llamaron correctamente
-    expect(mockUserRepository.findByUsernameForAuth).toHaveBeenCalledWith(MOCK_LOGIN_REQUEST.username);
+    expect(mockUserRepository.findByUsernameForAuth).toHaveBeenCalledWith(
+      MOCK_LOGIN_REQUEST.username
+    );
     expect(mockAuthLoginService.comparePassword).toHaveBeenCalledWith(
       MOCK_LOGIN_REQUEST.password,
       userFound.passwordHash
@@ -61,7 +63,9 @@ describe('LoginUseCaseService', () => {
       AuthUserNotFoundException
     );
 
-    expect(mockUserRepository.findByUsernameForAuth).toHaveBeenCalledWith(MOCK_LOGIN_REQUEST.username);
+    expect(mockUserRepository.findByUsernameForAuth).toHaveBeenCalledWith(
+      MOCK_LOGIN_REQUEST.username
+    );
     expect(mockAuthLoginService.comparePassword).not.toHaveBeenCalled();
     expect(mockAuthLoginService.generateToken).not.toHaveBeenCalled();
   });
@@ -76,7 +80,9 @@ describe('LoginUseCaseService', () => {
       InvalidPasswordException
     );
 
-    expect(mockUserRepository.findByUsernameForAuth).toHaveBeenCalledWith(MOCK_LOGIN_REQUEST.username);
+    expect(mockUserRepository.findByUsernameForAuth).toHaveBeenCalledWith(
+      MOCK_LOGIN_REQUEST.username
+    );
     expect(mockAuthLoginService.comparePassword).toHaveBeenCalledWith(
       MOCK_LOGIN_REQUEST.password,
       userFound.passwordHash

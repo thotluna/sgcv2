@@ -3,7 +3,6 @@ import { Request, Response, NextFunction } from 'express';
 import { rbacService } from '../rbac.service';
 import { ResponseHelper } from '@shared/utils/response.helpers';
 
-
 /**
  * Middleware to ensure the user has at least one of the specified roles.
  * Usage in route definition:

@@ -11,7 +11,7 @@ const HOST = process.env.HOST || 'localhost';
 const server = app.listen(PORT, () => {
   logger.info(`Server started on port ${PORT}`, {
     environment: process.env.NODE_ENV,
-    logLevel: process.env.LOG_LEVEL
+    logLevel: process.env.LOG_LEVEL,
   });
   console.log('🚀 SGCV2 Backend Server');
   console.log(`📡 Server running on http://${HOST}:${PORT}`);

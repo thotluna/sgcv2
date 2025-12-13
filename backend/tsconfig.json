@@ -9,46 +9,22 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "typeRoots": [
-      "./node_modules/@types",
-      "./src/types"
-    ],
+    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "types": ["jest", "node", "supertest"],
     "baseUrl": "./src",
     "paths": {
-      "@sgcv2/shared": [
-        "../../packages/shared/dist"
-      ],
-      "@config/*": [
-        "./config/*"
-      ],
-      "@const/*": [
-        "./const/*"
-      ],
-      "@modules/*": [
-        "./modules/*"
-      ],
-      "@auth/*": [
-        "./modules/auth/*"
-      ],
-      "@users/*": [
-        "./modules/users/*"
-      ],
-      "@shared/*": [
-        "./shared/*"
-      ],
-      "@types/*": [
-        "./types/*"
-      ]
+      "@sgcv2/shared": ["../../packages/shared/dist"],
+      "@config/*": ["./config/*"],
+      "@const/*": ["./const/*"],
+      "@modules/*": ["./modules/*"],
+      "@auth/*": ["./modules/auth/*"],
+      "@users/*": ["./modules/users/*"],
+      "@shared/*": ["./shared/*"],
+      "@types/*": ["./types/*"]
     }
   },
-  "include": [
-    "src/**/*.ts",
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "tests"
-  ],
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist", "tests"],
   "references": [
     {
       "path": "../packages/shared"

@@ -32,7 +32,7 @@ export class JwtStrategy extends PassportJwtStrategy {
 
         const userWithRoles = {
           ...user,
-          roles: user.roles.map(ur => ur.role.name) // transform to array of role names
+          roles: user.roles.map(ur => ur.role.name), // transform to array of role names
         };
 
         return done(null, userWithRoles);

@@ -23,7 +23,7 @@ export class LocalStrategy extends PassportLocalStrategy {
             id: user.id.toString(),
             username: user.username,
             role: '',
-            roles: [] // Default logical role for initial login, JWT strategy will hydrate full roles
+            roles: [], // Default logical role for initial login, JWT strategy will hydrate full roles
           });
         } catch (err) {
           return done(err);

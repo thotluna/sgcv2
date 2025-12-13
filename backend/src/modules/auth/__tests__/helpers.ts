@@ -7,7 +7,7 @@ export function getUserMock({ username, password }: LoginDto): AuthUser {
     username: username,
     status: 'ACTIVE',
     passwordHash: password,
-    roles: ['admin']
+    roles: ['admin'],
   };
 }
 

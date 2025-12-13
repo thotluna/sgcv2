@@ -6,7 +6,7 @@ import { Request, Response } from 'express';
 
 @injectable()
 export class UsersController {
-  constructor(@inject(TYPES.UsersService) private readonly usersService: UsersService) { }
+  constructor(@inject(TYPES.UsersService) private readonly usersService: UsersService) {}
 
   async me(req: Request, res: Response): Promise<Response> {
     try {

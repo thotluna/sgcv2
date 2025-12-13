@@ -2,12 +2,13 @@ import { Request, Response, NextFunction } from 'express';
 import passport from 'passport';
 import { ResponseHelper } from '@shared/utils/response.helpers';
 import { UserDto } from '@sgcv2/shared';
+import { AuthUser } from '@modules/auth/domain/auth-user';
 
 export const authenticate = (req: Request, res: Response, next: NextFunction) => {
   return passport.authenticate(
     'jwt',
     { session: false },
-    (err: Error, user: UserDto, info: Error) => {
+    (err: Error, user: AuthUser, info: Error) => {
       if (err) {
         ResponseHelper.internalError(res, 'Authentication error');
         return;
@@ -24,7 +25,7 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
         id: userWithRoles.id.toString(),
         username: userWithRoles.username,
         role: userWithRoles.roles[0] || '', // Primary role for legacy compatibility if needed
-        roles: userWithRoles.roles
+        roles: userWithRoles.roles,
       };
       next();
     }
@@ -39,7 +40,7 @@ export const optionalAuth = (req: Request, res: Response, next: NextFunction) =>
         id: userWithRoles.id.toString(),
         username: userWithRoles.username,
         role: userWithRoles.roles[0] || '',
-        roles: userWithRoles.roles
+        roles: userWithRoles.roles,
       };
     }
     next();
