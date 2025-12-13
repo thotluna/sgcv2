@@ -6,7 +6,11 @@
     "rootDir": "./src",
     "declaration": true,
     "declarationMap": true,
-    "types": ["node", "jest", "supertest"],
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "types": ["jest", "node", "supertest"],
     "baseUrl": "./src",
     "paths": {
       "@sgcv2/shared": ["../../packages/shared/dist"],
@@ -19,11 +23,7 @@
       "@types/*": ["./types/*"]
     }
   },
-  "include": [
-    "src/**/*.ts",
-    "src/modules/users/users.controller.old",
-    "src/modules/users/users.service.old"
-  ],
+  "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist", "tests"],
   "references": [
     {

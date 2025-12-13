@@ -1,6 +1,5 @@
 import { TYPES } from '@modules/users/di/types';
 import { UsersService } from '@modules/users/domain/user.service';
-import { UserWithRolesDto } from '@sgcv2/shared';
 import { ResponseHelper } from '@shared/utils/response.helpers';
 import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
@@ -11,13 +10,15 @@ export class UsersController {
 
   async me(req: Request, res: Response): Promise<Response> {
     try {
-      const user = req.user as UserWithRolesDto;
+      const user = req.user;
 
       if (!user) {
         return ResponseHelper.unauthorized(res);
       }
 
-      const userWithRoles = await this.usersService.getUserWithRoles(user.id);
+      const id = Number(user.id);
+
+      const userWithRoles = await this.usersService.getUserWithRoles(id);
 
       if (!userWithRoles) {
         return ResponseHelper.notFound(res, 'User not found');

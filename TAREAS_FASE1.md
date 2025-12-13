@@ -267,6 +267,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 - [x] Crear documentación (README.md)
 - [x] Crear ejemplos de uso (protected.routes.example.ts)
 - [x] Probar con tests automatizados ✅ (48 tests pasando en 7 suites)
+- [x] Eliminar dependencias circulares entre módulo Auth y Users ✅ (Refactorización completa)
 
 **Tiempo estimado:** 8 horas  
 **Tiempo real:** ~2 horas ✅

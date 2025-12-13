@@ -31,15 +31,10 @@ describe('Local Strategy', () => {
   describe('Local Strategy Verify Function', () => {
     it('should call done with user when credentials are valid', async () => {
       const mockUser = {
-        id: 1,
+        id: '1',
         username: 'testuser',
-        email: 'test@example.com',
-        passwordHash: 'hashed',
-        firstName: 'Test',
-        lastName: 'User',
-        isActive: 'ACTIVE' as any,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        roles: [],
+        role: '',
       };
 
       service.validateUser.mockResolvedValue(mockUser);

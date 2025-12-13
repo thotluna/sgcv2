@@ -51,7 +51,7 @@ export class AuthController {
 
   async me(req: Request, res: Response): Promise<Response> {
     try {
-      const user = req.user as UserDto;
+      const user = req.user as unknown as UserDto;
 
       if (!user) {
         return ResponseHelper.unauthorized(res, 'Unauthorized');
