@@ -54,7 +54,6 @@ export class CustomerController {
       return ResponseHelper.created(res, customer);
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error('Create customer error:', error);
         if (error.message === 'Customer code already exists') {
           return ResponseHelper.conflict(res, error.message);
         }
@@ -91,8 +90,7 @@ export class CustomerController {
         total: result.pagination.total,
         totalPages: result.pagination.totalPages,
       });
-    } catch (error) {
-      console.error('Find all customers error:', error);
+    } catch {
       return ResponseHelper.internalError(res, 'An error occurred while fetching customers');
     }
   }
@@ -104,8 +102,6 @@ export class CustomerController {
       return ResponseHelper.success(res, customer);
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error('Find one customer error:', error);
-
         if (error.message === 'Customer not found') {
           return ResponseHelper.notFound(res, error.message);
         }
@@ -123,8 +119,6 @@ export class CustomerController {
       return ResponseHelper.success(res, customer);
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error('Update customer error:', error);
-
         if (error.message === 'Customer not found') {
           return ResponseHelper.notFound(res, error.message);
         }
@@ -141,8 +135,6 @@ export class CustomerController {
       return ResponseHelper.success(res, customer);
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error('Delete customer error:', error);
-
         if (error.message === 'Customer not found') {
           return ResponseHelper.notFound(res, error.message);
         }

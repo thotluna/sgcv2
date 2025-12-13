@@ -10,6 +10,7 @@ import { prisma } from './config/prisma';
 import { loadRoutes } from 'routes';
 import { requestLogger } from '@shared/middleware/requestLogger';
 import { errorLogger } from '@shared/middleware/errorLogger';
+import logger from '@config/logger';
 
 // Load environment variables
 dotenv.config();
@@ -99,10 +100,9 @@ if (process.env.NODE_ENV !== 'production') {
           OR: [{ legalName: { startsWith: 'E2E ' } }, { businessName: { startsWith: 'E2E ' } }],
         },
       });
-      console.log(`🧹 E2E Cleanup: Deleted ${count} test customers`);
+      logger.info(`🧹 E2E Cleanup: Deleted ${count} test customers`);
       res.json({ success: true, count });
-    } catch (error) {
-      console.error('E2E Cleanup Error:', error);
+    } catch {
       res.status(500).json({ error: 'Failed to cleanup' });
     }
   });
@@ -119,7 +119,7 @@ app.use((req: Request, res: Response) => {
 app.use(errorLogger);
 // ---------- Error handler ----------
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
-  console.error('Error:', err);
+  logger.error(err);
   res.status(500).json({
     error: 'Internal Server Error',
     message: process.env.NODE_ENV === 'development' ? err.message : 'Something went wrong',

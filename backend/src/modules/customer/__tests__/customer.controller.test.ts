@@ -7,8 +7,6 @@ jest.mock('uuid', () => ({
   v4: () => 'test-uuid-1234',
 }));
 
-// jest.mock('../customer.service');
-
 describe('CustomerController', () => {
   let customerController: CustomerController;
   let customerService: jest.Mocked<CustomerService>;
@@ -16,7 +14,6 @@ describe('CustomerController', () => {
   let res: Partial<Response>;
   let statusMock: jest.Mock;
   let jsonMock: jest.Mock;
-  let consoleErrorSpy: jest.SpyInstance;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -37,13 +34,7 @@ describe('CustomerController', () => {
       json: jsonMock,
     };
 
-    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-
     customerController = new CustomerController(customerService);
-  });
-
-  afterEach(() => {
-    consoleErrorSpy.mockRestore();
   });
 
   describe('create', () => {

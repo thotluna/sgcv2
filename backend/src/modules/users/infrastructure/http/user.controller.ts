@@ -25,8 +25,7 @@ export class UsersController {
       }
 
       return ResponseHelper.success(res, userWithRoles);
-    } catch (error) {
-      console.error('Get current user error:', error);
+    } catch {
       return ResponseHelper.internalError(res, 'An error occurred while fetching user data');
     }
   }

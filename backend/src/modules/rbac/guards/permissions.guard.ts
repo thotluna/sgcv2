@@ -19,8 +19,7 @@ export const requirePermission = (module: string, action: string) => {
       }
 
       next();
-    } catch (error) {
-      console.error('Permission guard error:', error);
+    } catch {
       ResponseHelper.internalError(res, 'Error checking permission');
     }
   };

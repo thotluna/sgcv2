@@ -27,8 +27,7 @@ export const requireRoles = (...allowedRoles: string[]) => {
       }
 
       next();
-    } catch (error) {
-      console.error('Role guard error:', error);
+    } catch {
       ResponseHelper.internalError(res, 'Error checking user roles');
     }
   };
