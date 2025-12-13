@@ -14,7 +14,7 @@ const mockDelete = jest.fn((_req, res) => res.status(200).json({ success: true, 
 // Mock authenticate middleware
 jest.mock('@modules/auth/infrastructure/http/auth.middleware', () => ({
   authenticate: jest.fn((req, _res, next) => {
-    req.user = { id: 'mock-admin-id', username: 'admin' };
+    req.user = { id: 'mock-admin-id', username: 'admin', role: 'admin', roles: ['admin'] };
     next();
   }),
 }));

@@ -8,6 +8,8 @@ import { LocalStrategy } from './modules/auth/infrastructure/http/strategies/loc
 import { TYPES as AuthTypes } from './modules/auth/di/types';
 import { prisma } from './config/prisma';
 import { loadRoutes } from 'routes';
+import { requestLogger } from '@shared/middleware/requestLogger';
+import { errorLogger } from '@shared/middleware/errorLogger';
 
 // Load environment variables
 dotenv.config();
@@ -37,6 +39,7 @@ app.use(
   })
 );
 app.use(express.json());
+app.use(requestLogger);
 app.use(express.urlencoded({ extended: true }));
 
 // ---------- Passport ----------
@@ -113,7 +116,7 @@ app.use((req: Request, res: Response) => {
     timestamp: new Date().toISOString(),
   });
 });
-
+app.use(errorLogger);
 // ---------- Error handler ----------
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   console.error('Error:', err);
@@ -123,5 +126,7 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
     timestamp: new Date().toISOString(),
   });
 });
+
+
 
 export default app;

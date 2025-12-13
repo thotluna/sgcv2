@@ -2,7 +2,7 @@ import { inject, injectable } from 'inversify';
 import { InvalidPasswordException } from '@auth/domain/exceptions/invalid-password.exception';
 import { TYPES } from '@auth/di/types';
 import { AuthLoginService } from '@auth/domain/auth.login.service';
-import { UserNotFoundException } from '@modules/users/domain/exceptions/user-no-found.exception';
+import { AuthUserNotFoundException } from '@auth/domain/exceptions/auth-user-not-found.exception';
 import { LoginDto, UserDto, UserTokenDto } from '@sgcv2/shared';
 import { UserFinderForAuth } from '../domain/user-finder-for-auth';
 
@@ -22,10 +22,10 @@ export class LoginUseCaseService {
   async execute(loginDto: LoginDto): Promise<UserTokenDto> {
     const { username, password } = loginDto;
 
-    const user = await this.userRepository.findByUsername(username);
+    const user = await this.userRepository.findByUsernameForAuth(username);
 
     if (!user) {
-      throw new UserNotFoundException(username);
+      throw new AuthUserNotFoundException(username);
     }
 
     const isValidPassword = await this.authService.comparePassword(password, user.passwordHash);
@@ -39,11 +39,11 @@ export class LoginUseCaseService {
     const userDto: UserDto = {
       id: user.id,
       username: user.username,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
+      email: '', // Not in AuthUser
+      firstName: '', // Not in AuthUser
+      lastName: '', // Not in AuthUser
+      createdAt: new Date(), // Not in AuthUser
+      updatedAt: new Date(), // Not in AuthUser
       isActive: user.status,
     };
 

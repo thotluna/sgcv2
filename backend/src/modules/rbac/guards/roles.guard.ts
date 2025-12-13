@@ -2,7 +2,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { rbacService } from '../rbac.service';
 import { ResponseHelper } from '@shared/utils/response.helpers';
-import { UserDto } from '@sgcv2/shared';
+
 
 /**
  * Middleware to ensure the user has at least one of the specified roles.
@@ -12,16 +12,22 @@ import { UserDto } from '@sgcv2/shared';
 export const requireRoles = (...allowedRoles: string[]) => {
   return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const user = req.user as UserDto;
+      const user = req.user;
 
       if (!user) {
         ResponseHelper.unauthorized(res, 'Authentication required');
+        return;
       }
-      const hasRole = await rbacService.hasRole(user.id, ...allowedRoles);
+
+      const userId = Number(user.id);
+      const hasRole = await rbacService.hasRole(userId, ...allowedRoles);
+
       if (!hasRole) {
         ResponseHelper.forbidden(res, `Required roles: ${allowedRoles.join(', ')}`);
+        return;
       }
-      return next();
+
+      next();
     } catch (error) {
       console.error('Role guard error:', error);
       ResponseHelper.internalError(res, 'Error checking user roles');

@@ -15,7 +15,7 @@ jest.mock('@auth/infrastructure/http/auth.middleware', () => ({
   authenticate: jest.fn((req: Request, _res: Response, next: (err?: Error) => void) => {
     // The real middleware would attach a DTO-like object.
     // The controller casts this to UserWithRolesDto and uses the id.
-    req.user = { id: 1, username: 'test-user' };
+    req.user = { id: '1', username: 'test-user', role: 'admin', roles: ['admin'] };
     next();
   }),
 }));

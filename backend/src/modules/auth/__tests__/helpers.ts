@@ -1,17 +1,13 @@
-import { UserEntity } from '@modules/users/domain/user-entity';
+import { AuthUser } from '@auth/domain/auth-user';
 import { LoginDto, UserDto, UserTokenDto } from '@sgcv2/shared';
 
-export function getUserMock({ username, password }: LoginDto): UserEntity {
+export function getUserMock({ username, password }: LoginDto): AuthUser {
   return {
     id: 1,
     username: username,
-    email: 'testuser@example.com',
-    firstName: 'Test',
-    lastName: 'User',
     status: 'ACTIVE',
     passwordHash: password,
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    roles: ['admin']
   };
 }
 

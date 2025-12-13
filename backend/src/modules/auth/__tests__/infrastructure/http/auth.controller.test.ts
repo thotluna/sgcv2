@@ -1,5 +1,5 @@
 import { AuthController } from '@modules/auth/infrastructure/http/auth.controller';
-import { UserNotFoundException } from '@modules/users/domain/exceptions/user-no-found.exception';
+import { AuthUserNotFoundException } from '@auth/domain/exceptions/auth-user-not-found.exception';
 import { InvalidPasswordException } from '@modules/auth/domain/exceptions/invalid-password.exception';
 import { MOCK_LOGIN_REQUEST, MOCK_USER_TOKEN_DTO } from '../../helpers';
 
@@ -40,7 +40,7 @@ describe('AuthController', () => {
   });
 
   it('should handle UserNotFoundException and return 404', async () => {
-    mockLoginUseCaseService.execute.mockRejectedValue(new UserNotFoundException('admin'));
+    mockLoginUseCaseService.execute.mockRejectedValue(new AuthUserNotFoundException('admin'));
 
     const req = { body: MOCK_LOGIN_REQUEST } as any;
 
@@ -54,7 +54,7 @@ describe('AuthController', () => {
         error: {
           code: 'NOT_FOUND',
           details: undefined,
-          message: 'User with id admin not found',
+          message: 'User with username admin not found',
         },
       })
     );

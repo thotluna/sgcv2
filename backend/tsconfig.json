@@ -6,25 +6,49 @@
     "rootDir": "./src",
     "declaration": true,
     "declarationMap": true,
-    "types": ["node", "jest", "supertest"],
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/types"
+    ],
     "baseUrl": "./src",
     "paths": {
-      "@sgcv2/shared": ["../../packages/shared/dist"],
-      "@config/*": ["./config/*"],
-      "@const/*": ["./const/*"],
-      "@modules/*": ["./modules/*"],
-      "@auth/*": ["./modules/auth/*"],
-      "@users/*": ["./modules/users/*"],
-      "@shared/*": ["./shared/*"],
-      "@types/*": ["./types/*"]
+      "@sgcv2/shared": [
+        "../../packages/shared/dist"
+      ],
+      "@config/*": [
+        "./config/*"
+      ],
+      "@const/*": [
+        "./const/*"
+      ],
+      "@modules/*": [
+        "./modules/*"
+      ],
+      "@auth/*": [
+        "./modules/auth/*"
+      ],
+      "@users/*": [
+        "./modules/users/*"
+      ],
+      "@shared/*": [
+        "./shared/*"
+      ],
+      "@types/*": [
+        "./types/*"
+      ]
     }
   },
   "include": [
     "src/**/*.ts",
-    "src/modules/users/users.controller.old",
-    "src/modules/users/users.service.old"
   ],
-  "exclude": ["node_modules", "dist", "tests"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "tests"
+  ],
   "references": [
     {
       "path": "../packages/shared"
