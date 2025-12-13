@@ -21,6 +21,7 @@
       "@config/*": ["src/config/*"],
       "@modules/*": ["src/modules/*"],
       "@auth/*": ["src/modules/auth/*"],
+      "@users/*": ["src/modules/users/*"],
       "@const/*": ["src/const/*"],
       "@shared/*": ["src/shared/*"],
       "@types/*": ["src/types/*"]

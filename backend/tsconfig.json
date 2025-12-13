@@ -14,11 +14,16 @@
       "@const/*": ["./const/*"],
       "@modules/*": ["./modules/*"],
       "@auth/*": ["./modules/auth/*"],
+      "@users/*": ["./modules/users/*"],
       "@shared/*": ["./shared/*"],
       "@types/*": ["./types/*"]
     }
   },
-  "include": ["src/**/*.ts"],
+  "include": [
+    "src/**/*.ts",
+    "src/modules/users/users.controller.old",
+    "src/modules/users/users.service.old"
+  ],
   "exclude": ["node_modules", "dist", "tests"],
   "references": [
     {
