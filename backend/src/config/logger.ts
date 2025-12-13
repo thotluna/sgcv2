@@ -1,6 +1,7 @@
 import winston from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
 import path from 'path';
+import util from 'util';
 
 const customFormat = winston.format.combine(
   winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
@@ -15,7 +16,14 @@ const consoleFormat = winston.format.combine(
   winston.format.printf(({ timestamp, level, message, ...meta }) => {
     let msg = `${timestamp} [${level}]: ${message}`;
     if (Object.keys(meta).length > 0) {
-      msg += ` ${JSON.stringify(meta, null, 2)}`;
+      // Usar util.inspect para mejor formato
+      msg +=
+        '\n' +
+        util.inspect(meta, {
+          colors: true,
+          depth: 1,
+          breakLength: 80,
+        });
     }
     return msg;
   })
