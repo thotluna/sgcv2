@@ -36,8 +36,7 @@ export class AuthController {
         user,
         token: tokenData.access_token,
       });
-    } catch (error) {
-      console.error('Login error:', error);
+    } catch {
       return ResponseHelper.internalError(res, 'An error occurred during login');
     }
   }
@@ -64,8 +63,7 @@ export class AuthController {
       }
 
       return ResponseHelper.success(res, userWithRoles);
-    } catch (error) {
-      console.error('Get user error:', error);
+    } catch {
       return ResponseHelper.internalError(res, 'An error occurred while fetching user data');
     }
   }

@@ -13,11 +13,11 @@ const server = app.listen(PORT, () => {
     environment: process.env.NODE_ENV,
     logLevel: process.env.LOG_LEVEL,
   });
-  console.log('🚀 SGCV2 Backend Server');
-  console.log(`📡 Server running on http://${HOST}:${PORT}`);
-  console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`📋 API Prefix: ${process.env.API_PREFIX || '/api'}`);
-  console.log(`✅ Health check: http://${HOST}:${PORT}/health`);
+  logger.info('🚀 SGCV2 Backend Server');
+  logger.info(`📡 Server running on http://${HOST}:${PORT}`);
+  logger.info(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+  logger.info(`📋 API Prefix: ${process.env.API_PREFIX || '/api'}`);
+  logger.info(`✅ Health check: http://${HOST}:${PORT}/health`);
 });
 
 // Graceful shutdown

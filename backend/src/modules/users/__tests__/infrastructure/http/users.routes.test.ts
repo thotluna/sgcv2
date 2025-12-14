@@ -6,8 +6,9 @@ import request from 'supertest';
 import { UsersService } from '@modules/users/domain/user.service';
 import { ResponseHelper } from '@shared/utils/response.helpers';
 import { UserWithRolesEntity } from '@modules/users/domain/user-entity';
+import { globalErrorHandler } from '@shared/middleware/global-error.middleware';
 
-// Mock utility helpers
+// Mock utility helpers (only mocking success to keep test simple or consistent if desired, but ideally we use real one too)
 jest.mock('@shared/utils/response.helpers');
 
 // Mock the authenticate middleware
@@ -42,6 +43,9 @@ describe('UsersRoutes', () => {
     // Instantiate UsersRoutes with the real controller
     const usersRouter = new UsersRoutes(usersController);
     app.use('/users', usersRouter.getRouter());
+
+    // Add Global Error Handler to the test app
+    app.use(globalErrorHandler);
   });
 
   describe('GET /users/me', () => {
@@ -62,9 +66,8 @@ describe('UsersRoutes', () => {
       // Mock the service method to return the user entity
       mockUsersService.getUserWithRoles.mockResolvedValue(mockUserEntity);
 
-      // Mock the success response helper to check what is being passed
+      // Mock the success response helper
       (ResponseHelper.success as jest.Mock).mockImplementation((res, data) => {
-        // The real helper would serialize the Date objects
         return res.status(200).json(JSON.parse(JSON.stringify(data)));
       });
 
@@ -73,19 +76,13 @@ describe('UsersRoutes', () => {
 
       // Assert
       expect(response.status).toBe(200);
-      // The response body will have dates as strings, so we compare with a stringified version
       expect(response.body).toEqual(JSON.parse(JSON.stringify(mockUserEntity)));
       expect(mockUsersService.getUserWithRoles).toHaveBeenCalledWith(1);
-      expect(ResponseHelper.success).toHaveBeenCalledWith(expect.anything(), mockUserEntity);
     });
 
     it('should return 404 if the user is not found', async () => {
-      // Mock the service method to return null
+      // Mock the service method to return null, which causes controller to throw NotFoundException
       mockUsersService.getUserWithRoles.mockResolvedValue(null);
-
-      (ResponseHelper.notFound as jest.Mock).mockImplementation((res, message) => {
-        return res.status(404).json({ message });
-      });
 
       // Act
       const response = await request(app).get('/users/me');
@@ -93,25 +90,39 @@ describe('UsersRoutes', () => {
       // Assert
       expect(response.status).toBe(404);
       expect(mockUsersService.getUserWithRoles).toHaveBeenCalledWith(1);
-      expect(ResponseHelper.notFound).toHaveBeenCalledWith(expect.anything(), 'User not found');
+
+      // Check for AppResponse error structure
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          success: false,
+          error: expect.objectContaining({
+            code: 'NOT_FOUND',
+            message: 'User not found',
+          }),
+        })
+      );
     });
 
     it('should return 500 if an unexpected error occurs', async () => {
-      const errorMessage = 'An error occurred while fetching user data';
-      mockUsersService.getUserWithRoles.mockRejectedValue(new Error('Database error'));
-
-      (ResponseHelper.internalError as jest.Mock).mockImplementation((res, message) => {
-        return res.status(500).json({ message });
-      });
+      const errorMessage = 'Database error';
+      mockUsersService.getUserWithRoles.mockRejectedValue(new Error(errorMessage));
 
       // Act
       const response = await request(app).get('/users/me');
 
       // Assert
       expect(response.status).toBe(500);
-      expect(response.body.message).toBe(errorMessage);
       expect(mockUsersService.getUserWithRoles).toHaveBeenCalledWith(1);
-      expect(ResponseHelper.internalError).toHaveBeenCalledWith(expect.anything(), errorMessage);
+
+      // Check for AppResponse error structure (default for unknown errors)
+      // Check for AppResponse error structure (default for unknown errors)
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          error: 'Internal Server Error',
+          // In test environment, we expect the generic message
+          message: 'Something went wrong',
+        })
+      );
     });
   });
 });

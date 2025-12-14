@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import passport from 'passport';
-import { ResponseHelper } from '@shared/utils/response.helpers';
 import { UserDto } from '@sgcv2/shared';
 import { AuthUser } from '@modules/auth/domain/auth-user';
+import { InternalServerErrorException, UnauthorizedException } from '@shared/exceptions';
 
 export const authenticate = (req: Request, res: Response, next: NextFunction) => {
   return passport.authenticate(
@@ -10,13 +10,11 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
     { session: false },
     (err: Error, user: AuthUser, info: Error) => {
       if (err) {
-        ResponseHelper.internalError(res, 'Authentication error');
-        return;
+        return next(new InternalServerErrorException('Authentication error'));
       }
 
       if (!user) {
-        ResponseHelper.unauthorized(res, info?.message || 'Invalid or missing token');
-        return;
+        return next(new UnauthorizedException(info?.message || 'Invalid or missing token'));
       }
 
       const userWithRoles = user as unknown as { id: number; username: string; roles: string[] };
@@ -24,7 +22,7 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
       req.user = {
         id: userWithRoles.id.toString(),
         username: userWithRoles.username,
-        role: userWithRoles.roles[0] || '', // Primary role for legacy compatibility if needed
+        role: userWithRoles.roles[0] || '',
         roles: userWithRoles.roles,
       };
       next();
