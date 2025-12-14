@@ -1,4 +1,4 @@
-import express, { Application, Request, Response, NextFunction } from 'express';
+import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import passport from 'passport';
@@ -11,6 +11,7 @@ import { loadRoutes } from 'routes';
 import { requestLogger } from '@shared/middleware/requestLogger';
 import { errorLogger } from '@shared/middleware/errorLogger';
 import logger from '@config/logger';
+import { globalErrorHandler } from '@shared/middleware/global-error.middleware';
 
 // Load environment variables
 dotenv.config();
@@ -118,13 +119,6 @@ app.use((req: Request, res: Response) => {
 });
 app.use(errorLogger);
 // ---------- Error handler ----------
-app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
-  logger.error(err);
-  res.status(500).json({
-    error: 'Internal Server Error',
-    message: process.env.NODE_ENV === 'development' ? err.message : 'Something went wrong',
-    timestamp: new Date().toISOString(),
-  });
-});
+app.use(globalErrorHandler);
 
 export default app;
