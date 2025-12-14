@@ -2,6 +2,7 @@ import { AuthController } from '@modules/auth/infrastructure/http/auth.controlle
 import { AuthUserNotFoundException } from '@auth/domain/exceptions/auth-user-not-found.exception';
 import { InvalidPasswordException } from '@modules/auth/domain/exceptions/invalid-password.exception';
 import { MOCK_LOGIN_REQUEST, MOCK_USER_TOKEN_DTO } from '../../helpers';
+import { NotFoundException, UnauthorizedException } from '@shared/exceptions';
 
 const mockLoginUseCaseService = {
   execute: jest.fn(),
@@ -35,69 +36,39 @@ describe('AuthController', () => {
         data: MOCK_USER_TOKEN_DTO,
       })
     );
-
-    expect(mockResponse.status).toHaveBeenCalledWith(200);
   });
 
-  it('should handle UserNotFoundException and return 404', async () => {
+  it('should throw NotFoundException when user not found', async () => {
     mockLoginUseCaseService.execute.mockRejectedValue(new AuthUserNotFoundException('admin'));
 
     const req = { body: MOCK_LOGIN_REQUEST } as any;
 
-    await authController.login(req, mockResponse);
+    await expect(authController.login(req, mockResponse)).rejects.toThrow(NotFoundException);
 
     expect(mockLoginUseCaseService.execute).toHaveBeenCalledWith(MOCK_LOGIN_REQUEST);
-    expect(mockResponse.status).toHaveBeenCalledWith(404);
-    expect(mockResponse.json).toHaveBeenCalledWith(
-      expect.objectContaining({
-        success: false,
-        error: {
-          code: 'NOT_FOUND',
-          details: undefined,
-          message: 'User with username admin not found',
-        },
-      })
-    );
   });
 
-  it('should handle InvalidPasswordException and return 401', async () => {
+  it('should throw UnauthorizedException when password invalid', async () => {
     mockLoginUseCaseService.execute.mockRejectedValue(new InvalidPasswordException());
 
     const req = { body: MOCK_LOGIN_REQUEST } as any;
 
-    await authController.login(req, mockResponse);
+    await expect(authController.login(req, mockResponse)).rejects.toThrow(UnauthorizedException);
 
     expect(mockLoginUseCaseService.execute).toHaveBeenCalledWith(MOCK_LOGIN_REQUEST);
-    expect(mockResponse.status).toHaveBeenCalledWith(401);
-    expect(mockResponse.json).toHaveBeenCalledWith(
-      expect.objectContaining({
-        success: false,
-        error: {
-          code: 'UNAUTHORIZED',
-          message: 'Invalid username, password',
-        },
-      })
-    );
   });
 
-  it('should handle generic Error and return 500', async () => {
+  it('should rethrow generic Error', async () => {
     const genericError = new Error('Database connection failed');
     mockLoginUseCaseService.execute.mockRejectedValue(genericError);
 
     const req = { body: MOCK_LOGIN_REQUEST } as any;
 
-    await authController.login(req, mockResponse);
+    await expect(authController.login(req, mockResponse)).rejects.toThrow(Error);
+    await expect(authController.login(req, mockResponse)).rejects.toThrow(
+      'Database connection failed'
+    );
 
     expect(mockLoginUseCaseService.execute).toHaveBeenCalledWith(MOCK_LOGIN_REQUEST);
-    expect(mockResponse.status).toHaveBeenCalledWith(500);
-    expect(mockResponse.json).toHaveBeenCalledWith(
-      expect.objectContaining({
-        success: false,
-        error: {
-          code: 'INTERNAL_SERVER_ERROR',
-          message: 'Database connection failed',
-        },
-      })
-    );
   });
 });
