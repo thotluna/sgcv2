@@ -1,5 +1,6 @@
 import { UsersController } from '@modules/users/infrastructure/http/user.controller';
 import { Request, Response } from 'express';
+import { NotFoundException, UnauthorizedException } from '@shared/exceptions';
 
 const mockUserService = {
   getUserWithRoles: jest.fn(),
@@ -14,7 +15,7 @@ describe('UserController', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    userController = new UsersController(mockUserService);
+    userController = new UsersController(mockUserService as any);
     mockJson = jest.fn();
     mockStatus = jest.fn().mockReturnValue({ json: mockJson });
     mockRes = {
@@ -28,20 +29,12 @@ describe('UserController', () => {
   });
 
   it('should get user with roles', async () => {
-    const user = {
-      id: 1,
-      name: 'John Doe',
-      email: 'john.doe@example.com',
-      roles: ['admin'],
-    };
-    mockUserService.getUserWithRoles.mockResolvedValue(user);
+    const mockUser = { id: 1, username: 'test' };
+    mockUserService.getUserWithRoles.mockResolvedValue(mockUser);
 
     mockReq = {
       user: { id: 1 } as any,
     };
-
-    const mockUser = { id: 1, username: 'test' };
-    mockUserService.getUserWithRoles.mockResolvedValue(mockUser);
 
     await userController.me(mockReq as Request, mockRes as Response);
 
@@ -54,20 +47,24 @@ describe('UserController', () => {
     );
   });
 
-  it('should return 401 if no user in request', async () => {
+  it('should throw UnauthorizedException if no user in request', async () => {
     mockReq = {};
 
-    await userController.me(mockReq as Request, mockRes as Response);
-
-    expect(mockStatus).toHaveBeenCalledWith(401);
-    expect(mockJson).toHaveBeenCalledWith(
-      expect.objectContaining({
-        success: false,
-        error: expect.objectContaining({
-          code: 'UNAUTHORIZED',
-          message: 'Unauthorized',
-        }),
-      })
+    await expect(userController.me(mockReq as Request, mockRes as Response)).rejects.toThrow(
+      UnauthorizedException
     );
+  });
+
+  it('should throw NotFoundException if user not found in service', async () => {
+    mockUserService.getUserWithRoles.mockResolvedValue(null);
+    mockReq = {
+      user: { id: 1 } as any,
+    };
+
+    await expect(userController.me(mockReq as Request, mockRes as Response)).rejects.toThrow(
+      NotFoundException
+    );
+
+    expect(mockUserService.getUserWithRoles).toHaveBeenCalledWith(1);
   });
 });
