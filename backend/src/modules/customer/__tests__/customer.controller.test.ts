@@ -2,6 +2,11 @@ import { CustomerState } from '@prisma/client';
 import { CustomerController } from '../customer.controller';
 import { CustomerService } from '../customer.service';
 import { Request, Response } from 'express';
+import {
+  ConflictException,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@shared/exceptions';
 
 jest.mock('uuid', () => ({
   v4: () => 'test-uuid-1234',
@@ -68,14 +73,11 @@ describe('CustomerController', () => {
         expect.objectContaining({
           success: true,
           data: createdCustomer,
-          // metadata: expect.objectContaining({
-          //   requestId: 'test-uuid-1234',
-          // }),
         })
       );
     });
 
-    it('should return 422 when validation fails', async () => {
+    it('should throw UnprocessableEntityException when validation fails', async () => {
       const invalidDto = {
         code: '',
         legalName: '',
@@ -85,22 +87,14 @@ describe('CustomerController', () => {
 
       req = { body: invalidDto };
 
-      await customerController.create(req as Request, res as Response);
-
-      expect(statusMock).toHaveBeenCalledWith(422);
-      expect(jsonMock).toHaveBeenCalledWith(
-        expect.objectContaining({
-          success: false,
-          error: expect.objectContaining({
-            code: 'UNPROCESSABLE_ENTITY',
-            message: 'Validation failed',
-          }),
-        })
+      await expect(customerController.create(req as Request, res as Response)).rejects.toThrow(
+        UnprocessableEntityException
       );
+
       expect(customerService.create).not.toHaveBeenCalled();
     });
 
-    it('should return 409 when code exists', async () => {
+    it('should throw ConflictException when code exists', async () => {
       const customerDto = {
         code: 'C001',
         businessName: 'Test',
@@ -113,21 +107,12 @@ describe('CustomerController', () => {
         new Error('Customer code already exists')
       );
 
-      await customerController.create(req as Request, res as Response);
-
-      expect(statusMock).toHaveBeenCalledWith(409);
-      expect(jsonMock).toHaveBeenCalledWith(
-        expect.objectContaining({
-          success: false,
-          error: expect.objectContaining({
-            code: 'CONFLICT',
-            message: 'Customer code already exists',
-          }),
-        })
+      await expect(customerController.create(req as Request, res as Response)).rejects.toThrow(
+        ConflictException
       );
     });
 
-    it('should return 500 when service throws generic error', async () => {
+    it('should rethrow generic error', async () => {
       const customerDto = {
         code: 'C001',
         businessName: 'Test',
@@ -138,16 +123,8 @@ describe('CustomerController', () => {
       req = { body: customerDto };
       (customerService.create as jest.Mock).mockRejectedValue(new Error('Service error'));
 
-      await customerController.create(req as Request, res as Response);
-
-      expect(statusMock).toHaveBeenCalledWith(500);
-      expect(jsonMock).toHaveBeenCalledWith(
-        expect.objectContaining({
-          success: false,
-          error: expect.objectContaining({
-            code: 'INTERNAL_SERVER_ERROR',
-          }),
-        })
+      await expect(customerController.create(req as Request, res as Response)).rejects.toThrow(
+        Error
       );
     });
   });
@@ -179,13 +156,13 @@ describe('CustomerController', () => {
       );
     });
 
-    it('should return 500 on error', async () => {
+    it('should rethrow error on findAll failure', async () => {
       req = { query: {} };
       (customerService.findAll as jest.Mock).mockRejectedValue(new Error('Error'));
 
-      await customerController.findAll(req as Request, res as Response);
-
-      expect(statusMock).toHaveBeenCalledWith(500);
+      await expect(customerController.findAll(req as Request, res as Response)).rejects.toThrow(
+        'Error'
+      );
     });
   });
 
@@ -206,20 +183,12 @@ describe('CustomerController', () => {
       );
     });
 
-    it('should return 404 when not found', async () => {
+    it('should throw NotFoundException when not found', async () => {
       req = { params: { id: '1' } };
       (customerService.findById as jest.Mock).mockRejectedValue(new Error('Customer not found'));
 
-      await customerController.findOne(req as Request, res as Response);
-
-      expect(statusMock).toHaveBeenCalledWith(404);
-      expect(jsonMock).toHaveBeenCalledWith(
-        expect.objectContaining({
-          success: false,
-          error: expect.objectContaining({
-            code: 'NOT_FOUND',
-          }),
-        })
+      await expect(customerController.findOne(req as Request, res as Response)).rejects.toThrow(
+        NotFoundException
       );
     });
   });
@@ -243,13 +212,13 @@ describe('CustomerController', () => {
       );
     });
 
-    it('should return 404 when not found', async () => {
+    it('should throw NotFoundException when not found', async () => {
       req = { params: { id: '1' }, body: {} };
       (customerService.update as jest.Mock).mockRejectedValue(new Error('Customer not found'));
 
-      await customerController.update(req as Request, res as Response);
-
-      expect(statusMock).toHaveBeenCalledWith(404);
+      await expect(customerController.update(req as Request, res as Response)).rejects.toThrow(
+        NotFoundException
+      );
     });
   });
 
@@ -271,13 +240,13 @@ describe('CustomerController', () => {
       );
     });
 
-    it('should return 404 when not found', async () => {
+    it('should throw NotFoundException when not found', async () => {
       req = { params: { id: '1' } };
       (customerService.delete as jest.Mock).mockRejectedValue(new Error('Customer not found'));
 
-      await customerController.delete(req as Request, res as Response);
-
-      expect(statusMock).toHaveBeenCalledWith(404);
+      await expect(customerController.delete(req as Request, res as Response)).rejects.toThrow(
+        NotFoundException
+      );
     });
   });
 });
