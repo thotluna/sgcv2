@@ -1,26 +1,32 @@
 import { Request, Response, NextFunction } from 'express';
 import { rbacService } from '../rbac.service';
-import { ResponseHelper } from '@shared/utils/response.helpers';
+import {
+  ForbiddenException,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@shared/exceptions';
 
 export const requirePermission = (module: string, action: string) => {
-  return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  return async (req: Request, _res: Response, next: NextFunction): Promise<void> => {
     try {
       const user = req.user;
 
       if (!user) {
-        ResponseHelper.unauthorized(res, 'Authentication required');
-        return;
+        throw new UnauthorizedException('Authentication required');
       }
       const id = Number(user.id);
       const hasPerm = await rbacService.hasPermission(id, module, action);
       if (!hasPerm) {
-        ResponseHelper.forbidden(res, `Required permission: ${module}.${action}`);
-        return;
+        throw new ForbiddenException(`Required permission: ${module}.${action}`);
       }
 
       next();
-    } catch {
-      ResponseHelper.internalError(res, 'Error checking permission');
+    } catch (error) {
+      if (error instanceof UnauthorizedException || error instanceof ForbiddenException) {
+        next(error);
+        return;
+      }
+      next(new InternalServerErrorException('Error checking permission'));
     }
   };
 };

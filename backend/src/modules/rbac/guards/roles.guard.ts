@@ -1,7 +1,11 @@
 // src/modules/rbac/guards/roles.guard.ts
 import { Request, Response, NextFunction } from 'express';
 import { rbacService } from '../rbac.service';
-import { ResponseHelper } from '@shared/utils/response.helpers';
+import {
+  ForbiddenException,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@shared/exceptions';
 
 /**
  * Middleware to ensure the user has at least one of the specified roles.
@@ -9,26 +13,28 @@ import { ResponseHelper } from '@shared/utils/response.helpers';
  *   router.get('/admin', requireRoles('admin', 'gerente'), handler);
  */
 export const requireRoles = (...allowedRoles: string[]) => {
-  return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  return async (req: Request, _res: Response, next: NextFunction): Promise<void> => {
     try {
       const user = req.user;
 
       if (!user) {
-        ResponseHelper.unauthorized(res, 'Authentication required');
-        return;
+        throw new UnauthorizedException('Authentication required');
       }
 
       const userId = Number(user.id);
       const hasRole = await rbacService.hasRole(userId, ...allowedRoles);
 
       if (!hasRole) {
-        ResponseHelper.forbidden(res, `Required roles: ${allowedRoles.join(', ')}`);
-        return;
+        throw new ForbiddenException(`Required roles: ${allowedRoles.join(', ')}`);
       }
 
       next();
-    } catch {
-      ResponseHelper.internalError(res, 'Error checking user roles');
+    } catch (error) {
+      if (error instanceof UnauthorizedException || error instanceof ForbiddenException) {
+        next(error);
+        return;
+      }
+      next(new InternalServerErrorException('Error checking user roles'));
     }
   };
 };

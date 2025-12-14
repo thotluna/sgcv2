@@ -18,6 +18,10 @@ const mockRes = {
 } as unknown as Response;
 const nextFn = jest.fn() as NextFunction;
 
+import { ForbiddenException } from '@shared/exceptions';
+
+// ... (existing imports and mock setup)
+
 describe('Roles Guard', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -32,7 +36,9 @@ describe('Roles Guard', () => {
   it('rejects request when role does not match', async () => {
     (rbacService.hasRole as jest.Mock).mockResolvedValue(false);
     await requireRoles('Gerente')(mockReq, mockRes, nextFn);
-    expect(mockRes.status).toHaveBeenCalledWith(403);
-    expect(mockRes.json).toHaveBeenCalled();
+
+    expect(nextFn).toHaveBeenCalledWith(expect.any(ForbiddenException));
+    const error = (nextFn as jest.Mock).mock.calls[0][0];
+    expect(error.message).toContain('Required roles: Gerente');
   });
 });

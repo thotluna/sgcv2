@@ -1,6 +1,6 @@
-// src/modules/rbac/__tests__/permissions.guard.test.ts
 import { requirePermission } from '../guards/permissions.guard';
 import { Request, Response, NextFunction } from 'express';
+import { ForbiddenException } from '@shared/exceptions';
 
 // Mock the entire rbac.service module
 jest.mock('../rbac.service', () => ({
@@ -32,7 +32,9 @@ describe('Permissions Guard', () => {
   it('rejects request when permission missing', async () => {
     (rbacService.hasPermission as jest.Mock).mockResolvedValue(false);
     await requirePermission('ODS', 'ELIMINAR')(mockReq, mockRes, nextFn);
-    expect(mockRes.status).toHaveBeenCalledWith(403);
-    expect(mockRes.json).toHaveBeenCalled();
+
+    expect(nextFn).toHaveBeenCalledWith(expect.any(ForbiddenException));
+    const error = (nextFn as jest.Mock).mock.calls[0][0];
+    expect(error.message).toContain('Required permission: ODS.ELIMINAR');
   });
 });
