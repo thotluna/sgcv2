@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import passport from 'passport';
 import { authenticate, optionalAuth } from '../../../infrastructure/http/auth.middleware';
+import { InternalServerErrorException, UnauthorizedException } from '@shared/exceptions';
 
 // Mock passport
 jest.mock('passport');
@@ -39,7 +40,7 @@ describe('Auth Middleware', () => {
         expect.any(Function)
       );
       expect(mockRequest.user).toEqual(mockUser);
-      expect(nextFunction).toHaveBeenCalled();
+      expect(nextFunction).toHaveBeenCalledWith();
       expect(mockResponse.status).not.toHaveBeenCalled();
     });
 
@@ -53,17 +54,9 @@ describe('Auth Middleware', () => {
 
       authenticate(mockRequest as Request, mockResponse as Response, nextFunction);
 
-      expect(mockResponse.status).toHaveBeenCalledWith(401);
-      expect(mockResponse.json).toHaveBeenCalledWith(
-        expect.objectContaining({
-          success: false,
-          error: expect.objectContaining({
-            code: 'UNAUTHORIZED',
-            message: 'Invalid token',
-          }),
-        })
-      );
-      expect(nextFunction).not.toHaveBeenCalled();
+      expect(nextFunction).toHaveBeenCalledWith(expect.any(UnauthorizedException));
+      const error = (nextFunction as jest.Mock).mock.calls[0][0];
+      expect(error.message).toBe('Invalid token');
     });
 
     it('should return 401 with default message if info message is missing', () => {
@@ -75,16 +68,9 @@ describe('Auth Middleware', () => {
 
       authenticate(mockRequest as Request, mockResponse as Response, nextFunction);
 
-      expect(mockResponse.status).toHaveBeenCalledWith(401);
-      expect(mockResponse.json).toHaveBeenCalledWith(
-        expect.objectContaining({
-          success: false,
-          error: expect.objectContaining({
-            code: 'UNAUTHORIZED',
-            message: 'Invalid or missing token',
-          }),
-        })
-      );
+      expect(nextFunction).toHaveBeenCalledWith(expect.any(UnauthorizedException));
+      const error = (nextFunction as jest.Mock).mock.calls[0][0];
+      expect(error.message).toBe('Invalid or missing token');
     });
 
     it('should return 500 if an error occurs during authentication', () => {
@@ -97,17 +83,9 @@ describe('Auth Middleware', () => {
 
       authenticate(mockRequest as Request, mockResponse as Response, nextFunction);
 
-      expect(mockResponse.status).toHaveBeenCalledWith(500);
-      expect(mockResponse.json).toHaveBeenCalledWith(
-        expect.objectContaining({
-          success: false,
-          error: expect.objectContaining({
-            code: 'INTERNAL_SERVER_ERROR',
-            message: 'Authentication error',
-          }),
-        })
-      );
-      expect(nextFunction).not.toHaveBeenCalled();
+      expect(nextFunction).toHaveBeenCalledWith(expect.any(InternalServerErrorException));
+      const error = (nextFunction as jest.Mock).mock.calls[0][0];
+      expect(error.message).toBe('Authentication error');
     });
   });
 

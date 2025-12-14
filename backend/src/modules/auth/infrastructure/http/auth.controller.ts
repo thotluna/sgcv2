@@ -6,7 +6,8 @@ import { TYPES } from '@auth/di/types';
 import { AuthUserNotFoundException } from '@auth/domain/exceptions/auth-user-not-found.exception';
 import { ResponseHelper } from '@shared/utils/response.helpers';
 import { LoginDto } from '@sgcv2/shared';
-import { TypedRequest } from 'types/app-express/types';
+import { TypedRequest } from 'types/express-interfaces/types';
+import { NotFoundException, UnauthorizedException } from '@shared/exceptions';
 
 @injectable()
 export class AuthController {
@@ -23,18 +24,14 @@ export class AuthController {
       return ResponseHelper.success(res, userTokenDto);
     } catch (error) {
       if (error instanceof AuthUserNotFoundException) {
-        return ResponseHelper.notFound(res, error.message);
+        throw new NotFoundException(error.message);
       }
 
       if (error instanceof InvalidPasswordException) {
-        return ResponseHelper.unauthorized(res, error.message);
+        throw new UnauthorizedException(error.message);
       }
 
-      if (error instanceof Error) {
-        return ResponseHelper.internalError(res, error.message);
-      }
-
-      return ResponseHelper.internalError(res, 'An error occurred during login');
+      throw error;
     }
   }
 }
