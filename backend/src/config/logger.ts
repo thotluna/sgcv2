@@ -14,18 +14,53 @@ const consoleFormat = winston.format.combine(
   winston.format.colorize(),
   winston.format.timestamp({ format: 'HH:mm:ss' }),
   winston.format.printf(({ timestamp, level, message, ...meta }) => {
-    let msg = `${timestamp} [${level}]: ${message}`;
-    if (Object.keys(meta).length > 0) {
-      // Usar util.inspect para mejor formato
-      msg +=
+    const cleanedMeta = { ...meta };
+    delete cleanedMeta[Symbol.for('level')];
+    delete cleanedMeta[Symbol.for('splat')];
+    delete cleanedMeta[Symbol.for('message')];
+
+    let log = `${timestamp} [${level}]: ${message}`;
+
+    if (meta.query && meta.target === 'ClientEngine') {
+      log += '\n  ' + 'SQL Query:';
+
+      log +=
         '\n' +
-        util.inspect(meta, {
+        util.inspect(meta.query, {
           colors: true,
-          depth: 1,
-          breakLength: 80,
+          breakLength: Infinity,
+          depth: null,
         });
+
+      log += '\n  ' + 'Parameters:';
+      try {
+        log +=
+          '\n' +
+          util.inspect(JSON.parse(meta.params as string), {
+            colors: true,
+            breakLength: Infinity,
+            depth: 2,
+          });
+      } catch {
+        log += `\n ${meta.params}`;
+      }
+
+      const otherMeta = {
+        service: cleanedMeta.service,
+        environment: cleanedMeta.environment,
+        duration: cleanedMeta.duration,
+      };
+
+      log += `\n  ${JSON.stringify(otherMeta)}`;
+
+      return log;
     }
-    return msg;
+
+    if (Object.keys(cleanedMeta).length > 0) {
+      log += ` ${JSON.stringify(cleanedMeta)}`;
+    }
+
+    return log;
   })
 );
 
