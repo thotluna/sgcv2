@@ -1,6 +1,7 @@
 import { Response } from 'express';
 import { AppResponse, ErrorData, Metadata, Pagination } from '@sgcv2/shared';
 import { ErrorCodes } from '../enums/error-codes.enum';
+import logger from '@config/logger';
 // import { v4 as uuidv4 } from 'uuid';
 
 export class ResponseHelper {
@@ -49,6 +50,11 @@ export class ResponseHelper {
     statusCode: number = 500,
     details?: Record<string, string>
   ): Response {
+    logger.error({
+      message,
+      code,
+      details,
+    });
     const errorData: ErrorData = {
       code,
       message,
