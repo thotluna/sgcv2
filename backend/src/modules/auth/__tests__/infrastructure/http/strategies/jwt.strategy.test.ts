@@ -1,19 +1,15 @@
-import { jwtOptions } from '../../../../infrastructure/http/strategies/jwt.options';
-import { prisma } from '../../../../../../config/prisma';
-import { JwtStrategy } from '../../../../infrastructure/http/strategies/jwt.strategy';
+import { jwtOptions } from '@auth/infrastructure/http/strategies/jwt.options';
+import { JwtStrategy } from '@auth/infrastructure/http/strategies/jwt.strategy';
 
-// Mock prisma before importing the strategy
-jest.mock('../../../../../../config/prisma', () => ({
-  prisma: {
-    user: {
-      findUnique: jest.fn(),
-    },
-  },
-}));
+const mockRepository = {
+  findByIdForAuth: jest.fn(),
+};
 
 describe('JWT Strategy', () => {
+  let jwtStrategy: JwtStrategy;
   beforeEach(() => {
     jest.clearAllMocks();
+    jwtStrategy = new JwtStrategy(mockRepository as any);
   });
 
   describe('JWT Options', () => {
@@ -39,8 +35,6 @@ describe('JWT Strategy', () => {
 
   describe('JWT Strategy Verify Function', () => {
     it('should create a valid JWT strategy instance', () => {
-      const jwtStrategy = new JwtStrategy();
-
       expect(jwtStrategy).toBeDefined();
       expect(jwtStrategy.name).toBe('jwt');
     });
@@ -65,9 +59,8 @@ describe('JWT Strategy', () => {
         ],
       };
 
-      (prisma.user.findUnique as jest.Mock).mockResolvedValue(mockUser);
+      mockRepository.findByIdForAuth.mockResolvedValue(mockUser);
 
-      const jwtStrategy = new JwtStrategy();
       const verifyFn = (jwtStrategy as any)._verify;
 
       const mockDone = jest.fn();
@@ -75,31 +68,13 @@ describe('JWT Strategy', () => {
 
       await verifyFn(payload, mockDone);
 
-      expect(prisma.user.findUnique).toHaveBeenCalledWith({
-        where: { id: 1 },
-        include: {
-          roles: {
-            include: {
-              role: true,
-            },
-          },
-        },
-      });
-      expect(mockDone).toHaveBeenCalledWith(null, {
-        id: 1,
-        username: 'testuser',
-        email: 'test@example.com',
-        firstName: 'Test',
-        lastName: 'User',
-        isActive: 'ACTIVE',
-        roles: ['admin'],
-      });
+      expect(mockRepository.findByIdForAuth).toHaveBeenCalledWith(1);
+      expect(mockDone).toHaveBeenCalledWith(null, mockUser);
     });
 
     it('should return false when user is not found in database', async () => {
-      (prisma.user.findUnique as jest.Mock).mockResolvedValue(null);
+      mockRepository.findByIdForAuth.mockResolvedValue(null);
 
-      const jwtStrategy = new JwtStrategy();
       const verifyFn = (jwtStrategy as any)._verify;
 
       const mockDone = jest.fn();
@@ -107,24 +82,14 @@ describe('JWT Strategy', () => {
 
       await verifyFn(payload, mockDone);
 
-      expect(prisma.user.findUnique).toHaveBeenCalledWith({
-        where: { id: 999 },
-        include: {
-          roles: {
-            include: {
-              role: true,
-            },
-          },
-        },
-      });
+      expect(mockRepository.findByIdForAuth).toHaveBeenCalledWith(999);
       expect(mockDone).toHaveBeenCalledWith(null, false);
     });
 
     it('should handle database errors gracefully', async () => {
       const mockError = new Error('Database connection error');
-      (prisma.user.findUnique as jest.Mock).mockRejectedValue(mockError);
+      mockRepository.findByIdForAuth.mockRejectedValue(mockError);
 
-      const jwtStrategy = new JwtStrategy();
       const verifyFn = (jwtStrategy as any)._verify;
 
       const mockDone = jest.fn();
@@ -137,9 +102,8 @@ describe('JWT Strategy', () => {
 
     it('should query database with correct user id from payload', async () => {
       const userId = 42;
-      (prisma.user.findUnique as jest.Mock).mockResolvedValue(null);
+      mockRepository.findByIdForAuth.mockResolvedValue(null);
 
-      const jwtStrategy = new JwtStrategy();
       const verifyFn = (jwtStrategy as any)._verify;
 
       const mockDone = jest.fn();
@@ -147,16 +111,7 @@ describe('JWT Strategy', () => {
 
       await verifyFn(payload, mockDone);
 
-      expect(prisma.user.findUnique).toHaveBeenCalledWith({
-        where: { id: userId },
-        include: {
-          roles: {
-            include: {
-              role: true,
-            },
-          },
-        },
-      });
+      expect(mockRepository.findByIdForAuth).toHaveBeenCalledWith(userId);
     });
   });
 });

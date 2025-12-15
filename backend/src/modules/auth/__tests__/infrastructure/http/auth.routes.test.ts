@@ -3,6 +3,7 @@ import { AuthRoutes } from '@modules/auth/infrastructure/http/auth.routes';
 import express, { Application } from 'express';
 import request from 'supertest';
 import { MOCK_LOGIN_REQUEST, MOCK_USER_TOKEN_DTO } from '../../helpers';
+import { globalErrorHandler } from '@shared/middleware/global-error.middleware';
 
 const controller = {
   login: jest.fn(),
@@ -20,6 +21,7 @@ describe('AuthRoutes', () => {
     app.use(express.json());
 
     app.use('/', authRoutes.getRouter());
+    app.use(globalErrorHandler);
   });
 
   it('should return a 200 status code and the token when the credentials are valid', async () => {
@@ -37,7 +39,7 @@ describe('AuthRoutes', () => {
       .send(MOCK_LOGIN_REQUEST)
       .set('Accept', 'application/json');
 
-    const { createdAt, updatedAt, ...user } = MOCK_USER_TOKEN_DTO.user;
+    const user = MOCK_USER_TOKEN_DTO.user;
 
     expect(response.status).toBe(200);
     expect(response.body).toMatchObject(
