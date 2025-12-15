@@ -1,13 +1,16 @@
-import { AuthServiceMock } from '../../../auth.service.mock';
+import { AuthenticatedUserDto } from '@modules/auth/infrastructure/http/authenticated-user.dto';
 import { LocalStrategy } from '../../../../infrastructure/http/strategies/local.strategy';
+import { UserValidationService } from '@auth/domain/user-validation.service';
+
+const mockValidationService: jest.Mocked<UserValidationService> = {
+  validateCredentials: jest.fn(),
+};
 
 describe('Local Strategy', () => {
-  let service: AuthServiceMock;
   let strategy: any;
 
   beforeEach(() => {
-    service = new AuthServiceMock();
-    strategy = new LocalStrategy(service);
+    strategy = new LocalStrategy(mockValidationService);
     jest.clearAllMocks();
   });
 
@@ -30,37 +33,48 @@ describe('Local Strategy', () => {
 
   describe('Local Strategy Verify Function', () => {
     it('should call done with user when credentials are valid', async () => {
-      const mockUser = {
-        id: '1',
+      const mockUser: AuthenticatedUserDto = {
+        id: 1,
         username: 'testuser',
         roles: [],
-        role: '',
+        status: 'ACTIVE',
       };
 
-      service.validateUser.mockResolvedValue(mockUser);
+      mockValidationService.validateCredentials.mockResolvedValue(mockUser);
 
       const verifyFn = strategy._verify;
       const mockDone = jest.fn();
       await verifyFn('testuser', 'password123', mockDone);
 
-      expect(service.validateUser).toHaveBeenCalledWith('testuser', 'password123');
-      expect(mockDone).toHaveBeenCalledWith(null, mockUser);
+      expect(mockValidationService.validateCredentials).toHaveBeenCalledWith(
+        'testuser',
+        'password123'
+      );
+      expect(mockDone).toHaveBeenCalledWith(null, {
+        id: mockUser.id.toString(),
+        username: mockUser.username,
+        roles: mockUser.roles,
+        role: mockUser.roles[0] || '',
+      });
     });
 
     it('should call done with false when credentials are invalid', async () => {
-      service.validateUser.mockResolvedValue(null);
+      mockValidationService.validateCredentials.mockResolvedValue(null);
 
       const verifyFn = strategy._verify;
       const mockDone = jest.fn();
       await verifyFn('testuser', 'wrongpassword', mockDone);
 
-      expect(service.validateUser).toHaveBeenCalledWith('testuser', 'wrongpassword');
+      expect(mockValidationService.validateCredentials).toHaveBeenCalledWith(
+        'testuser',
+        'wrongpassword'
+      );
       expect(mockDone).toHaveBeenCalledWith(null, false, { message: 'Invalid credentials' });
     });
 
     it('should call done with error when an exception occurs', async () => {
       const mockError = new Error('Database error');
-      service.validateUser.mockRejectedValue(mockError);
+      mockValidationService.validateCredentials.mockRejectedValue(mockError);
 
       const verifyFn = strategy._verify;
       const mockDone = jest.fn();

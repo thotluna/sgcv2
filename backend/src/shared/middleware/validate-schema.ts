@@ -1,15 +1,14 @@
 import z from 'zod';
 import { NextFunction, RequestHandler, Response } from 'express';
 import { TypedRequest } from '../../types/express-interfaces/types';
-import { ResponseHelper } from '../utils/response.helpers';
+import { ValidationException } from '../exceptions/http-exceptions';
 
 export const validateSchema = <T extends z.ZodTypeAny>(schema: T): RequestHandler => {
-  return (req: TypedRequest<T>, res: Response, next: NextFunction): void => {
+  return (req: TypedRequest<T>, _res: Response, next: NextFunction): void => {
     const validationResult = schema.safeParse(req.body);
 
     if (!validationResult.success) {
-      ResponseHelper.validationError(
-        res,
+      throw new ValidationException(
         'Validation failed',
         validationResult.error.issues.reduce(
           (acc, issue) => {
@@ -24,7 +23,6 @@ export const validateSchema = <T extends z.ZodTypeAny>(schema: T): RequestHandle
           {} as Record<string, string>
         )
       );
-      return;
     }
 
     // Overwrite the req.body with validated data

@@ -1,11 +1,11 @@
 export const TYPES = {
-  AuthService: Symbol.for('AuthService'),
-  AuthLoginService: Symbol.for('AuthLoginService'),
+  UserCredentialsRepository: Symbol.for('UserCredentialsRepository'),
+  AuthUserIdentityRepository: Symbol.for('AuthUserIdentityRepository'),
+  LoginService: Symbol.for('LoginService'),
+  UserValidationService: Symbol.for('UserValidationService'),
   LoginUseCaseService: Symbol.for('LoginUseCaseService'),
   AuthController: Symbol.for('AuthController'),
   AuthRoutes: Symbol.for('AuthRoutes'),
   LocalStrategy: Symbol.for('LocalStrategy'),
   JwtStrategy: Symbol.for('JwtStrategy'),
-  UserFinderForAuth: Symbol.for('UserFinderForAuth'),
-  ValidationService: Symbol.for('ValidationService'),
 };

@@ -3,10 +3,11 @@ import { AuthUserNotFoundException } from '@auth/domain/exceptions/auth-user-not
 import { InvalidPasswordException } from '@modules/auth/domain/exceptions/invalid-password.exception';
 import { MOCK_LOGIN_REQUEST, MOCK_USER_TOKEN_DTO } from '../../helpers';
 import { NotFoundException, UnauthorizedException } from '@shared/exceptions';
+import { LoginUseCaseService } from '@modules/auth/application/login.use-case.service';
 
 const mockLoginUseCaseService = {
   execute: jest.fn(),
-};
+} as unknown as jest.Mocked<LoginUseCaseService>;
 
 const mockResponse = {
   status: jest.fn().mockReturnThis(),
@@ -18,7 +19,7 @@ describe('AuthController', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    authController = new AuthController(mockLoginUseCaseService as any);
+    authController = new AuthController(mockLoginUseCaseService);
   });
 
   it('should call LoginUseCaseService and return success DTO', async () => {
