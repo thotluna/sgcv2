@@ -1,14 +1,24 @@
-import { UserEntity, UserWithRolesEntity } from '@modules/users/domain/user-entity';
-import { AuthUser } from '@modules/auth/domain/auth-user';
-import { UserRepository } from '../../domain/user-repository';
-import { prisma } from '../../../../config/prisma';
-import { UserEntityModelMapper } from './user-entity-model.mapper';
+import { prisma } from '@config/prisma';
 import { injectable } from 'inversify';
-import { UserFinderForAuth } from '@modules/auth/domain/user-finder-for-auth';
 import { userInclude } from './include';
+import { UserEntity, UserWithRolesEntity } from '@users/domain/user-entity';
+import { UserRepository } from '@users/domain/user-repository';
+import { AuthUser } from '@auth/domain/auth-user';
+import { UserCredentialsRepository } from '@modules/auth/domain/user-credentials.repository';
+import { UserEntityModelMapper } from '@users/infrastructure/persist/user-entity-model.mapper';
+import { UsersMapper } from '@users/infrastructure/mappers/users';
+import { AuthUserIdentityRepository } from '@modules/auth/domain/auth-user-identity.repository';
 
 @injectable()
-export class UsersPrismaRepository implements UserRepository, UserFinderForAuth {
+export class UsersPrismaRepository
+  implements UserRepository, UserCredentialsRepository, AuthUserIdentityRepository
+{
+  async findByIdForAuth(sub: number): Promise<AuthUser | null> {
+    const user = await prisma.user.findUnique({ where: { id: sub }, include: userInclude });
+    if (!user) return null;
+
+    return UsersMapper.toAuthUser(user);
+  }
   async getUserWithRoles(userId: number): Promise<UserWithRolesEntity | null> {
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -49,7 +59,7 @@ export class UsersPrismaRepository implements UserRepository, UserFinderForAuth 
       id: user.id,
       username: user.username,
       passwordHash: user.passwordHash,
-      // @ts-ignore - Assuming mapping is largely compatible or handled at DB level
+      // @ts-expect-error - Assuming mapping is largely compatible or handled at DB level
       status: user.isActive,
       roles: user.roles.map(ur => ur.role.name),
     };

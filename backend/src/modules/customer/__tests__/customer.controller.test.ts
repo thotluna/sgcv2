@@ -191,6 +191,15 @@ describe('CustomerController', () => {
         NotFoundException
       );
     });
+
+    it('should rethrow generic error', async () => {
+      req = { params: { id: '1' } };
+      (customerService.findById as jest.Mock).mockRejectedValue(new Error('DB Error'));
+
+      await expect(customerController.findOne(req as Request, res as Response)).rejects.toThrow(
+        'DB Error'
+      );
+    });
   });
 
   describe('update', () => {
@@ -220,6 +229,15 @@ describe('CustomerController', () => {
         NotFoundException
       );
     });
+
+    it('should rethrow generic error', async () => {
+      req = { params: { id: '1' }, body: {} };
+      (customerService.update as jest.Mock).mockRejectedValue(new Error('DB Error'));
+
+      await expect(customerController.update(req as Request, res as Response)).rejects.toThrow(
+        'DB Error'
+      );
+    });
   });
 
   describe('delete', () => {
@@ -246,6 +264,15 @@ describe('CustomerController', () => {
 
       await expect(customerController.delete(req as Request, res as Response)).rejects.toThrow(
         NotFoundException
+      );
+    });
+
+    it('should rethrow generic error', async () => {
+      req = { params: { id: '1' } };
+      (customerService.delete as jest.Mock).mockRejectedValue(new Error('DB Error'));
+
+      await expect(customerController.delete(req as Request, res as Response)).rejects.toThrow(
+        'DB Error'
       );
     });
   });
