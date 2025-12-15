@@ -8,9 +8,9 @@ export interface UserEntity {
   passwordHash: string;
   firstName: string;
   lastName: string;
+  status: UserState;
   createdAt: Date;
   updatedAt: Date;
-  status: UserState;
 }
 
 export interface UserWithRolesEntity extends UserEntity {

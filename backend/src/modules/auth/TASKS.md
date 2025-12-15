@@ -59,3 +59,10 @@ Refactorizar el módulo de Autenticación para adherirse estrictamente a la Arqu
   - Actualizar mocks en `jwt.strategy.test.ts` para reflejar la inyección de dependencia del repositorio.
   - Actualizar mocks en `local.strategy.test.ts` y `login.use-case.test.ts` según los cambios de interfaces.
   - Verificar que todos los tests pasen (82/82).
+
+## 5. Strict Clean Architecture Refactoring
+
+- [ ] **Refactor LoginUseCaseService**:
+  - Cambiar el tipo de retorno de `UserTokenDto` a una Entidad/Agregado de Dominio (ej. `AuthenticatedUserEntity`).
+  - Mover el mapeo del DTO (`AuthMapper.toAuthenticatedUserDto`) al `AuthController`.
+  - Asegurar que el Caso de Uso sea capa pura de Aplicación y no dependa de DTOs de Infraestructura en su retorno.
