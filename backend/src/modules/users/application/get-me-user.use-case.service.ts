@@ -5,7 +5,11 @@ import { TYPES } from '@users/di/types';
 
 @injectable()
 export class GetMeUserUseCaseService {
-  constructor(@inject(TYPES.UsersService) private readonly usersService: UsersService) {}
+  private readonly usersService: UsersService;
+
+  constructor(@inject(TYPES.UsersService) usersService: UsersService) {
+    this.usersService = usersService;
+  }
 
   async execute(userId: number) {
     const user = await this.usersService.getUserWithRoles(userId);
