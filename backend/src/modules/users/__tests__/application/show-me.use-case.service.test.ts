@@ -1,0 +1,35 @@
+import { ShowMeUseCaseService } from '@modules/users/application/show-me.use-case.service';
+import { UserNotFoundException } from '@modules/users/domain/exceptions/user-no-found.exception';
+import { ShowMeService } from '@modules/users/domain/show-me.service';
+import { mockUserWithRole } from '../helpers';
+
+const mockService = {
+  getUserWithRoles: jest.fn(),
+};
+
+describe('ShowMeUseCaseService', () => {
+  let useCase: ShowMeUseCaseService;
+
+  beforeEach(() => {
+    useCase = new ShowMeUseCaseService(mockService as ShowMeService);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should return a user with roles', async () => {
+    mockService.getUserWithRoles.mockResolvedValue(mockUserWithRole);
+
+    const user = await useCase.execute(1);
+    expect(user).toBeDefined();
+    expect(mockService.getUserWithRoles).toHaveBeenCalledWith(1);
+    expect(user).toEqual(mockUserWithRole);
+  });
+
+  it('should throw an error when user is not found', async () => {
+    mockService.getUserWithRoles.mockResolvedValue(null);
+
+    await expect(useCase.execute(1)).rejects.toThrow(UserNotFoundException);
+  });
+});
