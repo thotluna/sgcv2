@@ -149,4 +149,111 @@ describe('UsersPrismaRepository', () => {
       });
     });
   });
+
+  describe('findByIdForAuth', () => {
+    it('should return an AuthUser when a valid id is provided', async () => {
+      const mockUserModel: UserWithRolesModel = {
+        id: 1,
+        username: 'testuser',
+        email: 'test@user.com',
+        passwordHash: 'hashedpassword',
+        firstName: 'Test',
+        lastName: 'User',
+        isActive: 'ACTIVE',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        roles: [
+          {
+            userId: 1,
+            roleId: 1,
+            assignedAt: new Date(),
+            role: {
+              id: 1,
+              name: 'ADMIN',
+              description: 'Administrator role',
+              createdAt: new Date(),
+              updatedAt: new Date(),
+              permissions: [],
+            },
+          },
+        ],
+      };
+
+      mockPrismaUser.findUnique.mockResolvedValue(mockUserModel);
+
+      const user = await repository.findByIdForAuth(1);
+
+      expect(user).toBeDefined();
+      expect(user?.id).toBe(1);
+      expect(user?.username).toBe('testuser');
+      expect(user?.roles).toContain('ADMIN');
+      expect(mockPrismaUser.findUnique).toHaveBeenCalledWith({
+        where: { id: 1 },
+        include: expect.any(Object), // We generally verify the include object structure elsewhere or broadly
+      });
+    });
+
+    it('should return null when user is not found', async () => {
+      mockPrismaUser.findUnique.mockResolvedValue(null);
+
+      const user = await repository.findByIdForAuth(999);
+
+      expect(user).toBeNull();
+      expect(mockPrismaUser.findUnique).toHaveBeenCalledWith({
+        where: { id: 999 },
+        include: expect.any(Object),
+      });
+    });
+  });
+
+  describe('findByUsernameForAuth', () => {
+    it('should return an AuthUser when a valid username is provided', async () => {
+      // Mock structure matching the specific include in findByUsernameForAuth
+      const mockPrismaResponse = {
+        id: 1,
+        username: 'testuser',
+        passwordHash: 'hashedpassword',
+        isActive: 'ACTIVE',
+        roles: [
+          {
+            role: {
+              name: 'ADMIN',
+            },
+          },
+        ],
+      };
+
+      mockPrismaUser.findUnique.mockResolvedValue(mockPrismaResponse as any);
+
+      const user = await repository.findByUsernameForAuth('testuser');
+
+      expect(user).toBeDefined();
+      expect(user?.id).toBe(1);
+      expect(user?.username).toBe('testuser');
+      expect(user?.status).toBe('ACTIVE');
+      expect(user?.roles).toContain('ADMIN');
+      expect(mockPrismaUser.findUnique).toHaveBeenCalledWith({
+        where: { username: 'testuser' },
+        include: {
+          roles: {
+            include: {
+              role: true,
+            },
+          },
+        },
+      });
+    });
+
+    it('should return null when user is not found', async () => {
+      mockPrismaUser.findUnique.mockResolvedValue(null);
+
+      const user = await repository.findByUsernameForAuth('nonexistent');
+
+      expect(user).toBeNull();
+      expect(mockPrismaUser.findUnique).toHaveBeenCalledWith({
+        where: { username: 'nonexistent' },
+        include: expect.any(Object),
+      });
+    });
+  });
 });
