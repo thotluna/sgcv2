@@ -203,6 +203,8 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 - [x] Actualizar archivos SQL de base de datos
   - ✅ `database/schema.sql` actualizado a estructura simplificada (solo Auth) y en inglés
   - ✅ `database/seed_data.sql` actualizado con datos iniciales en inglés
+- [x] Limpieza de código muerto
+  - ✅ Eliminar directorio `backend/src/generated/prisma` con modelos antiguos en español
 
 **Cambios principales:**
 
