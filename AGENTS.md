@@ -83,15 +83,20 @@ This document serves as the **source of truth** for AI agents working on the SGC
 ### Branches
 
 - **`main`**: Production ready state. **Tags only** (e.g., `v1.0.0`). NO direct commits.
-- **`develop`**: Integration branch. Source of truth for active development.
-- **`feature/*`**: Create from `develop`. Merge back to `develop` via PR.
+- **`develop`**: Integration branch. Source of truth for active development. **NO DIRECT COMMITS OR MERGES PERMITTED**.
+- **`feature/*`**: Create from `develop`. Merge back to `develop` **ONLY VIA PULL REQUEST**.
   - Naming: `feature/auth-login`, `feature/users-crud`.
-- **`bugfix/*`**: Create from `develop`. Naming: `bugfix/fix-login-error`.
+- **`bugfix/*`**: Create from `develop`. Merge back to `develop` **ONLY VIA PULL REQUEST**.
+  - Naming: `bugfix/fix-login-error`.
 
 ### Commit & PR Standards
 
 - **Convention**: Conventional Commits (Semantic Versioning).
 - **Language**: **ENGLISH**.
+- **Pull Requests**:
+  - Must have a descriptive title and description.
+  - Must pass all status checks (linting, tests) before merging.
+  - Squash and merge is preferred to keep history clean unless preservation of commit history is critical.
 - **Structure**: `<type>(<scope>): <description>`
   - `feat(auth): add jwt strategy`
   - `fix(user): resolve null pointer in repository`
