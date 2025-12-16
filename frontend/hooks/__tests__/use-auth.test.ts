@@ -20,7 +20,7 @@ describe('useAuth', () => {
   });
 
   afterAll(() => {
-    window.location = originalLocation;
+    window.location = originalLocation as any;
   });
 
   beforeEach(() => {
