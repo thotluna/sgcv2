@@ -1,54 +1,23 @@
 import { authService } from '@/lib/api/auth.service';
-import { UserBasic as User } from '@sgcv2/shared';
+import { usersService } from '@/lib/api/users.service';
+import { AuthenticatedUserDto } from '@sgcv2/shared';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 interface AuthState {
-  user: User | null;
-  token: string | null;
+  user: AuthenticatedUserDto | null;
   isAuthenticated: boolean;
 
   login: (username: string, password: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   checkAuth: () => Promise<void>;
-  setUser: (user: User | null) => void;
-}
-
-function setCookie(name: string, value: string, days: number = 7) {
-  if (typeof document === 'undefined') return;
-
-  const expires = new Date();
-  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-
-  // Use Secure flag only in production (HTTPS)
-  const isProduction = process.env.NODE_ENV === 'production';
-  const secureFlag = isProduction ? ';Secure' : '';
-
-  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Lax${secureFlag}`;
-}
-
-function deleteCookie(name: string) {
-  if (typeof document === 'undefined') return;
-
-  document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
-}
-
-function getCookie(name: string): string | null {
-  if (typeof document === 'undefined') return null;
-
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) {
-    return parts.pop()?.split(';').shift() || null;
-  }
-  return null;
+  setUser: (user: AuthenticatedUserDto | null) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
   persist(
     set => ({
       user: null,
-      token: null,
       isAuthenticated: false,
 
       login: async (username, password) => {
@@ -60,40 +29,49 @@ export const useAuthStore = create<AuthState>()(
           }
 
           const user = response.data?.user;
-          const token = response.data?.token;
+          // Cookie is set by backend (HttpOnly)
 
-          setCookie('auth-token', token || '');
-
-          set({ user, token, isAuthenticated: true });
+          set({ user, isAuthenticated: true });
         } catch (error) {
           console.error('Login failed:', error);
-          set({ user: null, token: null, isAuthenticated: false });
+          set({ user: null, isAuthenticated: false });
           throw error;
         }
       },
 
-      logout: () => {
-        deleteCookie('auth-token');
-
-        set({ user: null, token: null, isAuthenticated: false });
+      logout: async () => {
+        try {
+          await authService.logout(); // Backend clears cookie
+        } catch (error) {
+          console.error('Logout failed', error);
+        } finally {
+          set({ user: null, isAuthenticated: false });
+        }
       },
 
       checkAuth: async () => {
         try {
-          const token = getCookie('auth-token');
+          // This should only be called from the client (browser)
+          const userWIthRole = await usersService.getMe();
 
-          if (!token) {
-            set({ user: null, token: null, isAuthenticated: false });
-            return;
+          if (!userWIthRole) {
+            throw new Error('User not found');
           }
 
-          const user = await authService.getMe();
+          const user: AuthenticatedUserDto = {
+            id: userWIthRole.id,
+            username: userWIthRole.username,
+            email: userWIthRole.email,
+            firstName: userWIthRole.firstName || '',
+            lastName: userWIthRole.lastName || '',
+            status: userWIthRole.isActive,
+            roles: userWIthRole.roles?.map((role: { name: string }) => role.name),
+          };
 
-          set({ user, token, isAuthenticated: true });
+          set({ user, isAuthenticated: true });
         } catch (error) {
           console.error('Auth check failed:', error);
-          deleteCookie('auth-token');
-          set({ user: null, token: null, isAuthenticated: false });
+          set({ user: null, isAuthenticated: false });
         }
       },
 
