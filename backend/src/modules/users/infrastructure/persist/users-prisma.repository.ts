@@ -8,6 +8,7 @@ import { UserCredentialsRepository } from '@modules/auth/domain/user-credentials
 import { UserEntityModelMapper } from '@users/infrastructure/persist/user-entity-model.mapper';
 import { UsersMapper } from '@users/infrastructure/mappers/users';
 import { AuthUserIdentityRepository } from '@modules/auth/domain/auth-user-identity.repository';
+import { UserStatus } from '@sgcv2/shared';
 
 @injectable()
 export class UsersPrismaRepository
@@ -58,9 +59,11 @@ export class UsersPrismaRepository
     return {
       id: user.id,
       username: user.username,
+      email: user.email,
+      firstName: user.firstName || '',
+      lastName: user.lastName || '',
       passwordHash: user.passwordHash,
-      // @ts-expect-error - Assuming mapping is largely compatible or handled at DB level
-      status: user.isActive,
+      status: user.isActive as UserStatus,
       roles: user.roles.map(ur => ur.role.name),
     };
   }

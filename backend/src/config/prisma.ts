@@ -14,7 +14,7 @@ function setupPrismaLogging(client: PrismaClient) {
   // Queries (solo en desarrollo)
   if (process.env.NODE_ENV !== 'production') {
     prismaAny.$on('query', (e: Prisma.QueryEvent) => {
-      logger.debug('Prisma Query', {
+      logger.info('Prisma Query', {
         query: e.query,
         params: e.params,
         duration: `${e.duration}ms`,

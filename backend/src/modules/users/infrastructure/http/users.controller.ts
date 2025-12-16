@@ -26,8 +26,6 @@ export class UsersController {
         throw new NotFoundException('User not found');
       }
 
-      console.log({ userWithRoles });
-
       return ResponseHelper.success(res, UsersMapper.toUserWithRolesDto(userWithRoles));
     } catch {
       throw new NotFoundException('User not found');

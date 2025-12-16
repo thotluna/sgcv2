@@ -12,6 +12,7 @@ import { requestLogger } from '@shared/middleware/requestLogger';
 import { errorLogger } from '@shared/middleware/errorLogger';
 import logger from '@config/logger';
 import { globalErrorHandler } from '@shared/middleware/global-error.middleware';
+import cookieParser from 'cookie-parser';
 
 // Load environment variables
 dotenv.config();
@@ -41,6 +42,7 @@ app.use(
   })
 );
 app.use(express.json());
+app.use(cookieParser());
 app.use(requestLogger);
 app.use(express.urlencoded({ extended: true }));
 

@@ -12,6 +12,7 @@ const mockLoginUseCaseService = {
 const mockResponse = {
   status: jest.fn().mockReturnThis(),
   json: jest.fn().mockReturnThis(),
+  cookie: jest.fn().mockReturnThis(),
 } as any;
 
 describe('AuthController', () => {
@@ -34,7 +35,7 @@ describe('AuthController', () => {
     expect(mockResponse.json).toHaveBeenCalledWith(
       expect.objectContaining({
         success: true,
-        data: MOCK_USER_TOKEN_DTO,
+        data: { user: MOCK_USER_TOKEN_DTO.user },
       })
     );
   });

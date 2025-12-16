@@ -37,8 +37,9 @@ describe('LoginUseCaseService', () => {
       MOCK_LOGIN_REQUEST.password
     );
     expect(mockAuthLoginService.generateToken).toHaveBeenCalledWith({
-      id: userFound.id,
       username: userFound.username,
+      roles: userFound.roles,
+      sub: userFound.id,
     });
   });
 

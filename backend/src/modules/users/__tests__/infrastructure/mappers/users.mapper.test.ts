@@ -65,6 +65,9 @@ describe('UsersMapper', () => {
       expect(result).toEqual({
         id: 1,
         username: 'testuser',
+        email: 'test@example.com',
+        firstName: 'First',
+        lastName: 'Last',
         status: 'ACTIVE',
         roles: ['ADMIN'],
       });
@@ -85,6 +88,9 @@ describe('UsersMapper', () => {
         id: 1,
         username: 'testuser',
         passwordHash: 'hashedpassword',
+        email: 'test@example.com',
+        firstName: 'First',
+        lastName: 'Last',
         status: 'ACTIVE',
         roles: ['ADMIN'],
       });

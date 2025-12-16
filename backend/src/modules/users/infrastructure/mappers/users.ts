@@ -1,4 +1,4 @@
-import { AuthenticatedUserDto } from '@auth/infrastructure/http/authenticated-user.dto';
+import { AuthenticatedUserDto } from '@sgcv2/shared/src/dtos/auth.dto';
 import { UserEntity, UserWithRolesEntity } from '@users/domain/user-entity';
 import { UserDto, UserWithRolesDto } from '@sgcv2/shared';
 import { UserWithRolesModel } from '@users/infrastructure/persist/include';
@@ -39,6 +39,9 @@ export class UsersMapper {
     return {
       id: user.id,
       username: user.username,
+      email: user.email,
+      firstName: user.firstName || '',
+      lastName: user.lastName || '',
       status: user.isActive || 'ACTIVE',
       roles: user.roles.map(ur => ur.role.name),
     };
@@ -48,6 +51,9 @@ export class UsersMapper {
     return {
       id: user.id,
       username: user.username,
+      email: user.email,
+      firstName: user.firstName || '',
+      lastName: user.lastName || '',
       passwordHash: user.passwordHash,
       status: user.isActive || 'ACTIVE',
       roles: user.roles.map(ur => ur.role.name),
