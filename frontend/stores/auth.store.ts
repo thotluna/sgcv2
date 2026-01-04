@@ -3,6 +3,7 @@ import { usersService } from '@/lib/api/users.service';
 import { AuthenticatedUserDto } from '@sgcv2/shared';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { sha256 } from 'js-sha256';
 
 interface AuthState {
   user: AuthenticatedUserDto | null;
@@ -19,6 +20,7 @@ export const useAuthStore = create<AuthState>()(
     set => ({
       user: null,
       isAuthenticated: false,
+      urlAvatar: '',
 
       login: async (username, password) => {
         try {
@@ -29,6 +31,12 @@ export const useAuthStore = create<AuthState>()(
           }
 
           const user = response.data?.user;
+
+          if (user) {
+            const address = String(user.email).trim().toLowerCase();
+            const hash = sha256(address);
+            user.avatar = `https://gravatar.com/avatar/${hash}`;
+          }
           // Cookie is set by backend (HttpOnly)
 
           set({ user, isAuthenticated: true });
