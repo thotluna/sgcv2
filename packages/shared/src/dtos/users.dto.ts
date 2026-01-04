@@ -29,6 +29,7 @@ export class UserDto {
   createdAt!: Date;
   updatedAt!: Date;
   isActive!: UserStatus;
+  avatar?: string;
 }
 
 export interface RoleDto {

@@ -17,5 +17,6 @@ export class AuthenticatedUserDto {
   firstName?: string;
   lastName?: string;
   status!: UserStatus;
+  avatar?: string;
   roles?: string[];
 }
