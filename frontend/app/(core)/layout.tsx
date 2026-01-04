@@ -1,5 +1,5 @@
-import Header from '@/components/header/header';
-import SidebarApp from '@/components/sidebar/sidebar';
+import Header from './_components/header/header';
+import SidebarApp from './_components/sidebar/sidebar';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { cookies } from 'next/headers';
 import StoreInitializer from '@/components/auth/store-initializer';

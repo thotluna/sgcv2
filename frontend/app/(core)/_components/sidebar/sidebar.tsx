@@ -1,4 +1,3 @@
-'use client';
 import Link from 'next/link';
 import {
   Sidebar,
@@ -29,13 +28,14 @@ import {
   Wallet,
   UserCog,
 } from 'lucide-react';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '../../../../components/ui/collapsible';
 import { NavUser } from '../nav-user';
-import { useAuth } from '@/hooks/use-auth';
 
 export default function SidebarApp() {
-  const { user } = useAuth();
-
   const menuItems = [
     {
       session: 'Operaciones',
@@ -170,13 +170,7 @@ export default function SidebarApp() {
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter>
-        <NavUser
-          user={{
-            name: user?.username || '',
-            email: user?.email || '',
-            avatar: 'https://via.placeholder.com/150',
-          }}
-        />
+        <NavUser />
       </SidebarFooter>
     </Sidebar>
   );
