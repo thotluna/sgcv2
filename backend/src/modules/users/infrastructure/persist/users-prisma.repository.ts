@@ -67,4 +67,20 @@ export class UsersPrismaRepository
       roles: user.roles.map(ur => ur.role.name),
     };
   }
+
+  async update(id: number, data: Partial<UserEntity>): Promise<UserEntity> {
+    const updatedUser = await prisma.user.update({
+      where: { id },
+      data: {
+        email: data.email,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        avatar: data.avatar,
+        isActive: data.status,
+        passwordHash: data.passwordHash,
+      },
+    });
+
+    return UserEntityModelMapper.toEntity(updatedUser);
+  }
 }

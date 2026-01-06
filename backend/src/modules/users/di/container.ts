@@ -9,6 +9,7 @@ import { TYPES } from '@users/di/types';
 import { TYPES as AuthTypes } from '@auth/di/types';
 import { AuthUserIdentityRepository } from '@modules/auth/domain/auth-user-identity.repository';
 import { ShowMeUseCaseService } from '../application/show-me.use-case.service';
+import { UpdateMeUseCaseService } from '../application/update-me.use-case.service';
 import { UserRepository } from '../domain/user-repository';
 import { ShowMeService } from '../domain/show-me.service';
 
@@ -21,6 +22,7 @@ export const usersContainerModule = new ContainerModule((option: ContainerModule
     .to(UsersPrismaRepository);
   option.bind<UserRepository>(TYPES.UserRepository).to(UsersPrismaRepository);
   option.bind<ShowMeUseCaseService>(TYPES.ShowMeUseCaseService).to(ShowMeUseCaseService);
+  option.bind<UpdateMeUseCaseService>(TYPES.UpdateMeUseCaseService).to(UpdateMeUseCaseService);
   option.bind<UsersService>(TYPES.UsersService).to(UserServiceImpl);
   option.bind<ShowMeService>(TYPES.ShowMeService).to(UserServiceImpl);
   option.bind<UsersController>(TYPES.UsersController).to(UsersController);

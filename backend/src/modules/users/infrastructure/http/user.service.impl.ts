@@ -14,4 +14,9 @@ export class UserServiceImpl implements UsersService, ShowMeService {
 
     return user;
   }
+
+  async updateUser(id: number, data: Partial<UserWithRolesEntity>): Promise<UserWithRolesEntity> {
+    const updatedUser = await this.userRepository.update(id, data);
+    return (await this.userRepository.getUserWithRoles(updatedUser.id))!;
+  }
 }

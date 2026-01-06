@@ -18,6 +18,7 @@ export class UsersRoutes {
 
   createRoutes() {
     this.router.get('/me', authenticate, (req, res) => this.usersController.me(req, res));
+    this.router.patch('/me', authenticate, (req, res) => this.usersController.updateMe(req, res));
   }
 
   getRouter() {

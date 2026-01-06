@@ -6,8 +6,9 @@ export interface UserEntity {
   username: string;
   email: string;
   passwordHash: string;
-  firstName: string;
-  lastName: string;
+  firstName: string | null;
+  lastName: string | null;
+  avatar: string | null;
   status: UserState;
   createdAt: Date;
   updatedAt: Date;

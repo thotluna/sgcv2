@@ -4,11 +4,15 @@ import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
 import { NotFoundException, UnauthorizedException } from '@shared/exceptions';
 import { ShowMeUseCaseService } from '@users/application/show-me.use-case.service';
+import { UpdateMeUseCaseService } from '@users/application/update-me.use-case.service';
 import { UsersMapper } from '../mappers/users';
 
 @injectable()
 export class UsersController {
-  constructor(@inject(TYPES.ShowMeUseCaseService) private readonly useCase: ShowMeUseCaseService) {}
+  constructor(
+    @inject(TYPES.ShowMeUseCaseService) private readonly showMeUseCase: ShowMeUseCaseService,
+    @inject(TYPES.UpdateMeUseCaseService) private readonly updateMeUseCase: UpdateMeUseCaseService,
+  ) { }
 
   async me(req: Request, res: Response): Promise<Response> {
     const user = req.user;
@@ -20,7 +24,7 @@ export class UsersController {
     const id = Number(user.id);
 
     try {
-      const userWithRoles = await this.useCase.execute(id);
+      const userWithRoles = await this.showMeUseCase.execute(id);
 
       if (!userWithRoles) {
         throw new NotFoundException('User not found');
@@ -29,6 +33,24 @@ export class UsersController {
       return ResponseHelper.success(res, UsersMapper.toUserWithRolesDto(userWithRoles));
     } catch {
       throw new NotFoundException('User not found');
+    }
+  }
+
+  async updateMe(req: Request, res: Response): Promise<Response> {
+    const user = req.user;
+
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    const id = Number(user.id);
+    const data = req.body;
+
+    try {
+      const updatedUser = await this.updateMeUseCase.execute(id, data);
+      return ResponseHelper.success(res, UsersMapper.toUserWithRolesDto(updatedUser));
+    } catch (error) {
+      throw error;
     }
   }
 }
