@@ -4,12 +4,18 @@ export class CreateUserDto {
   username!: string;
   email!: string;
   password!: string;
+  firstName?: string;
+  lastName?: string;
+  avatar?: string;
   roleIds?: number[];
 }
 
 export class UpdateUserDto {
   email?: string;
   password?: string; // Only if changing password
+  firstName?: string;
+  lastName?: string;
+  avatar?: string;
   isActive?: UserStatus; // Status
   roleIds?: number[];
 }
