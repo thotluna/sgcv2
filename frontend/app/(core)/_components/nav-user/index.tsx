@@ -18,6 +18,7 @@ import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui
 import { serverUsersService } from '@/lib/api/server-users.service';
 import { DropdownMenuLogout } from '../dropdown-menu-logout';
 import { sha256 } from 'js-sha256';
+import Link from 'next/link';
 
 export async function NavUser() {
   // const { isMobile } = useSidebar();
@@ -69,9 +70,11 @@ export async function NavUser() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <IconUserCircle />
-                Account
+              <DropdownMenuItem asChild>
+                <Link href="/users/profile">
+                  <IconUserCircle />
+                  Account
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <IconCreditCard />
