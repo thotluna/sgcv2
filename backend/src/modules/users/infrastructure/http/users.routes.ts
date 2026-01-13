@@ -3,6 +3,8 @@ import { inject, injectable } from 'inversify';
 import { UsersController } from '@modules/users/infrastructure/http/users.controller';
 import { authenticate } from '@auth/infrastructure/http/auth.middleware';
 import { TYPES } from '@users/di/types';
+import { validateSchema } from '@shared/middleware/validate-schema';
+import { UpdateUserSchema } from './update-user.schema';
 
 @injectable()
 export class UsersRoutes {
@@ -18,7 +20,9 @@ export class UsersRoutes {
 
   createRoutes() {
     this.router.get('/me', authenticate, (req, res) => this.usersController.me(req, res));
-    this.router.patch('/me', authenticate, (req, res) => this.usersController.updateMe(req, res));
+    this.router.patch('/me', authenticate, validateSchema(UpdateUserSchema), (req, res) =>
+      this.usersController.updateMe(req, res)
+    );
   }
 
   getRouter() {

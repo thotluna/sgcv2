@@ -6,7 +6,7 @@ import { UsersService } from '../domain/user.service';
 import { UserNotFoundException } from '../domain/exceptions/user-no-found.exception';
 import { PasswordHasher } from '@modules/auth/domain/password-hasher';
 import { BadRequestException } from '@shared/exceptions';
-import { UpdateUserDto } from '../domain/dtos/user.dtos';
+import { UpdateMeInput } from '../domain/dtos/user.dtos';
 
 @injectable()
 export class UpdateMeUseCaseService {
@@ -15,14 +15,15 @@ export class UpdateMeUseCaseService {
     @inject(AuthTypes.PasswordHasher) private readonly hasher: PasswordHasher
   ) {}
 
-  async execute(id: number, data: UpdateUserDto): Promise<UserWithRolesEntity> {
+  async execute(id: number, data: UpdateMeInput): Promise<UserWithRolesEntity> {
     const user = await this.service.getUserWithRoles(id);
 
     if (!user) {
       throw new UserNotFoundException(id.toString());
     }
 
-    const updateData: Partial<UserWithRolesEntity> = { ...data };
+    const { password: _password, currentPassword: _currentPassword, ...rest } = data;
+    const updateData: Partial<UserWithRolesEntity> = { ...rest };
 
     if (data.password) {
       if (!data.currentPassword) {
@@ -40,9 +41,6 @@ export class UpdateMeUseCaseService {
 
       updateData.passwordHash = await this.hasher.hashPassword(data.password);
     }
-
-    delete (updateData as any).password;
-    delete (updateData as any).currentPassword;
 
     return await this.service.updateUser(id, updateData);
   }
