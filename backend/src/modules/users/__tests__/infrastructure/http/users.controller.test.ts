@@ -83,4 +83,50 @@ describe('UserController', () => {
 
     expect(mockShowMeUseCase.execute).toHaveBeenCalledWith(1);
   });
+
+  describe('updateMe', () => {
+    it('should update user and return success', async () => {
+      const updateData = { firstName: 'Updated' };
+      mockUpdateMeUseCase.execute.mockResolvedValue({
+        ...mockUserWithRole,
+        firstName: 'Updated',
+      });
+
+      mockReq = {
+        user: { id: 1 },
+        body: updateData,
+      } as unknown as Request;
+
+      await userController.updateMe(mockReq as Request, mockRes as Response);
+
+      expect(mockUpdateMeUseCase.execute).toHaveBeenCalledWith(1, updateData);
+      expect(mockRes.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: true,
+          data: expect.objectContaining({ firstName: 'Updated' }),
+        })
+      );
+    });
+
+    it('should throw UnauthorizedException if no user in request', async () => {
+      mockReq = { body: {} };
+
+      await expect(
+        userController.updateMe(mockReq as Request, mockRes as Response)
+      ).rejects.toThrow(UnauthorizedException);
+    });
+
+    it('should propagate errors from use case', async () => {
+      const error = new Error('Some error');
+      mockUpdateMeUseCase.execute.mockRejectedValue(error);
+      mockReq = {
+        user: { id: 1 },
+        body: {},
+      } as unknown as Request;
+
+      await expect(
+        userController.updateMe(mockReq as Request, mockRes as Response)
+      ).rejects.toThrow(error);
+    });
+  });
 });

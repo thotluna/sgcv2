@@ -4,6 +4,7 @@ import { mockUserWithRole } from '../../helpers';
 
 const mockRepository = {
   getUserWithRoles: jest.fn(),
+  update: jest.fn(),
 };
 
 describe('UserServiceImpl', () => {
@@ -11,6 +12,10 @@ describe('UserServiceImpl', () => {
 
   beforeEach(() => {
     userServiceImpl = new UserServiceImpl(mockRepository as unknown as UserRepository);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it('should get user with roles', async () => {
@@ -21,10 +26,22 @@ describe('UserServiceImpl', () => {
     expect(result).toEqual(mockUserWithRole);
   });
 
-  it('should throw UserNotFoundException when user is not found', async () => {
+  it('should return null when user is not found', async () => {
     mockRepository.getUserWithRoles.mockResolvedValue(null);
 
     await expect(userServiceImpl.getUserWithRoles(1)).resolves.toBeNull();
     expect(mockRepository.getUserWithRoles).toHaveBeenCalledWith(1);
+  });
+
+  it('should update user and return updated entity with roles', async () => {
+    const updateData = { firstName: 'Updated' };
+    mockRepository.update.mockResolvedValue({ id: 1, ...updateData });
+    mockRepository.getUserWithRoles.mockResolvedValue({ ...mockUserWithRole, ...updateData });
+
+    const result = await userServiceImpl.updateUser(1, updateData as any);
+
+    expect(mockRepository.update).toHaveBeenCalledWith(1, updateData);
+    expect(mockRepository.getUserWithRoles).toHaveBeenCalledWith(1);
+    expect(result.firstName).toBe('Updated');
   });
 });

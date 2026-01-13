@@ -41,7 +41,6 @@ export class UpdateMeUseCaseService {
       updateData.passwordHash = await this.hasher.hashPassword(data.password);
     }
 
-    // Clean up internal fields before passing to domain service
     delete (updateData as any).password;
     delete (updateData as any).currentPassword;
 
