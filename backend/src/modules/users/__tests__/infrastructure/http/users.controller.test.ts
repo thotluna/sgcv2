@@ -1,12 +1,15 @@
 import { UsersController } from '@modules/users/infrastructure/http/users.controller';
 import { Request, Response } from 'express';
 import { NotFoundException, UnauthorizedException } from '@shared/exceptions';
-import { ShowMeUseCaseService } from '@users/application/show-me.use-case.service';
 import { UserWithRolesDto } from '@sgcv2/shared';
 import { UserNotFoundException } from '@modules/users/domain/exceptions/user-no-found.exception';
 import { mockUserWithRole } from '../../helpers';
 
 const mockShowMeUseCase = {
+  execute: jest.fn(),
+};
+
+const mockUpdateMeUseCase = {
   execute: jest.fn(),
 };
 
@@ -19,7 +22,7 @@ describe('UserController', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    userController = new UsersController(mockShowMeUseCase as unknown as ShowMeUseCaseService);
+    userController = new UsersController(mockShowMeUseCase as any, mockUpdateMeUseCase as any);
     mockJson = jest.fn();
     mockStatus = jest.fn().mockReturnValue({ json: mockJson });
     mockRes = {
