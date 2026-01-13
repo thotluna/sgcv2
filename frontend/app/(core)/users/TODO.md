@@ -10,7 +10,7 @@
   - [x] password update
   - [ ] preference dark mode update
   - [x] avatar update
-  - [ ] role update
+  - [x] role update
 - [ ] Implementar eliminación de usuario
 
 - [x] 1. Crear una pagina de perfile que tenga la informacion de usuario con la lista de roles
