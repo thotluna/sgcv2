@@ -48,6 +48,7 @@ export async function updatePasswordAction(formData: FormData) {
   try {
     const result = await serverUsersService.updateMe({
       password: validated.data.newPassword,
+      currentPassword: validated.data.currentPassword,
     });
 
     if (!result.success) {

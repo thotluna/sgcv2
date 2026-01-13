@@ -13,6 +13,7 @@ export class CreateUserDto {
 export class UpdateUserDto {
   email?: string;
   password?: string; // Only if changing password
+  currentPassword?: string; // Required when changing password
   firstName?: string;
   lastName?: string;
   avatar?: string;

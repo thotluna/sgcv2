@@ -13,6 +13,8 @@ export interface CreateUserDto {
 export interface UpdateUserDto {
   username?: string;
   email?: string;
+  password?: string;
+  currentPassword?: string;
   firstName?: string;
   lastName?: string;
   roleIds?: number[];
