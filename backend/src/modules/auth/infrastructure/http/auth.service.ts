@@ -6,13 +6,19 @@ import { inject, injectable } from 'inversify';
 import jwt from 'jsonwebtoken';
 import { LoginService } from '@modules/auth/domain/login.service';
 import { AuthUser } from '@modules/auth/domain/auth-user';
+import { PasswordHasher } from '../../domain/password-hasher';
 
 @injectable()
-export class AuthService implements UserValidationService, LoginService {
+export class AuthService implements UserValidationService, LoginService, PasswordHasher {
   private userRepository: UserCredentialsRepository;
 
   constructor(@inject(TYPES.UserCredentialsRepository) userRepository: UserCredentialsRepository) {
     this.userRepository = userRepository;
+  }
+
+  async hashPassword(password: string): Promise<string> {
+    const salt = await bcrypt.genSalt(10);
+    return bcrypt.hash(password, salt);
   }
 
   comparePassword(password: string, hash: string): Promise<boolean> {
