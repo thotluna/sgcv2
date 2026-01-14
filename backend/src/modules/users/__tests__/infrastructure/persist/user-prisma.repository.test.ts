@@ -8,6 +8,8 @@ jest.mock('@config/prisma', () => ({
   prisma: {
     user: {
       findUnique: jest.fn(),
+      findMany: jest.fn(),
+      update: jest.fn(),
     },
   },
 }));
@@ -259,4 +261,56 @@ describe('UsersPrismaRepository', () => {
       });
     });
   });
+
+  describe('getAll', () => {
+    it('should return a list of users with applied filters', async () => {
+      const mockUsers = [
+        { id: 1, username: 'user1', email: 'user1@test.com', isActive: 'ACTIVE', createdAt: new Date() },
+        { id: 2, username: 'user2', email: 'user2@test.com', isActive: 'INACTIVE', createdAt: new Date() },
+      ];
+
+      (prisma.user.findMany as jest.Mock).mockResolvedValue(mockUsers);
+
+      const filter = {
+        username: 'user',
+        email: '@test.com',
+        status: 'ACTIVE' as const,
+        roleId: 1,
+        pagination: { limit: 10, offset: 0 },
+      };
+
+      const result = await repository.getAll(filter);
+
+      expect(result).toHaveLength(2);
+      expect(prisma.user.findMany).toHaveBeenCalledWith({
+        where: {
+          username: { contains: 'user', mode: 'insensitive' },
+          email: { contains: '@test.com', mode: 'insensitive' },
+          isActive: 'ACTIVE',
+          roles: {
+            some: {
+              roleId: 1,
+            },
+          },
+        },
+        skip: 0,
+        take: 10,
+        orderBy: { createdAt: 'desc' },
+      });
+    });
+
+    it('should return all users when no filters are provided', async () => {
+      (prisma.user.findMany as jest.Mock).mockResolvedValue([]);
+
+      await repository.getAll({});
+
+      expect(prisma.user.findMany).toHaveBeenCalledWith({
+        where: {},
+        skip: undefined,
+        take: undefined,
+        orderBy: { createdAt: 'desc' },
+      });
+    });
+  });
 });
+

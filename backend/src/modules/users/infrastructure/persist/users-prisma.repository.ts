@@ -9,11 +9,12 @@ import { UserEntityModelMapper } from '@users/infrastructure/persist/user-entity
 import { UsersMapper } from '@users/infrastructure/mappers/users';
 import { AuthUserIdentityRepository } from '@modules/auth/domain/auth-user-identity.repository';
 import { UserStatus } from '@sgcv2/shared';
+import { UserFilterInput } from '@modules/users/domain/dtos/user.dtos';
 
 @injectable()
 export class UsersPrismaRepository
-  implements UserRepository, UserCredentialsRepository, AuthUserIdentityRepository
-{
+  implements UserRepository, UserCredentialsRepository, AuthUserIdentityRepository {
+
   async findByIdForAuth(sub: number): Promise<AuthUser | null> {
     const user = await prisma.user.findUnique({ where: { id: sub }, include: userInclude });
     if (!user) return null;
@@ -66,6 +67,41 @@ export class UsersPrismaRepository
       status: user.isActive as UserStatus,
       roles: user.roles.map(ur => ur.role.name),
     };
+  }
+
+  async getAll(filter: UserFilterInput): Promise<UserEntity[]> {
+    const { username, email, status, roleId, pagination } = filter;
+
+    const where: any = {};
+
+    if (username) {
+      where.username = { contains: username, mode: 'insensitive' };
+    }
+
+    if (email) {
+      where.email = { contains: email, mode: 'insensitive' };
+    }
+
+    if (status) {
+      where.isActive = status;
+    }
+
+    if (roleId) {
+      where.roles = {
+        some: {
+          roleId: roleId,
+        },
+      };
+    }
+
+    const users = await prisma.user.findMany({
+      where,
+      skip: pagination?.offset,
+      take: pagination?.limit,
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return users.map(user => UserEntityModelMapper.toEntity(user));
   }
 
   async update(id: number, data: Partial<UserEntity>): Promise<UserEntity> {

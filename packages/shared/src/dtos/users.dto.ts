@@ -47,3 +47,14 @@ export interface RoleDto {
 export class UserWithRolesDto extends UserDto {
   roles?: RoleDto[];
 }
+
+export interface UserFilterDto {
+  username?: string;
+  email?: string;
+  status?: UserStatus;
+  roleId?: number;
+  pagination?: {
+    limit: number;
+    offset: number;
+  };
+}

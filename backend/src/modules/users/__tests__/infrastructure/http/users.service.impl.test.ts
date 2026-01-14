@@ -5,7 +5,9 @@ import { mockUserWithRole } from '../../helpers';
 const mockRepository = {
   getUserWithRoles: jest.fn(),
   update: jest.fn(),
+  getAll: jest.fn(),
 };
+
 
 describe('UserServiceImpl', () => {
   let userServiceImpl: UserServiceImpl;
@@ -44,4 +46,15 @@ describe('UserServiceImpl', () => {
     expect(mockRepository.getUserWithRoles).toHaveBeenCalledWith(1);
     expect(result.firstName).toBe('Updated');
   });
+
+  it('should call repository.getAll with filters', async () => {
+    const filters = { username: 'test' };
+    mockRepository.getAll = jest.fn().mockResolvedValue([]);
+
+    const result = await userServiceImpl.getAll(filters);
+
+    expect(mockRepository.getAll).toHaveBeenCalledWith(filters);
+    expect(result).toEqual([]);
+  });
 });
+

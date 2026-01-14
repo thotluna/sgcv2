@@ -5,6 +5,11 @@ import { authenticate } from '@auth/infrastructure/http/auth.middleware';
 import { TYPES } from '@users/di/types';
 import { validateSchema } from '@shared/middleware/validate-schema';
 import { UpdateUserSchema } from './update-user.schema';
+import { requireRoles } from '@modules/rbac/guards/roles.guard';
+import { ROLES } from '@consts/roles';
+import { UserFilterSchema } from './user-filter.schema';
+
+
 
 @injectable()
 export class UsersRoutes {
@@ -23,6 +28,15 @@ export class UsersRoutes {
     this.router.patch('/me', authenticate, validateSchema(UpdateUserSchema), (req, res) =>
       this.usersController.updateMe(req, res)
     );
+    this.router.get(
+      '/',
+      authenticate,
+      requireRoles(ROLES.ADMIN),
+      validateSchema(UserFilterSchema, 'query'),
+      (req, res) => this.usersController.showAll(req, res)
+    );
+
+
   }
 
   getRouter() {

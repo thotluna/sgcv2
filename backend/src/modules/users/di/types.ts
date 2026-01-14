@@ -6,4 +6,6 @@ export const TYPES = {
   UsersController: Symbol.for('UsersController'),
   UsersRoutes: Symbol.for('UsersRoutes'),
   UpdateMeUseCaseService: Symbol.for('UpdateMeUseCaseService'),
+  ListUsersService: Symbol.for('ListUsersService'),
+  ShowAllUseCaseService: Symbol.for('ShowAllUseCaseService'),
 };
