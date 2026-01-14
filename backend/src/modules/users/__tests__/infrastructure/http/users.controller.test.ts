@@ -20,7 +20,13 @@ const mockShowAllUseCase = {
 const mockCreateUserUseCase = {
   execute: jest.fn(),
 };
+const mockShowUserUseCase = {
+  execute: jest.fn(),
+};
 
+const mockUpdateUserUseCase = {
+  execute: jest.fn(),
+};
 
 describe('UserController', () => {
   let userController: UsersController;
@@ -35,7 +41,9 @@ describe('UserController', () => {
       mockShowMeUseCase as any,
       mockUpdateMeUseCase as any,
       mockShowAllUseCase as any,
-      mockCreateUserUseCase as any
+      mockCreateUserUseCase as any,
+      mockShowUserUseCase as any,
+      mockUpdateUserUseCase as any
     );
 
     mockJson = jest.fn();
@@ -162,7 +170,6 @@ describe('UserController', () => {
         },
       });
 
-
       expect(mockRes.json).toHaveBeenCalledWith(
         expect.objectContaining({
           success: true,
@@ -170,9 +177,9 @@ describe('UserController', () => {
           metadata: expect.objectContaining({
             pagination: expect.objectContaining({
               total: 1,
-              totalPages: 1
-            })
-          })
+              totalPages: 1,
+            }),
+          }),
         })
       );
     });
@@ -205,4 +212,3 @@ describe('UserController', () => {
     });
   });
 });
-

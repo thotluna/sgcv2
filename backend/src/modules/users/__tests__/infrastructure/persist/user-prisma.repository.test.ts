@@ -267,8 +267,20 @@ describe('UsersPrismaRepository', () => {
   describe('getAll', () => {
     it('should return a list of users with applied filters', async () => {
       const mockUsers = [
-        { id: 1, username: 'user1', email: 'user1@test.com', isActive: 'ACTIVE', createdAt: new Date() },
-        { id: 2, username: 'user2', email: 'user2@test.com', isActive: 'INACTIVE', createdAt: new Date() },
+        {
+          id: 1,
+          username: 'user1',
+          email: 'user1@test.com',
+          isActive: 'ACTIVE',
+          createdAt: new Date(),
+        },
+        {
+          id: 2,
+          username: 'user2',
+          email: 'user2@test.com',
+          isActive: 'INACTIVE',
+          createdAt: new Date(),
+        },
       ];
 
       (prisma.user.findMany as jest.Mock).mockResolvedValue(mockUsers);
@@ -329,7 +341,7 @@ describe('UsersPrismaRepository', () => {
 
   describe('update', () => {
     it('should update a user and return the entity', async () => {
-      const mockUserModel: User = {
+      const mockUserModel: any = {
         id: 1,
         username: 'testuser',
         email: 'updated@test.com',
@@ -340,6 +352,7 @@ describe('UsersPrismaRepository', () => {
         isActive: 'ACTIVE',
         createdAt: new Date(),
         updatedAt: new Date(),
+        roles: [],
       };
       mockPrismaUser.update.mockResolvedValue(mockUserModel);
 
@@ -391,4 +404,3 @@ describe('UsersPrismaRepository', () => {
     });
   });
 });
-

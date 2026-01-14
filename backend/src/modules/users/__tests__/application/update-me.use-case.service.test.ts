@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { UpdateMeUseCaseService } from '@modules/users/application/update-me.use-case.service';
-import { UsersService } from '@modules/users/domain/user.service';
+import { UpdateUserService } from '@modules/users/domain/update.service';
 import { PasswordHasher } from '@modules/auth/domain/password-hasher';
 import { UserNotFoundException } from '@modules/users/domain/exceptions/user-no-found.exception';
 import { BadRequestException } from '@shared/exceptions';
@@ -8,13 +8,13 @@ import { mockUserWithRole } from '../helpers';
 
 describe('UpdateMeUseCaseService', () => {
   let useCase: UpdateMeUseCaseService;
-  let mockUsersService: jest.Mocked<UsersService>;
+  let mockUsersService: jest.Mocked<UpdateUserService>;
   let mockHasher: jest.Mocked<PasswordHasher>;
 
   beforeEach(() => {
     mockUsersService = {
       getUserWithRoles: jest.fn(),
-      updateUser: jest.fn(),
+      update: jest.fn(),
     } as any;
 
     mockHasher = {
@@ -35,12 +35,12 @@ describe('UpdateMeUseCaseService', () => {
     it('should update user fields excluding password', async () => {
       const updateData = { email: 'new@example.com', firstName: 'New' };
       mockUsersService.getUserWithRoles.mockResolvedValue(mockUserWithRole);
-      mockUsersService.updateUser.mockResolvedValue({ ...mockUserWithRole, ...updateData });
+      mockUsersService.update.mockResolvedValue({ ...mockUserWithRole, ...updateData });
 
       const result = await useCase.execute(userId, updateData);
 
       expect(mockUsersService.getUserWithRoles).toHaveBeenCalledWith(userId);
-      expect(mockUsersService.updateUser).toHaveBeenCalledWith(userId, updateData);
+      expect(mockUsersService.update).toHaveBeenCalledWith(userId, updateData);
       expect(mockHasher.hashPassword).not.toHaveBeenCalled();
       expect(result.email).toBe(updateData.email);
     });
@@ -86,7 +86,7 @@ describe('UpdateMeUseCaseService', () => {
       mockUsersService.getUserWithRoles.mockResolvedValue(mockUserWithRole);
       mockHasher.comparePassword.mockResolvedValue(true);
       mockHasher.hashPassword.mockResolvedValue(newHash);
-      mockUsersService.updateUser.mockResolvedValue({
+      mockUsersService.update.mockResolvedValue({
         ...mockUserWithRole,
         passwordHash: newHash,
       });
@@ -101,7 +101,7 @@ describe('UpdateMeUseCaseService', () => {
         mockUserWithRole.passwordHash
       );
       expect(mockHasher.hashPassword).toHaveBeenCalledWith(newPassword);
-      expect(mockUsersService.updateUser).toHaveBeenCalledWith(userId, {
+      expect(mockUsersService.update).toHaveBeenCalledWith(userId, {
         passwordHash: newHash,
       });
       expect(result.passwordHash).toBe(newHash);
@@ -109,11 +109,11 @@ describe('UpdateMeUseCaseService', () => {
 
     it('should clean up internal fields before calling repository', async () => {
       mockUsersService.getUserWithRoles.mockResolvedValue(mockUserWithRole);
-      mockUsersService.updateUser.mockResolvedValue(mockUserWithRole);
+      mockUsersService.update.mockResolvedValue(mockUserWithRole);
 
       await useCase.execute(userId, { firstName: 'Test' });
 
-      const callData = mockUsersService.updateUser.mock.calls[0][1];
+      const callData = mockUsersService.update.mock.calls[0][1];
       expect(callData).not.toHaveProperty('password');
       expect(callData).not.toHaveProperty('currentPassword');
     });
