@@ -47,7 +47,7 @@ describe('CustomersTable', () => {
 
   it('renders loading state', () => {
     render(<CustomersTable data={[]} isLoading={true} onDelete={mockOnDelete} />);
-    expect(screen.getByText('Cargando...')).toBeInTheDocument();
+    expect(screen.getByText('Loading...')).toBeInTheDocument();
   });
 
   it('renders empty state', () => {
