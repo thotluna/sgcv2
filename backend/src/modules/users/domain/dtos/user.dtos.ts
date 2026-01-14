@@ -21,6 +21,16 @@ export interface UpdateMeInput {
   roleIds?: number[];
 }
 
+export interface UpdateUserInput {
+  email?: string;
+  password?: string;
+  firstName?: string;
+  lastName?: string;
+  avatar?: string;
+  isActive?: UserState;
+  roleIds?: number[];
+}
+
 export interface UserFilterInput {
   search?: string;
   status?: UserState;
