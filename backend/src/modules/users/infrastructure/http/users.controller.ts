@@ -68,16 +68,14 @@ export class UsersController {
   async showAll(req: Request, res: Response): Promise<Response> {
     const rawQuery: any = req.query;
     const filter: UserFilterDto = {
-      username: rawQuery.username,
-      email: rawQuery.email,
+      search: rawQuery.search,
       status: rawQuery.status,
-      roleId: rawQuery.roleId,
       pagination: {
         limit: rawQuery.limit,
         offset: rawQuery.offset,
       },
     };
     const users = await this.showAllUseCase.execute(filter);
-    return ResponseHelper.success(res, users);
+    return ResponseHelper.success(res, users.map(user => UsersMapper.toUserDto(user)));
   }
 }

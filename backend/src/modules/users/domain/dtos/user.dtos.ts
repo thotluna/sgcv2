@@ -12,10 +12,8 @@ export interface UpdateMeInput {
 }
 
 export interface UserFilterInput {
-  username?: string;
-  email?: string;
+  search?: string;
   status?: UserState;
-  roleId?: number;
   pagination?: {
     limit: number;
     offset: number;

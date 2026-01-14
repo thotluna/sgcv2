@@ -70,28 +70,37 @@ export class UsersPrismaRepository
   }
 
   async getAll(filter: UserFilterInput): Promise<UserEntity[]> {
-    const { username, email, status, roleId, pagination } = filter;
+    const { search, status, pagination } = filter;
 
-    const where: any = {};
+    const where: any = {
+      AND: [],
+    };
 
-    if (username) {
-      where.username = { contains: username, mode: 'insensitive' };
-    }
-
-    if (email) {
-      where.email = { contains: email, mode: 'insensitive' };
+    if (search) {
+      where.AND.push({
+        OR: [
+          { username: { contains: search, mode: 'insensitive' } },
+          { email: { contains: search, mode: 'insensitive' } },
+          {
+            roles: {
+              some: {
+                role: {
+                  name: { contains: search, mode: 'insensitive' },
+                },
+              },
+            },
+          },
+        ],
+      });
     }
 
     if (status) {
-      where.isActive = status;
+      where.AND.push({ isActive: status });
     }
 
-    if (roleId) {
-      where.roles = {
-        some: {
-          roleId: roleId,
-        },
-      };
+    // If AND is empty, remove it to avoid empty filter issues
+    if (where.AND.length === 0) {
+      delete where.AND;
     }
 
     const users = await prisma.user.findMany({

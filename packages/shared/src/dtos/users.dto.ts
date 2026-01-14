@@ -49,10 +49,8 @@ export class UserWithRolesDto extends UserDto {
 }
 
 export interface UserFilterDto {
-  username?: string;
-  email?: string;
+  search?: string;
   status?: UserStatus;
-  roleId?: number;
   pagination?: {
     limit: number;
     offset: number;
