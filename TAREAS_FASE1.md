@@ -295,7 +295,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
   - ✅ `deleteUser(id)` → soft delete
 - [x] Implementar `users.controller.ts`:
   - ✅ `GET /api/users/me` → perfil del usuario actual
-  - ✅ `GET /api/users` → listar usuarios (admin)
+  - ✅ `GET /api/users` → listar usuarios (ADMIN only)
   - ✅ `GET /api/users/:id` → obtener usuario (admin)
   - ✅ `POST /api/users` → crear usuario (admin)
   - ✅ `PUT /api/users/:id` → actualizar usuario
@@ -661,22 +661,26 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 
 ## 📈 Estado Actual del Proyecto (2025-11-26)
 
-### ✅ Completado (~80%)
+### ✅ Completado (~85%)
 
 - Setup completo de backend y frontend
 - Base de datos PostgreSQL con schema
 - Sistema de autenticación JWT completo
 - RBAC implementado y testeado
 - Página de login funcional
-- **Protección de rutas (Middleware)**
+- Protección de rutas (Middleware)
+- **Gestión de Usuarios:**
+  - ✅ Listado de usuarios con filtros y paginación
+  - ✅ Validación robusta de filtros (Zod)
+  - ✅ Manejo de errores global refinado
 - **Testing completo:**
-  - Backend: 69 tests (9 suites) - Unit + Integration
+  - Backend: 143 tests (26 suites) - Unit + Integration + Routes
   - Frontend: 22 tests (3 suites) - Unit + Component + Hook
   - **E2E: 7 tests (Playwright) - Login, Logout, Protected Routes, Responsive**
 - API client con interceptores
 - Refactorización de Auth Hook (`useAuth`)
 
-### ⏳ En Progreso / Pendiente (~20%)
+### ⏳ En Progreso / Pendiente (~15%)
 
 - Layout de dashboard
 - Componentes de navegación (Sidebar, Header)
@@ -694,12 +698,13 @@ Al finalizar esta iteración, debes tener:
 - ✅ Sistema de login funcional
 - ✅ JWT authentication implementado
 - ✅ RBAC básico funcionando
-- ⏳ Dashboard con layout principal (pendiente)
+- ✅ Gestión de usuarios (listar con filtros)
+- ⏳ Dashboard con layout principal (en progreso)
 - ✅ Rutas protegidas
-- ✅ Tests básicos pasando (69 backend + 22 frontend + 7 E2E = 98 tests totales)
+- ✅ Tests básicos pasando (143 backend + 22 frontend + 7 E2E = 172 tests totales)
 - ⏳ Documentación actualizada (pendiente)
 
-**Estado actual:** 7/9 criterios completados (78%)
+**Estado actual:** 8/10 criterios completados (80%)
 
 ---
 
@@ -726,7 +731,7 @@ Una vez completada esta fase, la siguiente iteración será:
 
 ---
 
-**Versión:** 1.1  
+**Versión:** 1.2  
 **Fecha inicial:** 2025-11-21  
-**Última actualización:** 2025-11-25  
-**Próxima revisión:** Al completar Dashboard y protección de rutas
+**Última actualización:** 2026-01-14  
+**Próxima revisión:** Al completar Dashboard y componentes de navegación

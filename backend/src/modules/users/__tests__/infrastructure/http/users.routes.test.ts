@@ -10,9 +10,18 @@ jest.mock('@auth/infrastructure/http/auth.middleware', () => ({
   authenticate: jest.fn(),
 }));
 
+jest.mock('@modules/rbac/guards/roles.guard', () => ({
+  requireRoles: jest.fn(() => (_req: Request, _res: Response, next: any) => next()),
+}));
+
+
+
 const mockUsersController = {
   me: jest.fn(),
+  updateMe: jest.fn(),
+  showAll: jest.fn(),
 } as unknown as UsersController;
+
 
 describe('UsersRoutes', () => {
   let app: Application;
@@ -65,4 +74,34 @@ describe('UsersRoutes', () => {
       expect(mockUsersController.me).not.toHaveBeenCalled();
     });
   });
+
+  describe('GET /users', () => {
+    it('should delegate request to usersController.showAll when authenticated and authorized', async () => {
+      const mockResponse = [{ id: 1, username: 'test-user' }];
+      (mockUsersController.showAll as jest.Mock).mockImplementation(
+        (_req: Request, res: Response) => {
+          res.status(200).json(mockResponse);
+        }
+      );
+
+      const response = await request(app).get('/users').query({ limit: '5' });
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(mockResponse);
+      expect(mockUsersController.showAll).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything()
+      );
+
+
+    });
+
+    it('should return 400 if filter validation fails', async () => {
+      const response = await request(app).get('/users').query({ status: 'INVALID' });
+
+      expect(response.status).toBe(400);
+      expect(mockUsersController.showAll).not.toHaveBeenCalled();
+    });
+  });
 });
+

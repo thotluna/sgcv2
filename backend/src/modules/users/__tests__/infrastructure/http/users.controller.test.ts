@@ -13,6 +13,11 @@ const mockUpdateMeUseCase = {
   execute: jest.fn(),
 };
 
+const mockShowAllUseCase = {
+  execute: jest.fn(),
+};
+
+
 describe('UserController', () => {
   let userController: UsersController;
   let mockReq: Partial<Request>;
@@ -22,7 +27,12 @@ describe('UserController', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    userController = new UsersController(mockShowMeUseCase as any, mockUpdateMeUseCase as any);
+    userController = new UsersController(
+      mockShowMeUseCase as any,
+      mockUpdateMeUseCase as any,
+      mockShowAllUseCase as any
+    );
+
     mockJson = jest.fn();
     mockStatus = jest.fn().mockReturnValue({ json: mockJson });
     mockRes = {
@@ -129,4 +139,34 @@ describe('UserController', () => {
       ).rejects.toThrow(error);
     });
   });
+
+  describe('showAll', () => {
+    it('should return a list of users', async () => {
+      const mockUsers = [{ id: 1, username: 'user1' }];
+      mockShowAllUseCase.execute.mockResolvedValue(mockUsers);
+      mockReq = { query: { username: 'user1' } };
+
+      await userController.showAll(mockReq as Request, mockRes as Response);
+
+      expect(mockShowAllUseCase.execute).toHaveBeenCalledWith({
+        username: 'user1',
+        email: undefined,
+        status: undefined,
+        roleId: undefined,
+        pagination: {
+          limit: undefined,
+          offset: undefined,
+        },
+      });
+
+
+      expect(mockRes.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: true,
+          data: mockUsers,
+        })
+      );
+    });
+  });
 });
+

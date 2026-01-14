@@ -6,15 +6,17 @@ import { NotFoundException, UnauthorizedException } from '@shared/exceptions';
 import { ShowMeUseCaseService } from '@users/application/show-me.use-case.service';
 import { UpdateMeUseCaseService } from '@users/application/update-me.use-case.service';
 import { UsersMapper } from '../mappers/users';
-import { UpdateUserDto } from '@sgcv2/shared';
+import { UpdateUserDto, UserFilterDto } from '@sgcv2/shared';
 import { UpdateMeInput } from '@modules/users/domain/dtos/user.dtos';
+import { ShowAllUseCaseService } from '@modules/users/application/show-all.use-case.service';
 
 @injectable()
 export class UsersController {
   constructor(
     @inject(TYPES.ShowMeUseCaseService) private readonly showMeUseCase: ShowMeUseCaseService,
-    @inject(TYPES.UpdateMeUseCaseService) private readonly updateMeUseCase: UpdateMeUseCaseService
-  ) {}
+    @inject(TYPES.UpdateMeUseCaseService) private readonly updateMeUseCase: UpdateMeUseCaseService,
+    @inject(TYPES.ShowAllUseCaseService) private readonly showAllUseCase: ShowAllUseCaseService
+  ) { }
 
   async me(req: Request, res: Response): Promise<Response> {
     const user = req.user;
@@ -46,21 +48,36 @@ export class UsersController {
     }
 
     const id = Number(user.id);
-    const body = req.body as UpdateUserDto;
+    const userDto: UpdateUserDto = req.body;
 
-    // Mapping DTO (shared/transport) to Input (application)
     const input: UpdateMeInput = {
-      email: body.email,
-      password: body.password,
-      currentPassword: body.currentPassword,
-      firstName: body.firstName,
-      lastName: body.lastName,
-      avatar: body.avatar,
-      status: body.isActive,
-      roleIds: body.roleIds,
+      email: userDto.email,
+      password: userDto.password,
+      currentPassword: userDto.currentPassword,
+      firstName: userDto.firstName,
+      lastName: userDto.lastName,
+      avatar: userDto.avatar,
+      status: userDto.isActive,
+      roleIds: userDto.roleIds,
     };
 
     const updatedUser = await this.updateMeUseCase.execute(id, input);
     return ResponseHelper.success(res, UsersMapper.toUserWithRolesDto(updatedUser));
+  }
+
+  async showAll(req: Request, res: Response): Promise<Response> {
+    const rawQuery: any = req.query;
+    const filter: UserFilterDto = {
+      username: rawQuery.username,
+      email: rawQuery.email,
+      status: rawQuery.status,
+      roleId: rawQuery.roleId,
+      pagination: {
+        limit: rawQuery.limit,
+        offset: rawQuery.offset,
+      },
+    };
+    const users = await this.showAllUseCase.execute(filter);
+    return ResponseHelper.success(res, users);
   }
 }
