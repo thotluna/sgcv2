@@ -66,14 +66,20 @@ export function DataPagination({
     isActive?: boolean;
     className?: string;
   }) => {
+    const href = createPageUrl ? createPageUrl(page) : '#';
+
+    const handleClick = (e: React.MouseEvent) => {
+      if (!createPageUrl) e.preventDefault();
+      if (!disabled && onPageChange) onPageChange(page);
+    };
+
     const props = {
-      href: createPageUrl ? createPageUrl(page) : '#',
-      onClick: (e: React.MouseEvent) => {
-        if (!createPageUrl) e.preventDefault();
-        if (!disabled && onPageChange) onPageChange(page);
-      },
+      href,
       isActive,
       className: cn(className, disabled ? 'pointer-events-none opacity-50' : 'cursor-pointer'),
+      // Only pass onClick if we actually have an onPageChange handler
+      // This is crucial for Server Component compatibility
+      ...(onPageChange ? { onClick: handleClick } : {}),
     };
 
     if (children === 'Next') return <PaginationNext {...props} />;
