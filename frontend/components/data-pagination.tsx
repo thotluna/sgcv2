@@ -7,14 +7,21 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
+import { cn } from '@/lib/utils';
 
 interface DataPaginationProps {
   currentPage: number;
   totalPages: number;
-  onPageChange: (page: number) => void;
+  onPageChange?: (page: number) => void;
+  createPageUrl?: (page: number) => string;
 }
 
-export function DataPagination({ currentPage, totalPages, onPageChange }: DataPaginationProps) {
+export function DataPagination({
+  currentPage,
+  totalPages,
+  onPageChange,
+  createPageUrl,
+}: DataPaginationProps) {
   if (totalPages <= 1) return null;
 
   const getPageNumbers = () => {
@@ -46,14 +53,42 @@ export function DataPagination({ currentPage, totalPages, onPageChange }: DataPa
     return pages;
   };
 
+  const PageLink = ({
+    page,
+    children,
+    disabled = false,
+    isActive = false,
+    className = '',
+  }: {
+    page: number;
+    children: React.ReactNode;
+    disabled?: boolean;
+    isActive?: boolean;
+    className?: string;
+  }) => {
+    const props = {
+      href: createPageUrl ? createPageUrl(page) : '#',
+      onClick: (e: React.MouseEvent) => {
+        if (!createPageUrl) e.preventDefault();
+        if (!disabled && onPageChange) onPageChange(page);
+      },
+      isActive,
+      className: cn(className, disabled ? 'pointer-events-none opacity-50' : 'cursor-pointer'),
+    };
+
+    if (children === 'Next') return <PaginationNext {...props} />;
+    if (children === 'Previous') return <PaginationPrevious {...props} />;
+
+    return <PaginationLink {...props}>{children}</PaginationLink>;
+  };
+
   return (
     <Pagination>
       <PaginationContent>
         <PaginationItem>
-          <PaginationPrevious
-            onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
-            className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
-          />
+          <PageLink page={currentPage - 1} disabled={currentPage === 1}>
+            Previous
+          </PageLink>
         </PaginationItem>
 
         {getPageNumbers().map((page, index) =>
@@ -63,24 +98,17 @@ export function DataPagination({ currentPage, totalPages, onPageChange }: DataPa
             </PaginationItem>
           ) : (
             <PaginationItem key={page}>
-              <PaginationLink
-                onClick={() => onPageChange(page as number)}
-                isActive={currentPage === page}
-                className="cursor-pointer"
-              >
+              <PageLink page={page as number} isActive={currentPage === page}>
                 {page}
-              </PaginationLink>
+              </PageLink>
             </PaginationItem>
           )
         )}
 
         <PaginationItem>
-          <PaginationNext
-            onClick={() => currentPage < totalPages && onPageChange(currentPage + 1)}
-            className={
-              currentPage === totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'
-            }
-          />
+          <PageLink page={currentPage + 1} disabled={currentPage === totalPages}>
+            Next
+          </PageLink>
         </PaginationItem>
       </PaginationContent>
     </Pagination>

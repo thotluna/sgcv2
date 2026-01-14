@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Link from 'next/link';
 import { ChevronLeftIcon, ChevronRightIcon, MoreHorizontalIcon } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
@@ -37,7 +38,7 @@ type PaginationLinkProps = {
 
 function PaginationLink({ className, isActive, size = 'icon', ...props }: PaginationLinkProps) {
   return (
-    <a
+    <Link
       aria-current={isActive ? 'page' : undefined}
       data-slot="pagination-link"
       data-active={isActive}
@@ -48,7 +49,7 @@ function PaginationLink({ className, isActive, size = 'icon', ...props }: Pagina
         }),
         className
       )}
-      {...props}
+      {...(props as any)}
     />
   );
 }
