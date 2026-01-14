@@ -6,16 +6,18 @@ import { NotFoundException, UnauthorizedException } from '@shared/exceptions';
 import { ShowMeUseCaseService } from '@users/application/show-me.use-case.service';
 import { UpdateMeUseCaseService } from '@users/application/update-me.use-case.service';
 import { UsersMapper } from '../mappers/users';
-import { UpdateUserDto, UserFilterDto } from '@sgcv2/shared';
+import { UpdateUserDto, UserFilterDto, CreateUserDto as SharedCreateUserDto } from '@sgcv2/shared';
 import { UpdateMeInput } from '@modules/users/domain/dtos/user.dtos';
 import { ShowAllUseCaseService } from '@modules/users/application/show-all.use-case.service';
+import { CreateUserUseCaseService } from '@modules/users/application/create-user.use-case.service';
 
 @injectable()
 export class UsersController {
   constructor(
     @inject(TYPES.ShowMeUseCaseService) private readonly showMeUseCase: ShowMeUseCaseService,
     @inject(TYPES.UpdateMeUseCaseService) private readonly updateMeUseCase: UpdateMeUseCaseService,
-    @inject(TYPES.ShowAllUseCaseService) private readonly showAllUseCase: ShowAllUseCaseService
+    @inject(TYPES.ShowAllUseCaseService) private readonly showAllUseCase: ShowAllUseCaseService,
+    @inject(TYPES.CreateUserUseCaseService) private readonly createUserUseCase: CreateUserUseCaseService
   ) { }
 
   async me(req: Request, res: Response): Promise<Response> {
@@ -75,7 +77,29 @@ export class UsersController {
         offset: rawQuery.offset,
       },
     };
-    const users = await this.showAllUseCase.execute(filter);
-    return ResponseHelper.success(res, users.map(user => UsersMapper.toUserDto(user)));
+    const { users, total } = await this.showAllUseCase.execute(filter);
+    const limit = Number(filter.pagination?.limit) || 10;
+    const offset = Number(filter.pagination?.offset) || 0;
+    const page = Math.floor(offset / limit) + 1;
+
+    return ResponseHelper.paginated(
+      res,
+      users.map(user => UsersMapper.toUserDto(user)),
+      {
+        total,
+        page,
+        perPage: limit,
+        totalPages: Math.ceil(total / limit),
+      }
+    );
+  }
+
+  async create(req: Request, res: Response): Promise<Response> {
+    const createUserDto: SharedCreateUserDto = req.body;
+
+    const input = UsersMapper.toCreateUserInput(createUserDto);
+
+    const newUser = await this.createUserUseCase.execute(input);
+    return ResponseHelper.success(res, UsersMapper.toUserDto(newUser));
   }
 }

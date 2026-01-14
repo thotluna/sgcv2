@@ -8,6 +8,7 @@ export class CreateUserDto {
   lastName?: string;
   avatar?: string;
   roleIds?: number[];
+  isActive?: UserStatus;
 }
 
 export class UpdateUserDto {

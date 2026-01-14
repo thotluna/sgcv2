@@ -9,7 +9,7 @@ import { UserEntityModelMapper } from '@users/infrastructure/persist/user-entity
 import { UsersMapper } from '@users/infrastructure/mappers/users';
 import { AuthUserIdentityRepository } from '@modules/auth/domain/auth-user-identity.repository';
 import { UserStatus } from '@sgcv2/shared';
-import { UserFilterInput } from '@modules/users/domain/dtos/user.dtos';
+import { CreateUserInput, UserFilterInput, PaginatedUsers } from '@modules/users/domain/dtos/user.dtos';
 
 @injectable()
 export class UsersPrismaRepository
@@ -69,7 +69,7 @@ export class UsersPrismaRepository
     };
   }
 
-  async getAll(filter: UserFilterInput): Promise<UserEntity[]> {
+  async getAll(filter: UserFilterInput): Promise<PaginatedUsers> {
     const { search, status, pagination } = filter;
 
     const where: any = {
@@ -103,14 +103,20 @@ export class UsersPrismaRepository
       delete where.AND;
     }
 
-    const users = await prisma.user.findMany({
-      where,
-      skip: pagination?.offset,
-      take: pagination?.limit,
-      orderBy: { createdAt: 'desc' },
-    });
+    const [users, total] = await Promise.all([
+      prisma.user.findMany({
+        where,
+        skip: pagination?.offset,
+        take: pagination?.limit,
+        orderBy: { createdAt: 'desc' },
+      }),
+      prisma.user.count({ where }),
+    ]);
 
-    return users.map(user => UserEntityModelMapper.toEntity(user));
+    return {
+      users: users.map(user => UserEntityModelMapper.toEntity(user)),
+      total,
+    };
   }
 
   async update(id: number, data: Partial<UserEntity>): Promise<UserEntity> {
@@ -127,5 +133,21 @@ export class UsersPrismaRepository
     });
 
     return UserEntityModelMapper.toEntity(updatedUser);
+  }
+
+  async create(data: CreateUserInput): Promise<UserEntity> {
+    const user = await prisma.user.create({
+      data: {
+        username: data.username,
+        email: data.email,
+        passwordHash: data.password, // This will be the hash coming from the use case
+        firstName: data.firstName,
+        lastName: data.lastName,
+        avatar: data.avatar,
+        isActive: data.isActive || 'ACTIVE',
+      },
+    });
+
+    return UserEntityModelMapper.toEntity(user);
   }
 }

@@ -8,6 +8,7 @@ import { UpdateUserSchema } from './update-user.schema';
 import { requireRoles } from '@modules/rbac/guards/roles.guard';
 import { ROLES } from '@consts/roles';
 import { UserFilterSchema } from './user-filter.schema';
+import { CreateUserSchema } from './create-user.schema';
 
 
 
@@ -35,8 +36,7 @@ export class UsersRoutes {
       validateSchema(UserFilterSchema, 'query'),
       (req, res) => this.usersController.showAll(req, res)
     );
-
-
+    this.router.post('/', authenticate, requireRoles(ROLES.ADMIN), validateSchema(CreateUserSchema), (req, res) => this.usersController.create(req, res));
   }
 
   getRouter() {

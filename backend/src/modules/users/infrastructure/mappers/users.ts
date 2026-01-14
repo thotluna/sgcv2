@@ -1,6 +1,7 @@
 import { AuthenticatedUserDto } from '@sgcv2/shared/src/dtos/auth.dto';
 import { UserEntity, UserWithRolesEntity } from '@users/domain/user-entity';
-import { UserDto, UserWithRolesDto } from '@sgcv2/shared';
+import { UserDto, UserWithRolesDto, CreateUserDto } from '@sgcv2/shared';
+import { CreateUserInput } from '@modules/users/domain/dtos/user.dtos';
 import { UserWithRolesModel } from '@users/infrastructure/persist/include';
 import { AuthUser } from '@modules/auth/domain/auth-user';
 
@@ -57,6 +58,17 @@ export class UsersMapper {
       passwordHash: user.passwordHash,
       status: user.isActive || 'ACTIVE',
       roles: user.roles.map(ur => ur.role.name),
+    };
+  }
+  static toCreateUserInput(dto: CreateUserDto): CreateUserInput {
+    return {
+      username: dto.username,
+      email: dto.email,
+      password: dto.password,
+      firstName: dto.firstName,
+      lastName: dto.lastName,
+      avatar: dto.avatar,
+      isActive: dto.isActive,
     };
   }
 }

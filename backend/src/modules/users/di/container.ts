@@ -13,6 +13,7 @@ import { UpdateMeUseCaseService } from '../application/update-me.use-case.servic
 import { UserRepository } from '../domain/user-repository';
 import { ShowMeService } from '../domain/show-me.service';
 import { ShowAllUseCaseService } from '../application/show-all.use-case.service';
+import { CreateUserUseCaseService } from '../application/create-user.use-case.service';
 
 export const usersContainerModule = new ContainerModule((option: ContainerModuleLoadOptions) => {
   option
@@ -29,6 +30,7 @@ export const usersContainerModule = new ContainerModule((option: ContainerModule
   option.bind<UsersController>(TYPES.UsersController).to(UsersController);
   option.bind<UsersRoutes>(TYPES.UsersRoutes).to(UsersRoutes);
   option.bind<ShowAllUseCaseService>(TYPES.ShowAllUseCaseService).to(ShowAllUseCaseService);
+  option.bind<CreateUserUseCaseService>(TYPES.CreateUserUseCaseService).to(CreateUserUseCaseService);
   option.bind<UserServiceImpl>(TYPES.ListUsersService).to(UserServiceImpl);
 });
 

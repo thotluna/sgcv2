@@ -1,6 +1,5 @@
-import { UserFilterInput } from "./dtos/user.dtos";
-import { UserEntity } from "./user-entity";
+import { UserFilterInput, PaginatedUsers } from "./dtos/user.dtos";
 
 export interface ListUsersService {
-  getAll(filter: UserFilterInput): Promise<UserEntity[]>;
+  getAll(filter: UserFilterInput): Promise<PaginatedUsers>;
 }

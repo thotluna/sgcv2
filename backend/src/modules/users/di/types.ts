@@ -8,4 +8,5 @@ export const TYPES = {
   UpdateMeUseCaseService: Symbol.for('UpdateMeUseCaseService'),
   ListUsersService: Symbol.for('ListUsersService'),
   ShowAllUseCaseService: Symbol.for('ShowAllUseCaseService'),
+  CreateUserUseCaseService: Symbol.for('CreateUserUseCaseService'),
 };
