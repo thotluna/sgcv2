@@ -30,7 +30,7 @@ interface UserFormProps {
 }
 
 export function UserForm({ userId }: UserFormProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(!!userId);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
@@ -93,8 +93,10 @@ export function UserForm({ userId }: UserFormProps) {
         setError('Password is required for new users');
         return;
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      result = await createUser(values as any);
+      result = await createUser({
+        ...values,
+        password: values.password,
+      });
     }
 
     if (result.success) {
