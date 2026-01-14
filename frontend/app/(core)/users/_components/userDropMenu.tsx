@@ -19,7 +19,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { EllipsisIcon, Eye, Pencil, Trash } from 'lucide-react';
+import { EllipsisIcon, Eye, Trash } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -35,16 +35,10 @@ export function UserDropMenu({ id, username, onDelete }: UserDropMenuProps) {
 
   const data = [
     {
-      label: 'Ver',
+      label: 'Ver / Editar',
       icon: Eye,
-      href: `/users/${id}`,
+      href: `?userId=${id}`,
       shortCut: '⌘V',
-    },
-    {
-      label: 'Editar',
-      icon: Pencil,
-      href: `/users/${id}/update`,
-      shortCut: '⌘E',
     },
   ];
 

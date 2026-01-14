@@ -1,4 +1,10 @@
-import { AppResponse, UserWithRolesDto, UpdateUserDto, UserFilterDto, UserDto } from '@sgcv2/shared';
+import {
+  AppResponse,
+  UserWithRolesDto,
+  UpdateUserDto,
+  UserFilterDto,
+  UserDto,
+} from '@sgcv2/shared';
 import { createServerApiClient } from './server-client';
 
 export const serverUsersService = {
@@ -23,6 +29,16 @@ export const serverUsersService = {
         ...pagination,
       },
     });
+    return response.data;
+  },
+  getUserById: async (id: number) => {
+    const apiClient = await createServerApiClient();
+    const response = await apiClient.get<AppResponse<UserDto>>(`/users/${id}`);
+    return response.data;
+  },
+  updateUser: async (id: number, data: UpdateUserDto) => {
+    const apiClient = await createServerApiClient();
+    const response = await apiClient.patch<AppResponse<UserDto>>(`/users/${id}`, data);
     return response.data;
   },
 };

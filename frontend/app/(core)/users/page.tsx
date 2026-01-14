@@ -68,7 +68,7 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
         <p className="text-muted-foreground">Gestiona los usuarios del sistema y sus permisos.</p>
       </div>
 
-      <UserForm />
+      <UserForm userId={params.userId ? Number(params.userId) : undefined} />
 
       <UsersFilters search={filter.search} status={filter.status} />
 
