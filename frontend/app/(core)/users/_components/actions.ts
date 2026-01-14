@@ -1,6 +1,14 @@
 'use server';
 
 import { redirect } from 'next/navigation';
+import { createServerApiClient } from '@/lib/api/server-client';
+import { CreateUserDto } from '@sgcv2/shared';
+
+export type ActionResult<T = any> = {
+  success: boolean;
+  data?: T;
+  error?: string;
+};
 
 export async function handleUserFilters(formData: FormData) {
   const search = formData.get('search') as string;
@@ -18,4 +26,23 @@ export async function handleUserFilters(formData: FormData) {
 
   const queryString = params.toString();
   redirect(`/users${queryString ? `?${queryString}` : ''}`);
+}
+
+export async function createUser(data: CreateUserDto): Promise<ActionResult> {
+  try {
+    const apiClient = await createServerApiClient();
+    const response = await apiClient.post('/users', data);
+
+    if (response.status === 201 || response.status === 200) {
+      return { success: true };
+    }
+
+    return { success: false, error: 'Unexpected response from server' };
+  } catch (error: any) {
+    console.error('Error creating user:', error);
+    return {
+      success: false,
+      error: error.response?.data?.message || 'Error connecting to server'
+    };
+  }
 }

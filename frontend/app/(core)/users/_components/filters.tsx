@@ -28,7 +28,7 @@ export function UsersFilters({ search, status }: UsersFiltersProps) {
           className="h-9 w-[150px] rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
         >
 
-          <option selected value="ACTIVE">Active</option>
+          <option value="ACTIVE">Active</option>
           <option value="INACTIVE">Inactive</option>
           <option value="BLOCKED">Blocked</option>
         </select>

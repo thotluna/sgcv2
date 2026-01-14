@@ -3,6 +3,7 @@ import { UsersTable } from './_components/table';
 import { UsersFilters } from './_components/filters';
 import { UserDto, UserFilterDto, UserStatus } from '@sgcv2/shared';
 import { DataPagination } from '@/components/data-pagination';
+import { UserForm } from './_components/user-form';
 
 interface UsersPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -10,7 +11,7 @@ interface UsersPageProps {
 
 export default async function UsersPage({ searchParams }: UsersPageProps) {
   const params = await searchParams;
-  const limit = typeof params.limit === 'string' ? parseInt(params.limit) : 20;
+  const limit = typeof params.limit === 'string' ? parseInt(params.limit) : 2;
   const offset = typeof params.offset === 'string' ? parseInt(params.offset) : 0;
 
   const filter: UserFilterDto = {
@@ -66,6 +67,8 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
         <h1 className="text-3xl font-bold tracking-tight">Usuarios</h1>
         <p className="text-muted-foreground">Gestiona los usuarios del sistema y sus permisos.</p>
       </div>
+
+      <UserForm />
 
       <UsersFilters search={filter.search} status={filter.status} />
 
