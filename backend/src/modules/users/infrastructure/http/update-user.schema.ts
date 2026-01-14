@@ -1,6 +1,8 @@
 import { z } from 'zod';
 
-export const UpdateUserSchema = z
+const userStateEnum = z.enum(['ACTIVE', 'INACTIVE', 'BLOCKED']);
+
+export const UpdateMeSchema = z
   .object({
     email: z.string().email().optional(),
     password: z.string().min(8).optional(),
@@ -8,7 +10,7 @@ export const UpdateUserSchema = z
     firstName: z.string().optional(),
     lastName: z.string().optional(),
     avatar: z.string().url().optional().or(z.literal('')),
-    isActive: z.boolean().optional(),
+    isActive: userStateEnum.optional(),
     roleIds: z.array(z.number()).optional(),
   })
   .strict()
@@ -25,4 +27,17 @@ export const UpdateUserSchema = z
     }
   );
 
-export type UpdateUserSchemaType = z.infer<typeof UpdateUserSchema>;
+export const AdminUpdateUserSchema = z
+  .object({
+    email: z.string().email().optional(),
+    password: z.string().min(8).optional(),
+    firstName: z.string().optional(),
+    lastName: z.string().optional(),
+    avatar: z.string().url().optional().or(z.literal('')),
+    isActive: userStateEnum.optional(),
+    roleIds: z.array(z.number()).optional(),
+  })
+  .strict();
+
+export type UpdateMeSchemaType = z.infer<typeof UpdateMeSchema>;
+export type AdminUpdateUserSchemaType = z.infer<typeof AdminUpdateUserSchema>;

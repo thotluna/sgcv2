@@ -9,12 +9,16 @@ import { UserEntityModelMapper } from '@users/infrastructure/persist/user-entity
 import { UsersMapper } from '@users/infrastructure/mappers/users';
 import { AuthUserIdentityRepository } from '@modules/auth/domain/auth-user-identity.repository';
 import { UserStatus } from '@sgcv2/shared';
-import { CreateUserInput, UserFilterInput, PaginatedUsers } from '@modules/users/domain/dtos/user.dtos';
+import {
+  CreateUserInput,
+  UserFilterInput,
+  PaginatedUsers,
+} from '@modules/users/domain/dtos/user.dtos';
 
 @injectable()
 export class UsersPrismaRepository
-  implements UserRepository, UserCredentialsRepository, AuthUserIdentityRepository {
-
+  implements UserRepository, UserCredentialsRepository, AuthUserIdentityRepository
+{
   async findByIdForAuth(sub: number): Promise<AuthUser | null> {
     const user = await prisma.user.findUnique({ where: { id: sub }, include: userInclude });
     if (!user) return null;
@@ -30,6 +34,12 @@ export class UsersPrismaRepository
     if (!user) return null;
 
     return UserEntityModelMapper.toUserWithRolesDto(user);
+  }
+
+  async findById(id: number): Promise<UserEntity | null> {
+    const user = await prisma.user.findUnique({ where: { id } });
+    if (!user) return null;
+    return UserEntityModelMapper.toEntity(user);
   }
 
   async findByUsername(username: string): Promise<UserEntity | null> {
@@ -119,20 +129,38 @@ export class UsersPrismaRepository
     };
   }
 
-  async update(id: number, data: Partial<UserEntity>): Promise<UserEntity> {
+  async update(id: number, data: any): Promise<UserWithRolesEntity> {
+    const updateData: any = {};
+
+    if (data.email !== undefined) updateData.email = data.email;
+    if (data.firstName !== undefined) updateData.firstName = data.firstName;
+    if (data.lastName !== undefined) updateData.lastName = data.lastName;
+    if (data.avatar !== undefined) updateData.avatar = data.avatar;
+
+    // Handle both isActive (from UpdateUserInput) and status (from UserEntity/UpdateMeInput)
+    if (data.isActive !== undefined) updateData.isActive = data.isActive;
+    else if (data.status !== undefined) updateData.isActive = data.status;
+
+    // Handle both password (to be hashed or already hashed) and passwordHash
+    if (data.password !== undefined) updateData.passwordHash = data.password;
+    else if (data.passwordHash !== undefined) updateData.passwordHash = data.passwordHash;
+
+    if (data.roleIds) {
+      updateData.roles = {
+        deleteMany: {},
+        create: data.roleIds.map((roleId: number) => ({
+          roleId,
+        })),
+      };
+    }
+
     const updatedUser = await prisma.user.update({
       where: { id },
-      data: {
-        email: data.email,
-        firstName: data.firstName,
-        lastName: data.lastName,
-        avatar: data.avatar,
-        isActive: data.status,
-        passwordHash: data.passwordHash,
-      },
+      data: updateData,
+      include: userInclude,
     });
 
-    return UserEntityModelMapper.toEntity(updatedUser);
+    return UserEntityModelMapper.toUserWithRolesDto(updatedUser);
   }
 
   async create(data: CreateUserInput): Promise<UserEntity> {

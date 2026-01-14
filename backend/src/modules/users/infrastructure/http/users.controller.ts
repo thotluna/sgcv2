@@ -7,9 +7,11 @@ import { ShowMeUseCaseService } from '@users/application/show-me.use-case.servic
 import { UpdateMeUseCaseService } from '@users/application/update-me.use-case.service';
 import { UsersMapper } from '../mappers/users';
 import { UpdateUserDto, UserFilterDto, CreateUserDto as SharedCreateUserDto } from '@sgcv2/shared';
-import { UpdateMeInput } from '@modules/users/domain/dtos/user.dtos';
+import { UpdateMeInput, UpdateUserInput } from '@modules/users/domain/dtos/user.dtos';
 import { ShowAllUseCaseService } from '@modules/users/application/show-all.use-case.service';
 import { CreateUserUseCaseService } from '@modules/users/application/create-user.use-case.service';
+import { ShowUserUseCaseService } from '@users/application/show-user.use-case.service';
+import { UpdateUserUseCaseService } from '@users/application/update-user.use-case.service';
 
 @injectable()
 export class UsersController {
@@ -17,8 +19,12 @@ export class UsersController {
     @inject(TYPES.ShowMeUseCaseService) private readonly showMeUseCase: ShowMeUseCaseService,
     @inject(TYPES.UpdateMeUseCaseService) private readonly updateMeUseCase: UpdateMeUseCaseService,
     @inject(TYPES.ShowAllUseCaseService) private readonly showAllUseCase: ShowAllUseCaseService,
-    @inject(TYPES.CreateUserUseCaseService) private readonly createUserUseCase: CreateUserUseCaseService
-  ) { }
+    @inject(TYPES.CreateUserUseCaseService)
+    private readonly createUserUseCase: CreateUserUseCaseService,
+    @inject(TYPES.ShowUserUseCaseService) private readonly showUserUseCase: ShowUserUseCaseService,
+    @inject(TYPES.UpdateUserUseCaseService)
+    private readonly updateUserUseCase: UpdateUserUseCaseService
+  ) {}
 
   async me(req: Request, res: Response): Promise<Response> {
     const user = req.user;
@@ -101,5 +107,34 @@ export class UsersController {
 
     const newUser = await this.createUserUseCase.execute(input);
     return ResponseHelper.success(res, UsersMapper.toUserDto(newUser));
+  }
+
+  async show(req: Request, res: Response): Promise<Response> {
+    const id = Number(req.params.id);
+    const user = await this.showUserUseCase.execute(id);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return ResponseHelper.success(res, UsersMapper.toUserDto(user));
+  }
+
+  async update(req: Request, res: Response): Promise<Response> {
+    const id = Number(req.params.id);
+    const userDto: UpdateUserDto = req.body;
+
+    const input: UpdateUserInput = {
+      email: userDto.email,
+      password: userDto.password,
+      firstName: userDto.firstName,
+      lastName: userDto.lastName,
+      avatar: userDto.avatar,
+      isActive: userDto.isActive,
+      roleIds: userDto.roleIds,
+    };
+
+    const updatedUser = await this.updateUserUseCase.execute(id, input);
+    return ResponseHelper.success(res, UsersMapper.toUserDto(updatedUser));
   }
 }
