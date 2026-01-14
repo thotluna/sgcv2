@@ -144,15 +144,13 @@ describe('UserController', () => {
     it('should return a list of users', async () => {
       const mockUsers = [{ id: 1, username: 'user1' }];
       mockShowAllUseCase.execute.mockResolvedValue(mockUsers);
-      mockReq = { query: { username: 'user1' } };
+      mockReq = { query: { search: 'user1' } };
 
       await userController.showAll(mockReq as Request, mockRes as Response);
 
       expect(mockShowAllUseCase.execute).toHaveBeenCalledWith({
-        username: 'user1',
-        email: undefined,
+        search: 'user1',
         status: undefined,
-        roleId: undefined,
         pagination: {
           limit: undefined,
           offset: undefined,

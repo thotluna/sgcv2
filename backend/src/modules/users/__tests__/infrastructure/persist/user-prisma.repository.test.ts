@@ -272,10 +272,8 @@ describe('UsersPrismaRepository', () => {
       (prisma.user.findMany as jest.Mock).mockResolvedValue(mockUsers);
 
       const filter = {
-        username: 'user',
-        email: '@test.com',
+        search: 'user',
         status: 'ACTIVE' as const,
-        roleId: 1,
         pagination: { limit: 10, offset: 0 },
       };
 
@@ -284,14 +282,24 @@ describe('UsersPrismaRepository', () => {
       expect(result).toHaveLength(2);
       expect(prisma.user.findMany).toHaveBeenCalledWith({
         where: {
-          username: { contains: 'user', mode: 'insensitive' },
-          email: { contains: '@test.com', mode: 'insensitive' },
-          isActive: 'ACTIVE',
-          roles: {
-            some: {
-              roleId: 1,
+          AND: [
+            {
+              OR: [
+                { username: { contains: 'user', mode: 'insensitive' } },
+                { email: { contains: 'user', mode: 'insensitive' } },
+                {
+                  roles: {
+                    some: {
+                      role: {
+                        name: { contains: 'user', mode: 'insensitive' },
+                      },
+                    },
+                  },
+                },
+              ],
             },
-          },
+            { isActive: 'ACTIVE' },
+          ],
         },
         skip: 0,
         take: 10,
