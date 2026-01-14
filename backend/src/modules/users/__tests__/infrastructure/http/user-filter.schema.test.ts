@@ -1,17 +1,16 @@
 import { UserFilterSchema } from '../../../infrastructure/http/user-filter.schema';
 
 describe('UserFilterSchema', () => {
-  it('should validate and transform empty query', () => {
+  it('should validate empty query', () => {
     const result = UserFilterSchema.safeParse({});
     expect(result.success).toBe(true);
     if (result.success) {
       expect(result.data).toEqual({
-        username: undefined,
-        email: undefined,
+        search: undefined,
         status: undefined,
         roleId: undefined,
-        limit: 10,
-        offset: 0,
+        limit: undefined,
+        offset: undefined,
       });
     }
 
@@ -19,8 +18,7 @@ describe('UserFilterSchema', () => {
 
   it('should validate and transform full query', () => {
     const query = {
-      username: 'test',
-      email: 'test@example.com',
+      search: 'test',
       status: 'ACTIVE',
       roleId: '1',
       limit: '20',
@@ -30,8 +28,7 @@ describe('UserFilterSchema', () => {
     expect(result.success).toBe(true);
     if (result.success) {
       expect(result.data).toEqual({
-        username: 'test',
-        email: 'test@example.com',
+        search: 'test',
         status: 'ACTIVE',
         roleId: 1,
         limit: 20,

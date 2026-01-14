@@ -17,6 +17,10 @@ const mockShowAllUseCase = {
   execute: jest.fn(),
 };
 
+const mockCreateUserUseCase = {
+  execute: jest.fn(),
+};
+
 
 describe('UserController', () => {
   let userController: UsersController;
@@ -30,7 +34,8 @@ describe('UserController', () => {
     userController = new UsersController(
       mockShowMeUseCase as any,
       mockUpdateMeUseCase as any,
-      mockShowAllUseCase as any
+      mockShowAllUseCase as any,
+      mockCreateUserUseCase as any
     );
 
     mockJson = jest.fn();
@@ -143,8 +148,8 @@ describe('UserController', () => {
   describe('showAll', () => {
     it('should return a list of users', async () => {
       const mockUsers = [{ id: 1, username: 'user1' }];
-      mockShowAllUseCase.execute.mockResolvedValue(mockUsers);
-      mockReq = { query: { search: 'user1' } };
+      mockShowAllUseCase.execute.mockResolvedValue({ users: mockUsers, total: 1 });
+      mockReq = { query: { search: 'user1', limit: '10', offset: '0' } };
 
       await userController.showAll(mockReq as Request, mockRes as Response);
 
@@ -152,8 +157,8 @@ describe('UserController', () => {
         search: 'user1',
         status: undefined,
         pagination: {
-          limit: undefined,
-          offset: undefined,
+          limit: '10',
+          offset: '0',
         },
       });
 
@@ -161,7 +166,40 @@ describe('UserController', () => {
       expect(mockRes.json).toHaveBeenCalledWith(
         expect.objectContaining({
           success: true,
-          data: mockUsers,
+          data: expect.any(Array),
+          metadata: expect.objectContaining({
+            pagination: expect.objectContaining({
+              total: 1,
+              totalPages: 1
+            })
+          })
+        })
+      );
+    });
+  });
+
+  describe('create', () => {
+    it('should create a user and return success', async () => {
+      const createData = {
+        username: 'newuser',
+        email: 'newuser@example.com',
+        password: 'password123',
+        isActive: 'ACTIVE',
+      };
+      const mockCreatedUser = { id: 2, ...createData, status: 'ACTIVE' };
+      mockCreateUserUseCase.execute.mockResolvedValue(mockCreatedUser);
+
+      mockReq = {
+        body: createData,
+      } as unknown as Request;
+
+      await userController.create(mockReq as Request, mockRes as Response);
+
+      expect(mockCreateUserUseCase.execute).toHaveBeenCalledWith(createData);
+      expect(mockRes.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: true,
+          data: expect.objectContaining({ username: 'newuser' }),
         })
       );
     });

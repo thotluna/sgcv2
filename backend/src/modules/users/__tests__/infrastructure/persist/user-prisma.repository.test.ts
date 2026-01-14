@@ -10,6 +10,8 @@ jest.mock('@config/prisma', () => ({
       findUnique: jest.fn(),
       findMany: jest.fn(),
       update: jest.fn(),
+      create: jest.fn(),
+      count: jest.fn(),
     },
   },
 }));
@@ -270,6 +272,7 @@ describe('UsersPrismaRepository', () => {
       ];
 
       (prisma.user.findMany as jest.Mock).mockResolvedValue(mockUsers);
+      (prisma.user.count as jest.Mock).mockResolvedValue(2);
 
       const filter = {
         search: 'user',
@@ -279,7 +282,8 @@ describe('UsersPrismaRepository', () => {
 
       const result = await repository.getAll(filter);
 
-      expect(result).toHaveLength(2);
+      expect(result.users).toHaveLength(2);
+      expect(result.total).toBe(2);
       expect(prisma.user.findMany).toHaveBeenCalledWith({
         where: {
           AND: [
@@ -309,14 +313,80 @@ describe('UsersPrismaRepository', () => {
 
     it('should return all users when no filters are provided', async () => {
       (prisma.user.findMany as jest.Mock).mockResolvedValue([]);
+      (prisma.user.count as jest.Mock).mockResolvedValue(0);
 
-      await repository.getAll({});
+      const result = await repository.getAll({});
 
+      expect(result.total).toBe(0);
       expect(prisma.user.findMany).toHaveBeenCalledWith({
         where: {},
         skip: undefined,
         take: undefined,
         orderBy: { createdAt: 'desc' },
+      });
+    });
+  });
+
+  describe('update', () => {
+    it('should update a user and return the entity', async () => {
+      const mockUserModel: User = {
+        id: 1,
+        username: 'testuser',
+        email: 'updated@test.com',
+        passwordHash: 'hashed',
+        firstName: 'Updated',
+        lastName: 'User',
+        avatar: null,
+        isActive: 'ACTIVE',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      mockPrismaUser.update.mockResolvedValue(mockUserModel);
+
+      const result = await repository.update(1, { email: 'updated@test.com' });
+
+      expect(result.email).toBe('updated@test.com');
+      expect(mockPrismaUser.update).toHaveBeenCalled();
+    });
+  });
+
+  describe('create', () => {
+    it('should create a user and return the entity', async () => {
+      const createData = {
+        username: 'newuser',
+        email: 'newuser@test.com',
+        password: 'hashedpassword',
+        firstName: 'New',
+        lastName: 'User',
+        isActive: 'ACTIVE' as const,
+      };
+      const mockUserModel: User = {
+        id: 2,
+        username: createData.username,
+        email: createData.email,
+        passwordHash: createData.password,
+        firstName: createData.firstName,
+        lastName: createData.lastName,
+        avatar: null,
+        isActive: 'ACTIVE',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      mockPrismaUser.create.mockResolvedValue(mockUserModel);
+
+      const result = await repository.create(createData);
+
+      expect(result.username).toBe('newuser');
+      expect(mockPrismaUser.create).toHaveBeenCalledWith({
+        data: {
+          username: createData.username,
+          email: createData.email,
+          passwordHash: createData.password,
+          firstName: createData.firstName,
+          lastName: createData.lastName,
+          avatar: undefined,
+          isActive: createData.isActive,
+        },
       });
     });
   });

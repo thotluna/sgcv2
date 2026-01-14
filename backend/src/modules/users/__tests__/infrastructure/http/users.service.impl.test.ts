@@ -6,6 +6,7 @@ const mockRepository = {
   getUserWithRoles: jest.fn(),
   update: jest.fn(),
   getAll: jest.fn(),
+  create: jest.fn(),
 };
 
 
@@ -48,13 +49,31 @@ describe('UserServiceImpl', () => {
   });
 
   it('should call repository.getAll with filters', async () => {
-    const filters = { username: 'test' };
-    mockRepository.getAll = jest.fn().mockResolvedValue([]);
+    const filters = { search: 'test' };
+    const mockResult = { users: [], total: 0 };
+    mockRepository.getAll.mockResolvedValue(mockResult);
 
     const result = await userServiceImpl.getAll(filters);
 
     expect(mockRepository.getAll).toHaveBeenCalledWith(filters);
-    expect(result).toEqual([]);
+    expect(result).toEqual(mockResult);
+  });
+
+  describe('create', () => {
+    it('should call repository.create and return the entity', async () => {
+      const createData = {
+        username: 'newuser',
+        email: 'newuser@test.com',
+        password: 'hashedpassword',
+      };
+      const mockCreatedUser = { id: 2, ...createData };
+      mockRepository.create.mockResolvedValue(mockCreatedUser as any);
+
+      const result = await userServiceImpl.create(createData as any);
+
+      expect(mockRepository.create).toHaveBeenCalledWith(createData);
+      expect(result).toEqual(mockCreatedUser);
+    });
   });
 });
 

@@ -20,6 +20,7 @@ const mockUsersController = {
   me: jest.fn(),
   updateMe: jest.fn(),
   showAll: jest.fn(),
+  create: jest.fn(),
 } as unknown as UsersController;
 
 
@@ -101,6 +102,38 @@ describe('UsersRoutes', () => {
 
       expect(response.status).toBe(400);
       expect(mockUsersController.showAll).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('POST /users', () => {
+    it('should create a user when data is valid', async () => {
+      const validUserData = {
+        username: 'newuser',
+        email: 'newuser@example.com',
+        password: 'password123',
+      };
+      const mockResponse = { id: 2, ...validUserData };
+      (mockUsersController.create as jest.Mock).mockImplementation((_req: Request, res: Response) => {
+        res.status(201).json({ success: true, data: mockResponse });
+      });
+
+      const response = await request(app).post('/users').send(validUserData);
+
+      expect(response.status).toBe(201);
+      expect(response.body.data).toEqual(mockResponse);
+      expect(mockUsersController.create).toHaveBeenCalled();
+    });
+
+    it('should return 400 when data is invalid', async () => {
+      const invalidUserData = {
+        username: 'us', // too short
+        email: 'not-an-email',
+      };
+
+      const response = await request(app).post('/users').send(invalidUserData);
+
+      expect(response.status).toBe(400);
+      expect(mockUsersController.create).not.toHaveBeenCalled();
     });
   });
 });

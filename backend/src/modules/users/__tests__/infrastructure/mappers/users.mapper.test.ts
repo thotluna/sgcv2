@@ -104,4 +104,29 @@ describe('UsersMapper', () => {
       expect(result.status).toBe('ACTIVE');
     });
   });
+
+  describe('toCreateUserInput', () => {
+    it('should map CreateUserDto to CreateUserInput correctly', () => {
+      const dto = {
+        username: 'newuser',
+        email: 'newuser@example.com',
+        password: 'password123',
+        firstName: 'New',
+        lastName: 'User',
+        isActive: 'ACTIVE' as const,
+      };
+
+      const result = UsersMapper.toCreateUserInput(dto);
+
+      expect(result).toEqual({
+        username: 'newuser',
+        email: 'newuser@example.com',
+        password: 'password123',
+        firstName: 'New',
+        lastName: 'User',
+        avatar: undefined,
+        isActive: 'ACTIVE',
+      });
+    });
+  });
 });

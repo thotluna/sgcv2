@@ -16,14 +16,14 @@ describe('ShowAllUseCaseService', () => {
     jest.clearAllMocks();
   });
 
-  it('should return a list of users', async () => {
-    const mockUsers = [{ id: 1, username: 'test' }] as any;
-    mockService.getAll.mockResolvedValue(mockUsers);
+  it('should return paginated users', async () => {
+    const mockResponse = { users: [{ id: 1, username: 'test' }], total: 1 } as any;
+    mockService.getAll.mockResolvedValue(mockResponse);
 
-    const filter = { username: 'test' };
+    const filter = { search: 'test' };
     const result = await useCase.execute(filter);
 
-    expect(result).toEqual(mockUsers);
+    expect(result).toEqual(mockResponse);
     expect(mockService.getAll).toHaveBeenCalledWith(filter);
   });
 });
