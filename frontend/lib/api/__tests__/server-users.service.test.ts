@@ -38,4 +38,53 @@ describe('serverUsersService', () => {
       expect(result).toEqual(apiResponse.data);
     });
   });
+
+  describe('getAll', () => {
+    it('should fetch all users with filters', async () => {
+      const mockUsers = [{ id: 1, username: 'user1' }];
+      const filters = { search: 'test', pagination: { limit: 10, offset: 0 } };
+      mockApiClient.get.mockResolvedValue({ data: { data: mockUsers, success: true } });
+
+      const result = await serverUsersService.getAll(filters);
+
+      expect(mockApiClient.get).toHaveBeenCalledWith('/users', {
+        params: {
+          search: 'test',
+          limit: 10,
+          offset: 0,
+        },
+      });
+      expect(result).toEqual({ data: mockUsers, success: true });
+    });
+
+    it('should work without filters', async () => {
+      mockApiClient.get.mockResolvedValue({ data: { success: true } });
+      await serverUsersService.getAll();
+      expect(mockApiClient.get).toHaveBeenCalledWith('/users', { params: {} });
+    });
+  });
+
+  describe('getUserById', () => {
+    it('should fetch user by id', async () => {
+      const mockUser = { id: 123 };
+      mockApiClient.get.mockResolvedValue({ data: { data: mockUser, success: true } });
+
+      const result = await serverUsersService.getUserById(123);
+
+      expect(mockApiClient.get).toHaveBeenCalledWith('/users/123');
+      expect(result).toEqual({ data: mockUser, success: true });
+    });
+  });
+
+  describe('updateUser', () => {
+    it('should update user by id', async () => {
+      const updateData = { firstName: 'Updated' };
+      mockApiClient.patch.mockResolvedValue({ data: { success: true } });
+
+      const result = await serverUsersService.updateUser(123, updateData);
+
+      expect(mockApiClient.patch).toHaveBeenCalledWith('/users/123', updateData);
+      expect(result).toEqual({ success: true });
+    });
+  });
 });
