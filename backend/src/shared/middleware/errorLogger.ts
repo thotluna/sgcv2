@@ -11,9 +11,12 @@ interface ErrorLogData {
   request: {
     method: string;
     url: string;
-    params: unknown;
-    query: unknown;
-    body: unknown;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    params: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    query: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    body: any;
     ip: string;
   };
   user?: string;

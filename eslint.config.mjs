@@ -33,10 +33,18 @@ export default [
       ...tsPlugin.configs.recommended.rules,
       ...prettierConfig.rules,
       'prettier/prettier': 'error',
-      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-unused-vars': [
         'error',
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      ],
+      '@typescript-eslint/no-restricted-types': [
+        'error',
+        {
+          types: {
+            unknown: 'Do not use unknown, use specific types or interfaces instead.',
+          },
+        },
       ],
       '@typescript-eslint/no-require-imports': 'off',
       'no-unused-vars': 'off',

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import passport from 'passport';
-import { UserDto } from '@sgcv2/shared';
+import { UserWithRolesDto } from '@sgcv2/shared';
 import { AuthUser } from '@modules/auth/domain/auth-user';
 import { InternalServerErrorException, UnauthorizedException } from '@shared/exceptions';
 
@@ -17,13 +17,11 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
         return next(new UnauthorizedException(info?.message || 'Invalid or missing token'));
       }
 
-      const userWithRoles = user as unknown as { id: number; username: string; roles: string[] };
-
       req.user = {
-        id: userWithRoles.id.toString(),
-        username: userWithRoles.username,
-        role: userWithRoles.roles[0] || '',
-        roles: userWithRoles.roles,
+        id: user.id.toString(),
+        username: user.username,
+        role: user.roles[0] || '',
+        roles: user.roles,
       };
       next();
     }
@@ -31,14 +29,13 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
 };
 
 export const optionalAuth = (req: Request, res: Response, next: NextFunction) => {
-  return passport.authenticate('jwt', { session: false }, (err: Error, user: UserDto) => {
+  return passport.authenticate('jwt', { session: false }, (err: Error, user: UserWithRolesDto) => {
     if (!err && user) {
-      const userWithRoles = user as unknown as { id: number; username: string; roles: string[] };
       req.user = {
-        id: userWithRoles.id.toString(),
-        username: userWithRoles.username,
-        role: userWithRoles.roles[0] || '',
-        roles: userWithRoles.roles,
+        id: user.id.toString(),
+        username: user.username,
+        role: user.roles?.[0]?.name || '',
+        roles: user.roles?.map(r => r.name) || [],
       };
     }
     next();

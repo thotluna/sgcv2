@@ -102,7 +102,7 @@ export async function createUserAction(
     } else {
       return { success: false, message: 'Respuesta inesperada del servidor' };
     }
-  } catch (error: unknown) {
+  } catch (error) {
     console.error('Error creating user:', error);
     const message =
       (error as ApiResponseError).response?.data?.message || 'Error al conectar con el servidor';
@@ -160,7 +160,7 @@ export async function updateUserAction(
     } else {
       return { success: false, message: 'Respuesta inesperada del servidor' };
     }
-  } catch (error: unknown) {
+  } catch (error) {
     console.error('Error updating user:', error);
     const message =
       (error as ApiResponseError).response?.data?.message || 'Error al conectar con el servidor';
@@ -184,7 +184,7 @@ export async function getUser(id: number): Promise<ActionResult<UserDto>> {
     }
 
     return { success: false, error: 'User not found' };
-  } catch (error: unknown) {
+  } catch (error) {
     console.error('Error fetching user:', error);
     const errorMsg =
       (error as ApiResponseError).response?.data?.message || 'Error connecting to server';

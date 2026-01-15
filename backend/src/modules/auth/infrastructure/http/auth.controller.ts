@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
 import { LoginUseCaseService } from '@auth/application/login.use-case.service';
 import { InvalidPasswordException } from '@auth/domain/exceptions/invalid-password.exception';
@@ -44,7 +44,7 @@ export class AuthController {
     }
   }
 
-  async logout(_req: TypedRequest<unknown>, res: Response): Promise<Response> {
+  async logout(_req: Request, res: Response): Promise<Response> {
     res.clearCookie('auth-token', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',

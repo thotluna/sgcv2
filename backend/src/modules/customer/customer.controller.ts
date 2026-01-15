@@ -53,7 +53,7 @@ export class CustomerController {
     try {
       const customer = await this.customerService.create(result.data);
       return ResponseHelper.created(res, customer);
-    } catch (error: unknown) {
+    } catch (error) {
       if (error instanceof Error) {
         if (error.message === 'Customer code already exists') {
           throw new ConflictException(error.message);
@@ -96,7 +96,7 @@ export class CustomerController {
     try {
       const customer = await this.customerService.findById(id);
       return ResponseHelper.success(res, customer);
-    } catch (error: unknown) {
+    } catch (error) {
       if (error instanceof Error) {
         if (error.message === 'Customer not found') {
           throw new NotFoundException(error.message);
@@ -112,7 +112,7 @@ export class CustomerController {
     try {
       const customer = await this.customerService.update(id, customerDto);
       return ResponseHelper.success(res, customer);
-    } catch (error: unknown) {
+    } catch (error) {
       if (error instanceof Error) {
         if (error.message === 'Customer not found') {
           throw new NotFoundException(error.message);
@@ -127,7 +127,7 @@ export class CustomerController {
     try {
       const customer = await this.customerService.delete(id);
       return ResponseHelper.success(res, customer);
-    } catch (error: unknown) {
+    } catch (error) {
       if (error instanceof Error) {
         if (error.message === 'Customer not found') {
           throw new NotFoundException(error.message);

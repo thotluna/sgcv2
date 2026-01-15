@@ -23,7 +23,17 @@ describe('Auth Middleware', () => {
 
   describe('authenticate', () => {
     it('should call next if authentication is successful', () => {
-      const mockUser = { id: '1', username: 'test', roles: ['admin'], role: 'admin' };
+      const mockUser = {
+        id: 1,
+        username: 'test',
+        email: 'test@example.com',
+        firstName: 'Test',
+        lastName: 'User',
+        passwordHash: 'hash',
+        status: 'ACTIVE' as const,
+        roles: ['admin'],
+      };
+      const expectedUser = { id: '1', username: 'test', roles: ['admin'], role: 'admin' };
 
       // Mock passport.authenticate to return a middleware that calls the callback with success
       (passport.authenticate as jest.Mock).mockImplementation((_strategy, _options, callback) => {
@@ -39,7 +49,7 @@ describe('Auth Middleware', () => {
         { session: false },
         expect.any(Function)
       );
-      expect(mockRequest.user).toEqual(mockUser);
+      expect(mockRequest.user).toEqual(expectedUser);
       expect(nextFunction).toHaveBeenCalledWith();
       expect(mockResponse.status).not.toHaveBeenCalled();
     });
@@ -91,7 +101,12 @@ describe('Auth Middleware', () => {
 
   describe('optionalAuth', () => {
     it('should set user and call next if authentication is successful', () => {
-      const mockUser = { id: '1', username: 'test', roles: ['admin'], role: 'admin' };
+      const mockUser = {
+        id: 1,
+        username: 'test',
+        roles: [{ id: 1, name: 'admin' }],
+      };
+      const expectedUser = { id: '1', username: 'test', roles: ['admin'], role: 'admin' };
 
       (passport.authenticate as jest.Mock).mockImplementation((_strategy, _options, callback) => {
         return (_req: Request, _res: Response, _next: NextFunction) => {
@@ -101,7 +116,7 @@ describe('Auth Middleware', () => {
 
       optionalAuth(mockRequest as Request, mockResponse as Response, nextFunction);
 
-      expect(mockRequest.user).toEqual(mockUser);
+      expect(mockRequest.user).toEqual(expectedUser);
       expect(nextFunction).toHaveBeenCalled();
     });
 
