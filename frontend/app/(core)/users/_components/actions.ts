@@ -15,7 +15,15 @@ const userSchema = z.object({
   isActive: z.enum(['ACTIVE', 'INACTIVE', 'BLOCKED']),
 });
 
-export type ActionResult<T = unknown> = {
+interface ApiResponseError {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+}
+
+export type ActionResult<T> = {
   success: boolean;
   data?: T;
   error?: string;
@@ -97,13 +105,11 @@ export async function createUserAction(
   } catch (error: unknown) {
     console.error('Error creating user:', error);
     const message =
-      error instanceof Object && 'response' in error
-        ? (error as { response: { data: { message: string } } }).response?.data?.message
-        : 'Error al conectar con el servidor';
+      (error as ApiResponseError).response?.data?.message || 'Error al conectar con el servidor';
 
     return {
       success: false,
-      message: message || 'Error al conectar con el servidor',
+      message,
     };
   }
 
@@ -157,13 +163,11 @@ export async function updateUserAction(
   } catch (error: unknown) {
     console.error('Error updating user:', error);
     const message =
-      error instanceof Object && 'response' in error
-        ? (error as { response: { data: { message: string } } }).response?.data?.message
-        : 'Error al conectar con el servidor';
+      (error as ApiResponseError).response?.data?.message || 'Error al conectar con el servidor';
 
     return {
       success: false,
-      message: message || 'Error al conectar con el servidor',
+      message,
     };
   }
 
@@ -182,14 +186,12 @@ export async function getUser(id: number): Promise<ActionResult<UserDto>> {
     return { success: false, error: 'User not found' };
   } catch (error: unknown) {
     console.error('Error fetching user:', error);
-    const errorMessage =
-      error instanceof Object && 'response' in error
-        ? (error as { response: { data: { message: string } } }).response?.data?.message
-        : 'Error connecting to server';
+    const errorMsg =
+      (error as ApiResponseError).response?.data?.message || 'Error connecting to server';
 
     return {
       success: false,
-      error: errorMessage || 'Error connecting to server',
+      error: errorMsg,
     };
   }
 }
