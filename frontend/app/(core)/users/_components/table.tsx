@@ -51,7 +51,7 @@ export function UsersTable({ data = [], isLoading }: UsersTableProps) {
         <UserDropMenu
           id={user.id}
           username={user.username}
-        // onDelete for users might be implemented later or handled via parent
+          // onDelete for users might be implemented later or handled via parent
         />
       )}
     />

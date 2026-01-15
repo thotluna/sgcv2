@@ -70,11 +70,7 @@ export function DataTable<T>({
                     {column.accessor(item)}
                   </TableCell>
                 ))}
-                {hasActions && (
-                  <TableCell className="text-right">
-                    {rowActions(item)}
-                  </TableCell>
-                )}
+                {hasActions && <TableCell className="text-right">{rowActions(item)}</TableCell>}
               </TableRow>
             ))
           )}

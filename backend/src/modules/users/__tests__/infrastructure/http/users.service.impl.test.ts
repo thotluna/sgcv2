@@ -9,7 +9,6 @@ const mockRepository = {
   create: jest.fn(),
 };
 
-
 describe('UserServiceImpl', () => {
   let userServiceImpl: UserServiceImpl;
 
@@ -76,4 +75,3 @@ describe('UserServiceImpl', () => {
     });
   });
 });
-

@@ -3,7 +3,6 @@ import { validateSchema } from '../validate-schema';
 import { ValidationException } from '../../exceptions/http-exceptions';
 import { Response, NextFunction } from 'express';
 
-
 describe('validateSchema Middleware', () => {
   const schema = z.object({
     name: z.string(),

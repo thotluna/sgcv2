@@ -13,7 +13,6 @@ describe('UserFilterSchema', () => {
         offset: undefined,
       });
     }
-
   });
 
   it('should validate and transform full query', () => {
@@ -35,7 +34,6 @@ describe('UserFilterSchema', () => {
         offset: 5,
       });
     }
-
   });
 
   it('should reject invalid status', () => {

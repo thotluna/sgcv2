@@ -34,9 +34,7 @@ export function CustomersTable({ data, isLoading, onDelete }: CustomersTableProp
     {
       header: 'Estado',
       accessor: customer => (
-        <Badge variant={statusMap[customer.state].variant}>
-          {statusMap[customer.state].label}
-        </Badge>
+        <Badge variant={statusMap[customer.state].variant}>{statusMap[customer.state].label}</Badge>
       ),
     },
   ];
@@ -48,11 +46,7 @@ export function CustomersTable({ data, isLoading, onDelete }: CustomersTableProp
       isLoading={isLoading}
       emptyMessage="No se encontraron resultados."
       rowActions={customer => (
-        <CustomerDropMenu
-          id={customer.id}
-          customerName={customer.legalName}
-          onDelete={onDelete}
-        />
+        <CustomerDropMenu id={customer.id} customerName={customer.legalName} onDelete={onDelete} />
       )}
     />
   );

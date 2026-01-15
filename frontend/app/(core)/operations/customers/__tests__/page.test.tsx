@@ -2,7 +2,6 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import CustomersPage from '../page';
 import { customersService } from '@/lib/api/customers.service';
 import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
 
 // Mocks
 jest.mock('@/lib/api/customers.service');
@@ -21,9 +20,15 @@ jest.mock('@/components/ui/pagination', () => ({
   ),
   PaginationContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   PaginationItem: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  PaginationLink: ({ children, onClick }: any) => <button onClick={onClick}>{children}</button>,
-  PaginationPrevious: ({ onClick }: any) => <button onClick={onClick}>Previous</button>,
-  PaginationNext: ({ onClick }: any) => <button onClick={onClick}>Next</button>,
+  PaginationLink: ({ children, onClick }: { children: React.ReactNode; onClick?: () => void }) => (
+    <button onClick={onClick}>{children}</button>
+  ),
+  PaginationPrevious: ({ onClick }: { onClick?: () => void }) => (
+    <button onClick={onClick}>Previous</button>
+  ),
+  PaginationNext: ({ onClick }: { onClick?: () => void }) => (
+    <button onClick={onClick}>Next</button>
+  ),
   PaginationEllipsis: () => <span>...</span>,
 }));
 
@@ -99,7 +104,7 @@ describe('CustomersPage', () => {
   it('handles status filter change', async () => {
     render(<CustomersPage />);
 
-    const statusSelect = screen.getByRole('combobox'); // Assuming select render as combobox role or investigate toolbar implementation
+    screen.getByRole('combobox'); // Assuming select render as combobox role or investigate toolbar implementation
     // Actually toolbar uses a native select
     // Let's find by generic way if role fails
     // Looking at toolbar.tsx: <select value={status} ...>

@@ -16,6 +16,45 @@ interface DataPaginationProps {
   createPageUrl?: (page: number) => string;
 }
 
+interface PageLinkProps {
+  page: number;
+  children: React.ReactNode;
+  disabled?: boolean;
+  isActive?: boolean;
+  className?: string;
+  createPageUrl?: (page: number) => string;
+  onPageChange?: (page: number) => void;
+}
+
+const PageLink = ({
+  page,
+  children,
+  disabled = false,
+  isActive = false,
+  className = '',
+  createPageUrl,
+  onPageChange,
+}: PageLinkProps) => {
+  const href = createPageUrl ? createPageUrl(page) : '#';
+
+  const handleClick = (e: React.MouseEvent) => {
+    if (!createPageUrl) e.preventDefault();
+    if (!disabled && onPageChange) onPageChange(page);
+  };
+
+  const props = {
+    href,
+    isActive,
+    className: cn(className, disabled ? 'pointer-events-none opacity-50' : 'cursor-pointer'),
+    ...(onPageChange ? { onClick: handleClick } : {}),
+  };
+
+  if (children === 'Next') return <PaginationNext {...props} />;
+  if (children === 'Previous') return <PaginationPrevious {...props} />;
+
+  return <PaginationLink {...props}>{children}</PaginationLink>;
+};
+
 export function DataPagination({
   currentPage,
   totalPages,
@@ -53,46 +92,16 @@ export function DataPagination({
     return pages;
   };
 
-  const PageLink = ({
-    page,
-    children,
-    disabled = false,
-    isActive = false,
-    className = '',
-  }: {
-    page: number;
-    children: React.ReactNode;
-    disabled?: boolean;
-    isActive?: boolean;
-    className?: string;
-  }) => {
-    const href = createPageUrl ? createPageUrl(page) : '#';
-
-    const handleClick = (e: React.MouseEvent) => {
-      if (!createPageUrl) e.preventDefault();
-      if (!disabled && onPageChange) onPageChange(page);
-    };
-
-    const props = {
-      href,
-      isActive,
-      className: cn(className, disabled ? 'pointer-events-none opacity-50' : 'cursor-pointer'),
-      // Only pass onClick if we actually have an onPageChange handler
-      // This is crucial for Server Component compatibility
-      ...(onPageChange ? { onClick: handleClick } : {}),
-    };
-
-    if (children === 'Next') return <PaginationNext {...props} />;
-    if (children === 'Previous') return <PaginationPrevious {...props} />;
-
-    return <PaginationLink {...props}>{children}</PaginationLink>;
-  };
-
   return (
     <Pagination>
       <PaginationContent>
         <PaginationItem>
-          <PageLink page={currentPage - 1} disabled={currentPage === 1}>
+          <PageLink
+            page={currentPage - 1}
+            disabled={currentPage === 1}
+            createPageUrl={createPageUrl}
+            onPageChange={onPageChange}
+          >
             Previous
           </PageLink>
         </PaginationItem>
@@ -104,7 +113,12 @@ export function DataPagination({
             </PaginationItem>
           ) : (
             <PaginationItem key={page}>
-              <PageLink page={page as number} isActive={currentPage === page}>
+              <PageLink
+                page={page as number}
+                isActive={currentPage === page}
+                createPageUrl={createPageUrl}
+                onPageChange={onPageChange}
+              >
                 {page}
               </PageLink>
             </PaginationItem>
@@ -112,7 +126,12 @@ export function DataPagination({
         )}
 
         <PaginationItem>
-          <PageLink page={currentPage + 1} disabled={currentPage === totalPages}>
+          <PageLink
+            page={currentPage + 1}
+            disabled={currentPage === totalPages}
+            createPageUrl={createPageUrl}
+            onPageChange={onPageChange}
+          >
             Next
           </PageLink>
         </PaginationItem>

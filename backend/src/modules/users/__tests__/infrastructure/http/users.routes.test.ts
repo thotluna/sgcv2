@@ -14,15 +14,12 @@ jest.mock('@modules/rbac/guards/roles.guard', () => ({
   requireRoles: jest.fn(() => (_req: Request, _res: Response, next: any) => next()),
 }));
 
-
-
 const mockUsersController = {
   me: jest.fn(),
   updateMe: jest.fn(),
   showAll: jest.fn(),
   create: jest.fn(),
 } as unknown as UsersController;
-
 
 describe('UsersRoutes', () => {
   let app: Application;
@@ -93,8 +90,6 @@ describe('UsersRoutes', () => {
         expect.anything(),
         expect.anything()
       );
-
-
     });
 
     it('should return 400 if filter validation fails', async () => {
@@ -113,9 +108,11 @@ describe('UsersRoutes', () => {
         password: 'password123',
       };
       const mockResponse = { id: 2, ...validUserData };
-      (mockUsersController.create as jest.Mock).mockImplementation((_req: Request, res: Response) => {
-        res.status(201).json({ success: true, data: mockResponse });
-      });
+      (mockUsersController.create as jest.Mock).mockImplementation(
+        (_req: Request, res: Response) => {
+          res.status(201).json({ success: true, data: mockResponse });
+        }
+      );
 
       const response = await request(app).post('/users').send(validUserData);
 
@@ -137,4 +134,3 @@ describe('UsersRoutes', () => {
     });
   });
 });
-
