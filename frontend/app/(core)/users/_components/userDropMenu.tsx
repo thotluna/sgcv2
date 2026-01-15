@@ -37,7 +37,7 @@ export function UserDropMenu({ id, username, onDelete }: UserDropMenuProps) {
     {
       label: 'Ver / Editar',
       icon: Eye,
-      href: `?userId=${id}`,
+      href: `/users/${id}/edit`,
       shortCut: '⌘V',
     },
   ];

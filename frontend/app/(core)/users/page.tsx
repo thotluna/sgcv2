@@ -3,7 +3,8 @@ import { UsersTable } from './_components/table';
 import { UsersFilters } from './_components/filters';
 import { UserDto, UserFilterDto, UserStatus } from '@sgcv2/shared';
 import { DataPagination } from '@/components/data-pagination';
-import { UserForm } from './_components/user-form';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 interface UsersPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -11,7 +12,7 @@ interface UsersPageProps {
 
 export default async function UsersPage({ searchParams }: UsersPageProps) {
   const params = await searchParams;
-  const limit = typeof params.limit === 'string' ? parseInt(params.limit) : 2;
+  const limit = typeof params.limit === 'string' ? parseInt(params.limit) : 5;
   const offset = typeof params.offset === 'string' ? parseInt(params.offset) : 0;
 
   const filter: UserFilterDto = {
@@ -62,23 +63,28 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
   };
 
   return (
-    <div className="p-6 space-y-4">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold tracking-tight">Usuarios</h1>
-        <p className="text-muted-foreground">Gestiona los usuarios del sistema y sus permisos.</p>
-      </div>
+    <div className="p-6 space-y-6">
+      <header className="flex justify-between items-center">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-3xl font-bold tracking-tight">Usuarios</h1>
+          <p className="text-muted-foreground">Gestiona los usuarios del sistema y sus permisos.</p>
+        </div>
+        <Button asChild>
+          <Link href="/users/new">Crear Usuario</Link>
+        </Button>
+      </header>
 
-      <UserForm userId={params.userId ? Number(params.userId) : undefined} />
+      <main className="flex w-full flex-col gap-4">
+        <UsersFilters search={filter.search} status={filter.status} />
 
-      <UsersFilters search={filter.search} status={filter.status} />
+        <UsersTable data={users} />
 
-      <UsersTable data={users} />
-
-      <DataPagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        createPageUrl={createPageUrl}
-      />
+        <DataPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          createPageUrl={createPageUrl}
+        />
+      </main>
     </div>
   );
 }
