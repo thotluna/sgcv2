@@ -1,3 +1,4 @@
+import { UserEntity } from '../user-entity';
 import { UserState } from '../types';
 
 export interface CreateUserInput {
@@ -39,7 +40,6 @@ export interface UserFilterInput {
     offset: number;
   };
 }
-import { UserEntity } from '../user-entity';
 
 export interface PaginatedUsers {
   users: UserEntity[];

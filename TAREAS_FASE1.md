@@ -298,10 +298,15 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
   - ✅ `GET /api/users` → listar usuarios (ADMIN only)
   - ✅ `GET /api/users/:id` → obtener usuario (admin)
   - ✅ `POST /api/users` → crear usuario (admin)
-  - ✅ `PUT /api/users/:id` → actualizar usuario
-  - ✅ `DELETE /api/users/:id` → eliminar usuario (admin)
+  - ✅ `PATCH /api/users/:id` → actualizar usuario / bloquear usuario
+  - ✅ `DELETE /api/users/:id` → eliminar usuario (admin) - _Nota: se prefiere bloquear en lugar de eliminar_
   - ✅ Refactorizar respuestas a formato estándar AppResponse
 - [x] Probar endpoints con tests automatizados ✅ (Tests unitarios y de integración)
+- [x] Gestión de Usuarios en Frontend ✅
+  - ✅ Listado con filtros y paginación
+  - ✅ Creación y Edición de usuarios con validación Zod
+  - ✅ Bloqueo de usuarios (Soft delete) con diálogo de confirmación
+  - ✅ Refactorización de Server Actions para usar `serverUsersService`
 
 **Tiempo estimado:** 4 horas
 
@@ -669,13 +674,16 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 - RBAC implementado y testeado
 - Página de login funcional
 - Protección de rutas (Middleware)
-- **Gestión de Usuarios:**
+- **Gestión de Usuarios Completa:**
   - ✅ Listado de usuarios con filtros y paginación
+  - ✅ Creación y Edición de usuarios
+  - ✅ Lógica de bloqueo de usuarios (Soft delete)
   - ✅ Validación robusta de filtros (Zod)
   - ✅ Manejo de errores global refinado
+  - ✅ Refactorización de servicios en frontend
 - **Testing completo:**
   - Backend: 143 tests (26 suites) - Unit + Integration + Routes
-  - Frontend: 22 tests (3 suites) - Unit + Component + Hook
+  - Frontend: 36 tests (4 suites) - Unit + Component + Hook + Actions
   - **E2E: 7 tests (Playwright) - Login, Logout, Protected Routes, Responsive**
 - API client con interceptores
 - Refactorización de Auth Hook (`useAuth`)
@@ -731,7 +739,7 @@ Una vez completada esta fase, la siguiente iteración será:
 
 ---
 
-**Versión:** 1.2  
+**Versión:** 1.3  
 **Fecha inicial:** 2025-11-21  
-**Última actualización:** 2026-01-14  
+**Última actualización:** 2026-01-16  
 **Próxima revisión:** Al completar Dashboard y componentes de navegación

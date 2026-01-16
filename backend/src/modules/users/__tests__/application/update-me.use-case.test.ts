@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { UpdateMeUseCaseService } from '@modules/users/application/update-me.use-case.service';
+import { UpdateMeUseCase } from '@modules/users/application/update-me.use-case';
 import { UpdateUserService } from '@modules/users/domain/update.service';
 import { PasswordHasher } from '@modules/auth/domain/password-hasher';
 import { UserNotFoundException } from '@modules/users/domain/exceptions/user-no-found.exception';
@@ -7,7 +7,7 @@ import { BadRequestException } from '@shared/exceptions';
 import { mockUserWithRole } from '../helpers';
 
 describe('UpdateMeUseCaseService', () => {
-  let useCase: UpdateMeUseCaseService;
+  let useCase: UpdateMeUseCase;
   let mockUsersService: jest.Mocked<UpdateUserService>;
   let mockHasher: jest.Mocked<PasswordHasher>;
 
@@ -22,7 +22,7 @@ describe('UpdateMeUseCaseService', () => {
       comparePassword: jest.fn(),
     };
 
-    useCase = new UpdateMeUseCaseService(mockUsersService, mockHasher);
+    useCase = new UpdateMeUseCase(mockUsersService, mockHasher);
   });
 
   afterEach(() => {

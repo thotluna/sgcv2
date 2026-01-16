@@ -1,15 +1,15 @@
-import { ShowAllUseCaseService } from '@modules/users/application/show-all.use-case.service';
+import { ListUseCase } from '@modules/users/application/list.use-case';
 import { ListUsersService } from '@modules/users/domain/list.service';
 
 const mockService = {
   getAll: jest.fn(),
 };
 
-describe('ShowAllUseCaseService', () => {
-  let useCase: ShowAllUseCaseService;
+describe('ListUseCase', () => {
+  let useCase: ListUseCase;
 
   beforeEach(() => {
-    useCase = new ShowAllUseCaseService(mockService as unknown as ListUsersService);
+    useCase = new ListUseCase(mockService as unknown as ListUsersService);
   });
 
   afterEach(() => {

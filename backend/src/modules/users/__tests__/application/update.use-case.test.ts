@@ -1,19 +1,21 @@
-import { UpdateUserUseCaseService } from '../../application/update-user.use-case.service';
+import { UpdateUseCase } from '../../application/update.use-case';
 import { UpdateUserInput } from '../../domain/dtos/user.dtos';
-import bcrypt from 'bcrypt';
+
 import { UpdateUserService } from '@modules/users/domain/update.service';
 
-jest.mock('bcrypt');
-
 describe('UpdateUserUseCaseService', () => {
-  let service: UpdateUserUseCaseService;
+  let service: UpdateUseCase;
   let userService: jest.Mocked<UpdateUserService>;
+  let hasher: jest.Mocked<any>;
 
   beforeEach(() => {
     userService = {
       update: jest.fn(),
     } as any;
-    service = new UpdateUserUseCaseService(userService);
+    hasher = {
+      hashPassword: jest.fn(),
+    } as any;
+    service = new UpdateUseCase(userService, hasher);
     jest.clearAllMocks();
   });
 
@@ -23,11 +25,11 @@ describe('UpdateUserUseCaseService', () => {
       password: 'newpassword123',
     };
     const hashedPassword = 'hashed_password';
-    (bcrypt.hash as jest.Mock).mockResolvedValue(hashedPassword);
+    hasher.hashPassword.mockResolvedValue(hashedPassword);
 
     await service.execute(id, input);
 
-    expect(bcrypt.hash).toHaveBeenCalledWith('newpassword123', 10);
+    expect(hasher.hashPassword).toHaveBeenCalledWith('newpassword123');
     expect(userService.update).toHaveBeenCalledWith(id, {
       ...input,
       password: hashedPassword,
@@ -42,7 +44,7 @@ describe('UpdateUserUseCaseService', () => {
 
     await service.execute(id, input);
 
-    expect(bcrypt.hash).not.toHaveBeenCalled();
+    expect(hasher.hashPassword).not.toHaveBeenCalled();
     expect(userService.update).toHaveBeenCalledWith(id, input);
   });
 });

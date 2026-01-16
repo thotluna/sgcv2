@@ -1,15 +1,15 @@
 import { inject, injectable } from 'inversify';
-import { UserWithRolesEntity } from '../domain/user-entity';
-import { TYPES } from '../di/types';
+import { UserWithRolesEntity } from '@users/domain/user-entity';
+import { TYPES } from '@users/di/types';
 import { TYPES as AuthTypes } from '@modules/auth/di/types';
-import { UserNotFoundException } from '../domain/exceptions/user-no-found.exception';
+import { UserNotFoundException } from '@users/domain/exceptions/user-no-found.exception';
 import { PasswordHasher } from '@modules/auth/domain/password-hasher';
 import { BadRequestException } from '@shared/exceptions';
-import { UpdateMeInput } from '../domain/dtos/user.dtos';
-import { UpdateUserService } from '../domain/update.service';
+import { UpdateMeInput } from '@users/domain/dtos/user.dtos';
+import { UpdateUserService } from '@users/domain/update.service';
 
 @injectable()
-export class UpdateMeUseCaseService {
+export class UpdateMeUseCase {
   constructor(
     @inject(TYPES.UpdateUserService) private readonly service: UpdateUserService,
     @inject(AuthTypes.PasswordHasher) private readonly hasher: PasswordHasher

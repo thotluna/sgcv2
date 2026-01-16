@@ -1,18 +1,20 @@
-import { CreateUserUseCaseService } from '@modules/users/application/create-user.use-case.service';
+import { PasswordHasher } from '@modules/auth/domain/password-hasher';
+import { CreateUseCase } from '@modules/users/application/create.use-case';
 import { UserRepository } from '@modules/users/domain/user-repository';
-import bcrypt from 'bcrypt';
-
-jest.mock('bcrypt');
 
 const mockUserRepository = {
   create: jest.fn(),
 } as unknown as jest.Mocked<UserRepository>;
 
+const mockHasher = {
+  hashPassword: jest.fn(),
+} as unknown as jest.Mocked<PasswordHasher>;
+
 describe('CreateUserUseCaseService', () => {
-  let useCase: CreateUserUseCaseService;
+  let useCase: CreateUseCase;
 
   beforeEach(() => {
-    useCase = new CreateUserUseCaseService(mockUserRepository);
+    useCase = new CreateUseCase(mockUserRepository, mockHasher);
   });
 
   afterEach(() => {
@@ -39,12 +41,12 @@ describe('CreateUserUseCaseService', () => {
       status: 'ACTIVE' as const,
     };
 
-    (bcrypt.hash as jest.Mock).mockResolvedValue('hashedpassword');
+    mockHasher.hashPassword.mockResolvedValue('hashedpassword');
     mockUserRepository.create.mockResolvedValue(mockCreatedUser);
 
     const result = await useCase.execute(userInput);
 
-    expect(bcrypt.hash).toHaveBeenCalledWith('plainpassword', 10);
+    expect(mockHasher.hashPassword).toHaveBeenCalledWith('plainpassword');
     expect(mockUserRepository.create).toHaveBeenCalledWith({
       ...userInput,
       password: 'hashedpassword',
