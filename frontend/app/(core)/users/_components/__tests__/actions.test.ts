@@ -61,7 +61,7 @@ describe('User Actions', () => {
       formData.append('username', 'testuser');
       formData.append('email', 'test@example.com');
       formData.append('password', 'password123');
-      formData.append('isActive', 'ACTIVE');
+      formData.append('status', 'ACTIVE');
       formData.append('firstName', '');
       formData.append('lastName', '');
 
@@ -75,7 +75,7 @@ describe('User Actions', () => {
           username: 'testuser',
           email: 'test@example.com',
           password: 'password123',
-          isActive: 'ACTIVE',
+          status: 'ACTIVE',
         })
       );
       expect(revalidatePath).toHaveBeenCalledWith('/users');
@@ -101,7 +101,7 @@ describe('User Actions', () => {
       const formData = new FormData();
       formData.append('username', 'testuser');
       formData.append('email', 'test@example.com');
-      formData.append('isActive', 'ACTIVE');
+      formData.append('status', 'ACTIVE');
       formData.append('password', '');
       formData.append('firstName', '');
       formData.append('lastName', '');
@@ -118,7 +118,7 @@ describe('User Actions', () => {
       formData.append('username', 'testuser');
       formData.append('email', 'test@example.com');
       formData.append('password', 'password123');
-      formData.append('isActive', 'ACTIVE');
+      formData.append('status', 'ACTIVE');
       formData.append('firstName', '');
       formData.append('lastName', '');
 
@@ -139,7 +139,7 @@ describe('User Actions', () => {
       formData.append('username', 'testuser');
       formData.append('email', 'test@example.com');
       formData.append('password', 'password123');
-      formData.append('isActive', 'ACTIVE');
+      formData.append('status', 'ACTIVE');
       formData.append('firstName', '');
       formData.append('lastName', '');
 
@@ -160,7 +160,7 @@ describe('User Actions', () => {
     it('should update user successfully and redirect', async () => {
       const formData = new FormData();
       formData.append('email', 'updated@example.com');
-      formData.append('isActive', 'INACTIVE');
+      formData.append('status', 'INACTIVE');
       formData.append('firstName', 'New');
       formData.append('lastName', 'Name');
       formData.append('password', '');
@@ -174,7 +174,7 @@ describe('User Actions', () => {
         123,
         expect.objectContaining({
           email: 'updated@example.com',
-          isActive: 'INACTIVE',
+          status: 'INACTIVE',
           firstName: 'New',
           lastName: 'Name',
         })
@@ -186,7 +186,7 @@ describe('User Actions', () => {
     it('should include password in update if provided', async () => {
       const formData = new FormData();
       formData.append('email', 'updated@example.com');
-      formData.append('isActive', 'ACTIVE');
+      formData.append('status', 'ACTIVE');
       formData.append('password', 'newpassword123');
       formData.append('firstName', '');
       formData.append('lastName', '');
@@ -207,7 +207,7 @@ describe('User Actions', () => {
     it('should handle API errors during update', async () => {
       const formData = new FormData();
       formData.append('email', 'updated@example.com');
-      formData.append('isActive', 'ACTIVE');
+      formData.append('status', 'ACTIVE');
       formData.append('password', '');
       formData.append('firstName', '');
       formData.append('lastName', '');
@@ -227,7 +227,7 @@ describe('User Actions', () => {
     it('should handle unexpected status code during update', async () => {
       const formData = new FormData();
       formData.append('email', 'updated@example.com');
-      formData.append('isActive', 'ACTIVE');
+      formData.append('status', 'ACTIVE');
       formData.append('password', '');
       formData.append('firstName', '');
       formData.append('lastName', '');

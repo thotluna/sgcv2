@@ -181,7 +181,7 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
   - ✅ `id_usuario` → `id`
   - ✅ `password_hash` → `passwordHash` (con `@map("password_hash")`)
   - ✅ `created_at` → `createdAt` (con `@map("created_at")`)
-  - ✅ `is_active` → `isActive` (con `@map("user_state")`)
+  - ✅ `is_active` → `status` (con `@map("user_state")`)
 - [x] Configurar Prisma 7 con adaptador PostgreSQL
   - ✅ Instalar `@prisma/adapter-pg` y `pg`
   - ✅ Configurar `PrismaPg` adapter en `src/config/prisma.ts`

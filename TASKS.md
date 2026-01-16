@@ -7,3 +7,4 @@
 - [x] Connect frontend "Ver" action to User Form
 - [x] Adapt User Form for editing
 - [x] Implement frontend update server action
+- [x] Refactor user status naming convention (isActive -> status) across all layers
