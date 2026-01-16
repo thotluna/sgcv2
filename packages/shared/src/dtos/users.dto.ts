@@ -8,7 +8,7 @@ export class CreateUserDto {
   lastName?: string;
   avatar?: string;
   roleIds?: number[];
-  isActive?: UserStatus;
+  status?: UserStatus;
 }
 
 export class UpdateUserDto {
@@ -18,14 +18,14 @@ export class UpdateUserDto {
   firstName?: string;
   lastName?: string;
   avatar?: string;
-  isActive?: UserStatus; // Status
+  status?: UserStatus; // Status
   roleIds?: number[];
 }
 
 export class UserDelete {
   id!: number;
   username!: string;
-  isActive!: UserStatus;
+  status!: UserStatus;
 }
 
 export class UserDto {
@@ -36,7 +36,7 @@ export class UserDto {
   lastName!: string | null;
   createdAt!: Date;
   updatedAt!: Date;
-  isActive!: UserStatus;
+  status!: UserStatus;
   avatar?: string;
 }
 
