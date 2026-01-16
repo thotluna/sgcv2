@@ -45,8 +45,8 @@ export function UsersTable({ data = [], isLoading }: UsersTableProps) {
     {
       header: 'Estado',
       accessor: user => (
-        <Badge variant={statusMap[user.isActive]?.variant ?? 'outline'}>
-          {statusMap[user.isActive]?.label ?? user.isActive}
+        <Badge variant={statusMap[user.status]?.variant ?? 'outline'}>
+          {statusMap[user.status]?.label ?? user.status}
         </Badge>
       ),
     },

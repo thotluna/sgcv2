@@ -72,7 +72,7 @@ export const useAuthStore = create<AuthState>()(
             email: userWIthRole.email,
             firstName: userWIthRole.firstName || '',
             lastName: userWIthRole.lastName || '',
-            status: userWIthRole.isActive,
+            status: userWIthRole.status || 'ACTIVE',
             roles: userWIthRole.roles?.map((role: { name: string }) => role.name),
           };
 

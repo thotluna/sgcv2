@@ -22,7 +22,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           email: userWithRole.email,
           firstName: userWithRole.firstName || '',
           lastName: userWithRole.lastName || '',
-          status: userWithRole.isActive,
+          status: userWithRole.status,
           roles: userWithRole.roles?.map(role => role.name),
         };
       }

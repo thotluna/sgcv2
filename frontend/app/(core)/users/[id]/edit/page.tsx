@@ -27,7 +27,7 @@ export default async function EditUserPage({ params }: EditUserPageProps) {
     email: user.email,
     firstName: user.firstName || '',
     lastName: user.lastName || '',
-    isActive: user.isActive,
+    status: user.status,
     password: '',
   };
 

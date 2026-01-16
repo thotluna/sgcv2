@@ -12,7 +12,7 @@ const userSchema = z.object({
   password: z.string().optional().or(z.literal('')),
   firstName: z.string().optional().or(z.literal('')),
   lastName: z.string().optional().or(z.literal('')),
-  isActive: z.enum(['ACTIVE', 'INACTIVE', 'BLOCKED']),
+  status: z.enum(['ACTIVE', 'INACTIVE', 'BLOCKED']),
 });
 
 interface ApiResponseError {
@@ -63,7 +63,7 @@ export async function createUserAction(
     password: formData.get('password'),
     firstName: formData.get('firstName'),
     lastName: formData.get('lastName'),
-    isActive: formData.get('isActive'),
+    status: formData.get('status'),
   });
 
   if (!validatedFields.success) {
@@ -74,7 +74,7 @@ export async function createUserAction(
     };
   }
 
-  const { username, email, password, firstName, lastName, isActive } = validatedFields.data;
+  const { username, email, password, firstName, lastName, status } = validatedFields.data;
 
   if (!password) {
     return {
@@ -90,7 +90,7 @@ export async function createUserAction(
     password,
     firstName: firstName || '',
     lastName: lastName || '',
-    isActive,
+    status,
   };
 
   try {
@@ -126,7 +126,7 @@ export async function updateUserAction(
     password: formData.get('password'),
     firstName: formData.get('firstName'),
     lastName: formData.get('lastName'),
-    isActive: formData.get('isActive'),
+    status: formData.get('status'),
   });
 
   if (!validatedFields.success) {
@@ -137,13 +137,13 @@ export async function updateUserAction(
     };
   }
 
-  const { email, password, firstName, lastName, isActive } = validatedFields.data;
+  const { email, password, firstName, lastName, status } = validatedFields.data;
 
   const data: UpdateUserDto = {
     email,
     firstName: firstName || '',
     lastName: lastName || '',
-    isActive,
+    status,
   };
 
   if (password && password.trim() !== '') {
@@ -196,7 +196,7 @@ export async function getUser(id: number): Promise<ActionResult<UserDto>> {
 export async function blockUserAction(userId: number): Promise<ActionResult<void>> {
   try {
     const response = await serverUsersService.updateUser(userId, {
-      isActive: 'BLOCKED',
+      status: 'BLOCKED',
     } as UpdateUserDto);
 
     if (response.success) {

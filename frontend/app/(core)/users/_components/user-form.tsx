@@ -14,7 +14,7 @@ interface UserFormValues {
   password?: string;
   firstName: string;
   lastName: string;
-  isActive: 'ACTIVE' | 'INACTIVE' | 'BLOCKED';
+  status: 'ACTIVE' | 'INACTIVE' | 'BLOCKED';
 }
 
 interface UserFormProps {
@@ -86,19 +86,19 @@ export function UserForm({ userId, initialData }: UserFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="isActive">Estado</Label>
+            <Label htmlFor="status">Estado</Label>
             <select
-              id="isActive"
-              name="isActive"
-              defaultValue={initialData?.isActive || 'ACTIVE'}
+              id="status"
+              name="status"
+              defaultValue={initialData?.status || 'ACTIVE'}
               className="h-10 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
             >
               <option value="ACTIVE">Activo</option>
               <option value="INACTIVE">Inactivo</option>
               <option value="BLOCKED">Bloqueado</option>
             </select>
-            {state?.errors?.isActive && (
-              <p className="text-destructive text-xs font-medium">{state.errors.isActive[0]}</p>
+            {state?.errors?.status && (
+              <p className="text-destructive text-xs font-medium">{state.errors.status[0]}</p>
             )}
           </div>
 
