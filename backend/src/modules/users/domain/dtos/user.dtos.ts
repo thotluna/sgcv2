@@ -1,29 +1,47 @@
 import { UserState } from '../types';
 
-export interface CreateUserDto {
+export interface CreateUserInput {
   username: string;
   email: string;
-  password?: string; // Optional if created by admin without setting password initially, or if using a default
-  firstName: string;
-  lastName: string;
-  roleIds: number[];
-  status?: UserState;
-}
-
-export interface UpdateUserDto {
-  username?: string;
-  email?: string;
+  password: string;
   firstName?: string;
   lastName?: string;
-  roleIds?: number[];
-  status?: UserState;
+  avatar?: string;
+  isActive?: UserState;
 }
 
-export interface UserFilter {
-  username?: string;
+export interface UpdateMeInput {
   email?: string;
+  password?: string;
+  currentPassword?: string;
+  firstName?: string;
+  lastName?: string;
+  avatar?: string;
   status?: UserState;
-  roleId?: number;
-  skip?: number;
-  take?: number;
+  roleIds?: number[];
+}
+
+export interface UpdateUserInput {
+  email?: string;
+  password?: string;
+  firstName?: string;
+  lastName?: string;
+  avatar?: string;
+  isActive?: UserState;
+  roleIds?: number[];
+}
+
+export interface UserFilterInput {
+  search?: string;
+  status?: UserState;
+  pagination?: {
+    limit: number;
+    offset: number;
+  };
+}
+import { UserEntity } from '../user-entity';
+
+export interface PaginatedUsers {
+  users: UserEntity[];
+  total: number;
 }

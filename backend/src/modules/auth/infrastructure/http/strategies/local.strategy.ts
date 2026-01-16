@@ -24,8 +24,8 @@ export class LocalStrategy extends PassportLocalStrategy {
           return done(null, {
             id: user.id.toString(),
             username: user.username,
-            role: user.roles[0] || '',
-            roles: user.roles,
+            role: user.roles?.[0] || '',
+            roles: user.roles || [],
           });
         } catch (err) {
           return done(err);

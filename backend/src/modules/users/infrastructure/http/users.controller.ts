@@ -4,11 +4,27 @@ import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
 import { NotFoundException, UnauthorizedException } from '@shared/exceptions';
 import { ShowMeUseCaseService } from '@users/application/show-me.use-case.service';
+import { UpdateMeUseCaseService } from '@users/application/update-me.use-case.service';
 import { UsersMapper } from '../mappers/users';
+import { UpdateUserDto, UserFilterDto, CreateUserDto as SharedCreateUserDto } from '@sgcv2/shared';
+import { UpdateMeInput, UpdateUserInput } from '@modules/users/domain/dtos/user.dtos';
+import { ShowAllUseCaseService } from '@modules/users/application/show-all.use-case.service';
+import { CreateUserUseCaseService } from '@modules/users/application/create-user.use-case.service';
+import { ShowUserUseCaseService } from '@users/application/show-user.use-case.service';
+import { UpdateUserUseCaseService } from '@users/application/update-user.use-case.service';
 
 @injectable()
 export class UsersController {
-  constructor(@inject(TYPES.ShowMeUseCaseService) private readonly useCase: ShowMeUseCaseService) {}
+  constructor(
+    @inject(TYPES.ShowMeUseCaseService) private readonly showMeUseCase: ShowMeUseCaseService,
+    @inject(TYPES.UpdateMeUseCaseService) private readonly updateMeUseCase: UpdateMeUseCaseService,
+    @inject(TYPES.ShowAllUseCaseService) private readonly showAllUseCase: ShowAllUseCaseService,
+    @inject(TYPES.CreateUserUseCaseService)
+    private readonly createUserUseCase: CreateUserUseCaseService,
+    @inject(TYPES.ShowUserUseCaseService) private readonly showUserUseCase: ShowUserUseCaseService,
+    @inject(TYPES.UpdateUserUseCaseService)
+    private readonly updateUserUseCase: UpdateUserUseCaseService
+  ) {}
 
   async me(req: Request, res: Response): Promise<Response> {
     const user = req.user;
@@ -20,17 +36,105 @@ export class UsersController {
     const id = Number(user.id);
 
     try {
-      const userWithRoles = await this.useCase.execute(id);
+      const userWithRoles = await this.showMeUseCase.execute(id);
 
       if (!userWithRoles) {
         throw new NotFoundException('User not found');
       }
 
-      console.log({ userWithRoles });
-
       return ResponseHelper.success(res, UsersMapper.toUserWithRolesDto(userWithRoles));
     } catch {
       throw new NotFoundException('User not found');
     }
+  }
+
+  async updateMe(req: Request, res: Response): Promise<Response> {
+    const user = req.user;
+
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    const id = Number(user.id);
+    const userDto: UpdateUserDto = req.body;
+
+    const input: UpdateMeInput = {
+      email: userDto.email,
+      password: userDto.password,
+      currentPassword: userDto.currentPassword,
+      firstName: userDto.firstName,
+      lastName: userDto.lastName,
+      avatar: userDto.avatar,
+      status: userDto.isActive,
+      roleIds: userDto.roleIds,
+    };
+
+    const updatedUser = await this.updateMeUseCase.execute(id, input);
+    return ResponseHelper.success(res, UsersMapper.toUserWithRolesDto(updatedUser));
+  }
+
+  async showAll(req: Request, res: Response): Promise<Response> {
+    const rawQuery: any = req.query;
+    const filter: UserFilterDto = {
+      search: rawQuery.search,
+      status: rawQuery.status,
+      pagination: {
+        limit: rawQuery.limit,
+        offset: rawQuery.offset,
+      },
+    };
+    const { users, total } = await this.showAllUseCase.execute(filter);
+    const limit = Number(filter.pagination?.limit) || 10;
+    const offset = Number(filter.pagination?.offset) || 0;
+    const page = Math.floor(offset / limit) + 1;
+
+    return ResponseHelper.paginated(
+      res,
+      users.map(user => UsersMapper.toUserDto(user)),
+      {
+        total,
+        page,
+        perPage: limit,
+        totalPages: Math.ceil(total / limit),
+      }
+    );
+  }
+
+  async create(req: Request, res: Response): Promise<Response> {
+    const createUserDto: SharedCreateUserDto = req.body;
+
+    const input = UsersMapper.toCreateUserInput(createUserDto);
+
+    const newUser = await this.createUserUseCase.execute(input);
+    return ResponseHelper.success(res, UsersMapper.toUserDto(newUser));
+  }
+
+  async show(req: Request, res: Response): Promise<Response> {
+    const id = Number(req.params.id);
+    const user = await this.showUserUseCase.execute(id);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return ResponseHelper.success(res, UsersMapper.toUserDto(user));
+  }
+
+  async update(req: Request, res: Response): Promise<Response> {
+    const id = Number(req.params.id);
+    const userDto: UpdateUserDto = req.body;
+
+    const input: UpdateUserInput = {
+      email: userDto.email,
+      password: userDto.password,
+      firstName: userDto.firstName,
+      lastName: userDto.lastName,
+      avatar: userDto.avatar,
+      isActive: userDto.isActive,
+      roleIds: userDto.roleIds,
+    };
+
+    const updatedUser = await this.updateUserUseCase.execute(id, input);
+    return ResponseHelper.success(res, UsersMapper.toUserDto(updatedUser));
   }
 }

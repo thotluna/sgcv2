@@ -8,4 +8,5 @@ export const TYPES = {
   AuthRoutes: Symbol.for('AuthRoutes'),
   LocalStrategy: Symbol.for('LocalStrategy'),
   JwtStrategy: Symbol.for('JwtStrategy'),
+  PasswordHasher: Symbol.for('PasswordHasher'),
 };

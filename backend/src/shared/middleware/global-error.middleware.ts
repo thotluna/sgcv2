@@ -12,11 +12,12 @@ export const globalErrorHandler = (
   // (per user request) and potentially by errorLogger middleware with request context.
   // We just need to send the correct response.
 
-  if (err instanceof AppException) {
+  if (err instanceof AppException || ((err as any).statusCode && (err as any).code)) {
+    const appErr = err as any;
     const errorData = {
-      code: err.code,
-      message: err.message,
-      details: err.details,
+      code: appErr.code,
+      message: appErr.message,
+      details: appErr.details,
     };
 
     const response = {
@@ -27,7 +28,7 @@ export const globalErrorHandler = (
       },
     };
 
-    res.status(err.statusCode).json(response);
+    res.status(appErr.statusCode || 400).json(response);
     return;
   }
 

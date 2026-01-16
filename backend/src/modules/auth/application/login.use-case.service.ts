@@ -2,7 +2,7 @@ import { inject, injectable } from 'inversify';
 import { InvalidPasswordException } from '@auth/domain/exceptions/invalid-password.exception';
 import { TYPES } from '@auth/di/types';
 import { LoginDto, UserTokenDto } from '@sgcv2/shared';
-import { AuthenticatedUserDto } from '../infrastructure/http/authenticated-user.dto';
+import { AuthenticatedUserDto } from '@sgcv2/shared';
 import { LoginService } from '../domain/login.service';
 import { AuthMapper } from '../infrastructure/http/mapper';
 
@@ -23,7 +23,13 @@ export class LoginUseCaseService {
       throw new InvalidPasswordException();
     }
 
-    const token = await this.service.generateToken({ id: user.id, username: user.username });
+    const payload = {
+      sub: user.id,
+      username: user.username,
+      roles: user.roles,
+    };
+
+    const token = await this.service.generateToken(payload);
 
     return {
       user: AuthMapper.toAuthenticatedUserDto(user),

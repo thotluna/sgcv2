@@ -2,11 +2,7 @@ import logger from '@config/logger';
 
 export class LoggerHelper {
   // Log de operaciones de base de datos
-  static logDBOperation(
-    operation: string,
-    model: string,
-    data: Record<string, unknown> = {}
-  ): void {
+  static logDBOperation(operation: string, model: string, data: Record<string, any> = {}): void {
     logger.debug('Database operation', {
       operation,
       model,
@@ -32,7 +28,7 @@ export class LoggerHelper {
   }
 
   // Log de eventos de negocio
-  static logBusinessEvent(event: string, userId: string, data: Record<string, unknown> = {}): void {
+  static logBusinessEvent(event: string, userId: string, data: Record<string, any> = {}): void {
     logger.info('Business event', {
       event,
       userId,
@@ -50,10 +46,10 @@ export class LoggerHelper {
       exceededThreshold: duration > threshold,
     });
   }
-  static logAsyncOperation(_target: unknown, propertyKey: string, descriptor: PropertyDescriptor) {
+  static logAsyncOperation(_target: any, propertyKey: string, descriptor: PropertyDescriptor) {
     const originalMethod = descriptor.value;
 
-    descriptor.value = async function (...args: unknown[]) {
+    descriptor.value = async function (...args: any[]) {
       const startTime = Date.now();
       try {
         const result = await originalMethod.apply(this, args);

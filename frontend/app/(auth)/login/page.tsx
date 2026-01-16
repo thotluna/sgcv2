@@ -42,7 +42,7 @@ export default function LoginPage() {
       toast.success('Login successful!', {
         description: 'Welcome back!',
       });
-    } catch (error: unknown) {
+    } catch (error) {
       let errorMessage = 'Invalid credentials. Please try again.';
       if (error && typeof error === 'object' && 'response' in error) {
         const axiosError = error as { response: { data: { message: string } } };
@@ -60,7 +60,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 p-4">
+    <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 p-4">
       <Card className="w-full max-w-md shadow-xl">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center">

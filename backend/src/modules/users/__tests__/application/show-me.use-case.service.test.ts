@@ -1,6 +1,6 @@
 import { ShowMeUseCaseService } from '@modules/users/application/show-me.use-case.service';
 import { UserNotFoundException } from '@modules/users/domain/exceptions/user-no-found.exception';
-import { ShowMeService } from '@modules/users/domain/show-me.service';
+import { ShowUserService } from '@modules/users/domain/show.service';
 import { mockUserWithRole } from '../helpers';
 
 const mockService = {
@@ -11,7 +11,7 @@ describe('ShowMeUseCaseService', () => {
   let useCase: ShowMeUseCaseService;
 
   beforeEach(() => {
-    useCase = new ShowMeUseCaseService(mockService as ShowMeService);
+    useCase = new ShowMeUseCaseService(mockService as ShowUserService);
   });
 
   afterEach(() => {

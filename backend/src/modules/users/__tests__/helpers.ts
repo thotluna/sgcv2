@@ -7,6 +7,7 @@ export const mockUserWithRole: UserWithRolesEntity = {
   passwordHash: 'test',
   firstName: 'test',
   lastName: 'test',
+  avatar: null,
   status: 'ACTIVE',
   createdAt: new Date(),
   updatedAt: new Date(),

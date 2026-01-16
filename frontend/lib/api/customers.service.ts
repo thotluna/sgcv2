@@ -20,7 +20,6 @@ export const customersService = {
   },
   getOne: async (id: string): Promise<AppResponse<Customer>> => {
     const response = await apiClient.get<AppResponse<Customer>>(`/customers/${id}`);
-    console.log(response.data);
     return response.data;
   },
   create: async (customer: CreateCustomerDto): Promise<AppResponse<Customer>> => {

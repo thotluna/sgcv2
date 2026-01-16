@@ -13,9 +13,9 @@
     "types": ["jest", "node", "supertest"],
     "baseUrl": "./src",
     "paths": {
-      "@sgcv2/shared": ["../../packages/shared/dist"],
+      "@sgcv2/shared": ["../../packages/shared/src"],
       "@config/*": ["./config/*"],
-      "@const/*": ["./const/*"],
+      "@consts/*": ["./consts/*"],
       "@modules/*": ["./modules/*"],
       "@auth/*": ["./modules/auth/*"],
       "@users/*": ["./modules/users/*"],

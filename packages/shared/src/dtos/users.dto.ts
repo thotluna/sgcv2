@@ -4,12 +4,20 @@ export class CreateUserDto {
   username!: string;
   email!: string;
   password!: string;
+  firstName?: string;
+  lastName?: string;
+  avatar?: string;
   roleIds?: number[];
+  isActive?: UserStatus;
 }
 
 export class UpdateUserDto {
   email?: string;
   password?: string; // Only if changing password
+  currentPassword?: string; // Required when changing password
+  firstName?: string;
+  lastName?: string;
+  avatar?: string;
   isActive?: UserStatus; // Status
   roleIds?: number[];
 }
@@ -29,6 +37,7 @@ export class UserDto {
   createdAt!: Date;
   updatedAt!: Date;
   isActive!: UserStatus;
+  avatar?: string;
 }
 
 export interface RoleDto {
@@ -38,4 +47,13 @@ export interface RoleDto {
 
 export class UserWithRolesDto extends UserDto {
   roles?: RoleDto[];
+}
+
+export interface UserFilterDto {
+  search?: string;
+  status?: UserStatus;
+  pagination?: {
+    limit: number;
+    offset: number;
+  };
 }

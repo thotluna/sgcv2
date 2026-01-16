@@ -6,10 +6,10 @@
 
 - [ ] **Update UserRepository Interface**:
   - `create(user: CreateUserDto): Promise<UserEntity>`
-  - `update(id: number, user: UpdateUserDto): Promise<UserEntity>`
-  - `delete(id: number): Promise<void>` (Soft delete)
-  - `findAll(filter: UserFilter): Promise<UserEntity[]>`
-  - `findById(id: number): Promise<UserEntity | null>`
+  - [x] `update(id: number, user: UpdateUserDto): Promise<UserEntity>`
+  - [ ] `delete(id: number): Promise<void>` (Soft delete)
+  - [ ] `findAll(filter: UserFilter): Promise<UserEntity[]>`
+  - [x] `findById(id: number): Promise<UserEntity | null>`
   - `changePassword(id: number, newPasswordHash: string): Promise<void>`
   - `updatePreferences(id: number, preferences: UserPreferencesDto): Promise<void>`
 
@@ -18,9 +18,10 @@
 #### Admin (Management)
 
 - [ ] **Create User**: `CreateUserUseCase` (Admin only).
-- [ ] **Update User**: `UpdateUserUseCase` (Admin only - manage roles, names, status).
+- [x] **Update User**: `UpdateUserUseCase` (Admin only - manage roles, names, status).
 - [ ] **Soft Delete User**: `DeleteUserUseCase` (Admin only).
 - [ ] **Get All Users**: `GetAllUsersUseCase` (Pagination, sorting, filters).
+- [x] **Show User**: `ShowUserUseCase` (Get by ID).
 
 #### User (Self-Service)
 
@@ -34,13 +35,13 @@
 
 ### Infrastructure
 
-- [ ] **Prisma Repository**: Implement new methods in `PrismaUserRepository`.
+- [x] **Prisma Repository**: Implement new methods in `PrismaUserRepository`.
 - [ ] **HTTP Controller**: `UsersController` with endpoints:
   - **Admin Routes**:
     - `POST /users` (Create)
     - `GET /users` (List)
-    - `GET /users/:id` (Get One)
-    - `PATCH /users/:id` (Update General Info)
+    - [x] `GET /users/:id` (Get One)
+    - [x] `PATCH /users/:id` (Update General Info)
     - `DELETE /users/:id` (Soft Delete)
   - **User Routes (Profile)**:
     - `PATCH /users/profile/password`
@@ -54,13 +55,13 @@
 ### Infrastructure (API)
 
 - [ ] **Users Service**: `users.service.ts`
-  - Admin methods: `getUsers`, `getUserById`, `createUser`, `updateUser`, `deleteUser`
+  - Admin methods: [x] `getUsers`, [x] `getUserById`, [ ] `createUser`, [x] `updateUser`, [ ] `deleteUser`
   - User methods: `changePassword`, `requestEmailChange`, `confirmEmailChange`, `updatePreferences`
 
 ### Components
 
 - [ ] **User List Table** (Admin): Avatar (Gravatar), Name, Email, Role, Status, Actions.
-- [ ] **User Form** (Admin): Username, Email, First Name, Last Name, Role(s), Status.
+- [x] **User Form** (Admin): Username, Email, First Name, Last Name, Role(s), Status.
 - [ ] **Change Password Form** (User).
 - [ ] **Profile Settings Components**: Theme toggle (Avatar upload UI deferred).
 

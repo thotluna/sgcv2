@@ -3,18 +3,20 @@ import { PrismaPg } from '@prisma/adapter-pg';
 import { Pool } from 'pg';
 import logger from '@config/logger';
 
-const globalForPrisma = global as unknown as { prisma: PrismaClient; pool: Pool };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const globalForPrisma = global as any as { prisma: PrismaClient; pool: Pool };
 
 const pool = globalForPrisma.pool || new Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new PrismaPg(pool);
 
 function setupPrismaLogging(client: PrismaClient) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const prismaAny = client as any;
 
   // Queries (solo en desarrollo)
   if (process.env.NODE_ENV !== 'production') {
     prismaAny.$on('query', (e: Prisma.QueryEvent) => {
-      logger.debug('Prisma Query', {
+      logger.info('Prisma Query', {
         query: e.query,
         params: e.params,
         duration: `${e.duration}ms`,

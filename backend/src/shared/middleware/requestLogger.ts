@@ -37,7 +37,7 @@ export const requestLogger = (req: Request, res: Response, next: NextFunction): 
 
   // Capturar el response
   const originalSend = res.send;
-  res.send = function (data: unknown): Response {
+  res.send = function (data): Response {
     const duration = Date.now() - startTime;
 
     const completedLogData: LogMetadata = {

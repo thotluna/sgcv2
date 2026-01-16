@@ -12,6 +12,7 @@ describe('UsersMapper', () => {
     email: 'test@example.com',
     firstName: 'First',
     lastName: 'Last',
+    avatar: null,
     status: 'ACTIVE',
     createdAt: mockDate,
     updatedAt: mockDate,
@@ -25,6 +26,7 @@ describe('UsersMapper', () => {
     email: 'test@example.com',
     firstName: 'First',
     lastName: 'Last',
+    avatar: null,
     isActive: 'ACTIVE',
     createdAt: mockDate,
     updatedAt: mockDate,
@@ -65,6 +67,9 @@ describe('UsersMapper', () => {
       expect(result).toEqual({
         id: 1,
         username: 'testuser',
+        email: 'test@example.com',
+        firstName: 'First',
+        lastName: 'Last',
         status: 'ACTIVE',
         roles: ['ADMIN'],
       });
@@ -85,6 +90,9 @@ describe('UsersMapper', () => {
         id: 1,
         username: 'testuser',
         passwordHash: 'hashedpassword',
+        email: 'test@example.com',
+        firstName: 'First',
+        lastName: 'Last',
         status: 'ACTIVE',
         roles: ['ADMIN'],
       });
@@ -94,6 +102,31 @@ describe('UsersMapper', () => {
       const partialUser = { ...userWithRolesModel, isActive: null };
       const result = UsersMapper.toAuthUser(partialUser);
       expect(result.status).toBe('ACTIVE');
+    });
+  });
+
+  describe('toCreateUserInput', () => {
+    it('should map CreateUserDto to CreateUserInput correctly', () => {
+      const dto = {
+        username: 'newuser',
+        email: 'newuser@example.com',
+        password: 'password123',
+        firstName: 'New',
+        lastName: 'User',
+        isActive: 'ACTIVE' as const,
+      };
+
+      const result = UsersMapper.toCreateUserInput(dto);
+
+      expect(result).toEqual({
+        username: 'newuser',
+        email: 'newuser@example.com',
+        password: 'password123',
+        firstName: 'New',
+        lastName: 'User',
+        avatar: undefined,
+        isActive: 'ACTIVE',
+      });
     });
   });
 });

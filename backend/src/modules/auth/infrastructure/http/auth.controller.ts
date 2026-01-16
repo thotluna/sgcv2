@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
 import { LoginUseCaseService } from '@auth/application/login.use-case.service';
 import { InvalidPasswordException } from '@auth/domain/exceptions/invalid-password.exception';
@@ -20,8 +20,17 @@ export class AuthController {
     const dto: LoginDto = req.body;
 
     try {
-      const userTokenDto = await this.loginUseCaseService.execute(dto);
-      return ResponseHelper.success(res, userTokenDto);
+      const { user, token } = await this.loginUseCaseService.execute(dto);
+
+      res.cookie('auth-token', token, {
+        httpOnly: true,
+        secure: false, // Force false for local dev
+        sameSite: 'lax',
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        path: '/',
+      });
+
+      return ResponseHelper.success(res, { user });
     } catch (error) {
       if (error instanceof AuthUserNotFoundException) {
         throw new NotFoundException(error.message);
@@ -33,5 +42,15 @@ export class AuthController {
 
       throw error;
     }
+  }
+
+  async logout(_req: Request, res: Response): Promise<Response> {
+    res.clearCookie('auth-token', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+    });
+    return ResponseHelper.success(res, { message: 'Logged out successfully' });
   }
 }
