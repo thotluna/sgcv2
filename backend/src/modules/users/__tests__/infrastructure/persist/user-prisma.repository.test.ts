@@ -36,7 +36,7 @@ describe('UsersPrismaRepository', () => {
         firstName: 'Test',
         lastName: 'User',
         avatar: null,
-        isActive: 'ACTIVE',
+        status: 'ACTIVE',
         createdAt: new Date(),
         updatedAt: new Date(),
         roles: [
@@ -125,7 +125,7 @@ describe('UsersPrismaRepository', () => {
         firstName: 'Test',
         lastName: 'User',
         avatar: null,
-        isActive: 'ACTIVE',
+        status: 'ACTIVE',
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -166,7 +166,7 @@ describe('UsersPrismaRepository', () => {
         firstName: 'Test',
         lastName: 'User',
         avatar: null,
-        isActive: 'ACTIVE',
+        status: 'ACTIVE',
         createdAt: new Date(),
         updatedAt: new Date(),
         roles: [
@@ -220,7 +220,7 @@ describe('UsersPrismaRepository', () => {
         id: 1,
         username: 'testuser',
         passwordHash: 'hashedpassword',
-        isActive: 'ACTIVE',
+        status: 'ACTIVE',
         roles: [
           {
             role: {
@@ -271,14 +271,14 @@ describe('UsersPrismaRepository', () => {
           id: 1,
           username: 'user1',
           email: 'user1@test.com',
-          isActive: 'ACTIVE',
+          status: 'ACTIVE',
           createdAt: new Date(),
         },
         {
           id: 2,
           username: 'user2',
           email: 'user2@test.com',
-          isActive: 'INACTIVE',
+          status: 'INACTIVE',
           createdAt: new Date(),
         },
       ];
@@ -314,7 +314,7 @@ describe('UsersPrismaRepository', () => {
                 },
               ],
             },
-            { isActive: 'ACTIVE' },
+            { status: 'ACTIVE' },
           ],
         },
         skip: 0,
@@ -349,7 +349,7 @@ describe('UsersPrismaRepository', () => {
         firstName: 'Updated',
         lastName: 'User',
         avatar: null,
-        isActive: 'ACTIVE',
+        status: 'ACTIVE',
         createdAt: new Date(),
         updatedAt: new Date(),
         roles: [],
@@ -371,7 +371,7 @@ describe('UsersPrismaRepository', () => {
         password: 'hashedpassword',
         firstName: 'New',
         lastName: 'User',
-        isActive: 'ACTIVE' as const,
+        status: 'ACTIVE' as const,
       };
       const mockUserModel: User = {
         id: 2,
@@ -381,7 +381,7 @@ describe('UsersPrismaRepository', () => {
         firstName: createData.firstName,
         lastName: createData.lastName,
         avatar: null,
-        isActive: 'ACTIVE',
+        status: 'ACTIVE',
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -398,7 +398,7 @@ describe('UsersPrismaRepository', () => {
           firstName: createData.firstName,
           lastName: createData.lastName,
           avatar: undefined,
-          isActive: createData.isActive,
+          status: createData.status,
         },
       });
     });

@@ -64,7 +64,7 @@ export class UsersController {
       firstName: userDto.firstName,
       lastName: userDto.lastName,
       avatar: userDto.avatar,
-      status: userDto.isActive,
+      status: userDto.status,
       roleIds: userDto.roleIds,
     };
 
@@ -129,7 +129,7 @@ export class UsersController {
       firstName: userDto.firstName,
       lastName: userDto.lastName,
       avatar: userDto.avatar,
-      isActive: userDto.isActive,
+      status: userDto.status,
       roleIds: userDto.roleIds,
     };
 

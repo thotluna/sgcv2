@@ -8,7 +8,7 @@ export interface CreateUserInput {
   firstName?: string;
   lastName?: string;
   avatar?: string;
-  isActive?: UserState;
+  status?: UserState;
 }
 
 export interface UpdateMeInput {
@@ -28,7 +28,17 @@ export interface UpdateUserInput {
   firstName?: string;
   lastName?: string;
   avatar?: string;
-  isActive?: UserState;
+  status?: UserState;
+  roleIds?: number[];
+}
+
+export interface UpdateUserPersistenceInput {
+  email?: string;
+  passwordHash?: string;
+  firstName?: string;
+  lastName?: string;
+  avatar?: string;
+  status?: UserState;
   roleIds?: number[];
 }
 

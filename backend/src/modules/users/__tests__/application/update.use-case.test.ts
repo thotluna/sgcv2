@@ -31,8 +31,7 @@ describe('UpdateUserUseCaseService', () => {
 
     expect(hasher.hashPassword).toHaveBeenCalledWith('newpassword123');
     expect(userService.update).toHaveBeenCalledWith(id, {
-      ...input,
-      password: hashedPassword,
+      passwordHash: hashedPassword,
     });
   });
 

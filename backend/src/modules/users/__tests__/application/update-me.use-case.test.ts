@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { UpdateMeUseCase } from '@modules/users/application/update-me.use-case';
 import { UpdateUserService } from '@modules/users/domain/update.service';
 import { PasswordHasher } from '@modules/auth/domain/password-hasher';
-import { UserNotFoundException } from '@modules/users/domain/exceptions/user-no-found.exception';
+import { UserNotFoundException } from '@modules/users/domain/exceptions/user-not-found.exception';
 import { BadRequestException } from '@shared/exceptions';
 import { mockUserWithRole } from '../helpers';
 

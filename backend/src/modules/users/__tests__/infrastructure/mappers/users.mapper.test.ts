@@ -27,7 +27,7 @@ describe('UsersMapper', () => {
     firstName: 'First',
     lastName: 'Last',
     avatar: null,
-    isActive: 'ACTIVE',
+    status: 'ACTIVE',
     createdAt: mockDate,
     updatedAt: mockDate,
     roles: [
@@ -51,7 +51,7 @@ describe('UsersMapper', () => {
         id: 1,
         username: 'testuser',
         email: 'test@example.com',
-        isActive: 'ACTIVE',
+        status: 'ACTIVE',
         createdAt: mockDate,
         updatedAt: mockDate,
         firstName: 'First',
@@ -75,8 +75,8 @@ describe('UsersMapper', () => {
       });
     });
 
-    it('should default status to ACTIVE if isActive is null (edge case)', () => {
-      const partialUser = { ...userWithRolesModel, isActive: null };
+    it('should default status to ACTIVE if status is null (edge case)', () => {
+      const partialUser = { ...userWithRolesModel, status: null };
       const result = UsersMapper.toAuthenticatedUserDto(partialUser);
       expect(result.status).toBe('ACTIVE');
     });
@@ -98,8 +98,8 @@ describe('UsersMapper', () => {
       });
     });
 
-    it('should default status to ACTIVE if isActive is null (edge case)', () => {
-      const partialUser = { ...userWithRolesModel, isActive: null };
+    it('should default status to ACTIVE if status is null (edge case)', () => {
+      const partialUser = { ...userWithRolesModel, status: null };
       const result = UsersMapper.toAuthUser(partialUser);
       expect(result.status).toBe('ACTIVE');
     });
@@ -113,7 +113,7 @@ describe('UsersMapper', () => {
         password: 'password123',
         firstName: 'New',
         lastName: 'User',
-        isActive: 'ACTIVE' as const,
+        status: 'ACTIVE' as const,
       };
 
       const result = UsersMapper.toCreateUserInput(dto);
@@ -125,7 +125,7 @@ describe('UsersMapper', () => {
         firstName: 'New',
         lastName: 'User',
         avatar: undefined,
-        isActive: 'ACTIVE',
+        status: 'ACTIVE',
       });
     });
   });

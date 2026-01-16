@@ -11,7 +11,7 @@ export class UsersMapper {
       id: userWithRoles.id,
       username: userWithRoles.username,
       email: userWithRoles.email,
-      isActive: userWithRoles.status,
+      status: userWithRoles.status,
       createdAt: userWithRoles.createdAt,
       updatedAt: userWithRoles.updatedAt,
       firstName: userWithRoles.firstName,
@@ -28,7 +28,7 @@ export class UsersMapper {
       id: user.id,
       username: user.username,
       email: user.email,
-      isActive: user.status,
+      status: user.status,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
       firstName: user.firstName,
@@ -43,7 +43,7 @@ export class UsersMapper {
       email: user.email,
       firstName: user.firstName || '',
       lastName: user.lastName || '',
-      status: user.isActive || 'ACTIVE',
+      status: user.status || 'ACTIVE',
       roles: user.roles.map(ur => ur.role.name),
     };
   }
@@ -56,7 +56,7 @@ export class UsersMapper {
       firstName: user.firstName || '',
       lastName: user.lastName || '',
       passwordHash: user.passwordHash,
-      status: user.isActive || 'ACTIVE',
+      status: user.status || 'ACTIVE',
       roles: user.roles.map(ur => ur.role.name),
     };
   }
@@ -68,7 +68,7 @@ export class UsersMapper {
       firstName: dto.firstName,
       lastName: dto.lastName,
       avatar: dto.avatar,
-      isActive: dto.isActive,
+      status: dto.status,
     };
   }
 }

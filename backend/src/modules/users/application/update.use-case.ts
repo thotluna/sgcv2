@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { TYPES } from '@users/di/types';
-import { UpdateUserInput } from '@users/domain/dtos/user.dtos';
-import { UserEntity } from '@users/domain/user-entity';
+import { UpdateUserInput, UpdateUserPersistenceInput } from '@users/domain/dtos/user.dtos';
+import { UserWithRolesEntity } from '@users/domain/user-entity';
 import { UpdateUserService } from '@users/domain/update.service';
 import { TYPES as AuthTypes } from '@auth/di/types';
 import { PasswordHasher } from '@modules/auth/domain/password-hasher';
@@ -13,11 +13,18 @@ export class UpdateUseCase {
     @inject(AuthTypes.PasswordHasher) private readonly hasher: PasswordHasher
   ) {}
 
-  async execute(id: number, data: UpdateUserInput): Promise<UserEntity> {
-    const updateData = { ...data };
+  async execute(id: number, data: UpdateUserInput): Promise<UserWithRolesEntity> {
+    const updateData: UpdateUserPersistenceInput = {
+      email: data.email,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      avatar: data.avatar,
+      status: data.status,
+      roleIds: data.roleIds,
+    };
 
-    if (data.password) {
-      updateData.password = await this.hasher.hashPassword(data.password);
+    if (data.password && data.password.trim() !== '') {
+      updateData.passwordHash = await this.hasher.hashPassword(data.password);
     }
 
     return this.service.update(id, updateData);

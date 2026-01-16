@@ -14,7 +14,7 @@ export class UserEntityModelMapper {
       firstName: userModel.firstName,
       lastName: userModel.lastName,
       avatar: userModel.avatar,
-      status: userModel.isActive || 'ACTIVE',
+      status: userModel.status || 'ACTIVE',
       createdAt: userModel.createdAt,
       updatedAt: userModel.updatedAt,
     };
@@ -29,7 +29,7 @@ export class UserEntityModelMapper {
       firstName: userEntity.firstName,
       lastName: userEntity.lastName,
       avatar: userEntity.avatar,
-      isActive: userEntity.status,
+      status: userEntity.status,
       createdAt: userEntity.createdAt,
       updatedAt: userEntity.updatedAt,
     };
@@ -62,7 +62,7 @@ export class UserEntityModelMapper {
       avatar: user.avatar,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
-      status: user.isActive as UserStatus,
+      status: user.status as UserStatus,
       roles: roles,
     } satisfies UserWithRolesEntity;
   }

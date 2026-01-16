@@ -8,7 +8,7 @@ model User {
   avatar       String?     @db.VarChar(255)
   createdAt    DateTime    @default(now()) @map("created_at")
   updatedAt    DateTime    @updatedAt @map("updated_at")
-  isActive     user_state? @default(ACTIVE) @map("user_state")
+  status       user_state? @default(ACTIVE) @map("user_state")
   roles        UserRole[]
 
   @@map("users")

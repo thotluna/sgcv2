@@ -2,10 +2,10 @@ import { inject, injectable } from 'inversify';
 import { UserWithRolesEntity } from '@users/domain/user-entity';
 import { TYPES } from '@users/di/types';
 import { TYPES as AuthTypes } from '@modules/auth/di/types';
-import { UserNotFoundException } from '@users/domain/exceptions/user-no-found.exception';
+import { UserNotFoundException } from '@users/domain/exceptions/user-not-found.exception';
 import { PasswordHasher } from '@modules/auth/domain/password-hasher';
 import { BadRequestException } from '@shared/exceptions';
-import { UpdateMeInput } from '@users/domain/dtos/user.dtos';
+import { UpdateMeInput, UpdateUserPersistenceInput } from '@users/domain/dtos/user.dtos';
 import { UpdateUserService } from '@users/domain/update.service';
 
 @injectable()
@@ -22,8 +22,14 @@ export class UpdateMeUseCase {
       throw new UserNotFoundException(id.toString());
     }
 
-    const { password: _password, currentPassword: _currentPassword, ...rest } = data;
-    const updateData: Partial<UserWithRolesEntity> = { ...rest };
+    const updateData: UpdateUserPersistenceInput = {
+      email: data.email,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      avatar: data.avatar,
+      status: data.status,
+      roleIds: data.roleIds,
+    };
 
     if (data.password) {
       if (!data.currentPassword) {

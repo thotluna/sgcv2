@@ -28,17 +28,20 @@ describe('CreateUserUseCaseService', () => {
       password: 'plainpassword',
       firstName: 'New',
       lastName: 'User',
-      isActive: 'ACTIVE' as const,
+      status: 'ACTIVE' as const,
     };
 
     const mockCreatedUser = {
       id: 2,
-      ...userInput,
+      username: userInput.username,
+      email: userInput.email,
+      firstName: userInput.firstName,
+      lastName: userInput.lastName,
+      status: userInput.status,
       avatar: null,
       passwordHash: 'hashedpassword',
       createdAt: new Date(),
       updatedAt: new Date(),
-      status: 'ACTIVE' as const,
     };
 
     mockHasher.hashPassword.mockResolvedValue('hashedpassword');
