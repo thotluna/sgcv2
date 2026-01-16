@@ -44,7 +44,7 @@ jobs:
 
       - name: Check formatting
         working-directory: ./frontend
-        run: pnpm run prettier --check "**/*.{ts,tsx,js,jsx}"
+        run: pnpm run format:check
 
   build:
     name: Build Frontend
