@@ -82,8 +82,8 @@ export function UserDropMenu({ id, username, onDelete }: UserDropMenuProps) {
           {onDelete && (
             <DropdownMenuItem onClick={handleDeleteClick} className="text-red-600">
               <Trash className="mr-2 h-4 w-4" />
-              Eliminar
-              <DropdownMenuShortcut>⌘D</DropdownMenuShortcut>
+              Bloquear
+              <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
             </DropdownMenuItem>
           )}
         </DropdownMenuContent>
@@ -92,10 +92,11 @@ export function UserDropMenu({ id, username, onDelete }: UserDropMenuProps) {
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
+            <AlertDialogTitle>¿Bloquear usuario?</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta acción no se puede deshacer. Esto eliminará permanentemente al usuario{' '}
-              <span className="font-semibold">{username}</span> de la base de datos.
+              Esta acción marcará al usuario <span className="font-semibold">{username}</span> como{' '}
+              <span className="font-semibold text-red-600">BLOQUEADO</span>. El usuario ya no podrá
+              iniciar sesión en el sistema.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -105,7 +106,7 @@ export function UserDropMenu({ id, username, onDelete }: UserDropMenuProps) {
               disabled={isDeleting}
               className="bg-red-600 hover:bg-red-700"
             >
-              {isDeleting ? 'Eliminando...' : 'Eliminar'}
+              {isDeleting ? 'Bloqueando...' : 'Confirmar Bloqueo'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

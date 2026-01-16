@@ -4,6 +4,7 @@ import {
   UpdateUserDto,
   UserFilterDto,
   UserDto,
+  CreateUserDto,
 } from '@sgcv2/shared';
 import { createServerApiClient } from './server-client';
 
@@ -39,6 +40,11 @@ export const serverUsersService = {
   updateUser: async (id: number, data: UpdateUserDto) => {
     const apiClient = await createServerApiClient();
     const response = await apiClient.patch<AppResponse<UserDto>>(`/users/${id}`, data);
+    return response.data;
+  },
+  create: async (data: CreateUserDto) => {
+    const apiClient = await createServerApiClient();
+    const response = await apiClient.post<AppResponse<UserDto>>(`/users`, data);
     return response.data;
   },
 };
