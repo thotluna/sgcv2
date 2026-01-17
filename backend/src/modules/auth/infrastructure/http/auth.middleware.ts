@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import passport from 'passport';
-import { UserWithRolesDto } from '@sgcv2/shared';
 import { AuthUser } from '@modules/auth/domain/auth-user';
 import { InternalServerErrorException, UnauthorizedException } from '@shared/exceptions';
 
@@ -22,6 +21,7 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
         username: user.username,
         role: user.roles[0] || '',
         roles: user.roles,
+        permissions: user.permissions,
       };
       next();
     }
@@ -29,13 +29,14 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
 };
 
 export const optionalAuth = (req: Request, res: Response, next: NextFunction) => {
-  return passport.authenticate('jwt', { session: false }, (err: Error, user: UserWithRolesDto) => {
+  return passport.authenticate('jwt', { session: false }, (err: Error, user: AuthUser) => {
     if (!err && user) {
       req.user = {
         id: user.id.toString(),
         username: user.username,
-        role: user.roles?.[0]?.name || '',
-        roles: user.roles?.map(r => r.name) || [],
+        role: user.roles?.[0] || '',
+        roles: user.roles || [],
+        permissions: user.permissions || [],
       };
     }
     next();
