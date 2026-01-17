@@ -22,6 +22,8 @@ jobs:
     name: Deploy Backend
     runs-on: ubuntu-latest
     if: github.event_name == 'push' || github.event.inputs.environment == 'production'
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://sgcv2_user:sgcv2_password@localhost:5432/sgcv2_test' }}
 
     steps:
       - name: Checkout code
@@ -49,13 +51,9 @@ jobs:
 
       - name: Generate Prisma client
         run: pnpm prisma:generate
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://sgcv2_user:sgcv2_password@localhost:5432/sgcv2_test' }}
 
       - name: Build
         run: pnpm run build:backend
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://sgcv2_user:sgcv2_password@localhost:5432/sgcv2_test' }}
 
       - name: Deploy notification
         run: |
@@ -140,12 +138,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Create Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
-          release_name: Release ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
           body: |
             ## Changes in this Release
             
