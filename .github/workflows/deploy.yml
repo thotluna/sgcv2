@@ -44,9 +44,18 @@ jobs:
           # This should be a secret in a real environment
           DATABASE_URL: postgresql://sgcv2_user:sgcv2_password@localhost:5432/sgcv2_test
 
+      - name: Build shared package first
+        run: pnpm --filter @sgcv2/shared build
+
+      - name: Generate Prisma client
+        run: pnpm prisma:generate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://sgcv2_user:sgcv2_password@localhost:5432/sgcv2_test' }}
+
       - name: Build
-        working-directory: ./backend
-        run: pnpm run build
+        run: pnpm run build:backend
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://sgcv2_user:sgcv2_password@localhost:5432/sgcv2_test' }}
 
       - name: Deploy notification
         run: |
@@ -95,9 +104,11 @@ jobs:
           # This should be a secret in a real environment
           DATABASE_URL: postgresql://sgcv2_user:sgcv2_password@localhost:5432/sgcv2_test
 
+      - name: Build shared package first
+        run: pnpm --filter @sgcv2/shared build
+
       - name: Build
-        working-directory: ./frontend
-        run: pnpm run build
+        run: pnpm run build:frontend
         env:
           NEXT_PUBLIC_API_URL: ${{ secrets.API_URL }}
 
