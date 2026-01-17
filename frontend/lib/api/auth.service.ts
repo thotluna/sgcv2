@@ -1,9 +1,9 @@
 import { apiClient } from './client';
-import { LoginDto, AppResponse, UserBasic } from '@sgcv2/shared';
+import { LoginDto, AppResponse, AuthenticatedUserDto } from '@sgcv2/shared';
 
 interface LoginResponse {
-  user: UserBasic;
-  token: string;
+  user: AuthenticatedUserDto;
+  token?: string;
 }
 
 export const authService = {
@@ -18,9 +18,5 @@ export const authService = {
   logout: async () => {
     const response = await apiClient.post(`/auth/logout`);
     return response.data;
-  },
-  getMe: async () => {
-    const response = await apiClient.get<AppResponse<UserBasic>>(`/users/me`);
-    return response.data.data;
   },
 };

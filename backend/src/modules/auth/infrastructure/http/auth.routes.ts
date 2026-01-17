@@ -15,6 +15,10 @@ export class AuthRoutes {
     this.router.post('/login', validateSchema(loginDtoSchema), (req, res) => {
       return controller.login(req, res);
     });
+
+    this.router.post('/logout', (req, res) => {
+      return controller.logout(req, res);
+    });
   }
 
   getRouter(): Router {

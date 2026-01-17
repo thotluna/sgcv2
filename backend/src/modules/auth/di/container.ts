@@ -17,4 +17,5 @@ export const authContainerModule = new ContainerModule((option: ContainerModuleL
   option.bind<AuthRoutes>(TYPES.AuthRoutes).to(AuthRoutes);
   option.bind<LocalStrategy>(TYPES.LocalStrategy).to(LocalStrategy);
   option.bind<JwtStrategy>(TYPES.JwtStrategy).to(JwtStrategy);
+  option.bind(TYPES.PasswordHasher).to(AuthService);
 });

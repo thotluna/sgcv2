@@ -66,7 +66,7 @@ async function main() {
       username: 'admin',
       email: 'admin@example.com',
       passwordHash,
-      isActive: 'ACTIVE',
+      status: 'ACTIVE',
       roles: {
         create: {
           roleId: createdRoles[ROLES.ADMIN].id,

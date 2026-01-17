@@ -7,6 +7,7 @@ import { AuthUserIdentityRepository } from '@modules/auth/domain/auth-user-ident
 export interface Payload {
   sub: number;
   username: string;
+  roles: string[];
   iat: number;
   exp: number;
 }
@@ -16,7 +17,7 @@ export class JwtStrategy extends PassportJwtStrategy {
   constructor(
     @inject(TYPES.AuthUserIdentityRepository) userRepository: AuthUserIdentityRepository
   ) {
-    super(jwtOptions, async (payload: Payload, done: VerifiedCallback) => {
+    super(jwtOptions as any, async (payload: Payload, done: VerifiedCallback) => {
       try {
         const user = await userRepository.findByIdForAuth(payload.sub);
 

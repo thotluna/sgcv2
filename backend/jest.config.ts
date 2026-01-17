@@ -27,7 +27,7 @@ const config: Config = {
     '^@modules/(.*)$': '<rootDir>/src/modules/$1',
     '^@auth/(.*)$': '<rootDir>/src/modules/auth/$1',
     '^@users/(.*)$': '<rootDir>/src/modules/users/$1',
-    '^@const/(.*)$': '<rootDir>/src/const/$1',
+    '^@consts/(.*)$': '<rootDir>/src/consts/$1',
     '^@shared/(.*)$': '<rootDir>/src/shared/$1',
     '^@types/(.*)$': '<rootDir>/src/types/$1',
     // CRÍTICO: Mapear al código FUENTE de shared

@@ -12,6 +12,7 @@ describe('UsersMapper', () => {
     email: 'test@example.com',
     firstName: 'First',
     lastName: 'Last',
+    avatar: null,
     status: 'ACTIVE',
     createdAt: mockDate,
     updatedAt: mockDate,
@@ -25,7 +26,8 @@ describe('UsersMapper', () => {
     email: 'test@example.com',
     firstName: 'First',
     lastName: 'Last',
-    isActive: 'ACTIVE',
+    avatar: null,
+    status: 'ACTIVE',
     createdAt: mockDate,
     updatedAt: mockDate,
     roles: [
@@ -49,7 +51,7 @@ describe('UsersMapper', () => {
         id: 1,
         username: 'testuser',
         email: 'test@example.com',
-        isActive: 'ACTIVE',
+        status: 'ACTIVE',
         createdAt: mockDate,
         updatedAt: mockDate,
         firstName: 'First',
@@ -65,13 +67,16 @@ describe('UsersMapper', () => {
       expect(result).toEqual({
         id: 1,
         username: 'testuser',
+        email: 'test@example.com',
+        firstName: 'First',
+        lastName: 'Last',
         status: 'ACTIVE',
         roles: ['ADMIN'],
       });
     });
 
-    it('should default status to ACTIVE if isActive is null (edge case)', () => {
-      const partialUser = { ...userWithRolesModel, isActive: null };
+    it('should default status to ACTIVE if status is null (edge case)', () => {
+      const partialUser = { ...userWithRolesModel, status: null };
       const result = UsersMapper.toAuthenticatedUserDto(partialUser);
       expect(result.status).toBe('ACTIVE');
     });
@@ -85,15 +90,43 @@ describe('UsersMapper', () => {
         id: 1,
         username: 'testuser',
         passwordHash: 'hashedpassword',
+        email: 'test@example.com',
+        firstName: 'First',
+        lastName: 'Last',
         status: 'ACTIVE',
         roles: ['ADMIN'],
       });
     });
 
-    it('should default status to ACTIVE if isActive is null (edge case)', () => {
-      const partialUser = { ...userWithRolesModel, isActive: null };
+    it('should default status to ACTIVE if status is null (edge case)', () => {
+      const partialUser = { ...userWithRolesModel, status: null };
       const result = UsersMapper.toAuthUser(partialUser);
       expect(result.status).toBe('ACTIVE');
+    });
+  });
+
+  describe('toCreateUserInput', () => {
+    it('should map CreateUserDto to CreateUserInput correctly', () => {
+      const dto = {
+        username: 'newuser',
+        email: 'newuser@example.com',
+        password: 'password123',
+        firstName: 'New',
+        lastName: 'User',
+        status: 'ACTIVE' as const,
+      };
+
+      const result = UsersMapper.toCreateUserInput(dto);
+
+      expect(result).toEqual({
+        username: 'newuser',
+        email: 'newuser@example.com',
+        password: 'password123',
+        firstName: 'New',
+        lastName: 'User',
+        avatar: undefined,
+        status: 'ACTIVE',
+      });
     });
   });
 });

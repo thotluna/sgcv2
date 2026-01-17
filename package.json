@@ -1,6 +1,6 @@
 {
   "name": "sgcv2",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "devDependencies": {
     "@eslint/js": "^9.39.1",
@@ -51,11 +51,13 @@
   "lint-staged": {
     "*.{ts,tsx,js,jsx,json,md}": "prettier --write",
     "frontend/**/*.{ts,tsx}": [
-      "pnpm --filter frontend lint --fix",
+      "pnpm --filter frontend lint --fix --no-warn-ignored",
+      "bash -c 'pnpm --filter frontend exec tsc --noEmit --project tsconfig.json'",
       "./scripts/run-frontend-tests.sh"
     ],
     "backend/**/*.ts": [
-      "pnpm --filter backend lint --fix",
+      "pnpm --filter backend lint --fix --no-warn-ignored",
+      "bash -c 'pnpm --filter backend exec tsc --noEmit --project tsconfig.json'",
       "./scripts/run-backend-tests.sh"
     ]
   },

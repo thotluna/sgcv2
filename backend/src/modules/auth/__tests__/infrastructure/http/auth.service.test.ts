@@ -16,6 +16,9 @@ describe('AuthService', () => {
     id: 1,
     username: 'testuser',
     passwordHash: 'hashed_password',
+    email: 'testuser@example.com',
+    firstName: 'Test',
+    lastName: 'User',
     status: 'ACTIVE',
     roles: ['admin'],
   };

@@ -4,20 +4,23 @@ export class CreateUserDto {
   username!: string;
   email!: string;
   password!: string;
+  firstName?: string;
+  lastName?: string;
+  avatar?: string;
   roleIds?: number[];
+  status?: UserStatus;
 }
 
-export class UpdateUserDto {
-  email?: string;
-  password?: string; // Only if changing password
-  isActive?: UserStatus; // Status
+export type UpdateUserDto = Partial<Omit<UserDto, 'id' | 'createdAt' | 'updatedAt'>> & {
+  password?: string;
+  currentPassword?: string;
   roleIds?: number[];
-}
+};
 
 export class UserDelete {
   id!: number;
   username!: string;
-  isActive!: UserStatus;
+  status!: UserStatus;
 }
 
 export class UserDto {
@@ -28,7 +31,8 @@ export class UserDto {
   lastName!: string | null;
   createdAt!: Date;
   updatedAt!: Date;
-  isActive!: UserStatus;
+  status!: UserStatus;
+  avatar?: string;
 }
 
 export interface RoleDto {
@@ -38,4 +42,13 @@ export interface RoleDto {
 
 export class UserWithRolesDto extends UserDto {
   roles?: RoleDto[];
+}
+
+export interface UserFilterDto {
+  search?: string;
+  status?: UserStatus;
+  pagination?: {
+    limit: number;
+    offset: number;
+  };
 }

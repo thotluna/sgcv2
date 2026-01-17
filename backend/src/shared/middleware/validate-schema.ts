@@ -1,11 +1,13 @@
 import z from 'zod';
 import { NextFunction, RequestHandler, Response } from 'express';
-import { TypedRequest } from '../../types/express-interfaces/types';
 import { ValidationException } from '../exceptions/http-exceptions';
 
-export const validateSchema = <T extends z.ZodTypeAny>(schema: T): RequestHandler => {
-  return (req: TypedRequest<T>, _res: Response, next: NextFunction): void => {
-    const validationResult = schema.safeParse(req.body);
+export const validateSchema = <T extends z.ZodTypeAny>(
+  schema: T,
+  source: 'body' | 'query' | 'params' = 'body'
+): RequestHandler => {
+  return (req: any, _res: Response, next: NextFunction): void => {
+    const validationResult = schema.safeParse(req[source]);
 
     if (!validationResult.success) {
       throw new ValidationException(
@@ -25,9 +27,19 @@ export const validateSchema = <T extends z.ZodTypeAny>(schema: T): RequestHandle
       );
     }
 
-    // Overwrite the req.body with validated data
-    req.body = validationResult.data as T;
+    // Overwrite the specific source with validated data
+    try {
+      req[source] = validationResult.data;
+    } catch (e) {
+      // Fallback for read-only properties (like req.query in some Express setups)
+      Object.defineProperty(req, source, {
+        value: validationResult.data,
+        writable: true,
+        configurable: true,
+        enumerable: true,
+      });
+    }
 
-    next();
+    return next();
   };
 };

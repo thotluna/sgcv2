@@ -28,6 +28,19 @@ const eslintConfig = defineConfig([
     '**/*.spec.tsx',
     'playwright-report/**',
   ]),
+  {
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/no-restricted-types': [
+        'error',
+        {
+          types: {
+            unknown: 'Do not use unknown, use specific types or interfaces instead.',
+          },
+        },
+      ],
+    },
+  },
 ]);
 
 export default eslintConfig;

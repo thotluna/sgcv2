@@ -12,7 +12,6 @@ export const serverCustomersService = {
     try {
       const client = await createServerApiClient();
       const response = await client.get(`/customers/${id}`);
-      console.log(response.data);
       return response.data;
     } catch (error) {
       console.error('Error fetching customer:', error);

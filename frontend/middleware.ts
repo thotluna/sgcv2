@@ -5,22 +5,32 @@ import type { NextRequest } from 'next/server';
 const publicRoutes = ['/login'];
 
 // Routes that should redirect to dashboard if already authenticated
-// const authRoutes = ['/login'];
+const authRoutes = ['/login'];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Get token from cookie or check localStorage (we'll use cookie for SSR)
+  // Get token from cookie
   const token = request.cookies.get('auth-token')?.value;
 
   // Check if the route is public
   const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
 
+  // Check if the route is an auth route (login/register)
+  const isAuthRoute = authRoutes.some(route => pathname.startsWith(route));
+
   // If user is authenticated and trying to access auth routes (like /login)
   // redirect to dashboard
-  // if (token && isAuthRoute) {
-  //   return NextResponse.redirect(new URL('/dashboard', request.url));
-  // }
+  if (token && isAuthRoute) {
+    // If we are redirecting due to session expiration (401 from client), allow access to login
+    // and clear the stale cookie
+    if (request.nextUrl.searchParams.get('expired') === 'true') {
+      const response = NextResponse.next();
+      response.cookies.delete('auth-token');
+      return response;
+    }
+    return NextResponse.redirect(new URL('/dashboard', request.url));
+  }
 
   // If user is not authenticated and trying to access protected routes
   // redirect to login

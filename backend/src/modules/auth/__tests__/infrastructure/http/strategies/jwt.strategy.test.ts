@@ -20,12 +20,12 @@ describe('JWT Strategy', () => {
 
     it('should have secretOrKey configured', () => {
       expect(jwtOptions).toHaveProperty('secretOrKey');
-      expect(jwtOptions.secretOrKey).toBeDefined();
+      expect((jwtOptions as any).secretOrKey).toBeDefined();
     });
 
     it('should use JWT_SECRET from environment or default', () => {
       const expectedSecret = process.env.JWT_SECRET || 'default_secret';
-      expect(jwtOptions.secretOrKey).toBe(expectedSecret);
+      expect((jwtOptions as any).secretOrKey).toBe(expectedSecret);
     });
 
     it('should extract JWT from Authorization header as Bearer token', () => {

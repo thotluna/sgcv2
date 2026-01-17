@@ -1,63 +1,14 @@
 import { Router } from 'express';
 import { inject, injectable } from 'inversify';
-import { UsersController } from '@users/infrastructure/http/user.controller';
+import { UsersController } from '@modules/users/infrastructure/http/users.controller';
 import { authenticate } from '@auth/infrastructure/http/auth.middleware';
 import { TYPES } from '@users/di/types';
-
-// const router = Router();
-// const usersController = new UsersController();
-
-// /**
-//  * @route   GET /api/users/me
-//  * @desc    Get current user profile
-//  * @access  Private
-//  */
-// router.get('/me', authenticate, (req, res) => usersController.me(req, res));
-
-// /**
-//  * @route   GET /api/users
-//  * @desc    Get all users (with pagination)
-//  * @access  Private (Admin only)
-//  */
-// router.get('/', authenticate, requireRoles('Administrador'), (req, res) =>
-//   usersController.getAll(req, res)
-// );
-
-// /**
-//  * @route   GET /api/users/:id
-//  * @desc    Get user by ID
-//  * @access  Private (Admin only)
-//  */
-// router.get('/:id', authenticate, requireRoles('Administrador'), (req, res) =>
-//   usersController.getById(req, res)
-// );
-
-// /**
-//  * @route   POST /api/users
-//  * @desc    Create new user
-//  * @access  Private (Admin only)
-//  */
-// router.post('/', authenticate, requireRoles('Administrador'), (req, res) =>
-//   usersController.create(req, res)
-// );
-
-// /**
-//  * @route   PUT /api/users/:id
-//  * @desc    Update user
-//  * @access  Private (Own profile or Admin)
-//  */
-// router.put('/:id', authenticate, (req, res) => usersController.update(req, res));
-
-// /**
-//  * @route   DELETE /api/users/:id
-//  * @desc    Delete user (soft delete)
-//  * @access  Private (Admin only)
-//  */
-// router.delete('/:id', authenticate, requireRoles('Administrador'), (req, res) =>
-//   usersController.delete(req, res)
-// );
-
-// export default router;
+import { validateSchema } from '@shared/middleware/validate-schema';
+import { UpdateMeSchema, AdminUpdateUserSchema } from './update-user.schema';
+import { requireRoles } from '@modules/rbac/guards/roles.guard';
+import { ROLES } from '@consts/roles';
+import { UserFilterSchema } from './user-filter.schema';
+import { CreateUserSchema } from './create-user.schema';
 
 @injectable()
 export class UsersRoutes {
@@ -73,19 +24,33 @@ export class UsersRoutes {
 
   createRoutes() {
     this.router.get('/me', authenticate, (req, res) => this.usersController.me(req, res));
-    // this.router.get('/', authenticate, requireRoles('Administrador'), (req, res) =>
-    //   this.usersController.getAll(req, res)
-    // );
-    // this.router.get('/:id', authenticate, requireRoles('Administrador'), (req, res) =>
-    //   this.usersController.getById(req, res)
-    // );
-    // this.router.post('/', authenticate, requireRoles('Administrador'), (req, res) =>
-    //   this.usersController.create(req, res)
-    // );
-    // this.router.put('/:id', authenticate, (req, res) => this.usersController.update(req, res));
-    // this.router.delete('/:id', authenticate, requireRoles('Administrador'), (req, res) =>
-    //   this.usersController.delete(req, res)
-    // );
+    this.router.patch('/me', authenticate, validateSchema(UpdateMeSchema), (req, res) =>
+      this.usersController.updateMe(req, res)
+    );
+    this.router.get(
+      '/',
+      authenticate,
+      requireRoles(ROLES.ADMIN),
+      validateSchema(UserFilterSchema, 'query'),
+      (req, res) => this.usersController.showAll(req, res)
+    );
+    this.router.get('/:id', authenticate, requireRoles(ROLES.ADMIN), (req, res) =>
+      this.usersController.show(req, res)
+    );
+    this.router.post(
+      '/',
+      authenticate,
+      requireRoles(ROLES.ADMIN),
+      validateSchema(CreateUserSchema),
+      (req, res) => this.usersController.create(req, res)
+    );
+    this.router.patch(
+      '/:id',
+      authenticate,
+      requireRoles(ROLES.ADMIN),
+      validateSchema(AdminUpdateUserSchema),
+      (req, res) => this.usersController.update(req, res)
+    );
   }
 
   getRouter() {

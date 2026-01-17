@@ -1,4 +1,4 @@
-import { AuthenticatedUserDto } from '@modules/auth/infrastructure/http/authenticated-user.dto';
+import { AuthenticatedUserDto } from '@sgcv2/shared/src/dtos/auth.dto';
 import { LocalStrategy } from '../../../../infrastructure/http/strategies/local.strategy';
 import { UserValidationService } from '@auth/domain/user-validation.service';
 
@@ -36,6 +36,9 @@ describe('Local Strategy', () => {
       const mockUser: AuthenticatedUserDto = {
         id: 1,
         username: 'testuser',
+        email: 'testuser@example.com',
+        firstName: 'Test',
+        lastName: 'User',
         roles: [],
         status: 'ACTIVE',
       };
@@ -54,7 +57,7 @@ describe('Local Strategy', () => {
         id: mockUser.id.toString(),
         username: mockUser.username,
         roles: mockUser.roles,
-        role: mockUser.roles[0] || '',
+        role: mockUser.roles?.[0] || '',
       });
     });
 
