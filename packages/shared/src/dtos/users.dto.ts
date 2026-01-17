@@ -42,6 +42,7 @@ export interface RoleDto {
 
 export class UserWithRolesDto extends UserDto {
   roles?: RoleDto[];
+  permissions?: string[];
 }
 
 export interface UserFilterDto {
