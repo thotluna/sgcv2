@@ -79,9 +79,12 @@ describe('UsersPrismaRepository', () => {
       expect(user?.id).toBe(1);
       expect(user?.username).toBe('testuser');
       expect(user?.roles).toHaveLength(1);
-      expect(user?.roles[0].name).toBe('ADMIN');
-      expect(user?.roles[0].permissions).toHaveLength(1);
-      expect(user?.roles[0].permissions[0].action).toBe('create');
+      const role = user?.roles?.[0];
+      expect(role).toBeDefined();
+      expect(role!.name).toBe('ADMIN');
+      expect(role!.permissions).toBeDefined();
+      expect(role!.permissions).toHaveLength(1);
+      expect(role!.permissions![0].action).toBe('create');
       expect(mockPrismaUser.findUnique).toHaveBeenCalledWith({
         where: { id: 1 },
         include: {
