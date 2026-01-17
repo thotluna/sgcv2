@@ -1,6 +1,10 @@
-import { CreateRoleInput, RoleFilterInput, UpdateRoleInput } from './inputs/roles.input';
-import { RoleEntity } from './roles.entity';
-import { PaginatedRoles } from './inputs/roles.input';
+import {
+  CreateRoleInput,
+  RoleFilterInput,
+  UpdateRoleInput,
+  PaginatedRoles,
+} from '@roles/domain/inputs/roles.input';
+import { RoleEntity } from '@roles/domain/roles.entity';
 
 export interface RoleRepository {
   getAll(filter: RoleFilterInput): Promise<PaginatedRoles>;

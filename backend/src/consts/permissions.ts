@@ -11,4 +11,10 @@ export const PERMISSIONS = {
     UPDATE: { resource: 'users', action: 'update' },
     DELETE: { resource: 'users', action: 'delete' },
   },
+  ROLES: {
+    CREATE: { resource: 'roles', action: 'create' },
+    READ: { resource: 'roles', action: 'read' },
+    UPDATE: { resource: 'roles', action: 'update' },
+    DELETE: { resource: 'roles', action: 'delete' },
+  },
 } as const;

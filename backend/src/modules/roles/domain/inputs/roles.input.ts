@@ -1,4 +1,4 @@
-import { RoleEntity } from '../roles.entity';
+import { RoleEntity } from '@roles/domain/roles.entity';
 
 export interface CreateRoleInput {
   name: string;
