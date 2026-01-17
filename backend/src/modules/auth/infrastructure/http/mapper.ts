@@ -11,6 +11,7 @@ export class AuthMapper {
       lastName: user.lastName,
       status: user.status,
       roles: user.roles,
+      permissions: user.permissions,
     };
   }
 }
