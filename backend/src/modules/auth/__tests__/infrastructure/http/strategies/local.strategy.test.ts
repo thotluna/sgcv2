@@ -58,6 +58,7 @@ describe('Local Strategy', () => {
         username: mockUser.username,
         roles: mockUser.roles,
         role: mockUser.roles?.[0] || '',
+        permissions: mockUser.permissions || [],
       });
     });
 

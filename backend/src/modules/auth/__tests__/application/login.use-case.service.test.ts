@@ -40,6 +40,7 @@ describe('LoginUseCaseService', () => {
       username: userFound.username,
       roles: userFound.roles,
       sub: userFound.id,
+      permissions: userFound.permissions,
     });
   });
 

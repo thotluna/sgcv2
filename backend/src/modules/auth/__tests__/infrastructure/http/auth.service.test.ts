@@ -21,6 +21,7 @@ describe('AuthService', () => {
     lastName: 'User',
     status: 'ACTIVE',
     roles: ['admin'],
+    permissions: [],
   };
 
   beforeEach(() => {

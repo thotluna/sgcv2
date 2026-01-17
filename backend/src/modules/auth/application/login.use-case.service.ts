@@ -27,6 +27,7 @@ export class LoginUseCaseService {
       sub: user.id,
       username: user.username,
       roles: user.roles,
+      permissions: user.permissions,
     };
 
     const token = await this.service.generateToken(payload);

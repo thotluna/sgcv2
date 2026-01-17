@@ -26,6 +26,7 @@ export class LocalStrategy extends PassportLocalStrategy {
             username: user.username,
             role: user.roles?.[0] || '',
             roles: user.roles || [],
+            permissions: user.permissions || [],
           });
         } catch (err) {
           return done(err);

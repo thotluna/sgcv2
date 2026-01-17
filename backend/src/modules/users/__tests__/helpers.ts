@@ -30,4 +30,5 @@ export const mockUserWithRole: UserWithRolesEntity = {
       ],
     },
   ],
+  permissions: ['test.test'],
 };

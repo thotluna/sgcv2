@@ -38,6 +38,14 @@ describe('UsersMapper', () => {
           id: 1,
           name: 'ADMIN',
           description: 'Admin role',
+          permissions: [
+            {
+              permission: {
+                resource: 'users',
+                action: 'read',
+              },
+            },
+          ],
         },
       },
     ],
@@ -60,6 +68,50 @@ describe('UsersMapper', () => {
     });
   });
 
+  describe('toUserWithRolesDto', () => {
+    it('should map UserWithRolesEntity to UserWithRolesDto correctly', () => {
+      const userWithRolesEntity: any = {
+        ...userEntity,
+        roles: [
+          {
+            id: 1,
+            name: 'ADMIN',
+            description: 'Admin role',
+            permissions: [
+              {
+                id: 1,
+                resource: 'users',
+                action: 'read',
+              },
+            ],
+          },
+        ],
+        permissions: ['users.read'],
+      };
+
+      const result = UsersMapper.toUserWithRolesDto(userWithRolesEntity);
+
+      expect(result).toEqual({
+        id: 1,
+        username: 'testuser',
+        email: 'test@example.com',
+        status: 'ACTIVE',
+        createdAt: mockDate,
+        updatedAt: mockDate,
+        firstName: 'First',
+        lastName: 'Last',
+        roles: [
+          {
+            id: 1,
+            name: 'ADMIN',
+            description: 'Admin role',
+          },
+        ],
+        permissions: ['users.read'],
+      });
+    });
+  });
+
   describe('toAuthenticatedUserDto', () => {
     it('should map UserWithRolesModel to AuthenticatedUserDto', () => {
       const result = UsersMapper.toAuthenticatedUserDto(userWithRolesModel as UserWithRolesModel);
@@ -72,6 +124,7 @@ describe('UsersMapper', () => {
         lastName: 'Last',
         status: 'ACTIVE',
         roles: ['ADMIN'],
+        permissions: ['users.read'],
       });
     });
 
@@ -95,6 +148,7 @@ describe('UsersMapper', () => {
         lastName: 'Last',
         status: 'ACTIVE',
         roles: ['ADMIN'],
+        permissions: ['users.read'],
       });
     });
 

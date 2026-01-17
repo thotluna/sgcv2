@@ -12,6 +12,7 @@ export function getUserMock({ username, password }: LoginDto): AuthUser {
     lastName: 'User',
     passwordHash: password,
     roles: ['admin'],
+    permissions: [],
   };
 }
 

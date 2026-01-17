@@ -32,8 +32,15 @@ describe('Auth Middleware', () => {
         passwordHash: 'hash',
         status: 'ACTIVE' as const,
         roles: ['admin'],
+        permissions: [],
       };
-      const expectedUser = { id: '1', username: 'test', roles: ['admin'], role: 'admin' };
+      const expectedUser = {
+        id: '1',
+        username: 'test',
+        roles: ['admin'],
+        role: 'admin',
+        permissions: [],
+      };
 
       // Mock passport.authenticate to return a middleware that calls the callback with success
       (passport.authenticate as jest.Mock).mockImplementation((_strategy, _options, callback) => {
@@ -104,9 +111,16 @@ describe('Auth Middleware', () => {
       const mockUser = {
         id: 1,
         username: 'test',
-        roles: [{ id: 1, name: 'admin' }],
+        roles: ['admin'],
+        permissions: [],
       };
-      const expectedUser = { id: '1', username: 'test', roles: ['admin'], role: 'admin' };
+      const expectedUser = {
+        id: '1',
+        username: 'test',
+        roles: ['admin'],
+        role: 'admin',
+        permissions: [],
+      };
 
       (passport.authenticate as jest.Mock).mockImplementation((_strategy, _options, callback) => {
         return (_req: Request, _res: Response, _next: NextFunction) => {

@@ -5,8 +5,8 @@ import { authenticate } from '@auth/infrastructure/http/auth.middleware';
 import { TYPES } from '@users/di/types';
 import { validateSchema } from '@shared/middleware/validate-schema';
 import { UpdateMeSchema, AdminUpdateUserSchema } from './update-user.schema';
-import { requireRoles } from '@modules/rbac/guards/roles.guard';
-import { ROLES } from '@consts/roles';
+import { Permission } from '@modules/rbac/decorators/permissions.decorator';
+import { PERMISSIONS } from '@consts/permissions';
 import { UserFilterSchema } from './user-filter.schema';
 import { CreateUserSchema } from './create-user.schema';
 
@@ -30,24 +30,27 @@ export class UsersRoutes {
     this.router.get(
       '/',
       authenticate,
-      requireRoles(ROLES.ADMIN),
+      Permission(PERMISSIONS.USERS.READ.resource, PERMISSIONS.USERS.READ.action),
       validateSchema(UserFilterSchema, 'query'),
       (req, res) => this.usersController.showAll(req, res)
     );
-    this.router.get('/:id', authenticate, requireRoles(ROLES.ADMIN), (req, res) =>
-      this.usersController.show(req, res)
+    this.router.get(
+      '/:id',
+      authenticate,
+      Permission(PERMISSIONS.USERS.READ.resource, PERMISSIONS.USERS.READ.action),
+      (req, res) => this.usersController.show(req, res)
     );
     this.router.post(
       '/',
       authenticate,
-      requireRoles(ROLES.ADMIN),
+      Permission(PERMISSIONS.USERS.CREATE.resource, PERMISSIONS.USERS.CREATE.action),
       validateSchema(CreateUserSchema),
       (req, res) => this.usersController.create(req, res)
     );
     this.router.patch(
       '/:id',
       authenticate,
-      requireRoles(ROLES.ADMIN),
+      Permission(PERMISSIONS.USERS.UPDATE.resource, PERMISSIONS.USERS.UPDATE.action),
       validateSchema(AdminUpdateUserSchema),
       (req, res) => this.usersController.update(req, res)
     );

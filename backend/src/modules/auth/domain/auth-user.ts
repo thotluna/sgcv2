@@ -9,4 +9,5 @@ export interface AuthUser {
   passwordHash: string;
   status: AuthUserState;
   roles: string[]; // Added roles for RBAC
+  permissions: string[];
 }

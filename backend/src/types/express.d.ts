@@ -4,6 +4,7 @@ declare namespace Express {
     username: string;
     role: string;
     roles: string[];
+    permissions: string[];
   }
 
   interface Request {

@@ -6,7 +6,7 @@ import {
   UnauthorizedException,
 } from '@shared/exceptions';
 
-export const requirePermission = (module: string, action: string) => {
+export const requirePermission = (resource: string, action: string) => {
   return async (req: Request, _res: Response, next: NextFunction): Promise<void> => {
     try {
       const user = req.user;
@@ -14,10 +14,19 @@ export const requirePermission = (module: string, action: string) => {
       if (!user) {
         throw new UnauthorizedException('Authentication required');
       }
+
+      const requiredPermission = `${resource}.${action}`;
+
+      // 1. Check in-memory permissions (from token)
+      if (user.permissions && user.permissions.includes(requiredPermission)) {
+        return next();
+      }
+
+      // 2. Fallback to database check (real-time)
       const id = Number(user.id);
-      const hasPerm = await rbacService.hasPermission(id, module, action);
+      const hasPerm = await rbacService.hasPermission(id, resource, action);
       if (!hasPerm) {
-        throw new ForbiddenException(`Required permission: ${module}.${action}`);
+        throw new ForbiddenException(`Required permission: ${requiredPermission}`);
       }
 
       next();

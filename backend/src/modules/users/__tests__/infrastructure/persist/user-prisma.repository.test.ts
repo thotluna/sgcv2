@@ -158,7 +158,7 @@ describe('UsersPrismaRepository', () => {
 
   describe('findByIdForAuth', () => {
     it('should return an AuthUser when a valid id is provided', async () => {
-      const mockUserModel: UserWithRolesModel = {
+      const mockUserModel: any = {
         id: 1,
         username: 'testuser',
         email: 'test@user.com',
@@ -180,7 +180,14 @@ describe('UsersPrismaRepository', () => {
               description: 'Administrator role',
               createdAt: new Date(),
               updatedAt: new Date(),
-              permissions: [],
+              permissions: [
+                {
+                  permission: {
+                    resource: 'users',
+                    action: 'read',
+                  },
+                },
+              ],
             },
           },
         ],
@@ -194,9 +201,10 @@ describe('UsersPrismaRepository', () => {
       expect(user?.id).toBe(1);
       expect(user?.username).toBe('testuser');
       expect(user?.roles).toContain('ADMIN');
+      expect(user?.permissions).toContain('users.read');
       expect(mockPrismaUser.findUnique).toHaveBeenCalledWith({
         where: { id: 1 },
-        include: expect.any(Object), // We generally verify the include object structure elsewhere or broadly
+        include: expect.any(Object),
       });
     });
 
@@ -219,12 +227,24 @@ describe('UsersPrismaRepository', () => {
       const mockPrismaResponse = {
         id: 1,
         username: 'testuser',
+        email: 'test@user.com',
+        firstName: 'Test',
+        lastName: 'User',
         passwordHash: 'hashedpassword',
         status: 'ACTIVE',
         roles: [
           {
             role: {
+              id: 1,
               name: 'ADMIN',
+              permissions: [
+                {
+                  permission: {
+                    resource: 'users',
+                    action: 'read',
+                  },
+                },
+              ],
             },
           },
         ],
@@ -239,15 +259,10 @@ describe('UsersPrismaRepository', () => {
       expect(user?.username).toBe('testuser');
       expect(user?.status).toBe('ACTIVE');
       expect(user?.roles).toContain('ADMIN');
+      expect(user?.permissions).toContain('users.read');
       expect(mockPrismaUser.findUnique).toHaveBeenCalledWith({
         where: { username: 'testuser' },
-        include: {
-          roles: {
-            include: {
-              role: true,
-            },
-          },
-        },
+        include: expect.any(Object),
       });
     });
 

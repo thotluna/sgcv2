@@ -21,6 +21,7 @@ export class UsersMapper {
         name: ur.name,
         description: ur.description,
       })),
+      permissions: userWithRoles.permissions,
     };
   }
   static toUserDto(user: UserEntity): UserDto {
@@ -45,6 +46,9 @@ export class UsersMapper {
       lastName: user.lastName || '',
       status: user.status || 'ACTIVE',
       roles: user.roles.map(ur => ur.role.name),
+      permissions: user.roles.flatMap(ur =>
+        ur.role.permissions.map(p => p.permission.resource + '.' + p.permission.action)
+      ),
     };
   }
 
@@ -58,6 +62,9 @@ export class UsersMapper {
       passwordHash: user.passwordHash,
       status: user.status || 'ACTIVE',
       roles: user.roles.map(ur => ur.role.name),
+      permissions: user.roles.flatMap(ur =>
+        ur.role.permissions.map(p => p.permission.resource + '.' + p.permission.action)
+      ),
     };
   }
   static toCreateUserInput(dto: CreateUserDto): CreateUserInput {

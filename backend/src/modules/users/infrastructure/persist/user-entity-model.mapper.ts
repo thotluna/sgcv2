@@ -64,6 +64,9 @@ export class UserEntityModelMapper {
       updatedAt: user.updatedAt,
       status: user.status as UserStatus,
       roles: roles,
+      permissions: roles.flatMap(role =>
+        role.permissions.map(permission => permission.resource + '.' + permission.action)
+      ),
     } satisfies UserWithRolesEntity;
   }
 }
