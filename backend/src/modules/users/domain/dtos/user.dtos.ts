@@ -1,3 +1,4 @@
+import { UserEntity } from '../user-entity';
 import { UserState } from '../types';
 
 export interface CreateUserInput {
@@ -7,27 +8,24 @@ export interface CreateUserInput {
   firstName?: string;
   lastName?: string;
   avatar?: string;
-  isActive?: UserState;
+  status?: UserState;
 }
 
-export interface UpdateMeInput {
-  email?: string;
+export type UpdateUserInput = Partial<
+  Omit<UserEntity, 'id' | 'createdAt' | 'updatedAt' | 'passwordHash'>
+> & {
   password?: string;
   currentPassword?: string;
-  firstName?: string;
-  lastName?: string;
-  avatar?: string;
-  status?: UserState;
   roleIds?: number[];
-}
+};
 
-export interface UpdateUserInput {
+export interface UpdateUserPersistenceInput {
   email?: string;
-  password?: string;
-  firstName?: string;
-  lastName?: string;
-  avatar?: string;
-  isActive?: UserState;
+  passwordHash?: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  avatar?: string | null;
+  status?: UserState;
   roleIds?: number[];
 }
 
@@ -39,7 +37,6 @@ export interface UserFilterInput {
     offset: number;
   };
 }
-import { UserEntity } from '../user-entity';
 
 export interface PaginatedUsers {
   users: UserEntity[];

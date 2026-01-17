@@ -8,7 +8,7 @@ describe('CreateUserSchema', () => {
       password: 'password123',
       firstName: 'John',
       lastName: 'Doe',
-      isActive: 'ACTIVE',
+      status: 'ACTIVE',
     };
 
     const result = CreateUserSchema.safeParse(validUser);
@@ -58,7 +58,7 @@ describe('CreateUserSchema', () => {
     const result = CreateUserSchema.safeParse(minimalUser);
     expect(result.success).toBe(true);
     if (result.success) {
-      expect(result.data.isActive).toBe('ACTIVE');
+      expect(result.data.status).toBe('ACTIVE');
     }
   });
 

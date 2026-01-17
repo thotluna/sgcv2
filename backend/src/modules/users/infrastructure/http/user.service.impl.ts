@@ -12,6 +12,7 @@ import {
 } from '@modules/users/domain/dtos/user.dtos';
 import { CreateUserService } from '@modules/users/domain/create.service';
 import { UpdateUserService } from '@modules/users/domain/update.service';
+import { UpdateUserPersistenceInput } from '@modules/users/domain/dtos/user.dtos';
 
 @injectable()
 export class UserServiceImpl
@@ -33,11 +34,11 @@ export class UserServiceImpl
     return this.userRepository.getAll(filter);
   }
 
-  async update(id: number, data: any): Promise<UserWithRolesEntity> {
+  async update(id: number, data: UpdateUserPersistenceInput): Promise<UserWithRolesEntity> {
     return this.userRepository.update(id, data);
   }
 
-  async updateUser(id: number, data: Partial<UserWithRolesEntity>): Promise<UserWithRolesEntity> {
+  async updateUser(id: number, data: UpdateUserPersistenceInput): Promise<UserWithRolesEntity> {
     const updatedUser = await this.userRepository.update(id, data);
     return (await this.userRepository.getUserWithRoles(updatedUser.id))!;
   }

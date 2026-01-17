@@ -60,20 +60,21 @@ export const useAuthStore = create<AuthState>()(
       checkAuth: async () => {
         try {
           // This should only be called from the client (browser)
-          const userWIthRole = await usersService.getMe();
+          const response = await usersService.getMe();
+          const userWithRole = response.data;
 
-          if (!userWIthRole) {
+          if (!userWithRole) {
             throw new Error('User not found');
           }
 
           const user: AuthenticatedUserDto = {
-            id: userWIthRole.id,
-            username: userWIthRole.username,
-            email: userWIthRole.email,
-            firstName: userWIthRole.firstName || '',
-            lastName: userWIthRole.lastName || '',
-            status: userWIthRole.isActive,
-            roles: userWIthRole.roles?.map((role: { name: string }) => role.name),
+            id: userWithRole.id,
+            username: userWithRole.username,
+            email: userWithRole.email,
+            firstName: userWithRole.firstName || '',
+            lastName: userWithRole.lastName || '',
+            status: userWithRole.status || 'ACTIVE',
+            roles: userWithRole.roles?.map((role: { name: string }) => role.name),
           };
 
           set({ user, isAuthenticated: true });

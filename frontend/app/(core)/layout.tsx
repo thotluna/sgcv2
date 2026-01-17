@@ -14,7 +14,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   if (token) {
     try {
-      const userWithRole = await serverUsersService.getMe();
+      const response = await serverUsersService.getMe();
+      const userWithRole = response.data;
       if (userWithRole) {
         user = {
           id: userWithRole.id,
@@ -22,7 +23,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           email: userWithRole.email,
           firstName: userWithRole.firstName || '',
           lastName: userWithRole.lastName || '',
-          status: userWithRole.isActive,
+          status: userWithRole.status,
           roles: userWithRole.roles?.map(role => role.name),
         };
       }

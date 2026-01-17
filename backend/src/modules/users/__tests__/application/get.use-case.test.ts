@@ -1,5 +1,5 @@
-import { ShowMeUseCaseService } from '@modules/users/application/show-me.use-case.service';
-import { UserNotFoundException } from '@modules/users/domain/exceptions/user-no-found.exception';
+import { GetUseCase } from '@modules/users/application/get.use-case';
+import { UserNotFoundException } from '@modules/users/domain/exceptions/user-not-found.exception';
 import { ShowUserService } from '@modules/users/domain/show.service';
 import { mockUserWithRole } from '../helpers';
 
@@ -7,11 +7,11 @@ const mockService = {
   getUserWithRoles: jest.fn(),
 };
 
-describe('ShowMeUseCaseService', () => {
-  let useCase: ShowMeUseCaseService;
+describe('GetUseCase', () => {
+  let useCase: GetUseCase;
 
   beforeEach(() => {
-    useCase = new ShowMeUseCaseService(mockService as ShowUserService);
+    useCase = new GetUseCase(mockService as ShowUserService);
   });
 
   afterEach(() => {

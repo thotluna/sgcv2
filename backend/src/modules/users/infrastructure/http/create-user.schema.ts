@@ -8,7 +8,7 @@ export const CreateUserSchema = z
     firstName: z.string().optional(),
     lastName: z.string().optional(),
     avatar: z.string().url().optional().or(z.literal('')),
-    isActive: z.enum(['ACTIVE', 'INACTIVE', 'BLOCKED']).optional().default('ACTIVE'),
+    status: z.enum(['ACTIVE', 'INACTIVE', 'BLOCKED']).optional().default('ACTIVE'),
   })
   .strict();
 

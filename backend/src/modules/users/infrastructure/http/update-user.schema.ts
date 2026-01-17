@@ -10,7 +10,7 @@ export const UpdateMeSchema = z
     firstName: z.string().optional(),
     lastName: z.string().optional(),
     avatar: z.string().url().optional().or(z.literal('')),
-    isActive: userStateEnum.optional(),
+    status: userStateEnum.optional(),
     roleIds: z.array(z.number()).optional(),
   })
   .strict()
@@ -34,7 +34,7 @@ export const AdminUpdateUserSchema = z
     firstName: z.string().optional(),
     lastName: z.string().optional(),
     avatar: z.string().url().optional().or(z.literal('')),
-    isActive: userStateEnum.optional(),
+    status: userStateEnum.optional(),
     roleIds: z.array(z.number()).optional(),
   })
   .strict();

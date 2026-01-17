@@ -2,8 +2,8 @@
 
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
-import { createServerApiClient } from '@/lib/api/server-client';
-import { CreateUserDto, UpdateUserDto, UserDto, AppResponse } from '@sgcv2/shared';
+import { serverUsersService } from '@/lib/api/server-users.service';
+import { CreateUserDto, UpdateUserDto, UserDto } from '@sgcv2/shared';
 import * as z from 'zod';
 
 const userSchema = z.object({
@@ -12,7 +12,7 @@ const userSchema = z.object({
   password: z.string().optional().or(z.literal('')),
   firstName: z.string().optional().or(z.literal('')),
   lastName: z.string().optional().or(z.literal('')),
-  isActive: z.enum(['ACTIVE', 'INACTIVE', 'BLOCKED']),
+  status: z.enum(['ACTIVE', 'INACTIVE', 'BLOCKED']),
 });
 
 interface ApiResponseError {
@@ -63,7 +63,7 @@ export async function createUserAction(
     password: formData.get('password'),
     firstName: formData.get('firstName'),
     lastName: formData.get('lastName'),
-    isActive: formData.get('isActive'),
+    status: formData.get('status'),
   });
 
   if (!validatedFields.success) {
@@ -74,7 +74,7 @@ export async function createUserAction(
     };
   }
 
-  const { username, email, password, firstName, lastName, isActive } = validatedFields.data;
+  const { username, email, password, firstName, lastName, status } = validatedFields.data;
 
   if (!password) {
     return {
@@ -90,17 +90,16 @@ export async function createUserAction(
     password,
     firstName: firstName || '',
     lastName: lastName || '',
-    isActive,
+    status,
   };
 
   try {
-    const apiClient = await createServerApiClient();
-    const response = await apiClient.post('/users', data);
+    const response = await serverUsersService.create(data);
 
-    if (response.status === 201 || response.status === 200) {
+    if (response.success) {
       revalidatePath('/users');
     } else {
-      return { success: false, message: 'Respuesta inesperada del servidor' };
+      return { success: false, message: response.error?.message || 'Error al crear usuario' };
     }
   } catch (error) {
     console.error('Error creating user:', error);
@@ -127,7 +126,7 @@ export async function updateUserAction(
     password: formData.get('password'),
     firstName: formData.get('firstName'),
     lastName: formData.get('lastName'),
-    isActive: formData.get('isActive'),
+    status: formData.get('status'),
   });
 
   if (!validatedFields.success) {
@@ -138,13 +137,13 @@ export async function updateUserAction(
     };
   }
 
-  const { email, password, firstName, lastName, isActive } = validatedFields.data;
+  const { email, password, firstName, lastName, status } = validatedFields.data;
 
   const data: UpdateUserDto = {
     email,
     firstName: firstName || '',
     lastName: lastName || '',
-    isActive,
+    status,
   };
 
   if (password && password.trim() !== '') {
@@ -152,13 +151,12 @@ export async function updateUserAction(
   }
 
   try {
-    const apiClient = await createServerApiClient();
-    const response = await apiClient.patch(`/users/${userId}`, data);
+    const response = await serverUsersService.updateUser(userId, data);
 
-    if (response.status === 200) {
+    if (response.success) {
       revalidatePath('/users');
     } else {
-      return { success: false, message: 'Respuesta inesperada del servidor' };
+      return { success: false, message: response.error?.message || 'Error al actualizar usuario' };
     }
   } catch (error) {
     console.error('Error updating user:', error);
@@ -176,16 +174,39 @@ export async function updateUserAction(
 
 export async function getUser(id: number): Promise<ActionResult<UserDto>> {
   try {
-    const apiClient = await createServerApiClient();
-    const response = await apiClient.get<AppResponse<UserDto>>(`/users/${id}`);
+    const response = await serverUsersService.getUserById(id);
 
-    if (response.status === 200) {
-      return { success: true, data: response.data.data };
+    if (response.success) {
+      return { success: true, data: response.data };
     }
 
-    return { success: false, error: 'User not found' };
+    return { success: false, error: response.error?.message || 'User not found' };
   } catch (error) {
     console.error('Error fetching user:', error);
+    const errorMsg =
+      (error as ApiResponseError).response?.data?.message || 'Error connecting to server';
+
+    return {
+      success: false,
+      error: errorMsg,
+    };
+  }
+}
+
+export async function blockUserAction(userId: number): Promise<ActionResult<void>> {
+  try {
+    const response = await serverUsersService.updateUser(userId, {
+      status: 'BLOCKED',
+    } as UpdateUserDto);
+
+    if (response.success) {
+      revalidatePath('/users');
+      return { success: true };
+    }
+
+    return { success: false, error: response.error?.message || 'Failed to block user' };
+  } catch (error) {
+    console.error('Error blocking user:', error);
     const errorMsg =
       (error as ApiResponseError).response?.data?.message || 'Error connecting to server';
 

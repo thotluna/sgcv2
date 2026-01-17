@@ -4,6 +4,8 @@ import { UserDto } from '@sgcv2/shared';
 import { UserDropMenu } from './userDropMenu';
 import { Badge } from '@/components/ui/badge';
 import { DataTable, Column } from '@/components/table/data-table';
+import { blockUserAction } from './actions';
+import { toast } from 'sonner';
 
 interface UsersTableProps {
   data: UserDto[];
@@ -17,6 +19,15 @@ const statusMap = {
 };
 
 export function UsersTable({ data = [], isLoading }: UsersTableProps) {
+  const handleDelete = async (id: number) => {
+    const result = await blockUserAction(id);
+    if (result.success) {
+      toast.success('Usuario bloqueado correctamente');
+    } else {
+      toast.error(result.error || 'Error al bloquear el usuario');
+    }
+  };
+
   const columns: Column<UserDto>[] = [
     {
       header: 'ID',
@@ -34,8 +45,8 @@ export function UsersTable({ data = [], isLoading }: UsersTableProps) {
     {
       header: 'Estado',
       accessor: user => (
-        <Badge variant={statusMap[user.isActive]?.variant ?? 'outline'}>
-          {statusMap[user.isActive]?.label ?? user.isActive}
+        <Badge variant={statusMap[user.status]?.variant ?? 'outline'}>
+          {statusMap[user.status]?.label ?? user.status}
         </Badge>
       ),
     },
@@ -48,11 +59,7 @@ export function UsersTable({ data = [], isLoading }: UsersTableProps) {
       isLoading={isLoading}
       emptyMessage="No se encontraron usuarios."
       rowActions={user => (
-        <UserDropMenu
-          id={user.id}
-          username={user.username}
-          // onDelete for users might be implemented later or handled via parent
-        />
+        <UserDropMenu id={user.id} username={user.username} onDelete={handleDelete} />
       )}
     />
   );

@@ -1,7 +1,7 @@
 import { AuthenticatedUserDto } from '@sgcv2/shared/src/dtos/auth.dto';
 import { UserEntity, UserWithRolesEntity } from '@users/domain/user-entity';
-import { UserDto, UserWithRolesDto, CreateUserDto } from '@sgcv2/shared';
-import { CreateUserInput } from '@modules/users/domain/dtos/user.dtos';
+import { UserDto, UserWithRolesDto, CreateUserDto, UpdateUserDto } from '@sgcv2/shared';
+import { CreateUserInput, UpdateUserInput } from '@modules/users/domain/dtos/user.dtos';
 import { UserWithRolesModel } from '@users/infrastructure/persist/include';
 import { AuthUser } from '@modules/auth/domain/auth-user';
 
@@ -11,7 +11,7 @@ export class UsersMapper {
       id: userWithRoles.id,
       username: userWithRoles.username,
       email: userWithRoles.email,
-      isActive: userWithRoles.status,
+      status: userWithRoles.status,
       createdAt: userWithRoles.createdAt,
       updatedAt: userWithRoles.updatedAt,
       firstName: userWithRoles.firstName,
@@ -28,7 +28,7 @@ export class UsersMapper {
       id: user.id,
       username: user.username,
       email: user.email,
-      isActive: user.status,
+      status: user.status,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
       firstName: user.firstName,
@@ -43,7 +43,7 @@ export class UsersMapper {
       email: user.email,
       firstName: user.firstName || '',
       lastName: user.lastName || '',
-      status: user.isActive || 'ACTIVE',
+      status: user.status || 'ACTIVE',
       roles: user.roles.map(ur => ur.role.name),
     };
   }
@@ -56,7 +56,7 @@ export class UsersMapper {
       firstName: user.firstName || '',
       lastName: user.lastName || '',
       passwordHash: user.passwordHash,
-      status: user.isActive || 'ACTIVE',
+      status: user.status || 'ACTIVE',
       roles: user.roles.map(ur => ur.role.name),
     };
   }
@@ -68,7 +68,20 @@ export class UsersMapper {
       firstName: dto.firstName,
       lastName: dto.lastName,
       avatar: dto.avatar,
-      isActive: dto.isActive,
+      status: dto.status,
+    };
+  }
+
+  static toUpdateInput(dto: UpdateUserDto): UpdateUserInput {
+    return {
+      email: dto.email,
+      firstName: dto.firstName,
+      lastName: dto.lastName,
+      avatar: dto.avatar,
+      status: dto.status,
+      password: dto.password,
+      currentPassword: dto.currentPassword,
+      roleIds: dto.roleIds,
     };
   }
 }

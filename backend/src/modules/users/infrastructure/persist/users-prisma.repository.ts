@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from '@config/prisma';
 import { injectable } from 'inversify';
 import { userInclude } from './include';
@@ -13,6 +14,7 @@ import {
   CreateUserInput,
   UserFilterInput,
   PaginatedUsers,
+  UpdateUserPersistenceInput,
 } from '@modules/users/domain/dtos/user.dtos';
 
 @injectable()
@@ -74,7 +76,7 @@ export class UsersPrismaRepository
       firstName: user.firstName || '',
       lastName: user.lastName || '',
       passwordHash: user.passwordHash,
-      status: user.isActive as UserStatus,
+      status: user.status as UserStatus,
       roles: user.roles.map(ur => ur.role.name),
     };
   }
@@ -105,7 +107,7 @@ export class UsersPrismaRepository
     }
 
     if (status) {
-      where.AND.push({ isActive: status });
+      where.AND.push({ status: status });
     }
 
     // If AND is empty, remove it to avoid empty filter issues
@@ -129,21 +131,15 @@ export class UsersPrismaRepository
     };
   }
 
-  async update(id: number, data: any): Promise<UserWithRolesEntity> {
-    const updateData: any = {};
-
-    if (data.email !== undefined) updateData.email = data.email;
-    if (data.firstName !== undefined) updateData.firstName = data.firstName;
-    if (data.lastName !== undefined) updateData.lastName = data.lastName;
-    if (data.avatar !== undefined) updateData.avatar = data.avatar;
-
-    // Handle both isActive (from UpdateUserInput) and status (from UserEntity/UpdateMeInput)
-    if (data.isActive !== undefined) updateData.isActive = data.isActive;
-    else if (data.status !== undefined) updateData.isActive = data.status;
-
-    // Handle both password (to be hashed or already hashed) and passwordHash
-    if (data.password !== undefined) updateData.passwordHash = data.password;
-    else if (data.passwordHash !== undefined) updateData.passwordHash = data.passwordHash;
+  async update(id: number, data: UpdateUserPersistenceInput): Promise<UserWithRolesEntity> {
+    const updateData: Prisma.UserUpdateInput = {
+      email: data.email,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      avatar: data.avatar,
+      status: data.status,
+      passwordHash: data.passwordHash,
+    };
 
     if (data.roleIds) {
       updateData.roles = {
@@ -172,7 +168,7 @@ export class UsersPrismaRepository
         firstName: data.firstName,
         lastName: data.lastName,
         avatar: data.avatar,
-        isActive: data.isActive || 'ACTIVE',
+        status: data.status || 'ACTIVE',
       },
     });
 

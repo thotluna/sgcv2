@@ -1,6 +1,5 @@
 export const TYPES = {
-  ShowUserService: Symbol.for('ShowUserService'),
-  ShowMeUseCaseService: Symbol.for('ShowMeUseCaseService'),
+  GetUseCase: Symbol.for('GetUseCase'),
   UserRepository: Symbol.for('UsersRepository'),
   UsersService: Symbol.for('UsersService'),
   UsersController: Symbol.for('UsersController'),
@@ -10,7 +9,7 @@ export const TYPES = {
   ShowAllUseCaseService: Symbol.for('ShowAllUseCaseService'),
   CreateUserUseCaseService: Symbol.for('CreateUserUseCaseService'),
   UpdateUserUseCaseService: Symbol.for('UpdateUserUseCaseService'),
-  ShowUserUseCaseService: Symbol.for('ShowUserUseCaseService'),
   CreateUserService: Symbol.for('CreateUserService'),
   UpdateUserService: Symbol.for('UpdateUserService'),
+  ShowUserService: Symbol.for('ShowUserService'),
 };

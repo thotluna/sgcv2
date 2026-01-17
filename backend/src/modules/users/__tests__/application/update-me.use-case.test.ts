@@ -1,13 +1,13 @@
 import 'reflect-metadata';
-import { UpdateMeUseCaseService } from '@modules/users/application/update-me.use-case.service';
+import { UpdateMeUseCase } from '@modules/users/application/update-me.use-case';
 import { UpdateUserService } from '@modules/users/domain/update.service';
 import { PasswordHasher } from '@modules/auth/domain/password-hasher';
-import { UserNotFoundException } from '@modules/users/domain/exceptions/user-no-found.exception';
+import { UserNotFoundException } from '@modules/users/domain/exceptions/user-not-found.exception';
 import { BadRequestException } from '@shared/exceptions';
 import { mockUserWithRole } from '../helpers';
 
 describe('UpdateMeUseCaseService', () => {
-  let useCase: UpdateMeUseCaseService;
+  let useCase: UpdateMeUseCase;
   let mockUsersService: jest.Mocked<UpdateUserService>;
   let mockHasher: jest.Mocked<PasswordHasher>;
 
@@ -22,7 +22,7 @@ describe('UpdateMeUseCaseService', () => {
       comparePassword: jest.fn(),
     };
 
-    useCase = new UpdateMeUseCaseService(mockUsersService, mockHasher);
+    useCase = new UpdateMeUseCase(mockUsersService, mockHasher);
   });
 
   afterEach(() => {
@@ -40,7 +40,10 @@ describe('UpdateMeUseCaseService', () => {
       const result = await useCase.execute(userId, updateData);
 
       expect(mockUsersService.getUserWithRoles).toHaveBeenCalledWith(userId);
-      expect(mockUsersService.update).toHaveBeenCalledWith(userId, updateData);
+      expect(mockUsersService.update).toHaveBeenCalledWith(
+        userId,
+        expect.objectContaining(updateData)
+      );
       expect(mockHasher.hashPassword).not.toHaveBeenCalled();
       expect(result.email).toBe(updateData.email);
     });
@@ -101,9 +104,12 @@ describe('UpdateMeUseCaseService', () => {
         mockUserWithRole.passwordHash
       );
       expect(mockHasher.hashPassword).toHaveBeenCalledWith(newPassword);
-      expect(mockUsersService.update).toHaveBeenCalledWith(userId, {
-        passwordHash: newHash,
-      });
+      expect(mockUsersService.update).toHaveBeenCalledWith(
+        userId,
+        expect.objectContaining({
+          passwordHash: newHash,
+        })
+      );
       expect(result.passwordHash).toBe(newHash);
     });
 

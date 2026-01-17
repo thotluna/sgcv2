@@ -2,10 +2,10 @@ import { UsersController } from '@modules/users/infrastructure/http/users.contro
 import { Request, Response } from 'express';
 import { NotFoundException, UnauthorizedException } from '@shared/exceptions';
 import { UserWithRolesDto } from '@sgcv2/shared';
-import { UserNotFoundException } from '@modules/users/domain/exceptions/user-no-found.exception';
+import { UserNotFoundException } from '@modules/users/domain/exceptions/user-not-found.exception';
 import { mockUserWithRole } from '../../helpers';
 
-const mockShowMeUseCase = {
+const mockGetUseCase = {
   execute: jest.fn(),
 };
 
@@ -18,9 +18,6 @@ const mockShowAllUseCase = {
 };
 
 const mockCreateUserUseCase = {
-  execute: jest.fn(),
-};
-const mockShowUserUseCase = {
   execute: jest.fn(),
 };
 
@@ -38,11 +35,10 @@ describe('UserController', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     userController = new UsersController(
-      mockShowMeUseCase as any,
+      mockGetUseCase as any,
       mockUpdateMeUseCase as any,
       mockShowAllUseCase as any,
       mockCreateUserUseCase as any,
-      mockShowUserUseCase as any,
       mockUpdateUserUseCase as any
     );
 
@@ -59,7 +55,7 @@ describe('UserController', () => {
   });
 
   it('should get user with roles', async () => {
-    mockShowMeUseCase.execute.mockResolvedValue(mockUserWithRole);
+    mockGetUseCase.execute.mockResolvedValue(mockUserWithRole);
 
     mockReq = {
       user: { id: 1 },
@@ -67,7 +63,7 @@ describe('UserController', () => {
 
     await userController.me(mockReq as Request, mockRes as Response);
 
-    expect(mockShowMeUseCase.execute).toHaveBeenCalledWith(1);
+    expect(mockGetUseCase.execute).toHaveBeenCalledWith(1);
     expect(mockRes.json).toHaveBeenCalledWith(
       expect.objectContaining({
         success: true,
@@ -77,7 +73,7 @@ describe('UserController', () => {
           email: mockUserWithRole.email,
           firstName: mockUserWithRole.firstName,
           lastName: mockUserWithRole.lastName,
-          isActive: mockUserWithRole.status,
+          status: mockUserWithRole.status,
           createdAt: expect.any(Date),
           updatedAt: expect.any(Date),
           roles: expect.any(Array),
@@ -95,7 +91,7 @@ describe('UserController', () => {
   });
 
   it('should throw NotFoundException if user not found in service', async () => {
-    mockShowMeUseCase.execute.mockRejectedValue(new UserNotFoundException('1'));
+    mockGetUseCase.execute.mockRejectedValue(new UserNotFoundException('1'));
     mockReq = {
       user: { id: 1 },
     } as unknown as Request;
@@ -104,7 +100,7 @@ describe('UserController', () => {
       NotFoundException
     );
 
-    expect(mockShowMeUseCase.execute).toHaveBeenCalledWith(1);
+    expect(mockGetUseCase.execute).toHaveBeenCalledWith(1);
   });
 
   describe('updateMe', () => {
@@ -191,9 +187,9 @@ describe('UserController', () => {
         username: 'newuser',
         email: 'newuser@example.com',
         password: 'password123',
-        isActive: 'ACTIVE',
+        status: 'ACTIVE',
       };
-      const mockCreatedUser = { id: 2, ...createData, status: 'ACTIVE' };
+      const mockCreatedUser = { id: 2, ...createData };
       mockCreateUserUseCase.execute.mockResolvedValue(mockCreatedUser);
 
       mockReq = {

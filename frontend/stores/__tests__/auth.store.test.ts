@@ -101,6 +101,41 @@ describe('useAuthStore', () => {
   });
 
   describe('checkAuth', () => {
+    it('should default status to ACTIVE if status is null (edge case)', async () => {
+      const mockUserWithNullStatus = {
+        id: 1,
+        username: 'testuser',
+        email: 'test@example.com',
+        roles: [{ name: 'admin' }],
+        firstName: 'Test',
+        lastName: 'User',
+        status: null, // Simulate null status from backend
+      };
+
+      (usersService.getMe as jest.Mock).mockResolvedValue({
+        success: true,
+        data: mockUserWithNullStatus,
+      });
+
+      const { result } = renderHook(() => useAuthStore());
+
+      await act(async () => {
+        await result.current.checkAuth();
+      });
+
+      expect(usersService.getMe).toHaveBeenCalled();
+      expect(result.current.isAuthenticated).toBe(true);
+      expect(result.current.user).toEqual({
+        id: 1,
+        username: 'testuser',
+        email: 'test@example.com',
+        roles: ['admin'],
+        firstName: 'Test',
+        lastName: 'User',
+        status: 'ACTIVE', // Expect status to be defaulted to ACTIVE
+      });
+    });
+
     it('should fetch user data and update state', async () => {
       const mockUser = {
         id: 1,
@@ -109,10 +144,13 @@ describe('useAuthStore', () => {
         roles: [{ name: 'admin' }],
         firstName: 'Test',
         lastName: 'User',
-        isActive: 'ACTIVE',
+        status: 'ACTIVE',
       };
 
-      (usersService.getMe as jest.Mock).mockResolvedValue(mockUser);
+      (usersService.getMe as jest.Mock).mockResolvedValue({
+        success: true,
+        data: mockUser,
+      });
 
       const { result } = renderHook(() => useAuthStore());
 
