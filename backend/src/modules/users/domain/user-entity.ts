@@ -16,4 +16,5 @@ export interface UserEntity {
 
 export interface UserWithRolesEntity extends UserEntity {
   roles: RoleEntity[];
+  permissions: string[];
 }
