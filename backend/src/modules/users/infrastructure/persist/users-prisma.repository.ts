@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from '@config/prisma';
 import { injectable } from 'inversify';
 import { userInclude } from './include';
@@ -131,14 +132,14 @@ export class UsersPrismaRepository
   }
 
   async update(id: number, data: UpdateUserPersistenceInput): Promise<UserWithRolesEntity> {
-    const updateData: any = {};
-
-    if (data.email !== undefined) updateData.email = data.email;
-    if (data.firstName !== undefined) updateData.firstName = data.firstName;
-    if (data.lastName !== undefined) updateData.lastName = data.lastName;
-    if (data.avatar !== undefined) updateData.avatar = data.avatar;
-    if (data.status !== undefined) updateData.status = data.status;
-    if (data.passwordHash !== undefined) updateData.passwordHash = data.passwordHash;
+    const updateData: Prisma.UserUpdateInput = {
+      email: data.email,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      avatar: data.avatar,
+      status: data.status,
+      passwordHash: data.passwordHash,
+    };
 
     if (data.roleIds) {
       updateData.roles = {

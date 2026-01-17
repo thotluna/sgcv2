@@ -14,6 +14,12 @@ export class UpdateUseCase {
   ) {}
 
   async execute(id: number, data: UpdateUserInput): Promise<UserWithRolesEntity> {
+    const user = await this.service.getUserWithRoles(id);
+
+    if (!user) {
+      throw new Error(`User with id ${id} not found`);
+    }
+
     const updateData: UpdateUserPersistenceInput = {
       email: data.email,
       firstName: data.firstName,

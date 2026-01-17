@@ -22,7 +22,7 @@ describe('serverUsersService', () => {
       const result = await serverUsersService.getMe();
 
       expect(mockApiClient.get).toHaveBeenCalledWith('/users/me');
-      expect(result).toEqual(mockUser);
+      expect(result).toEqual({ data: mockUser, success: true });
     });
   });
 

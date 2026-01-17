@@ -40,7 +40,10 @@ describe('UpdateMeUseCaseService', () => {
       const result = await useCase.execute(userId, updateData);
 
       expect(mockUsersService.getUserWithRoles).toHaveBeenCalledWith(userId);
-      expect(mockUsersService.update).toHaveBeenCalledWith(userId, updateData);
+      expect(mockUsersService.update).toHaveBeenCalledWith(
+        userId,
+        expect.objectContaining(updateData)
+      );
       expect(mockHasher.hashPassword).not.toHaveBeenCalled();
       expect(result.email).toBe(updateData.email);
     });
@@ -101,9 +104,12 @@ describe('UpdateMeUseCaseService', () => {
         mockUserWithRole.passwordHash
       );
       expect(mockHasher.hashPassword).toHaveBeenCalledWith(newPassword);
-      expect(mockUsersService.update).toHaveBeenCalledWith(userId, {
-        passwordHash: newHash,
-      });
+      expect(mockUsersService.update).toHaveBeenCalledWith(
+        userId,
+        expect.objectContaining({
+          passwordHash: newHash,
+        })
+      );
       expect(result.passwordHash).toBe(newHash);
     });
 

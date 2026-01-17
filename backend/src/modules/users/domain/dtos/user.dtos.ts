@@ -11,33 +11,20 @@ export interface CreateUserInput {
   status?: UserState;
 }
 
-export interface UpdateMeInput {
-  email?: string;
+export type UpdateUserInput = Partial<
+  Omit<UserEntity, 'id' | 'createdAt' | 'updatedAt' | 'passwordHash'>
+> & {
   password?: string;
   currentPassword?: string;
-  firstName?: string;
-  lastName?: string;
-  avatar?: string;
-  status?: UserState;
   roleIds?: number[];
-}
-
-export interface UpdateUserInput {
-  email?: string;
-  password?: string;
-  firstName?: string;
-  lastName?: string;
-  avatar?: string;
-  status?: UserState;
-  roleIds?: number[];
-}
+};
 
 export interface UpdateUserPersistenceInput {
   email?: string;
   passwordHash?: string;
-  firstName?: string;
-  lastName?: string;
-  avatar?: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  avatar?: string | null;
   status?: UserState;
   roleIds?: number[];
 }

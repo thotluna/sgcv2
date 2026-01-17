@@ -12,7 +12,7 @@ export const serverUsersService = {
   getMe: async () => {
     const apiClient = await createServerApiClient();
     const response = await apiClient.get<AppResponse<UserWithRolesDto>>(`/users/me`);
-    return response.data.data;
+    return response.data;
   },
 
   updateMe: async (data: UpdateUserDto) => {

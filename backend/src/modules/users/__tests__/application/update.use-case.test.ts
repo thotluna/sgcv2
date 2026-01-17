@@ -10,6 +10,7 @@ describe('UpdateUserUseCaseService', () => {
 
   beforeEach(() => {
     userService = {
+      getUserWithRoles: jest.fn(),
       update: jest.fn(),
     } as any;
     hasher = {
@@ -25,14 +26,18 @@ describe('UpdateUserUseCaseService', () => {
       password: 'newpassword123',
     };
     const hashedPassword = 'hashed_password';
+    userService.getUserWithRoles.mockResolvedValue({ id, passwordHash: 'old_hash' } as any);
     hasher.hashPassword.mockResolvedValue(hashedPassword);
 
     await service.execute(id, input);
 
     expect(hasher.hashPassword).toHaveBeenCalledWith('newpassword123');
-    expect(userService.update).toHaveBeenCalledWith(id, {
-      passwordHash: hashedPassword,
-    });
+    expect(userService.update).toHaveBeenCalledWith(
+      id,
+      expect.objectContaining({
+        passwordHash: hashedPassword,
+      })
+    );
   });
 
   it('should call userService.update without password hashing if password is not provided', async () => {
@@ -40,10 +45,16 @@ describe('UpdateUserUseCaseService', () => {
     const input: UpdateUserInput = {
       firstName: 'John',
     };
+    userService.getUserWithRoles.mockResolvedValue({ id, firstName: 'Old' } as any);
 
     await service.execute(id, input);
 
     expect(hasher.hashPassword).not.toHaveBeenCalled();
-    expect(userService.update).toHaveBeenCalledWith(id, input);
+    expect(userService.update).toHaveBeenCalledWith(
+      id,
+      expect.objectContaining({
+        firstName: 'John',
+      })
+    );
   });
 });

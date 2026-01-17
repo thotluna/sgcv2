@@ -14,7 +14,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   if (token) {
     try {
-      const userWithRole = await serverUsersService.getMe();
+      const response = await serverUsersService.getMe();
+      const userWithRole = response.data;
       if (userWithRole) {
         user = {
           id: userWithRole.id,

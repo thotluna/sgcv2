@@ -112,7 +112,10 @@ describe('useAuthStore', () => {
         status: null, // Simulate null status from backend
       };
 
-      (usersService.getMe as jest.Mock).mockResolvedValue(mockUserWithNullStatus);
+      (usersService.getMe as jest.Mock).mockResolvedValue({
+        success: true,
+        data: mockUserWithNullStatus,
+      });
 
       const { result } = renderHook(() => useAuthStore());
 
@@ -144,7 +147,10 @@ describe('useAuthStore', () => {
         status: 'ACTIVE',
       };
 
-      (usersService.getMe as jest.Mock).mockResolvedValue(mockUser);
+      (usersService.getMe as jest.Mock).mockResolvedValue({
+        success: true,
+        data: mockUser,
+      });
 
       const { result } = renderHook(() => useAuthStore());
 

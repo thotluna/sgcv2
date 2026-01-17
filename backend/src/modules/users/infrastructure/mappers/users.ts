@@ -1,7 +1,7 @@
 import { AuthenticatedUserDto } from '@sgcv2/shared/src/dtos/auth.dto';
 import { UserEntity, UserWithRolesEntity } from '@users/domain/user-entity';
-import { UserDto, UserWithRolesDto, CreateUserDto } from '@sgcv2/shared';
-import { CreateUserInput } from '@modules/users/domain/dtos/user.dtos';
+import { UserDto, UserWithRolesDto, CreateUserDto, UpdateUserDto } from '@sgcv2/shared';
+import { CreateUserInput, UpdateUserInput } from '@modules/users/domain/dtos/user.dtos';
 import { UserWithRolesModel } from '@users/infrastructure/persist/include';
 import { AuthUser } from '@modules/auth/domain/auth-user';
 
@@ -69,6 +69,19 @@ export class UsersMapper {
       lastName: dto.lastName,
       avatar: dto.avatar,
       status: dto.status,
+    };
+  }
+
+  static toUpdateInput(dto: UpdateUserDto): UpdateUserInput {
+    return {
+      email: dto.email,
+      firstName: dto.firstName,
+      lastName: dto.lastName,
+      avatar: dto.avatar,
+      status: dto.status,
+      password: dto.password,
+      currentPassword: dto.currentPassword,
+      roleIds: dto.roleIds,
     };
   }
 }

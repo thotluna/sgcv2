@@ -7,10 +7,8 @@ import { GetUseCase } from '@modules/users/application/get.use-case';
 import { UpdateMeUseCase } from '@modules/users/application/update-me.use-case';
 import { UsersMapper } from '../mappers/users';
 import { UpdateUserDto, UserFilterDto, CreateUserDto as SharedCreateUserDto } from '@sgcv2/shared';
-import { UpdateMeInput, UpdateUserInput } from '@modules/users/domain/dtos/user.dtos';
 import { ListUseCase } from '@modules/users/application/list.use-case';
 import { CreateUseCase } from '@modules/users/application/create.use-case';
-
 import { UpdateUseCase } from '@modules/users/application/update.use-case';
 
 @injectable()
@@ -56,17 +54,7 @@ export class UsersController {
 
     const id = Number(user.id);
     const userDto: UpdateUserDto = req.body;
-
-    const input: UpdateMeInput = {
-      email: userDto.email,
-      password: userDto.password,
-      currentPassword: userDto.currentPassword,
-      firstName: userDto.firstName,
-      lastName: userDto.lastName,
-      avatar: userDto.avatar,
-      status: userDto.status,
-      roleIds: userDto.roleIds,
-    };
+    const input = UsersMapper.toUpdateInput(userDto);
 
     const updatedUser = await this.updateMeUseCase.execute(id, input);
     return ResponseHelper.success(res, UsersMapper.toUserWithRolesDto(updatedUser));
@@ -122,16 +110,7 @@ export class UsersController {
   async update(req: Request, res: Response): Promise<Response> {
     const id = Number(req.params.id);
     const userDto: UpdateUserDto = req.body;
-
-    const input: UpdateUserInput = {
-      email: userDto.email,
-      password: userDto.password,
-      firstName: userDto.firstName,
-      lastName: userDto.lastName,
-      avatar: userDto.avatar,
-      status: userDto.status,
-      roleIds: userDto.roleIds,
-    };
+    const input = UsersMapper.toUpdateInput(userDto);
 
     const updatedUser = await this.updateUserUseCase.execute(id, input);
     return ResponseHelper.success(res, UsersMapper.toUserDto(updatedUser));

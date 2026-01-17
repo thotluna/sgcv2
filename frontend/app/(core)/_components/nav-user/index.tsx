@@ -23,7 +23,8 @@ import Link from 'next/link';
 export async function NavUser() {
   // const { isMobile } = useSidebar();
   // const { logout, user } = useAuth();
-  const user = await serverUsersService.getMe();
+  const response = await serverUsersService.getMe();
+  const user = response.data;
   if (user) {
     const address = String(user.email).trim().toLowerCase();
     const hash = sha256(address);

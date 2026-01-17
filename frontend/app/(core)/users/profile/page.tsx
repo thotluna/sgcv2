@@ -11,7 +11,8 @@ import axios from 'axios';
 export default async function ProfilePage() {
   let user;
   try {
-    user = await serverUsersService.getMe();
+    const response = await serverUsersService.getMe();
+    user = response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.status === 401) {
       redirect('/login?expired=true');

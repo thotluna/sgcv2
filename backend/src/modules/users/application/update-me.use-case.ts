@@ -5,7 +5,7 @@ import { TYPES as AuthTypes } from '@modules/auth/di/types';
 import { UserNotFoundException } from '@users/domain/exceptions/user-not-found.exception';
 import { PasswordHasher } from '@modules/auth/domain/password-hasher';
 import { BadRequestException } from '@shared/exceptions';
-import { UpdateMeInput, UpdateUserPersistenceInput } from '@users/domain/dtos/user.dtos';
+import { UpdateUserInput, UpdateUserPersistenceInput } from '@users/domain/dtos/user.dtos';
 import { UpdateUserService } from '@users/domain/update.service';
 
 @injectable()
@@ -15,7 +15,7 @@ export class UpdateMeUseCase {
     @inject(AuthTypes.PasswordHasher) private readonly hasher: PasswordHasher
   ) {}
 
-  async execute(id: number, data: UpdateMeInput): Promise<UserWithRolesEntity> {
+  async execute(id: number, data: UpdateUserInput): Promise<UserWithRolesEntity> {
     const user = await this.service.getUserWithRoles(id);
 
     if (!user) {
@@ -27,8 +27,6 @@ export class UpdateMeUseCase {
       firstName: data.firstName,
       lastName: data.lastName,
       avatar: data.avatar,
-      status: data.status,
-      roleIds: data.roleIds,
     };
 
     if (data.password) {
