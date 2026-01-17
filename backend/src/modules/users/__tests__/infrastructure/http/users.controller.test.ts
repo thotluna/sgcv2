@@ -77,6 +77,7 @@ describe('UserController', () => {
           createdAt: expect.any(Date),
           updatedAt: expect.any(Date),
           roles: expect.any(Array),
+          permissions: expect.any(Array),
         } satisfies UserWithRolesDto,
       })
     );
