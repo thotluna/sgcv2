@@ -11,16 +11,11 @@ export class CreateUserDto {
   status?: UserStatus;
 }
 
-export class UpdateUserDto {
-  email?: string;
-  password?: string; // Only if changing password
-  currentPassword?: string; // Required when changing password
-  firstName?: string;
-  lastName?: string;
-  avatar?: string;
-  status?: UserStatus; // Status
+export type UpdateUserDto = Partial<Omit<UserDto, 'id' | 'createdAt' | 'updatedAt'>> & {
+  password?: string;
+  currentPassword?: string;
   roleIds?: number[];
-}
+};
 
 export class UserDelete {
   id!: number;
