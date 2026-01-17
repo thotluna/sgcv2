@@ -9,7 +9,7 @@ import { UserCredentialsRepository } from '@modules/auth/domain/user-credentials
 import { UserEntityModelMapper } from '@users/infrastructure/persist/user-entity-model.mapper';
 import { UsersMapper } from '@users/infrastructure/mappers/users';
 import { AuthUserIdentityRepository } from '@modules/auth/domain/auth-user-identity.repository';
-import { UserStatus } from '@sgcv2/shared';
+
 import {
   CreateUserInput,
   UserFilterInput,
@@ -56,29 +56,14 @@ export class UsersPrismaRepository
   async findByUsernameForAuth(username: string): Promise<AuthUser | null> {
     const user = await prisma.user.findUnique({
       where: { username },
-      include: {
-        roles: {
-          include: {
-            role: true,
-          },
-        },
-      },
+      include: userInclude,
     });
 
     if (!user) {
       return null;
     }
 
-    return {
-      id: user.id,
-      username: user.username,
-      email: user.email,
-      firstName: user.firstName || '',
-      lastName: user.lastName || '',
-      passwordHash: user.passwordHash,
-      status: user.status as UserStatus,
-      roles: user.roles.map(ur => ur.role.name),
-    };
+    return UsersMapper.toAuthUser(user);
   }
 
   async getAll(filter: UserFilterInput): Promise<PaginatedUsers> {
