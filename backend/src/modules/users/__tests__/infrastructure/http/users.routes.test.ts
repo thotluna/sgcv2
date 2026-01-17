@@ -14,11 +14,17 @@ jest.mock('@modules/rbac/guards/roles.guard', () => ({
   requireRoles: jest.fn(() => (_req: Request, _res: Response, next: any) => next()),
 }));
 
+jest.mock('@modules/rbac/decorators/permissions.decorator', () => ({
+  Permission: jest.fn(() => (_req: Request, _res: Response, next: any) => next()),
+}));
+
 const mockUsersController = {
   me: jest.fn(),
   updateMe: jest.fn(),
   showAll: jest.fn(),
   create: jest.fn(),
+  show: jest.fn(),
+  update: jest.fn(),
 } as unknown as UsersController;
 
 describe('UsersRoutes', () => {
@@ -30,7 +36,13 @@ describe('UsersRoutes', () => {
     // Default mock implementation: Success (Authorized)
     (authenticate as jest.Mock).mockImplementation(
       (req: Request, _res: Response, next: (err?: Error) => void) => {
-        req.user = { id: '1', username: 'test-user', role: 'admin', roles: ['admin'] };
+        req.user = {
+          id: '1',
+          username: 'test-user',
+          role: 'admin',
+          roles: ['admin'],
+          permissions: [],
+        };
         next();
       }
     );
@@ -131,6 +143,34 @@ describe('UsersRoutes', () => {
 
       expect(response.status).toBe(400);
       expect(mockUsersController.create).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('GET /users/:id', () => {
+    it('should delegate to usersController.show', async () => {
+      (mockUsersController.show as jest.Mock).mockImplementation((_req: Request, res: Response) => {
+        res.status(200).json({ id: 1 });
+      });
+
+      const response = await request(app).get('/users/1');
+
+      expect(response.status).toBe(200);
+      expect(mockUsersController.show).toHaveBeenCalled();
+    });
+  });
+
+  describe('PATCH /users/:id', () => {
+    it('should delegate to usersController.update', async () => {
+      (mockUsersController.update as jest.Mock).mockImplementation(
+        (_req: Request, res: Response) => {
+          res.status(200).json({ id: 1, firstName: 'updated' });
+        }
+      );
+
+      const response = await request(app).patch('/users/1').send({ firstName: 'updated' });
+
+      expect(response.status).toBe(200);
+      expect(mockUsersController.update).toHaveBeenCalled();
     });
   });
 });
