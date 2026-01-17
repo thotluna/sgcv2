@@ -17,7 +17,7 @@
     "src"
   ],
   "scripts": {
-    "build": "tsc src/index.ts --outDir dist --declaration",
+    "build": "tsc -p tsconfig.json",
     "clean": "rm -rf dist",
     "dev": "tsc --watch"
   },
