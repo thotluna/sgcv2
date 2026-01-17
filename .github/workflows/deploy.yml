@@ -1,27 +1,14 @@
-name: Deploy to Production
+name: Release Management
 
 on:
   push:
-    branches: [master, main]
     tags:
       - 'v*'
 
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Environment to deploy to'
-        required: true
-        default: 'staging'
-        type: choice
-        options:
-          - staging
-          - production
-
 jobs:
-  deploy-backend:
-    name: Deploy Backend
+  quick-validation:
+    name: Quick Validation
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' || github.event.inputs.environment == 'production'
 
     steps:
       - name: Checkout code
@@ -40,117 +27,36 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Build all packages
+        run: pnpm run build
         env:
-          # This should be a secret in a real environment
           DATABASE_URL: postgresql://sgcv2_user:sgcv2_password@localhost:5432/sgcv2_test
+          NEXT_PUBLIC_API_URL: http://localhost:3000
 
-      - name: Build shared package first
-        run: pnpm --filter @sgcv2/shared build
-
-      - name: Generate Prisma client
-        run: pnpm prisma:generate
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://sgcv2_user:sgcv2_password@localhost:5432/sgcv2_test' }}
-
-      - name: Build
-        run: pnpm run build:backend
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://sgcv2_user:sgcv2_password@localhost:5432/sgcv2_test' }}
-
-      - name: Deploy notification
+      - name: Validation success
         run: |
-          echo "🚀 Backend deployment would happen here"
-          echo "Environment: ${{ github.event.inputs.environment || 'production' }}"
-          echo "Version: ${{ github.ref_name }}"
-
-      # Uncomment and configure for your deployment platform
-      # - name: Deploy to Heroku
-      #   uses: akhileshns/heroku-deploy@v3.12.14
-      #   with:
-      #     heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-      #     heroku_app_name: "sgcv2-backend"
-      #     heroku_email: "your-email@example.com"
-
-      # - name: Deploy to Railway
-      #   run: |
-      #     npm install -g @railway/cli
-      #     railway up --service backend
-      #   env:
-      #     RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-
-  deploy-frontend:
-    name: Deploy Frontend
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' || github.event.inputs.environment == 'production'
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-        env:
-          # This should be a secret in a real environment
-          DATABASE_URL: postgresql://sgcv2_user:sgcv2_password@localhost:5432/sgcv2_test
-
-      - name: Build shared package first
-        run: pnpm --filter @sgcv2/shared build
-
-      - name: Build
-        run: pnpm run build:frontend
-        env:
-          NEXT_PUBLIC_API_URL: ${{ secrets.API_URL }}
-
-      - name: Deploy notification
-        run: |
-          echo "🚀 Frontend deployment would happen here"
-          echo "Environment: ${{ github.event.inputs.environment || 'production' }}"
-          echo "Version: ${{ github.ref_name }}"
-
-      # Uncomment and configure for Vercel
-      # - name: Deploy to Vercel
-      #   uses: amondnet/vercel-action@v25
-      #   with:
-      #     vercel-token: ${{ secrets.VERCEL_TOKEN }}
-      #     vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-      #     vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-      #     working-directory: ./frontend
+          echo "✅ Build validation passed"
+          echo "Tag: ${{ github.ref_name }}"
 
   create-release:
     name: Create GitHub Release
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    if: startsWith(github.ref, 'refs/tags/v')
-    needs: [deploy-backend, deploy-frontend]
+    needs: [quick-validation]
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Create Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref_name }}
-          release_name: Release ${{ github.ref_name }}
+          tag_name: "${{ github.ref_name }}"
+          name: "Release ${{ github.ref_name }}"
           body: |
             ## Changes in this Release
-            
-            - Backend deployed ✅
-            - Frontend deployed ✅
             
             See the [CHANGELOG](CHANGELOG.md) for details.
           draft: false
