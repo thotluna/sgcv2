@@ -11,7 +11,6 @@ jest.mock('../rbac.service', () => ({
 
 import { rbacService } from '../rbac.service';
 
-const mockReq = { user: { id: 1 } } as unknown as Request;
 const mockRes = {
   status: jest.fn().mockReturnThis(),
   json: jest.fn(),
@@ -23,15 +22,38 @@ describe('Permissions Guard', () => {
     jest.clearAllMocks();
   });
 
-  it('allows request when permission exists', async () => {
-    (rbacService.hasPermission as jest.Mock).mockResolvedValue(true);
-    await requirePermission('ODS', 'CREAR')(mockReq, mockRes, nextFn);
-    expect(nextFn).toHaveBeenCalled();
+  it('allows request when permission exists in user data (fast-track)', async () => {
+    const reqWithPerms = {
+      user: { id: 1, permissions: ['ODS.CREAR'] },
+    } as unknown as Request;
+
+    await requirePermission('ODS', 'CREAR')(reqWithPerms, mockRes, nextFn);
+
+    expect(nextFn).toHaveBeenCalledWith();
+    expect(rbacService.hasPermission).not.toHaveBeenCalled();
   });
 
-  it('rejects request when permission missing', async () => {
+  it('allows request when permission exists in database (fallback)', async () => {
+    const reqWithoutPerms = {
+      user: { id: 1, permissions: [] },
+    } as unknown as Request;
+
+    (rbacService.hasPermission as jest.Mock).mockResolvedValue(true);
+
+    await requirePermission('ODS', 'CREAR')(reqWithoutPerms, mockRes, nextFn);
+
+    expect(rbacService.hasPermission).toHaveBeenCalledWith(1, 'ODS', 'CREAR');
+    expect(nextFn).toHaveBeenCalledWith();
+  });
+
+  it('rejects request when permission missing in both (fallback failure)', async () => {
+    const reqWithoutPerms = {
+      user: { id: 1, permissions: [] },
+    } as unknown as Request;
+
     (rbacService.hasPermission as jest.Mock).mockResolvedValue(false);
-    await requirePermission('ODS', 'ELIMINAR')(mockReq, mockRes, nextFn);
+
+    await requirePermission('ODS', 'ELIMINAR')(reqWithoutPerms, mockRes, nextFn);
 
     expect(nextFn).toHaveBeenCalledWith(expect.any(ForbiddenException));
     const error = (nextFn as jest.Mock).mock.calls[0][0];
