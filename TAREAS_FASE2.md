@@ -99,6 +99,15 @@ Implementar el módulo completo de Gestión de Clientes, permitiendo administrar
 - [x] Tests de renderizado de tabla
 - [x] Tests de formulario (validaciones)
 
+### 3. Backend - Gestión de Roles y Permisos
+
+- [x] Definir capa de dominio (Entidades, Repositorios, Inputs, Excepciones)
+- [ ] Implementar Casos de Uso (Create [x], Update [ ], List [ ], Delete [ ])
+- [ ] Implementar Servicios con Interface Segregation ([x] CreateService)
+- [x] Implementar Repositorios Prisma (Roles y Permisos)
+- [ ] Implementar Controladores y Rutas ([x] Create Role)
+- [x] Implementar Tests del módulo Roles (Unitarios e Integración)
+
 ---
 
 ## 📊 Criterios de Aceptación
