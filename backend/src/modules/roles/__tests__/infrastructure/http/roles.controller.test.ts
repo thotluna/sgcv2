@@ -1,5 +1,6 @@
 import { RolesController } from '@roles/infrastructure/http/roles.controller';
 import { CreateRoleUseCase } from '@roles/application/create.use-case';
+import { ListRolesUseCase } from '@roles/application/list-roles.use-case';
 import { Request, Response } from 'express';
 import { RoleAlreadyExistsException } from '@roles/domain/exceptions/role-already-exists-exception';
 import { PermissionNotFoundException } from '@roles/domain/exceptions/permission-not-found-exception';
@@ -10,6 +11,10 @@ const mockCreateRoleUseCase = {
   execute: jest.fn(),
 } as unknown as jest.Mocked<CreateRoleUseCase>;
 
+const mockListRolesUseCase = {
+  execute: jest.fn(),
+} as unknown as jest.Mocked<ListRolesUseCase>;
+
 describe('RolesController', () => {
   let controller: RolesController;
   let mockReq: Partial<Request>;
@@ -18,7 +23,7 @@ describe('RolesController', () => {
   let mockStatus: jest.Mock;
 
   beforeEach(() => {
-    controller = new RolesController(mockCreateRoleUseCase);
+    controller = new RolesController(mockCreateRoleUseCase, mockListRolesUseCase);
     mockJson = jest.fn();
     mockStatus = jest.fn().mockReturnValue({ json: mockJson });
     mockRes = {
@@ -78,6 +83,38 @@ describe('RolesController', () => {
 
       await expect(controller.create(mockReq as Request, mockRes as Response)).rejects.toThrow(
         BadRequestException
+      );
+    });
+  });
+
+  describe('getAll', () => {
+    it('should return paginated roles', async () => {
+      const mockPaginated = {
+        items: [mockRole],
+        total: 1,
+      };
+      mockListRolesUseCase.execute.mockResolvedValue(mockPaginated);
+      mockReq = { query: { search: 'Admin', page: '1', limit: '10' } };
+
+      await controller.getAll(mockReq as Request, mockRes as Response);
+
+      expect(mockListRolesUseCase.execute).toHaveBeenCalledWith({
+        search: 'Admin',
+        page: 1,
+        limit: 10,
+      });
+      expect(mockStatus).toHaveBeenCalledWith(200);
+      expect(mockJson).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: true,
+          data: expect.any(Array),
+          metadata: expect.objectContaining({
+            pagination: expect.objectContaining({
+              total: 1,
+              page: 1,
+            }),
+          }),
+        })
       );
     });
   });

@@ -26,6 +26,48 @@ describe('RolesMapper', () => {
     });
   });
 
+  describe('toDto', () => {
+    it('should map RoleEntity to RoleDto', () => {
+      const result = RolesMapper.toDto(mockRole);
+
+      expect(result).toEqual({
+        id: mockRole.id,
+        name: mockRole.name,
+        description: mockRole.description,
+        createdAt: mockRole.createdAt,
+        updatedAt: mockRole.updatedAt,
+      });
+    });
+  });
+
+  describe('toFilterInput', () => {
+    it('should map RoleFilterDto to RoleFilterInput', () => {
+      const dto = {
+        search: 'test',
+        pagination: { limit: 10, offset: 20 },
+      };
+
+      const result = RolesMapper.toFilterInput(dto);
+
+      expect(result).toEqual({
+        search: 'test',
+        page: 3,
+        limit: 10,
+      });
+    });
+
+    it('should use defaults for missing pagination', () => {
+      const dto = { search: 'test' };
+      const result = RolesMapper.toFilterInput(dto);
+
+      expect(result).toEqual({
+        search: 'test',
+        page: 1,
+        limit: 10,
+      });
+    });
+  });
+
   describe('toWithPermissionsDto', () => {
     it('should map RoleEntity to RoleWithPermissionsDto', () => {
       const result = RolesMapper.toWithPermissionsDto(mockRole);

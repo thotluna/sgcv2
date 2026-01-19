@@ -6,6 +6,7 @@ import { mockRole, mockPermission } from '@roles/__tests__/helpers';
 const mockRoleRepository = {
   findByName: jest.fn(),
   create: jest.fn(),
+  getAll: jest.fn(),
 } as unknown as jest.Mocked<RoleRepository>;
 
 const mockPermissionRepository = {
@@ -51,6 +52,19 @@ describe('RolesService', () => {
 
       expect(mockRoleRepository.create).toHaveBeenCalledWith(input);
       expect(result).toEqual(mockRole);
+    });
+  });
+
+  describe('getListRoles', () => {
+    it('should call roleRepository.getAll', async () => {
+      const filter = { search: 'test', page: 1, limit: 10 };
+      const mockResult = { items: [mockRole], total: 1 };
+      mockRoleRepository.getAll.mockResolvedValue(mockResult);
+
+      const result = await service.getListRoles(filter);
+
+      expect(mockRoleRepository.getAll).toHaveBeenCalledWith(filter);
+      expect(result).toEqual(mockResult);
     });
   });
 });

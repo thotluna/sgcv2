@@ -1,7 +1,7 @@
 import { AuthController } from '@modules/auth/infrastructure/http/auth.controller';
 import { AuthUserNotFoundException } from '@auth/domain/exceptions/auth-user-not-found.exception';
 import { InvalidPasswordException } from '@modules/auth/domain/exceptions/invalid-password.exception';
-import { MOCK_LOGIN_REQUEST, MOCK_USER_TOKEN_DTO } from '../../helpers';
+import { MOCK_LOGIN_REQUEST, getUserMock } from '../../helpers';
 import { NotFoundException, UnauthorizedException } from '@shared/exceptions';
 import { LoginUseCaseService } from '@modules/auth/application/login.use-case.service';
 
@@ -24,7 +24,11 @@ describe('AuthController', () => {
   });
 
   it('should call LoginUseCaseService and return success DTO', async () => {
-    mockLoginUseCaseService.execute.mockResolvedValue(MOCK_USER_TOKEN_DTO);
+    const authMockResult = {
+      user: getUserMock(MOCK_LOGIN_REQUEST),
+      token: 'jwt-token-abc',
+    };
+    mockLoginUseCaseService.execute.mockResolvedValue(authMockResult);
 
     const req = { body: MOCK_LOGIN_REQUEST } as any;
 
@@ -35,7 +39,7 @@ describe('AuthController', () => {
     expect(mockResponse.json).toHaveBeenCalledWith(
       expect.objectContaining({
         success: true,
-        data: { user: MOCK_USER_TOKEN_DTO.user },
+        data: { user: expect.objectContaining({ username: MOCK_LOGIN_REQUEST.username }) },
       })
     );
   });

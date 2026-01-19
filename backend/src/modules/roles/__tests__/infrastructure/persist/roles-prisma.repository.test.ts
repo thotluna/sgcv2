@@ -11,9 +11,13 @@ jest.mock('@config/prisma', () => ({
       update: jest.fn(),
       delete: jest.fn(),
       findFirst: jest.fn(),
+      count: jest.fn(),
     },
     userRole: {
       count: jest.fn(),
+    },
+    rolePermission: {
+      deleteMany: jest.fn(),
     },
   },
 }));
@@ -85,7 +89,7 @@ describe('RolesPrismaRepository', () => {
         description: input.description,
         createdAt: new Date(),
         updatedAt: new Date(),
-        permissions: [], // simplification for test
+        permissions: [],
       };
 
       mockPrismaRole.create.mockResolvedValue(mockCreatedModel);
@@ -102,6 +106,36 @@ describe('RolesPrismaRepository', () => {
         include: expect.any(Object),
       });
       expect(result.name).toBe(input.name);
+    });
+  });
+
+  describe('getAll', () => {
+    it('should return paginated roles from prisma', async () => {
+      const mockRoles = [
+        {
+          id: 1,
+          name: 'Admin',
+          description: 'Desc',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          permissions: [],
+        },
+      ];
+      mockPrismaRole.findMany.mockResolvedValue(mockRoles);
+      mockPrismaRole.count.mockResolvedValue(1);
+
+      const filter = { search: 'Admin', page: 1, limit: 10 };
+      const result = await repository.getAll(filter);
+
+      expect(mockPrismaRole.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.any(Object),
+          skip: 0,
+          take: 10,
+        })
+      );
+      expect(result.items).toHaveLength(1);
+      expect(result.total).toBe(1);
     });
   });
 
