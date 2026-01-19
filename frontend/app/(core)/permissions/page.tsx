@@ -23,7 +23,8 @@ export default async function PermissionsPage() {
             <h1 className="text-3xl font-bold tracking-tight">Permisos del Sistema</h1>
           </div>
           <p className="text-muted-foreground">
-            Lista completa de todos los permisos definidos en el sistema. Estos permisos se asignan a los roles para controlar el acceso a los recursos.
+            Lista completa de todos los permisos definidos en el sistema. Estos permisos se asignan
+            a los roles para controlar el acceso a los recursos.
           </p>
         </div>
       </header>
