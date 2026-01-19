@@ -2,7 +2,12 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { createRoleSchema, CreateRoleDto, PermissionDto, RoleWithPermissionsDto } from '@sgcv2/shared';
+import {
+  createRoleSchema,
+  CreateRoleDto,
+  PermissionDto,
+  RoleWithPermissionsDto,
+} from '@sgcv2/shared';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -60,14 +65,17 @@ export function RoleForm({ initialData, permissions }: RoleFormProps) {
     }
   };
 
-  const groupedPermissions = permissions.reduce((acc, permission) => {
-    const resource = permission.resource;
-    if (!acc[resource]) {
-      acc[resource] = [];
-    }
-    acc[resource].push(permission);
-    return acc;
-  }, {} as Record<string, PermissionDto[]>);
+  const groupedPermissions = permissions.reduce(
+    (acc, permission) => {
+      const resource = permission.resource;
+      if (!acc[resource]) {
+        acc[resource] = [];
+      }
+      acc[resource].push(permission);
+      return acc;
+    },
+    {} as Record<string, PermissionDto[]>
+  );
 
   return (
     <Form {...form}>
@@ -107,16 +115,14 @@ export function RoleForm({ initialData, permissions }: RoleFormProps) {
 
         <div className="space-y-4">
           <FormLabel className="text-base font-semibold">Permisos</FormLabel>
-          <FormDescription>
-            Selecciona los permisos que tendrá este rol.
-          </FormDescription>
+          <FormDescription>Selecciona los permisos que tendrá este rol.</FormDescription>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
             {Object.entries(groupedPermissions).map(([resource, perms]) => (
               <div key={resource} className="space-y-3 p-4 border rounded-lg bg-card/50">
                 <h3 className="font-bold capitalize text-sm">{resource}</h3>
                 <div className="space-y-2">
-                  {perms.map((permission) => (
+                  {perms.map(permission => (
                     <FormField
                       key={permission.id}
                       control={form.control}
@@ -134,10 +140,8 @@ export function RoleForm({ initialData, permissions }: RoleFormProps) {
                                   return checked
                                     ? field.onChange([...(field.value || []), permission.id])
                                     : field.onChange(
-                                      field.value?.filter(
-                                        (value) => value !== permission.id
-                                      )
-                                    )
+                                        field.value?.filter(value => value !== permission.id)
+                                      );
                                 }}
                               />
                             </FormControl>
@@ -150,7 +154,7 @@ export function RoleForm({ initialData, permissions }: RoleFormProps) {
                               )}
                             </FormLabel>
                           </FormItem>
-                        )
+                        );
                       }}
                     />
                   ))}
