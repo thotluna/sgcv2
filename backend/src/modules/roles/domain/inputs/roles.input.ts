@@ -1,3 +1,4 @@
+import { Paginated } from '@sgcv2/shared';
 import { RoleEntity } from '@roles/domain/roles.entity';
 
 export interface CreateRoleInput {
@@ -18,10 +19,7 @@ export interface RoleFilterInput {
   limit?: number;
 }
 
-export interface PaginatedRoles {
-  roles: RoleEntity[];
-  total: number;
-}
+export type PaginatedRoles = Paginated<RoleEntity>;
 
 export interface ManagePermissionsInput {
   roleId: number;

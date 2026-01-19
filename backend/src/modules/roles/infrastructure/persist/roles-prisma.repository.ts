@@ -37,7 +37,7 @@ export class RolesPrismaRepository implements RoleRepository {
     ]);
 
     return {
-      roles: roles.map(r => RoleEntityModelMapper.toRoleWithPermissionsEntity(r)),
+      items: roles.map(r => RoleEntityModelMapper.toRoleWithPermissionsEntity(r)),
       total,
     };
   }

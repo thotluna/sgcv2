@@ -111,7 +111,7 @@ export class UsersPrismaRepository
     ]);
 
     return {
-      users: users.map(user => UserEntityModelMapper.toEntity(user)),
+      items: users.map(user => UserEntityModelMapper.toEntity(user)),
       total,
     };
   }
