@@ -18,12 +18,6 @@ export type UpdateUserDto = Partial<Omit<UserDto, 'id' | 'createdAt' | 'updatedA
   roleIds?: number[];
 };
 
-export class UserDelete {
-  id!: number;
-  username!: string;
-  status!: UserStatus;
-}
-
 export class UserDto {
   id!: number;
   username!: string;
