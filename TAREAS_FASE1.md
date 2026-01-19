@@ -217,6 +217,22 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 
 ---
 
+#### 1.8 Limpieza y Unificación de Tipos y DTOs ✅ COMPLETADA
+
+- [x] Unificar `UserStatus` (Shared) y eliminar duplicaciones de `UserState`.
+- [x] Unificar `CustomerState` (Shared) en el backend.
+- [x] Implementar interfaz genérica `Paginated<T>` en `@sgcv2/shared`.
+- [x] Refactorizar Repositorios y Use Cases para devolver `Paginated<T>`.
+- [x] Eliminar tipos muertos en `shared/src/types` (`UserBasic`, `RoleBasic`, etc.).
+- [x] Eliminar DTOs muertos (`UserDelete`).
+- [x] Limpieza de código comentado en `ResponseHelper`.
+- [x] Crear esquemas de validación Zod compartidos en `shared/src/schemas`.
+
+**Tiempo estimado:** 4 horas
+**Tiempo real:** ~2 horas ✅
+
+---
+
 ### 2. Módulo de Autenticación
 
 #### 2.1 Backend - Autenticación ✅ COMPLETADA

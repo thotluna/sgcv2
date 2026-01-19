@@ -312,7 +312,7 @@ describe('UsersPrismaRepository', () => {
 
       const result = await repository.getAll(filter);
 
-      expect(result.users).toHaveLength(2);
+      expect(result.items).toHaveLength(2);
       expect(result.total).toBe(2);
       expect(prisma.user.findMany).toHaveBeenCalledWith({
         where: {
