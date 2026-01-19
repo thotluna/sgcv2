@@ -23,7 +23,16 @@ export function loadRoutes(app: Application, prefix: string = '') {
     app.use(`${prefix}/roles`, rolesRoutes.getRouter());
     app.use(`${prefix}/customers`, customersRoutes.getRouter());
   } catch (error) {
-    logger.error('Error loading routes', { error });
+    logger.error('Error loading routes', {
+      error:
+        error instanceof Error
+          ? {
+              message: error.message,
+              stack: error.stack,
+              ...(error as any),
+            }
+          : error,
+    });
     throw error;
   }
 }

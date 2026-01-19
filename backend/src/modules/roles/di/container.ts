@@ -8,6 +8,7 @@ import { CreateService } from '@roles/domain/create.service';
 import { RolesService } from '@roles/infrastructure/http/roles.service';
 import { CreateRoleUseCase } from '@roles/application/create.use-case';
 import { RolesController } from '@roles/infrastructure/http/roles.controller';
+import { RolesRoutes } from '@roles/infrastructure/http/roles.routes';
 
 export const rolesContainerModule = new ContainerModule((option: ContainerModuleLoadOptions) => {
   option.bind<RoleRepository>(TYPES.RoleRepository).to(RolesPrismaRepository);
@@ -15,4 +16,5 @@ export const rolesContainerModule = new ContainerModule((option: ContainerModule
   option.bind<CreateService>(TYPES.CreateService).to(RolesService);
   option.bind<CreateRoleUseCase>(TYPES.CreateRoleUseCase).to(CreateRoleUseCase);
   option.bind<RolesController>(TYPES.RolesController).to(RolesController);
+  option.bind<RolesRoutes>(TYPES.RolesRoutes).to(RolesRoutes);
 });
