@@ -22,4 +22,33 @@ export const serverRolesService = {
     const response = await apiClient.get<AppResponse<RoleDto[]>>(url);
     return response.data;
   },
+
+  getById: async (id: number) => {
+    const apiClient = await createServerApiClient();
+    const response = await apiClient.get<AppResponse<RoleDto>>(`/roles/${id}`);
+    return response.data;
+  },
+
+  create: async (data: any) => {
+    const apiClient = await createServerApiClient();
+    const response = await apiClient.post<AppResponse<RoleDto>>('/roles', data);
+    return response.data;
+  },
+
+  update: async (id: number, data: any) => {
+    const apiClient = await createServerApiClient();
+    const response = await apiClient.patch<AppResponse<RoleDto>>(`/roles/${id}`, data);
+    return response.data;
+  },
+
+  delete: async (id: number) => {
+    const apiClient = await createServerApiClient();
+    const response = await apiClient.delete<AppResponse<void>>(`/roles/${id}`);
+    return response.data;
+  },
+  getAllPermissions: async () => {
+    const apiClient = await createServerApiClient();
+    const response = await apiClient.get<AppResponse<any[]>>('/roles/permissions');
+    return response.data;
+  },
 };

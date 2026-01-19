@@ -32,6 +32,34 @@ export class RolesRoutes {
       Permission(PERMISSIONS.ROLES.READ.resource, PERMISSIONS.ROLES.READ.action),
       (req, res) => this.rolesController.getAll(req, res)
     );
+
+    this.router.get(
+      '/permissions',
+      authenticate,
+      Permission(PERMISSIONS.PERMISSIONS.READ.resource, PERMISSIONS.PERMISSIONS.READ.action),
+      (req, res) => this.rolesController.getAllPermissions(req, res)
+    );
+
+    this.router.get(
+      '/:id',
+      authenticate,
+      Permission(PERMISSIONS.ROLES.READ.resource, PERMISSIONS.ROLES.READ.action),
+      (req, res) => this.rolesController.getById(req, res)
+    );
+
+    this.router.patch(
+      '/:id',
+      authenticate,
+      Permission(PERMISSIONS.ROLES.UPDATE.resource, PERMISSIONS.ROLES.UPDATE.action),
+      (req, res) => this.rolesController.update(req, res)
+    );
+
+    this.router.delete(
+      '/:id',
+      authenticate,
+      Permission(PERMISSIONS.ROLES.DELETE.resource, PERMISSIONS.ROLES.DELETE.action),
+      (req, res) => this.rolesController.delete(req, res)
+    );
   }
 
   getRouter() {

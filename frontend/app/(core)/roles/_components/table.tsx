@@ -4,6 +4,10 @@ import { RoleDto } from '@sgcv2/shared';
 import { Column, DataTable } from '@/components/table/data-table';
 import { Button } from '@/components/ui/button';
 import { MoreHorizontal, SquarePen, Trash2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useTransition } from 'react';
+import { deleteRoleAction } from './actions';
+import { toast } from 'sonner';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,6 +22,22 @@ interface RolesTableProps {
 }
 
 export function RolesTable({ data }: RolesTableProps) {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
+  const onDelete = async (id: number) => {
+    if (!confirm('¿Estás seguro de que deseas eliminar este rol?')) return;
+
+    startTransition(async () => {
+      const result = await deleteRoleAction(id);
+      if (result.success) {
+        toast.success('Rol eliminado con éxito');
+      } else {
+        toast.error(result.error);
+      }
+    });
+  };
+
   const columns: Column<RoleDto>[] = [
     {
       header: 'ID',
@@ -34,10 +54,10 @@ export function RolesTable({ data }: RolesTableProps) {
     },
   ];
 
-  const rowActions = (_role: RoleDto) => (
+  const rowActions = (role: RoleDto) => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
+        <Button variant="ghost" className="h-8 w-8 p-0" disabled={isPending}>
           <span className="sr-only">Open menu</span>
           <MoreHorizontal className="h-4 w-4" />
         </Button>
@@ -45,11 +65,11 @@ export function RolesTable({ data }: RolesTableProps) {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Acciones</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => {}}>
+        <DropdownMenuItem onClick={() => router.push(`/roles/${role.id}`)}>
           <SquarePen className="mr-2 h-4 w-4" />
           Editar
         </DropdownMenuItem>
-        <DropdownMenuItem className="text-destructive" onClick={() => {}}>
+        <DropdownMenuItem className="text-destructive" onClick={() => onDelete(role.id)}>
           <Trash2 className="mr-2 h-4 w-4" />
           Eliminar
         </DropdownMenuItem>

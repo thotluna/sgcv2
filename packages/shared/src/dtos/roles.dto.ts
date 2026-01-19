@@ -17,6 +17,7 @@ export class CreateRoleDto {
 export class UpdateRoleDto {
   name?: string;
   description?: string;
+  permissionIds?: number[];
 }
 
 export class RoleWithPermissionsDto extends RoleDto {
