@@ -1,6 +1,6 @@
 import { Customer, Prisma } from '@prisma/client';
 import { prisma } from '../../config/prisma';
-import { CreateCustomerDto, UpdateCustomerDto, Pagination } from '@sgcv2/shared';
+import { CreateCustomerDto, UpdateCustomerDto, Pagination, CustomerState } from '@sgcv2/shared';
 import { injectable } from 'inversify';
 
 export type CustomerDelete = Pick<Customer, 'id'>;
@@ -12,7 +12,7 @@ export interface CustomerService {
   findAll(
     page: number,
     limit: number,
-    filters?: { state?: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED'; search?: string }
+    filters?: { state?: CustomerState; search?: string }
   ): Promise<{ customers: Customer[]; pagination: Pagination }>;
   update(id: string, data: UpdateCustomerDto): Promise<Customer>;
   delete(id: string): Promise<CustomerDelete>;
@@ -67,11 +67,7 @@ export class CustomerServiceImp implements CustomerService {
     return customer;
   }
 
-  async findAll(
-    page = 1,
-    limit = 10,
-    filters?: { state?: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED'; search?: string }
-  ) {
+  async findAll(page = 1, limit = 10, filters?: { state?: CustomerState; search?: string }) {
     const skip = (page - 1) * limit;
     const where: Prisma.CustomerWhereInput = {};
 

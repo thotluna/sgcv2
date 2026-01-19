@@ -1,4 +1,4 @@
-export type AuthUserState = 'ACTIVE' | 'INACTIVE' | 'BLOCKED';
+import { UserStatus } from '@sgcv2/shared';
 
 export interface AuthUser {
   id: number;
@@ -7,7 +7,7 @@ export interface AuthUser {
   firstName: string;
   lastName: string;
   passwordHash: string;
-  status: AuthUserState;
+  status: UserStatus;
   roles: string[]; // Added roles for RBAC
   permissions: string[];
 }
