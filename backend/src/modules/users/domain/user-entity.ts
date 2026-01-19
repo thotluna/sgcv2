@@ -1,4 +1,4 @@
-import { UserStatus } from '@sgcv2/shared';
+import { UserStatus } from './user-status';
 import { RoleEntity } from '@modules/roles/domain/roles.entity';
 
 export interface UserEntity {

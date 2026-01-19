@@ -8,6 +8,7 @@ import { ResponseHelper } from '@shared/utils/response.helpers';
 import { LoginDto } from '@sgcv2/shared';
 import { TypedRequest } from 'types/express-interfaces/types';
 import { NotFoundException, UnauthorizedException } from '@shared/exceptions';
+import { AuthMapper } from './mapper';
 
 @injectable()
 export class AuthController {
@@ -30,7 +31,8 @@ export class AuthController {
         path: '/',
       });
 
-      return ResponseHelper.success(res, { user });
+      const authenticatedUser = AuthMapper.toAuthenticatedUserDto(user);
+      return ResponseHelper.success(res, { user: authenticatedUser });
     } catch (error) {
       if (error instanceof AuthUserNotFoundException) {
         throw new NotFoundException(error.message);

@@ -74,16 +74,16 @@ export class CustomerController {
     const searchQuery = req.query.search as string | undefined;
     const state = stateQuery as CustomerState | undefined;
 
-    const result = await this.customerService.findAll(page, limit, {
+    const { items: customers, total } = await this.customerService.findAll(page, limit, {
       state,
       search: searchQuery,
     });
 
-    return ResponseHelper.paginated(res, result.customers, {
-      page: result.pagination.page,
-      perPage: result.pagination.perPage,
-      total: result.pagination.total,
-      totalPages: result.pagination.totalPages,
+    return ResponseHelper.paginated(res, customers, {
+      page,
+      perPage: limit,
+      total,
+      totalPages: Math.ceil(total / limit),
     });
   }
 

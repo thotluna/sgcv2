@@ -1,4 +1,4 @@
-import { UserStatus } from '@sgcv2/shared';
+import { UserStatus } from '../../users/domain/user-status';
 
 export interface AuthUser {
   id: number;

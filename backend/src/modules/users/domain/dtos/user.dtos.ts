@@ -1,4 +1,5 @@
-import { UserStatus, Paginated } from '@sgcv2/shared';
+import { UserStatus } from '../user-status';
+import { PaginationResult } from '@shared/domain/pagination';
 import { UserEntity } from '../user-entity';
 
 export interface CreateUserInput {
@@ -38,4 +39,4 @@ export interface UserFilterInput {
   };
 }
 
-export type PaginatedUsers = Paginated<UserEntity>;
+export type PaginatedUsers = PaginationResult<UserEntity>;
