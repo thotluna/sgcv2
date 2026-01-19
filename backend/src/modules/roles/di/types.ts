@@ -8,4 +8,6 @@ export const TYPES = {
   CreateService: Symbol.for('CreateService'),
   RolesController: Symbol.for('RolesController'),
   RolesRoutes: Symbol.for('RolesRoutes'),
+  ListRoleUseCase: Symbol.for('ListRoleUseCase'),
+  ListService: Symbol.for('ListService'),
 };

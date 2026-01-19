@@ -704,11 +704,11 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 - API client con interceptores
 - Refactorización de Auth Hook (`useAuth`)
 
-### ⏳ En Progreso / Pendiente (~15%)
+### ✅ Completado (~95%)
 
 - Layout de dashboard
 - Componentes de navegación (Sidebar, Header)
-- Documentación actualizada
+- Documentación actualizada (en proceso)
 - Deploy (opcional)
 
 ---
@@ -723,7 +723,7 @@ Al finalizar esta iteración, debes tener:
 - ✅ JWT authentication implementado
 - ✅ RBAC básico funcionando
 - ✅ Gestión de usuarios (listar con filtros)
-- ⏳ Dashboard con layout principal (en progreso)
+- ✅ Dashboard con layout principal
 - ✅ Rutas protegidas
 - ✅ Tests básicos pasando (143 backend + 22 frontend + 7 E2E = 172 tests totales)
 - ⏳ Documentación actualizada (pendiente)

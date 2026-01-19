@@ -25,6 +25,13 @@ export class RolesRoutes {
       validateSchema(createRoleSchema),
       (req, res) => this.rolesController.create(req, res)
     );
+
+    this.router.get(
+      '/',
+      authenticate,
+      Permission(PERMISSIONS.ROLES.READ.resource, PERMISSIONS.ROLES.READ.action),
+      (req, res) => this.rolesController.getAll(req, res)
+    );
   }
 
   getRouter() {
