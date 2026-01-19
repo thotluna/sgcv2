@@ -102,11 +102,18 @@ Implementar el módulo completo de Gestión de Clientes, permitiendo administrar
 ### 3. Backend - Gestión de Roles y Permisos
 
 - [x] Definir capa de dominio (Entidades, Repositorios, Inputs, Excepciones)
-- [ ] Implementar Casos de Uso (Create [x], Update [ ], List [ ], Delete [ ])
-- [ ] Implementar Servicios con Interface Segregation ([x] CreateService)
+- [x] Implementar Casos de Uso (Create, Update, List, Get, Delete, Add/Remove Permissions)
+- [x] Implementar Servicios con Interface Segregation
 - [x] Implementar Repositorios Prisma (Roles y Permisos)
-- [ ] Implementar Controladores y Rutas ([x] Create Role)
+- [x] Implementar Controladores y Rutas (CRUD completo de Roles y Listado de Permisos)
 - [x] Implementar Tests del módulo Roles (Unitarios e Integración)
+
+### 4. Frontend - Gestión de Roles y Permisos
+
+- [x] Implementar listado de Roles con filtros y paginación
+- [x] Implementar creación y edición de Roles con asignación de permisos
+- [x] Implementar vista de solo lectura para todos los Permisos del sistema (Nuevo)
+- [x] Tests unitarios y de integración para Roles y Permisos
 
 ---
 
@@ -115,5 +122,7 @@ Implementar el módulo completo de Gestión de Clientes, permitiendo administrar
 - [x] Se pueden crear, leer, actualizar y "eliminar" (desactivar) Clientes.
 - [ ] Un Cliente puede tener múltiples Localidades.
 - [ ] Un Cliente puede tener múltiples Contactos.
-- [ ] Las validaciones de backend y frontend funcionan correctamente.
-- [ ] El código pasa los tests unitarios y de integración.
+- [x] Se pueden gestionar Roles (CRUD) y sus permisos asociados.
+- [x] Existe una vista de solo lectura para todos los permisos del sistema.
+- [x] Las validaciones de backend y frontend funcionan correctamente.
+- [x] El código pasa los tests unitarios y de integración.
