@@ -6,7 +6,11 @@ import { RolesMapper } from '@roles/infrastructure/mappers/roles.mapper';
 import { ResponseHelper } from '@shared/utils/response.helpers';
 import { RoleAlreadyExistsException } from '@roles/domain/exceptions/role-already-exists-exception';
 import { PermissionNotFoundException } from '@roles/domain/exceptions/permission-not-found-exception';
-import { BadRequestException, ConflictException } from '@shared/exceptions/http-exceptions';
+import {
+  BadRequestException,
+  ConflictException,
+  NotFoundException,
+} from '@shared/exceptions/http-exceptions';
 import { CreateRoleDto } from '@sgcv2/shared';
 import { ListRolesUseCase } from '@roles/application/list-roles.use-case';
 import { GetRoleUseCase } from '@roles/application/get-role.use-case';
@@ -81,7 +85,7 @@ export class RolesController {
       return ResponseHelper.success(res, RolesMapper.toWithPermissionsDto(role));
     } catch (error) {
       if (error instanceof RoleNotFoundException) {
-        return ResponseHelper.error(res, error.message, 404);
+        throw new NotFoundException(error.message);
       }
       throw error;
     }
@@ -97,7 +101,7 @@ export class RolesController {
       return ResponseHelper.success(res, RolesMapper.toWithPermissionsDto(role));
     } catch (error) {
       if (error instanceof RoleNotFoundException) {
-        return ResponseHelper.error(res, error.message, 404);
+        throw new NotFoundException(error.message);
       }
       if (error instanceof PermissionNotFoundException) {
         throw new BadRequestException(error.message);
@@ -113,7 +117,7 @@ export class RolesController {
       return ResponseHelper.success(res, null, 204);
     } catch (error) {
       if (error instanceof RoleNotFoundException) {
-        return ResponseHelper.error(res, error.message, 404);
+        throw new NotFoundException(error.message);
       }
       if (error instanceof RoleInUseException) {
         throw new BadRequestException(error.message);

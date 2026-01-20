@@ -8,7 +8,11 @@ import { ListPermissionsUseCase } from '@roles/application/list-permissions.use-
 import { Request, Response } from 'express';
 import { RoleAlreadyExistsException } from '@roles/domain/exceptions/role-already-exists-exception';
 import { PermissionNotFoundException } from '@roles/domain/exceptions/permission-not-found-exception';
-import { ConflictException, BadRequestException } from '@shared/exceptions/http-exceptions';
+import {
+  ConflictException,
+  BadRequestException,
+  NotFoundException,
+} from '@shared/exceptions/http-exceptions';
 import { mockRole } from '@roles/__tests__/helpers';
 import { RoleNotFoundException } from '@roles/domain/exceptions/role-not-found-exception';
 import { RoleInUseException } from '@roles/domain/exceptions/role-in-use-exception';
@@ -165,13 +169,13 @@ describe('RolesController', () => {
       );
     });
 
-    it('should return 404 if role not found', async () => {
+    it('should throw NotFoundException if role not found', async () => {
       mockGetRoleUseCase.execute.mockRejectedValue(new RoleNotFoundException(1));
       mockReq = { params: { id: '1' } };
 
-      await controller.getById(mockReq as Request, mockRes as Response);
-
-      expect(mockStatus).toHaveBeenCalledWith(404);
+      await expect(controller.getById(mockReq as Request, mockRes as Response)).rejects.toThrow(
+        NotFoundException
+      );
     });
   });
 
@@ -187,6 +191,15 @@ describe('RolesController', () => {
       expect(mockUpdateRoleUseCase.execute).toHaveBeenCalledWith(1, expect.any(Object));
       expect(mockStatus).toHaveBeenCalledWith(200);
     });
+
+    it('should throw NotFoundException if role not found', async () => {
+      mockUpdateRoleUseCase.execute.mockRejectedValue(new RoleNotFoundException(1));
+      mockReq = { params: { id: '1' }, body: updateDto };
+
+      await expect(controller.update(mockReq as Request, mockRes as Response)).rejects.toThrow(
+        NotFoundException
+      );
+    });
   });
 
   describe('delete', () => {
@@ -198,6 +211,15 @@ describe('RolesController', () => {
 
       expect(mockDeleteRoleUseCase.execute).toHaveBeenCalledWith(1);
       expect(mockStatus).toHaveBeenCalledWith(204);
+    });
+
+    it('should throw NotFoundException if role not found', async () => {
+      mockDeleteRoleUseCase.execute.mockRejectedValue(new RoleNotFoundException(1));
+      mockReq = { params: { id: '1' } };
+
+      await expect(controller.delete(mockReq as Request, mockRes as Response)).rejects.toThrow(
+        NotFoundException
+      );
     });
 
     it('should throw BadRequestException if role is in use', async () => {
