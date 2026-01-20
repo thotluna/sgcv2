@@ -20,8 +20,11 @@ export async function createRoleAction(data: CreateRoleDto) {
     await serverRolesService.create(data);
     revalidatePath('/roles');
     return { success: true };
-  } catch (error: any) {
-    return { success: false, error: error.message || 'Error creating role' };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Error creating role',
+    };
   }
 }
 
@@ -31,8 +34,11 @@ export async function updateRoleAction(id: number, data: UpdateRoleDto) {
     revalidatePath('/roles');
     revalidatePath(`/roles/${id}`);
     return { success: true };
-  } catch (error: any) {
-    return { success: false, error: error.message || 'Error updating role' };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Error updating role',
+    };
   }
 }
 
@@ -41,7 +47,10 @@ export async function deleteRoleAction(id: number) {
     await serverRolesService.delete(id);
     revalidatePath('/roles');
     return { success: true };
-  } catch (error: any) {
-    return { success: false, error: error.message || 'Error deleting role' };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Error deleting role',
+    };
   }
 }

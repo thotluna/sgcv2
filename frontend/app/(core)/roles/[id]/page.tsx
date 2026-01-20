@@ -37,7 +37,7 @@ export default async function EditRolePage({ params }: EditRolePageProps) {
       </header>
 
       <main className="bg-card p-6 rounded-xl border shadow-sm">
-        <RoleForm initialData={role as any} permissions={permissions} />
+        <RoleForm initialData={role} permissions={permissions} />
       </main>
     </div>
   );

@@ -58,7 +58,7 @@ export function RoleForm({ initialData, permissions }: RoleFormProps) {
       } else {
         toast.error(result.error);
       }
-    } catch (error) {
+    } catch {
       toast.error('Ocurrió un error inesperado');
     } finally {
       setIsPending(false);

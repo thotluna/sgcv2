@@ -1,9 +1,10 @@
+import { PermissionDto } from '@sgcv2/shared';
 import { serverRolesService } from '@/lib/api/server-roles.service';
 import { PermissionsTable } from './_components/permissions-table';
 import { ShieldCheck } from 'lucide-react';
 
 export default async function PermissionsPage() {
-  let permissions: any[] = [];
+  let permissions: PermissionDto[] = [];
 
   try {
     const response = await serverRolesService.getAllPermissions();

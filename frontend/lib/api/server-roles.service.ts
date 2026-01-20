@@ -1,4 +1,12 @@
-import { AppResponse, RoleDto, RoleFilterDto } from '@sgcv2/shared';
+import {
+  AppResponse,
+  RoleDto,
+  RoleFilterDto,
+  CreateRoleDto,
+  UpdateRoleDto,
+  PermissionDto,
+  RoleWithPermissionsDto,
+} from '@sgcv2/shared';
 import { createServerApiClient } from './server-client';
 
 export const serverRolesService = {
@@ -25,17 +33,17 @@ export const serverRolesService = {
 
   getById: async (id: number) => {
     const apiClient = await createServerApiClient();
-    const response = await apiClient.get<AppResponse<RoleDto>>(`/roles/${id}`);
+    const response = await apiClient.get<AppResponse<RoleWithPermissionsDto>>(`/roles/${id}`);
     return response.data;
   },
 
-  create: async (data: any) => {
+  create: async (data: CreateRoleDto) => {
     const apiClient = await createServerApiClient();
     const response = await apiClient.post<AppResponse<RoleDto>>('/roles', data);
     return response.data;
   },
 
-  update: async (id: number, data: any) => {
+  update: async (id: number, data: UpdateRoleDto) => {
     const apiClient = await createServerApiClient();
     const response = await apiClient.patch<AppResponse<RoleDto>>(`/roles/${id}`, data);
     return response.data;
@@ -48,7 +56,7 @@ export const serverRolesService = {
   },
   getAllPermissions: async () => {
     const apiClient = await createServerApiClient();
-    const response = await apiClient.get<AppResponse<any[]>>('/roles/permissions');
+    const response = await apiClient.get<AppResponse<PermissionDto[]>>('/roles/permissions');
     return response.data;
   },
 };

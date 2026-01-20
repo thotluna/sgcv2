@@ -12,7 +12,7 @@ interface Permission {
   id: number;
   resource: string;
   action: string;
-  description: string;
+  description?: string;
 }
 
 interface PermissionsTableProps {
