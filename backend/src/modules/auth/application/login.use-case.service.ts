@@ -1,10 +1,9 @@
 import { inject, injectable } from 'inversify';
 import { InvalidPasswordException } from '@auth/domain/exceptions/invalid-password.exception';
 import { TYPES } from '@auth/di/types';
-import { LoginDto, UserTokenDto } from '@sgcv2/shared';
-import { AuthenticatedUserDto } from '@sgcv2/shared';
 import { LoginService } from '../domain/login.service';
-import { AuthMapper } from '../infrastructure/http/mapper';
+import { LoginInput, AuthResult } from '../domain/dtos/auth.domain.dtos';
+import { AuthUser } from '../domain/auth-user';
 
 @injectable()
 export class LoginUseCaseService {
@@ -14,8 +13,8 @@ export class LoginUseCaseService {
     this.service = service;
   }
 
-  async execute(loginDto: LoginDto): Promise<UserTokenDto<AuthenticatedUserDto>> {
-    const { username, password } = loginDto;
+  async execute(input: LoginInput): Promise<AuthResult<AuthUser>> {
+    const { username, password } = input;
 
     const user = await this.service.validateCredentials(username, password);
 
@@ -33,8 +32,8 @@ export class LoginUseCaseService {
     const token = await this.service.generateToken(payload);
 
     return {
-      user: AuthMapper.toAuthenticatedUserDto(user),
+      user: user,
       token: token,
-    } as UserTokenDto<AuthenticatedUserDto>;
+    };
   }
 }

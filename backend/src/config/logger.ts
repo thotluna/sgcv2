@@ -91,9 +91,15 @@ const logger = winston.createLogger({
   transports: [fileRotateTransport, errorFileRotateTransport],
   exceptionHandlers: [
     new winston.transports.File({ filename: path.join('logs', 'exceptions.log') }),
+    ...(process.env.NODE_ENV !== 'production'
+      ? [new winston.transports.Console({ format: consoleFormat })]
+      : []),
   ],
   rejectionHandlers: [
     new winston.transports.File({ filename: path.join('logs', 'rejections.log') }),
+    ...(process.env.NODE_ENV !== 'production'
+      ? [new winston.transports.Console({ format: consoleFormat })]
+      : []),
   ],
 });
 

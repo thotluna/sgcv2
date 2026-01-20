@@ -12,7 +12,15 @@ INSERT INTO permissions (resource, action, description) VALUES
 ('users', 'create', 'Create users'),
 ('users', 'read', 'Read users'),
 ('users', 'update', 'Update users'),
-('users', 'delete', 'Delete users');
+('users', 'delete', 'Delete users'),
+('roles', 'create', 'Create roles'),
+('roles', 'read', 'Read roles'),
+('roles', 'update', 'Update roles'),
+('roles', 'delete', 'Delete roles'),
+('permissions', 'create', 'Create permissions'),
+('permissions', 'read', 'Read permissions'),
+('permissions', 'update', 'Update permissions'),
+('permissions', 'delete', 'Delete permissions');
 
 -- Admin User
 -- Password: admin123 (hash from previous seed)

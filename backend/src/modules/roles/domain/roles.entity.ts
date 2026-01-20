@@ -4,15 +4,13 @@ export interface RoleEntity {
   description?: string;
   createdAt: Date;
   updatedAt: Date;
-  permissions: PermissionEntity[];
+  permissions?: PermissionEntity[];
 }
 
-export interface RolePermission {
-  id: number;
+export interface RolePermissionEntity {
   roleId: number;
   permissionId: number;
   assignedAt: Date;
-  permission: PermissionEntity[];
 }
 
 export interface PermissionEntity {

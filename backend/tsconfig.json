@@ -19,6 +19,7 @@
       "@modules/*": ["./modules/*"],
       "@auth/*": ["./modules/auth/*"],
       "@users/*": ["./modules/users/*"],
+      "@roles/*": ["./modules/roles/*"],
       "@shared/*": ["./shared/*"]
     }
   },

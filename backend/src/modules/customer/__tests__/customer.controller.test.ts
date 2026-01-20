@@ -133,8 +133,8 @@ describe('CustomerController', () => {
     it('should return all customers with pagination', async () => {
       req = { query: { page: '1', limit: '10' } };
       const result = {
-        customers: [],
-        pagination: { page: 1, perPage: 10, total: 0, totalPages: 0 },
+        items: [],
+        total: 0,
       };
 
       customerService.findAll.mockResolvedValue(result);

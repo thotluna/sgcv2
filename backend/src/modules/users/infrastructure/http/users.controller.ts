@@ -1,4 +1,5 @@
 import { TYPES } from '@users/di/types';
+import { UserEntity } from '@modules/users/domain/user-entity';
 import { ResponseHelper } from '@shared/utils/response.helpers';
 import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
@@ -70,14 +71,14 @@ export class UsersController {
         offset: rawQuery.offset,
       },
     };
-    const { users, total } = await this.showAllUseCase.execute(filter);
+    const { items: users, total } = await this.showAllUseCase.execute(filter);
     const limit = Number(filter.pagination?.limit) || 10;
     const offset = Number(filter.pagination?.offset) || 0;
     const page = Math.floor(offset / limit) + 1;
 
     return ResponseHelper.paginated(
       res,
-      users.map(user => UsersMapper.toUserDto(user)),
+      users.map((user: UserEntity) => UsersMapper.toUserDto(user)),
       {
         total,
         page,

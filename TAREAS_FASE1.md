@@ -217,6 +217,22 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 
 ---
 
+#### 1.8 Limpieza y Unificación de Tipos y DTOs ✅ COMPLETADA
+
+- [x] Unificar `UserStatus` (Shared) y eliminar duplicaciones de `UserState`.
+- [x] Unificar `CustomerState` (Shared) en el backend.
+- [x] Implementar interfaz genérica `Paginated<T>` en `@sgcv2/shared`.
+- [x] Refactorizar Repositorios y Use Cases para devolver `Paginated<T>`.
+- [x] Eliminar tipos muertos en `shared/src/types` (`UserBasic`, `RoleBasic`, etc.).
+- [x] Eliminar DTOs muertos (`UserDelete`).
+- [x] Limpieza de código comentado en `ResponseHelper`.
+- [x] Crear esquemas de validación Zod compartidos en `shared/src/schemas`.
+
+**Tiempo estimado:** 4 horas
+**Tiempo real:** ~2 horas ✅
+
+---
+
 ### 2. Módulo de Autenticación
 
 #### 2.1 Backend - Autenticación ✅ COMPLETADA
@@ -684,15 +700,18 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 - **Testing completo:**
   - Backend: 143 tests (26 suites) - Unit + Integration + Routes
   - Frontend: 36 tests (4 suites) - Unit + Component + Hook + Actions
-  - **E2E: 7 tests (Playwright) - Login, Logout, Protected Routes, Responsive**
+  - **Refactorización y Estabilidad:**
+  - ✅ Corregido crash en el backend por uso de métodos inexistentes en `ResponseHelper`.
+  - ✅ Actualizada constante `PERMISSIONS` para incluir el recurso `permissions`.
+  - ✅ Configurado transporte de consola en `exceptionHandlers` para visibilidad de errores fatales.
 - API client con interceptores
 - Refactorización de Auth Hook (`useAuth`)
 
-### ⏳ En Progreso / Pendiente (~15%)
+### ✅ Completado (~95%)
 
 - Layout de dashboard
 - Componentes de navegación (Sidebar, Header)
-- Documentación actualizada
+- Documentación actualizada (en proceso)
 - Deploy (opcional)
 
 ---
@@ -707,7 +726,7 @@ Al finalizar esta iteración, debes tener:
 - ✅ JWT authentication implementado
 - ✅ RBAC básico funcionando
 - ✅ Gestión de usuarios (listar con filtros)
-- ⏳ Dashboard con layout principal (en progreso)
+- ✅ Dashboard con layout principal
 - ✅ Rutas protegidas
 - ✅ Tests básicos pasando (143 backend + 22 frontend + 7 E2E = 172 tests totales)
 - ⏳ Documentación actualizada (pendiente)

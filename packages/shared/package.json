@@ -17,11 +17,14 @@
     "src"
   ],
   "scripts": {
-    "build": "tsc src/index.ts --outDir dist --declaration",
+    "build": "tsc -p tsconfig.json",
     "clean": "rm -rf dist",
     "dev": "tsc --watch"
   },
   "devDependencies": {
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "zod": "^4.3.5"
   }
 }

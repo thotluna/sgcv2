@@ -23,3 +23,8 @@ export interface AppResponse<T> {
   error?: ErrorData;
   metadata?: Metadata;
 }
+
+export interface Paginated<T> {
+  items: T[];
+  total: number;
+}

@@ -1,4 +1,5 @@
 import { UserStatus } from '../types';
+import { RoleDto } from './roles.dto';
 
 export class CreateUserDto {
   username!: string;
@@ -17,12 +18,6 @@ export type UpdateUserDto = Partial<Omit<UserDto, 'id' | 'createdAt' | 'updatedA
   roleIds?: number[];
 };
 
-export class UserDelete {
-  id!: number;
-  username!: string;
-  status!: UserStatus;
-}
-
 export class UserDto {
   id!: number;
   username!: string;
@@ -35,10 +30,10 @@ export class UserDto {
   avatar?: string;
 }
 
-export interface RoleDto {
-  id: number;
-  name: string;
-}
+// export interface RoleDto {
+//   id: number;
+//   name: string;
+// }
 
 export class UserWithRolesDto extends UserDto {
   roles?: RoleDto[];

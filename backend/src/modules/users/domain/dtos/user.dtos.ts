@@ -1,5 +1,6 @@
+import { UserStatus } from '../user-status';
+import { PaginationResult } from '@shared/domain/pagination';
 import { UserEntity } from '../user-entity';
-import { UserState } from '../types';
 
 export interface CreateUserInput {
   username: string;
@@ -8,7 +9,7 @@ export interface CreateUserInput {
   firstName?: string;
   lastName?: string;
   avatar?: string;
-  status?: UserState;
+  status?: UserStatus;
 }
 
 export type UpdateUserInput = Partial<
@@ -25,20 +26,17 @@ export interface UpdateUserPersistenceInput {
   firstName?: string | null;
   lastName?: string | null;
   avatar?: string | null;
-  status?: UserState;
+  status?: UserStatus;
   roleIds?: number[];
 }
 
 export interface UserFilterInput {
   search?: string;
-  status?: UserState;
+  status?: UserStatus;
   pagination?: {
     limit: number;
     offset: number;
   };
 }
 
-export interface PaginatedUsers {
-  users: UserEntity[];
-  total: number;
-}
+export type PaginatedUsers = PaginationResult<UserEntity>;

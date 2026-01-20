@@ -76,8 +76,8 @@ describe('CustomerService', () => {
 
       const result = await service.findAll(1, 10);
 
-      expect(result.customers).toEqual(customers);
-      expect(result.pagination.total).toBe(total);
+      expect(result.items).toEqual(customers);
+      expect(result.total).toBe(total);
       expect(prisma.customer.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           skip: 0,

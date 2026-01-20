@@ -63,5 +63,10 @@
   },
   "dependencies": {
     "concurrently": "^9.2.1"
+  },
+  "pnpm": {
+    "overrides": {
+      "zod": "4.3.5"
+    }
   }
 }

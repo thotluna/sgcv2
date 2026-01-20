@@ -153,7 +153,7 @@ describe('UserController', () => {
   describe('showAll', () => {
     it('should return a list of users', async () => {
       const mockUsers = [{ id: 1, username: 'user1' }];
-      mockShowAllUseCase.execute.mockResolvedValue({ users: mockUsers, total: 1 });
+      mockShowAllUseCase.execute.mockResolvedValue({ items: mockUsers, total: 1 });
       mockReq = { query: { search: 'user1', limit: '10', offset: '0' } };
 
       await userController.showAll(mockReq as Request, mockRes as Response);

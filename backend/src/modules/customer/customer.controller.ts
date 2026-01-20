@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { CustomerService } from './customer.service';
-import { CreateCustomerDto, UpdateCustomerDto } from '@sgcv2/shared';
+import { CreateCustomerDto, UpdateCustomerDto, CustomerState } from '@sgcv2/shared';
 import { ResponseHelper } from '../../shared/utils/response.helpers';
 import { z } from 'zod';
 import { inject, injectable } from 'inversify';
@@ -72,22 +72,18 @@ export class CustomerController {
     const limit = parseInt(req.query.perPage as string) || 10;
     const stateQuery = req.query.state as string | undefined;
     const searchQuery = req.query.search as string | undefined;
-    let state: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED' | undefined = undefined;
+    const state = stateQuery as CustomerState | undefined;
 
-    if (stateQuery === 'ACTIVE') state = 'ACTIVE';
-    if (stateQuery === 'INACTIVE') state = 'INACTIVE';
-    if (stateQuery === 'SUSPENDED') state = 'SUSPENDED';
-
-    const result = await this.customerService.findAll(page, limit, {
+    const { items: customers, total } = await this.customerService.findAll(page, limit, {
       state,
       search: searchQuery,
     });
 
-    return ResponseHelper.paginated(res, result.customers, {
-      page: result.pagination.page,
-      perPage: result.pagination.perPage,
-      total: result.pagination.total,
-      totalPages: result.pagination.totalPages,
+    return ResponseHelper.paginated(res, customers, {
+      page,
+      perPage: limit,
+      total,
+      totalPages: Math.ceil(total / limit),
     });
   }
 
