@@ -700,7 +700,10 @@ Configurar el entorno de desarrollo completo y tener un sistema de autenticació
 - **Testing completo:**
   - Backend: 143 tests (26 suites) - Unit + Integration + Routes
   - Frontend: 36 tests (4 suites) - Unit + Component + Hook + Actions
-  - **E2E: 7 tests (Playwright) - Login, Logout, Protected Routes, Responsive**
+  - **Refactorización y Estabilidad:**
+  - ✅ Corregido crash en el backend por uso de métodos inexistentes en `ResponseHelper`.
+  - ✅ Actualizada constante `PERMISSIONS` para incluir el recurso `permissions`.
+  - ✅ Configurado transporte de consola en `exceptionHandlers` para visibilidad de errores fatales.
 - API client con interceptores
 - Refactorización de Auth Hook (`useAuth`)
 
