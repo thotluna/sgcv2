@@ -22,7 +22,7 @@ export class CustomerController {
     @inject(TYPES.GetCustomerUseCase) private getUseCase: GetCustomerUseCase,
     @inject(TYPES.UpdateCustomerUseCase) private updateUseCase: UpdateCustomerUseCase,
     @inject(TYPES.DeleteCustomerUseCase) private deleteUseCase: DeleteCustomerUseCase
-  ) { }
+  ) {}
 
   /**
    * @swagger

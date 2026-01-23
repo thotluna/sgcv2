@@ -49,7 +49,7 @@ class BaseCustomerDto {
  *             - taxId
  *             - address
  */
-export class CreateCustomerDto extends BaseCustomerDto { }
+export class CreateCustomerDto extends BaseCustomerDto {}
 
 /**
  * @swagger
