@@ -7,19 +7,25 @@ import { GetCustomerService } from '../../domain/get-customer.service';
 import { UpdateCustomerService } from '../../domain/update-customer.service';
 import { DeleteCustomerService } from '../../domain/delete-customer.service';
 import { CustomerEntity } from '../../domain/customer.entity';
-import { CreateCustomerInput, UpdateCustomerInput, CustomerFilterInput, PaginatedCustomers } from '../../domain/inputs/customer.input';
+import {
+  CreateCustomerInput,
+  UpdateCustomerInput,
+  CustomerFilterInput,
+  PaginatedCustomers,
+} from '../../domain/inputs/customer.input';
 
 @injectable()
 export class CustomerService
   implements
-  CreateCustomerService,
-  ListCustomersService,
-  GetCustomerService,
-  UpdateCustomerService,
-  DeleteCustomerService {
+    CreateCustomerService,
+    ListCustomersService,
+    GetCustomerService,
+    UpdateCustomerService,
+    DeleteCustomerService
+{
   constructor(
     @inject(TYPES.CustomerRepository) private readonly customerRepository: CustomerRepository
-  ) { }
+  ) {}
 
   async findByCode(code: string): Promise<CustomerEntity | null> {
     return this.customerRepository.findByCode(code);

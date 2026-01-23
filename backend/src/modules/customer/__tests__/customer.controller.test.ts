@@ -1,10 +1,7 @@
 import { CustomerState } from '@prisma/client';
 import { CustomerController } from '../infrastructure/http/customer.controller';
 import { Request, Response } from 'express';
-import {
-  ConflictException,
-  NotFoundException,
-} from '@shared/exceptions';
+import { ConflictException, NotFoundException } from '@shared/exceptions';
 import { CreateCustomerUseCase } from '../application/create-customer.use-case';
 import { ListCustomersUseCase } from '../application/list-customers.use-case';
 import { GetCustomerUseCase } from '../application/get-customer.use-case';
@@ -116,9 +113,7 @@ describe('CustomerController', () => {
         address: 'Test',
       };
       req = { body: customerDto };
-      createUseCase.execute.mockRejectedValue(
-        new CustomerAlreadyExistsException('code', 'C001')
-      );
+      createUseCase.execute.mockRejectedValue(new CustomerAlreadyExistsException('code', 'C001'));
 
       await expect(customerController.create(req as Request, res as Response)).rejects.toThrow(
         ConflictException
@@ -142,7 +137,7 @@ describe('CustomerController', () => {
         page: 1,
         limit: 10,
         state: undefined,
-        search: undefined
+        search: undefined,
       });
       expect(jsonMock).toHaveBeenCalledWith(
         expect.objectContaining({

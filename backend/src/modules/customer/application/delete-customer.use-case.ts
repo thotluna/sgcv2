@@ -8,7 +8,7 @@ import { CustomerNotFoundException } from '../domain/exceptions/customer-not-fou
 export class DeleteCustomerUseCase {
   constructor(
     @inject(TYPES.DeleteCustomerService) private customerService: DeleteCustomerService
-  ) { }
+  ) {}
 
   async execute(id: string): Promise<CustomerEntity> {
     const customer = await this.customerService.findById(id);

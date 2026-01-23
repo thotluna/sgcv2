@@ -10,7 +10,7 @@ import { CustomerAlreadyExistsException } from '../domain/exceptions/customer-al
 export class UpdateCustomerUseCase {
   constructor(
     @inject(TYPES.UpdateCustomerService) private customerService: UpdateCustomerService
-  ) { }
+  ) {}
 
   async execute(id: string, data: UpdateCustomerInput): Promise<CustomerEntity> {
     const customer = await this.customerService.findById(id);

@@ -1,5 +1,10 @@
 import { CustomerEntity } from './customer.entity';
-import { CreateCustomerInput, UpdateCustomerInput, CustomerFilterInput, PaginatedCustomers } from './inputs/customer.input';
+import {
+  CreateCustomerInput,
+  UpdateCustomerInput,
+  CustomerFilterInput,
+  PaginatedCustomers,
+} from './inputs/customer.input';
 
 export interface CustomerRepository {
   create(data: CreateCustomerInput): Promise<CustomerEntity>;

@@ -5,9 +5,7 @@ import { ListCustomersService } from '../domain/list-customers.service';
 
 @injectable()
 export class ListCustomersUseCase {
-  constructor(
-    @inject(TYPES.ListCustomersService) private customerService: ListCustomersService
-  ) { }
+  constructor(@inject(TYPES.ListCustomersService) private customerService: ListCustomersService) {}
 
   async execute(filters: CustomerFilterInput): Promise<PaginatedCustomers> {
     return this.customerService.findAll(filters);

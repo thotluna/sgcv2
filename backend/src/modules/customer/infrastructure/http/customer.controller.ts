@@ -10,10 +10,7 @@ import { CustomerMapper } from '../mappers/customer.mapper';
 import { ResponseHelper } from '@shared/utils/response.helpers';
 import { CustomerAlreadyExistsException } from '../../domain/exceptions/customer-already-exists.exception';
 import { CustomerNotFoundException } from '../../domain/exceptions/customer-not-found.exception';
-import {
-  ConflictException,
-  NotFoundException,
-} from '@shared/exceptions/http-exceptions';
+import { ConflictException, NotFoundException } from '@shared/exceptions/http-exceptions';
 import { CreateCustomerDto, UpdateCustomerDto } from '@sgcv2/shared';
 
 @injectable()
@@ -24,7 +21,7 @@ export class CustomerController {
     @inject(TYPES.GetCustomerUseCase) private getUseCase: GetCustomerUseCase,
     @inject(TYPES.UpdateCustomerUseCase) private updateUseCase: UpdateCustomerUseCase,
     @inject(TYPES.DeleteCustomerUseCase) private deleteUseCase: DeleteCustomerUseCase
-  ) { }
+  ) {}
 
   async create(req: Request, res: Response): Promise<Response> {
     try {

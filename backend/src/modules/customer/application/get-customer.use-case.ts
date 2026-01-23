@@ -6,9 +6,7 @@ import { CustomerNotFoundException } from '../domain/exceptions/customer-not-fou
 
 @injectable()
 export class GetCustomerUseCase {
-  constructor(
-    @inject(TYPES.GetCustomerService) private customerService: GetCustomerService
-  ) { }
+  constructor(@inject(TYPES.GetCustomerService) private customerService: GetCustomerService) {}
 
   async execute(id: string): Promise<CustomerEntity> {
     const customer = await this.customerService.findById(id);

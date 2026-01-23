@@ -11,6 +11,7 @@ pnpm-lock.yaml
 yarn.lock
 .husky
 playwright-report
-test-resultslogs/
+test-results
+logs/
 .agent/
 .antigravity/

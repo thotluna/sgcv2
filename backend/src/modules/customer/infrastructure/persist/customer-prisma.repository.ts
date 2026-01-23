@@ -1,8 +1,14 @@
+import { Customer, Prisma } from '@prisma/client';
 import { prisma } from '@config/prisma';
 import { injectable } from 'inversify';
 import { CustomerEntity, CustomerState } from '../../domain/customer.entity';
 import { CustomerRepository } from '../../domain/customer.repository';
-import { CreateCustomerInput, UpdateCustomerInput, CustomerFilterInput, PaginatedCustomers } from '../../domain/inputs/customer.input';
+import {
+  CreateCustomerInput,
+  UpdateCustomerInput,
+  CustomerFilterInput,
+  PaginatedCustomers,
+} from '../../domain/inputs/customer.input';
 
 @injectable()
 export class CustomerPrismaRepository implements CustomerRepository {
@@ -23,7 +29,7 @@ export class CustomerPrismaRepository implements CustomerRepository {
 
   async findAll(filters: CustomerFilterInput): Promise<PaginatedCustomers> {
     const { page = 1, limit = 10, state, search } = filters;
-    const where: any = {};
+    const where: Prisma.CustomerWhereInput = {};
 
     if (state) {
       where.state = state;
@@ -84,7 +90,7 @@ export class CustomerPrismaRepository implements CustomerRepository {
         address: data.address,
         businessName: data.businessName,
         phone: data.phone,
-        state: data.state as any,
+        state: data.state as CustomerState,
       },
     });
     return this.mapToEntity(customer);
@@ -98,7 +104,7 @@ export class CustomerPrismaRepository implements CustomerRepository {
     return this.mapToEntity(customer);
   }
 
-  private mapToEntity(model: any): CustomerEntity {
+  private mapToEntity(model: Customer): CustomerEntity {
     return {
       id: model.id,
       code: model.code,

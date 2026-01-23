@@ -16,7 +16,7 @@ import { GetCustomerService } from '../domain/get-customer.service';
 import { ListCustomersService } from '../domain/list-customers.service';
 import { DeleteCustomerService } from '../domain/delete-customer.service';
 
-export const customerContainerModule = new ContainerModule((options) => {
+export const customerContainerModule = new ContainerModule(options => {
   options.bind<CustomerRepository>(TYPES.CustomerRepository).to(CustomerPrismaRepository);
 
   options.bind<CreateCustomerService>(TYPES.CreateCustomerService).to(CustomerService);

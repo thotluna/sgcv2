@@ -14,9 +14,7 @@ import { CustomerFilterSchema } from './customer-filter.schema';
 export class CustomerRoutes {
   private router: Router;
 
-  constructor(
-    @inject(TYPES.CustomerController) private customerController: CustomerController
-  ) {
+  constructor(@inject(TYPES.CustomerController) private customerController: CustomerController) {
     this.router = Router();
     this.setupRoutes();
   }

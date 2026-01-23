@@ -9,7 +9,7 @@ import { CustomerAlreadyExistsException } from '../domain/exceptions/customer-al
 export class CreateCustomerUseCase {
   constructor(
     @inject(TYPES.CreateCustomerService) private customerService: CreateCustomerService
-  ) { }
+  ) {}
 
   async execute(data: CreateCustomerInput): Promise<CustomerEntity> {
     const existingByCode = await this.customerService.findByCode(data.code);

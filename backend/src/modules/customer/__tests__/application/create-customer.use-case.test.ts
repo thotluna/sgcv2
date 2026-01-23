@@ -69,7 +69,9 @@ describe('CreateCustomerUseCase', () => {
       mockService.findByCode.mockResolvedValue(existingCustomer);
 
       await expect(useCase.execute(input)).rejects.toThrow(CustomerAlreadyExistsException);
-      await expect(useCase.execute(input)).rejects.toThrow("Customer with code 'C001' already exists");
+      await expect(useCase.execute(input)).rejects.toThrow(
+        "Customer with code 'C001' already exists"
+      );
 
       expect(mockService.findByCode).toHaveBeenCalledWith('C001');
       expect(mockService.findByTaxId).not.toHaveBeenCalled();
@@ -102,7 +104,9 @@ describe('CreateCustomerUseCase', () => {
       mockService.findByTaxId.mockResolvedValue(existingCustomer);
 
       await expect(useCase.execute(input)).rejects.toThrow(CustomerAlreadyExistsException);
-      await expect(useCase.execute(input)).rejects.toThrow("Customer with taxId 'J-12345678-9' already exists");
+      await expect(useCase.execute(input)).rejects.toThrow(
+        "Customer with taxId 'J-12345678-9' already exists"
+      );
 
       expect(mockService.findByCode).toHaveBeenCalledWith('C001');
       expect(mockService.findByTaxId).toHaveBeenCalledWith('J-12345678-9');

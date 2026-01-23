@@ -27,10 +27,10 @@ export function loadRoutes(app: Application, prefix: string = '') {
       error:
         error instanceof Error
           ? {
-            message: error.message,
-            stack: error.stack,
-            ...(error as any),
-          }
+              message: error.message,
+              stack: error.stack,
+              ...(error as any),
+            }
           : error,
     });
     throw error;
