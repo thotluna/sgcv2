@@ -1,4 +1,9 @@
-import { CreateCustomerDto, UpdateCustomerDto, CustomerDto } from '@sgcv2/shared';
+import {
+  CreateCustomerDto,
+  UpdateCustomerDto,
+  CustomerDto,
+  CustomerState as SharedCustomerState,
+} from '@sgcv2/shared';
 import { CreateCustomerInput, UpdateCustomerInput } from '../../domain/inputs/customer.input';
 import { CustomerEntity, CustomerState } from '../../domain/customer.entity';
 
@@ -32,12 +37,12 @@ export class CustomerMapper {
     return {
       id: entity.id,
       code: entity.code,
-      businessName: entity.businessName,
+      businessName: entity.businessName ?? undefined,
       legalName: entity.legalName,
       taxId: entity.taxId,
-      address: entity.address,
+      address: entity.address ?? '',
       phone: entity.phone ?? undefined,
-      state: entity.state as any,
+      state: entity.state as SharedCustomerState,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
     };

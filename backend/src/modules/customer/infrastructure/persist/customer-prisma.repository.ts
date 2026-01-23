@@ -1,4 +1,4 @@
-import { Customer, Prisma } from '@prisma/client';
+import { Customer, Prisma, CustomerState as PrismaCustomerState } from '@prisma/client';
 import { prisma } from '@config/prisma';
 import { injectable } from 'inversify';
 import { CustomerEntity, CustomerState } from '../../domain/customer.entity';
@@ -32,7 +32,7 @@ export class CustomerPrismaRepository implements CustomerRepository {
     const where: Prisma.CustomerWhereInput = {};
 
     if (state) {
-      where.state = state;
+      where.state = state as PrismaCustomerState;
     }
 
     if (search) {
@@ -90,7 +90,7 @@ export class CustomerPrismaRepository implements CustomerRepository {
         address: data.address,
         businessName: data.businessName,
         phone: data.phone,
-        state: data.state as CustomerState,
+        state: data.state as PrismaCustomerState,
       },
     });
     return this.mapToEntity(customer);

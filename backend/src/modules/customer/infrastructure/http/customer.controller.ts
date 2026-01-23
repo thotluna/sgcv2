@@ -12,6 +12,7 @@ import { CustomerAlreadyExistsException } from '../../domain/exceptions/customer
 import { CustomerNotFoundException } from '../../domain/exceptions/customer-not-found.exception';
 import { ConflictException, NotFoundException } from '@shared/exceptions/http-exceptions';
 import { CreateCustomerDto, UpdateCustomerDto } from '@sgcv2/shared';
+import { CustomerFilterSchemaType } from './customer-filter.schema';
 
 @injectable()
 export class CustomerController {
@@ -21,7 +22,7 @@ export class CustomerController {
     @inject(TYPES.GetCustomerUseCase) private getUseCase: GetCustomerUseCase,
     @inject(TYPES.UpdateCustomerUseCase) private updateUseCase: UpdateCustomerUseCase,
     @inject(TYPES.DeleteCustomerUseCase) private deleteUseCase: DeleteCustomerUseCase
-  ) {}
+  ) { }
 
   async create(req: Request, res: Response): Promise<Response> {
     try {
@@ -38,24 +39,24 @@ export class CustomerController {
   }
 
   async findAll(req: Request, res: Response): Promise<Response> {
-    const rawQuery: any = req.query;
-    const filter = {
-      state: rawQuery.state,
-      search: rawQuery.search,
-      page: rawQuery.page ? parseInt(rawQuery.page) : 1,
-      limit: rawQuery.perPage ? parseInt(rawQuery.perPage) : 10,
-    };
+    const query = req.query as CustomerFilterSchemaType;
+    const { page = 1, perPage = 10, state, search } = query;
 
-    const { items, total } = await this.listUseCase.execute(filter);
+    const { items, total } = await this.listUseCase.execute({
+      state,
+      search,
+      page,
+      limit: perPage,
+    });
 
     return ResponseHelper.paginated(
       res,
       items.map(c => CustomerMapper.toDto(c)),
       {
         total,
-        page: filter.page,
-        perPage: filter.limit,
-        totalPages: Math.ceil(total / filter.limit),
+        page,
+        perPage,
+        totalPages: Math.ceil(total / perPage),
       }
     );
   }
