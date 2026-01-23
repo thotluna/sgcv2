@@ -14,11 +14,11 @@ export class HealthController {
    * @swagger
    * /health:
    *   get:
-   *     summary: Health check de la API y base de datos
-   *     tags: [Soporte]
+   *     summary: API and Database Health Check
+   *     tags: [Support]
    *     responses:
    *       200:
-   *         description: El servidor está funcionando y la base de datos está conectada
+   *         description: Server is running and database is connected
    *         content:
    *           application/json:
    *             schema:
@@ -29,7 +29,7 @@ export class HealthController {
    *                 environment: { type: string, example: development }
    *                 database: { type: string, example: connected }
    *       500:
-   *         description: Error en el servidor o base de datos desconectada
+   *         description: Server error or database disconnected
    */
   async getHealth(_req: Request, res: Response): Promise<Response> {
     const health = await this.getHealthUseCase.execute();
