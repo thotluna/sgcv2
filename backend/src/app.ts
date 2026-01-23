@@ -13,6 +13,8 @@ import { errorLogger } from '@shared/middleware/errorLogger';
 import logger from '@config/logger';
 import { globalErrorHandler } from '@shared/middleware/global-error.middleware';
 import cookieParser from 'cookie-parser';
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from '@config/swagger.config';
 
 // Load environment variables
 dotenv.config();
@@ -53,7 +55,27 @@ passport.use(jwtStrategy);
 passport.use(localStrategy);
 app.use(passport.initialize());
 
-// ---------- Health check ----------
+/**
+ * @swagger
+ * /health:
+ *   get:
+ *     summary: Health check de la API y base de datos
+ *     tags: [Soporte]
+ *     responses:
+ *       200:
+ *         description: El servidor está funcionando y la base de datos está conectada
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status: { type: string, example: ok }
+ *                 timestamp: { type: string, format: date-time }
+ *                 environment: { type: string, example: development }
+ *                 database: { type: string, example: connected }
+ *       500:
+ *         description: Error en el servidor o base de datos desconectada
+ */
 app.get('/health', async (_req: Request, res: Response) => {
   try {
     await prisma.$queryRaw`SELECT 1`;
@@ -79,6 +101,9 @@ const API_PREFIX = process.env.API_PREFIX || '/api';
 
 // Mount routes
 loadRoutes(app, API_PREFIX);
+
+// ---------- Swagger Documentation ----------
+app.use(`${API_PREFIX}/docs`, swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.get(`${API_PREFIX}/`, (_req: Request, res: Response) => {
   res.json({
