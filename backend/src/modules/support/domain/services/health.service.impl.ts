@@ -9,7 +9,7 @@ export class HealthServiceImpl implements HealthService {
   constructor(
     @inject(TYPES.HealthCheckRepository)
     private readonly repository: HealthCheckRepository
-  ) { }
+  ) {}
 
   async checkHealth(): Promise<HealthStatus> {
     const isDbConnected = await this.repository.checkDatabase();

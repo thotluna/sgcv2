@@ -8,7 +8,7 @@ export class GetHealthUseCase {
   constructor(
     @inject(TYPES.HealthService)
     private readonly healthService: HealthService
-  ) { }
+  ) {}
 
   async execute(): Promise<HealthStatus> {
     return this.healthService.checkHealth();

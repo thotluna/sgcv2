@@ -9,7 +9,7 @@ export class HealthController {
   constructor(
     @inject(TYPES.GetHealthUseCase)
     private readonly getHealthUseCase: GetHealthUseCase
-  ) { }
+  ) {}
 
   /**
    * @swagger
