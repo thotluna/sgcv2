@@ -14,10 +14,10 @@ import { AppResponse, Metadata, Pagination } from '@sgcv2/shared';
  *           example: true
  *         data:
  *           type: object
- *           description: Payload dinámico de la respuesta
+ *           description: Dynamic response payload
  *         metadata:
  *           type: object
- *           description: Metadatos opcionales (timestamp, request_id)
+ *           description: Optional metadata (timestamp, request_id)
  *     
  *     Pagination:
  *       type: object

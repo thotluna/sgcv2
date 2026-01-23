@@ -20,7 +20,7 @@ import { AppException } from '@shared/exceptions/app.exception';
  *               example: RESOURCE_NOT_FOUND
  *             message:
  *               type: string
- *               example: El recurso solicitado no existe.
+ *               example: The requested resource does not exist.
  *             details:
  *               type: object
  *               nullable: true
