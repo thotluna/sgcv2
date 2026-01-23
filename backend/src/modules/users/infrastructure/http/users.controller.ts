@@ -24,6 +24,33 @@ export class UsersController {
     private readonly updateUserUseCase: UpdateUseCase
   ) {}
 
+  /**
+   * @swagger
+   * /users/me:
+   *   get:
+   *     summary: Get current user profile
+   *     tags: [Users]
+   *     security:
+   *       - bearerAuth: []
+   *     responses:
+   *       200:
+   *         description: Current user profile
+   *         content:
+   *           application/json:
+   *             schema:
+   *               allOf:
+   *                 - $ref: '#/components/schemas/ApiResponse'
+   *                 - type: object
+   *                   properties:
+   *                     data:
+   *                       $ref: '#/components/schemas/UserWithRolesDto'
+   *       401:
+   *         description: Unauthorized
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/ErrorResponse'
+   */
   async me(req: Request, res: Response): Promise<Response> {
     const user = req.user;
 
@@ -46,6 +73,37 @@ export class UsersController {
     }
   }
 
+  /**
+   * @swagger
+   * /users/me:
+   *   patch:
+   *     summary: Update current user profile
+   *     tags: [Users]
+   *     security:
+   *       - bearerAuth: []
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/UpdateUserDto'
+   *     responses:
+   *       200:
+   *         description: Profile updated
+   *         content:
+   *           application/json:
+   *             schema:
+   *               allOf:
+   *                 - $ref: '#/components/schemas/ApiResponse'
+   *                 - type: object
+   *                   properties:
+   *                     data:
+   *                       $ref: '#/components/schemas/UserWithRolesDto'
+   *       401:
+   *         description: Unauthorized
+   *       404:
+   *         description: User not found
+   */
   async updateMe(req: Request, res: Response): Promise<Response> {
     const user = req.user;
 
@@ -61,6 +119,45 @@ export class UsersController {
     return ResponseHelper.success(res, UsersMapper.toUserWithRolesDto(updatedUser));
   }
 
+  /**
+   * @swagger
+   * /users:
+   *   get:
+   *     summary: List all users (Admin only)
+   *     tags: [Users]
+   *     security:
+   *       - bearerAuth: []
+   *     parameters:
+   *       - in: query
+   *         name: search
+   *         schema: { type: string }
+   *         description: Search by username or email
+   *       - in: query
+   *         name: status
+   *         schema: { type: string, enum: [ACTIVE, INACTIVE, BLOCKED] }
+   *       - in: query
+   *         name: limit
+   *         schema: { type: integer, default: 10 }
+   *       - in: query
+   *         name: offset
+   *         schema: { type: integer, default: 0 }
+   *     responses:
+   *       200:
+   *         description: Paginated user list
+   *         content:
+   *           application/json:
+   *             schema:
+   *               allOf:
+   *                 - $ref: '#/components/schemas/ApiResponse'
+   *                 - type: object
+   *                   properties:
+   *                     data:
+   *                       type: array
+   *                       items:
+   *                         $ref: '#/components/schemas/UserDto'
+   *                     metadata:
+   *                       $ref: '#/components/schemas/Pagination'
+   */
   async showAll(req: Request, res: Response): Promise<Response> {
     const rawQuery: any = req.query;
     const filter: UserFilterDto = {
@@ -88,6 +185,35 @@ export class UsersController {
     );
   }
 
+  /**
+   * @swagger
+   * /users:
+   *   post:
+   *     summary: Create a new user (Admin only)
+   *     tags: [Users]
+   *     security:
+   *       - bearerAuth: []
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/CreateUserDto'
+   *     responses:
+   *       201:
+   *         description: User created
+   *         content:
+   *           application/json:
+   *             schema:
+   *               allOf:
+   *                 - $ref: '#/components/schemas/ApiResponse'
+   *                 - type: object
+   *                   properties:
+   *                     data:
+   *                       $ref: '#/components/schemas/UserDto'
+   *       400:
+   *         description: Bad request
+   */
   async create(req: Request, res: Response): Promise<Response> {
     const createUserDto: SharedCreateUserDto = req.body;
 
@@ -97,6 +223,34 @@ export class UsersController {
     return ResponseHelper.success(res, UsersMapper.toUserDto(newUser));
   }
 
+  /**
+   * @swagger
+   * /users/{id}:
+   *   get:
+   *     summary: Get user by ID (Admin only)
+   *     tags: [Users]
+   *     security:
+   *       - bearerAuth: []
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema: { type: integer }
+   *     responses:
+   *       200:
+   *         description: User details
+   *         content:
+   *           application/json:
+   *             schema:
+   *               allOf:
+   *                 - $ref: '#/components/schemas/ApiResponse'
+   *                 - type: object
+   *                   properties:
+   *                     data:
+   *                       $ref: '#/components/schemas/UserDto'
+   *       404:
+   *         description: User not found
+   */
   async show(req: Request, res: Response): Promise<Response> {
     const id = Number(req.params.id);
     const user = await this.getUseCase.execute(id);
@@ -108,6 +262,40 @@ export class UsersController {
     return ResponseHelper.success(res, UsersMapper.toUserDto(user));
   }
 
+  /**
+   * @swagger
+   * /users/{id}:
+   *   patch:
+   *     summary: Update user by ID (Admin only)
+   *     tags: [Users]
+   *     security:
+   *       - bearerAuth: []
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema: { type: integer }
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/UpdateUserDto'
+   *     responses:
+   *       200:
+   *         description: User updated
+   *         content:
+   *           application/json:
+   *             schema:
+   *               allOf:
+   *                 - $ref: '#/components/schemas/ApiResponse'
+   *                 - type: object
+   *                   properties:
+   *                     data:
+   *                       $ref: '#/components/schemas/UserDto'
+   *       404:
+   *         description: User not found
+   */
   async update(req: Request, res: Response): Promise<Response> {
     const id = Number(req.params.id);
     const userDto: UpdateUserDto = req.body;
