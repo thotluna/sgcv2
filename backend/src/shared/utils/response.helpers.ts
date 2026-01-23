@@ -2,6 +2,39 @@ import { Response } from 'express';
 import { AppResponse, Metadata, Pagination } from '@sgcv2/shared';
 // import { v4 as uuidv4 } from 'uuid';
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     ApiResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *           example: true
+ *         data:
+ *           type: object
+ *           description: Dynamic response payload
+ *         metadata:
+ *           type: object
+ *           description: Optional metadata (timestamp, request_id)
+ *
+ *     Pagination:
+ *       type: object
+ *       properties:
+ *         page:
+ *           type: integer
+ *           example: 1
+ *         perPage:
+ *           type: integer
+ *           example: 10
+ *         total:
+ *           type: integer
+ *           example: 100
+ *         totalPages:
+ *           type: integer
+ *           example: 10
+ */
 export class ResponseHelper {
   static success<T>(
     res: Response,

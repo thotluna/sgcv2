@@ -7,7 +7,7 @@ const options: swaggerJsdoc.Options = {
     info: {
       title: 'SGCV2 Backend API',
       version,
-      description: 'API para el Sistema de Gestión y Control (SGCV2) para XTEL Comunicaciones',
+      description: 'API for the Management and Control System (SGCV2) for XTEL Comunicaciones',
       contact: {
         name: 'XTEL Comunicaciones Dev Team',
       },
@@ -15,7 +15,7 @@ const options: swaggerJsdoc.Options = {
     servers: [
       {
         url: process.env.API_URL || 'http://localhost:4000/api',
-        description: 'Servidor de Desarrollo',
+        description: 'Development Server',
       },
     ],
     components: {
@@ -33,7 +33,12 @@ const options: swaggerJsdoc.Options = {
       },
     ],
   },
-  apis: ['./src/modules/**/*.controller.ts', './src/app.ts'], // Path to the API docs
+  apis: [
+    './src/modules/**/*.controller.ts',
+    './src/app.ts',
+    './src/shared/utils/response.helpers.ts',
+    './src/shared/middleware/global-error.middleware.ts',
+  ], // Path to the API docs
 };
 
 export const swaggerSpec = swaggerJsdoc(options);

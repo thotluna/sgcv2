@@ -2,6 +2,29 @@ import { Request, Response, NextFunction } from 'express';
 import logger from '@config/logger';
 import { AppException } from '@shared/exceptions/app.exception';
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     ErrorResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *           example: false
+ *         error:
+ *           type: object
+ *           properties:
+ *             code:
+ *               type: string
+ *               example: RESOURCE_NOT_FOUND
+ *             message:
+ *               type: string
+ *               example: The requested resource does not exist.
+ *             details:
+ *               type: object
+ *               nullable: true
+ */
 export const globalErrorHandler = (
   err: Error,
   _req: Request,
