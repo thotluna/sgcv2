@@ -47,7 +47,6 @@ export class ResponseHelper {
       data,
       metadata: {
         timestamp: new Date().toISOString(),
-        // requestId: metadata?.requestId || uuidv4(),
         ...metadata,
       },
     };
@@ -66,7 +65,6 @@ export class ResponseHelper {
       data,
       metadata: {
         timestamp: new Date().toISOString(),
-        // requestId: uuidv4(),
         pagination,
       },
     };

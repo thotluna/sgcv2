@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
 import { GetHealthUseCase } from '@modules/support/application/get-health.use-case';
 import { TYPES } from '@modules/support/di/types';
+import { ResponseHelper } from '@shared/utils/response.helpers';
 
 @injectable()
 export class HealthController {
@@ -22,18 +23,23 @@ export class HealthController {
    *         content:
    *           application/json:
    *             schema:
-   *               type: object
-   *               properties:
-   *                 status: { type: string, example: ok }
-   *                 timestamp: { type: string, format: date-time }
-   *                 environment: { type: string, example: development }
-   *                 database: { type: string, example: connected }
+   *               allOf:
+   *                 - $ref: '#/components/schemas/ApiResponse'
+   *                 - type: object
+   *                   properties:
+   *                     data:
+   *                       type: object
+   *                       properties:
+   *                         status: { type: string, example: ok }
+   *                         timestamp: { type: string, format: date-time }
+   *                         environment: { type: string, example: development }
+   *                         database: { type: string, example: connected }
    *       500:
    *         description: Server error or database disconnected
    */
   async getHealth(_req: Request, res: Response): Promise<Response> {
     const health = await this.getHealthUseCase.execute();
     const statusCode = health.status === 'ok' ? 200 : 500;
-    return res.status(statusCode).json(health);
+    return ResponseHelper.success(res, health, statusCode);
   }
 }
