@@ -30,6 +30,7 @@ const config: Config = {
     '^@roles/(.*)$': '<rootDir>/src/modules/roles/$1',
     '^@consts/(.*)$': '<rootDir>/src/consts/$1',
     '^@shared/(.*)$': '<rootDir>/src/shared/$1',
+    '^@customer/(.*)$': '<rootDir>/src/modules/customer/$1',
     '^@types/(.*)$': '<rootDir>/src/types/$1',
     // CRÍTICO: Mapear al código FUENTE de shared
     '^@sgcv2/shared$': '<rootDir>/../packages/shared/src/index.ts',

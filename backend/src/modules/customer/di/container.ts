@@ -1,20 +1,20 @@
 import { ContainerModule } from 'inversify';
 import { TYPES } from './types';
-import { CustomerController } from '../infrastructure/http/customer.controller';
-import { CustomerRoutes } from '../infrastructure/http/customer.routes';
-import { CustomerRepository } from '../domain/customer.repository';
-import { CustomerPrismaRepository } from '../infrastructure/persist/customer-prisma.repository';
-import { CreateCustomerUseCase } from '../application/create-customer.use-case';
-import { UpdateCustomerUseCase } from '../application/update-customer.use-case';
-import { GetCustomerUseCase } from '../application/get-customer.use-case';
-import { ListCustomersUseCase } from '../application/list-customers.use-case';
-import { DeleteCustomerUseCase } from '../application/delete-customer.use-case';
-import { CustomerService } from '../infrastructure/http/customer.service';
-import { CreateCustomerService } from '../domain/create-customer.service';
-import { UpdateCustomerService } from '../domain/update-customer.service';
-import { GetCustomerService } from '../domain/get-customer.service';
-import { ListCustomersService } from '../domain/list-customers.service';
-import { DeleteCustomerService } from '../domain/delete-customer.service';
+import { CustomerController } from '@customer/infrastructure/http/customer.controller';
+import { CustomerRoutes } from '@customer/infrastructure/http/customer.routes';
+import { CustomerRepository } from '@customer/domain/customer.repository';
+import { CustomerPrismaRepository } from '@customer/infrastructure/persist/customer-prisma.repository';
+import { CreateCustomerUseCase } from '@customer/application/create-customer.use-case';
+import { UpdateCustomerUseCase } from '@customer/application/update-customer.use-case';
+import { GetCustomerUseCase } from '@customer/application/get-customer.use-case';
+import { ListCustomersUseCase } from '@customer/application/list-customers.use-case';
+import { DeleteCustomerUseCase } from '@customer/application/delete-customer.use-case';
+import { CustomerService } from '@customer/infrastructure/http/customer.service';
+import { CreateCustomerService } from '@customer/domain/create-customer.service';
+import { UpdateCustomerService } from '@customer/domain/update-customer.service';
+import { GetCustomerService } from '@customer/domain/get-customer.service';
+import { ListCustomersService } from '@customer/domain/list-customers.service';
+import { DeleteCustomerService } from '@customer/domain/delete-customer.service';
 
 export const customerContainerModule = new ContainerModule(options => {
   options.bind<CustomerRepository>(TYPES.CustomerRepository).to(CustomerPrismaRepository);

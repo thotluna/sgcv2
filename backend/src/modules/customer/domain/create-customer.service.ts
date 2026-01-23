@@ -1,5 +1,5 @@
-import { CreateCustomerInput } from './inputs/customer.input';
-import { CustomerEntity } from './customer.entity';
+import { CreateCustomerInput } from '@customer/domain/inputs/customer.input';
+import { CustomerEntity } from '@customer/domain/customer.entity';
 
 export interface CreateCustomerService {
   findByCode(code: string): Promise<CustomerEntity | null>;

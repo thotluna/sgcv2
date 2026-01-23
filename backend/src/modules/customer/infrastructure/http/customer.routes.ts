@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { inject, injectable } from 'inversify';
-import { TYPES } from '../../di/types';
-import { CustomerController } from './customer.controller';
+import { TYPES } from '@customer/di/types';
+import { CustomerController } from '@customer/infrastructure/http/customer.controller';
 import { authenticate } from '@auth/infrastructure/http/auth.middleware';
 import { Permission } from '@modules/rbac/decorators/permissions.decorator';
 import { PERMISSIONS } from '@consts/permissions';

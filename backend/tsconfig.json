@@ -9,23 +9,58 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "typeRoots": ["./node_modules/@types", "./src/types"],
-    "types": ["jest", "node", "supertest"],
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/types"
+    ],
+    "types": [
+      "jest",
+      "node",
+      "supertest"
+    ],
     "baseUrl": "./src",
     "paths": {
-      "@sgcv2/shared": ["../../packages/shared/src"],
-      "@config/*": ["./config/*"],
-      "@consts/*": ["./consts/*"],
-      "@modules/*": ["./modules/*"],
-      "@auth/*": ["./modules/auth/*"],
-      "@users/*": ["./modules/users/*"],
-      "@roles/*": ["./modules/roles/*"],
-      "@shared/*": ["./shared/*"]
+      "@sgcv2/shared": [
+        "../../packages/shared/src"
+      ],
+      "@config/*": [
+        "./config/*"
+      ],
+      "@consts/*": [
+        "./consts/*"
+      ],
+      "@modules/*": [
+        "./modules/*"
+      ],
+      "@auth/*": [
+        "./modules/auth/*"
+      ],
+      "@users/*": [
+        "./modules/users/*"
+      ],
+      "@roles/*": [
+        "./modules/roles/*"
+      ],
+      "@customer/*": [
+        "./modules/customer/*"
+      ],
+      "@shared/*": [
+        "./shared/*"
+      ]
     }
   },
-  "include": ["src/**/*.ts", "src/types/**/*.d.ts"],
-  "files": ["src/types/express.d.ts"],
-  "exclude": ["node_modules", "dist", "tests"],
+  "include": [
+    "src/**/*.ts",
+    "src/types/**/*.d.ts"
+  ],
+  "files": [
+    "src/types/express.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "tests"
+  ],
   "references": [
     {
       "path": "../packages/shared"

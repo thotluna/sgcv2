@@ -1,31 +1,30 @@
 import { inject, injectable } from 'inversify';
-import { TYPES } from '../../di/types';
-import { CustomerRepository } from '../../domain/customer.repository';
-import { CreateCustomerService } from '../../domain/create-customer.service';
-import { ListCustomersService } from '../../domain/list-customers.service';
-import { GetCustomerService } from '../../domain/get-customer.service';
-import { UpdateCustomerService } from '../../domain/update-customer.service';
-import { DeleteCustomerService } from '../../domain/delete-customer.service';
-import { CustomerEntity } from '../../domain/customer.entity';
+import { TYPES } from '@customer/di/types';
+import { CustomerRepository } from '@customer/domain/customer.repository';
+import { CreateCustomerService } from '@customer/domain/create-customer.service';
+import { ListCustomersService } from '@customer/domain/list-customers.service';
+import { GetCustomerService } from '@customer/domain/get-customer.service';
+import { UpdateCustomerService } from '@customer/domain/update-customer.service';
+import { DeleteCustomerService } from '@customer/domain/delete-customer.service';
+import { CustomerEntity } from '@customer/domain/customer.entity';
 import {
   CreateCustomerInput,
   UpdateCustomerInput,
   CustomerFilterInput,
   PaginatedCustomers,
-} from '../../domain/inputs/customer.input';
+} from '@customer/domain/inputs/customer.input';
 
 @injectable()
 export class CustomerService
   implements
-    CreateCustomerService,
-    ListCustomersService,
-    GetCustomerService,
-    UpdateCustomerService,
-    DeleteCustomerService
-{
+  CreateCustomerService,
+  ListCustomersService,
+  GetCustomerService,
+  UpdateCustomerService,
+  DeleteCustomerService {
   constructor(
     @inject(TYPES.CustomerRepository) private readonly customerRepository: CustomerRepository
-  ) {}
+  ) { }
 
   async findByCode(code: string): Promise<CustomerEntity | null> {
     return this.customerRepository.findByCode(code);
