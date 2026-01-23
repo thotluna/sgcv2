@@ -17,6 +17,46 @@ export class AuthController {
     this.loginUseCaseService = loginUseCaseService;
   }
 
+  /**
+   * @swagger
+   * /auth/login:
+   *   post:
+   *     summary: User Login
+   *     tags: [Auth]
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/LoginDto'
+   *     responses:
+   *       200:
+   *         description: Login successful
+   *         content:
+   *           application/json:
+   *             schema:
+   *               allOf:
+   *                 - $ref: '#/components/schemas/ApiResponse'
+   *                 - type: object
+   *                   properties:
+   *                     data:
+   *                       type: object
+   *                       properties:
+   *                         user:
+   *                           $ref: '#/components/schemas/AuthenticatedUserDto'
+   *       401:
+   *         description: Invalid credentials
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/ErrorResponse'
+   *       404:
+   *         description: User not found
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/ErrorResponse'
+   */
   async login(req: TypedRequest<LoginDto>, res: Response): Promise<Response> {
     const dto: LoginDto = req.body;
 
@@ -46,6 +86,29 @@ export class AuthController {
     }
   }
 
+  /**
+   * @swagger
+   * /auth/logout:
+   *   post:
+   *     summary: User Logout
+   *     tags: [Auth]
+   *     responses:
+   *       200:
+   *         description: Logged out successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               allOf:
+   *                 - $ref: '#/components/schemas/ApiResponse'
+   *                 - type: object
+   *                   properties:
+   *                     data:
+   *                       type: object
+   *                       properties:
+   *                         message:
+   *                           type: string
+   *                           example: Logged out successfully
+   */
   async logout(_req: Request, res: Response): Promise<Response> {
     res.clearCookie('auth-token', {
       httpOnly: true,

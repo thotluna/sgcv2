@@ -131,7 +131,7 @@ Implementar el módulo completo de Gestión de Clientes, permitiendo administrar
 
 - [ ] 📝 Generar documentación OpenAPI / Swagger
   - [x] **Fase 1:** Configuración base y endpoint `/api/docs` (Infraestructura)
-  - [ ] **Fase 2:** Definición de Schemas globales y Seguridad (Shared)
+  - [x] **Fase 2:** Definición de Schemas globales y Seguridad (Shared)
   - [ ] **Fase 3:** Documentación de Módulos (Incremental):
     - [ ] Documentar Auth
     - [ ] Documentar Users

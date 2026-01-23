@@ -38,6 +38,7 @@ const options: swaggerJsdoc.Options = {
     './src/app.ts',
     './src/shared/utils/response.helpers.ts',
     './src/shared/middleware/global-error.middleware.ts',
+    '../packages/shared/src/dtos/*.dto.ts',
   ], // Path to the API docs
 };
 
