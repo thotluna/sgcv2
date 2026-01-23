@@ -6,7 +6,7 @@ export interface CreateCustomerInput {
   legalName: string;
   taxId: string;
   address: string;
-  phone?: string;
+  phone?: string | null;
 }
 
 export interface UpdateCustomerInput {
@@ -14,12 +14,12 @@ export interface UpdateCustomerInput {
   legalName?: string;
   taxId?: string;
   address?: string;
-  phone?: string;
-  state?: CustomerState | string;
+  phone?: string | null;
+  state?: CustomerState;
 }
 
 export interface CustomerFilterInput {
-  state?: CustomerState | string;
+  state?: CustomerState;
   search?: string;
   page?: number;
   limit?: number;

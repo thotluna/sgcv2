@@ -1,14 +1,14 @@
 import { Customer, Prisma, CustomerState as PrismaCustomerState } from '@prisma/client';
 import { prisma } from '@config/prisma';
 import { injectable } from 'inversify';
-import { CustomerEntity, CustomerState } from '../../domain/customer.entity';
-import { CustomerRepository } from '../../domain/customer.repository';
+import { CustomerEntity, CustomerState } from '@customer/domain/customer.entity';
+import { CustomerRepository } from '@customer/domain/customer.repository';
 import {
   CreateCustomerInput,
   UpdateCustomerInput,
   CustomerFilterInput,
   PaginatedCustomers,
-} from '../../domain/inputs/customer.input';
+} from '@customer/domain/inputs/customer.input';
 
 @injectable()
 export class CustomerPrismaRepository implements CustomerRepository {
@@ -113,7 +113,7 @@ export class CustomerPrismaRepository implements CustomerRepository {
       taxId: model.taxId,
       address: model.address,
       phone: model.phone,
-      state: model.state as CustomerState,
+      state: model.state as unknown as CustomerState,
       createdAt: model.createdAt,
       updatedAt: model.updatedAt,
     };

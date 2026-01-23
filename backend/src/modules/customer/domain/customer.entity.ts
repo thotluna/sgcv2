@@ -12,7 +12,7 @@ export interface CustomerEntity {
   taxId: string;
   address: string | null;
   phone?: string | null;
-  state: CustomerState | string;
+  state: CustomerState;
   createdAt: Date;
   updatedAt: Date;
 }
