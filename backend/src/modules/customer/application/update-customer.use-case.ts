@@ -1,10 +1,10 @@
 import { inject, injectable } from 'inversify';
-import { TYPES } from '../di/types';
-import { UpdateCustomerInput } from '../domain/inputs/customer.input';
-import { CustomerEntity } from '../domain/customer.entity';
-import { UpdateCustomerService } from '../domain/update-customer.service';
-import { CustomerNotFoundException } from '../domain/exceptions/customer-not-found.exception';
-import { CustomerAlreadyExistsException } from '../domain/exceptions/customer-already-exists.exception';
+import { TYPES } from '@customer/di/types';
+import { UpdateCustomerInput } from '@customer/domain/inputs/customer.input';
+import { CustomerEntity } from '@customer/domain/customer.entity';
+import { UpdateCustomerService } from '@customer/domain/update-customer.service';
+import { CustomerNotFoundException } from '@customer/domain/exceptions/customer-not-found.exception';
+import { CustomerAlreadyExistsException } from '@customer/domain/exceptions/customer-already-exists.exception';
 
 @injectable()
 export class UpdateCustomerUseCase {

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { CustomerState } from '../../domain/customer.entity';
+import { CustomerState } from '@customer/domain/customer.entity';
 
 export const UpdateCustomerSchema = z.object({
   businessName: z

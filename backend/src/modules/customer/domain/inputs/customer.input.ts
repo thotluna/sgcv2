@@ -1,4 +1,4 @@
-import { CustomerState, CustomerEntity } from '../customer.entity';
+import { CustomerState, CustomerEntity } from '@customer/domain/customer.entity';
 
 export interface CreateCustomerInput {
   code: string;

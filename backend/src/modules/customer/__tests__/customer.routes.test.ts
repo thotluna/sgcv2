@@ -1,8 +1,8 @@
 import request from 'supertest';
 import express from 'express';
 import { authenticate } from '@modules/auth/infrastructure/http/auth.middleware';
-import { CustomerRoutes } from '../infrastructure/http/customer.routes';
-import { CustomerController } from '../infrastructure/http/customer.controller';
+import { CustomerRoutes } from '@customer/infrastructure/http/customer.routes';
+import { CustomerController } from '@customer/infrastructure/http/customer.controller';
 
 // Define mock controller methods
 const mockCreate = jest.fn((_req, res) => res.status(201).json({ success: true, data: {} }));
@@ -20,14 +20,14 @@ jest.mock('@modules/auth/infrastructure/http/auth.middleware', () => ({
 }));
 
 // Mock RBAC service
-jest.mock('../../rbac/rbac.service', () => ({
+jest.mock('@modules/rbac/rbac.service', () => ({
   rbacService: {
     hasPermission: jest.fn().mockResolvedValue(true),
   },
 }));
 
 // Mock permissions guard
-jest.mock('../../rbac/guards/permissions.guard', () => ({
+jest.mock('@modules/rbac/guards/permissions.guard', () => ({
   requirePermission: jest.fn(() => (_req: any, _res: any, next: any) => next()),
 }));
 

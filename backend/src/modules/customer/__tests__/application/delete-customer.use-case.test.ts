@@ -1,7 +1,7 @@
-import { DeleteCustomerUseCase } from '../../application/delete-customer.use-case';
-import { DeleteCustomerService } from '../../domain/delete-customer.service';
-import { CustomerEntity, CustomerState } from '../../domain/customer.entity';
-import { CustomerNotFoundException } from '../../domain/exceptions/customer-not-found.exception';
+import { DeleteCustomerUseCase } from '@customer/application/delete-customer.use-case';
+import { DeleteCustomerService } from '@customer/domain/delete-customer.service';
+import { CustomerEntity, CustomerState } from '@customer/domain/customer.entity';
+import { CustomerNotFoundException } from '@customer/domain/exceptions/customer-not-found.exception';
 
 describe('DeleteCustomerUseCase', () => {
   let useCase: DeleteCustomerUseCase;
