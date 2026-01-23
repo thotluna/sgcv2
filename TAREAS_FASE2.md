@@ -129,11 +129,15 @@ Implementar el módulo completo de Gestión de Clientes, permitiendo administrar
 
 #### 5.2 Documentación API
 
-- [ ] 📝 Generar documentación OpenAPI
-  - [ ] Configurar Swagger/OpenAPI en el backend
-  - [ ] Documentar todos los endpoints de Customer
-  - [ ] Agregar ejemplos de request/response
-  - [ ] Publicar documentación interactiva en `/api/docs`
+- [ ] 📝 Generar documentación OpenAPI / Swagger
+  - [x] **Fase 1:** Configuración base y endpoint `/api/docs` (Infraestructura)
+  - [ ] **Fase 2:** Definición de Schemas globales y Seguridad (Shared)
+  - [ ] **Fase 3:** Documentación de Módulos (Incremental):
+    - [ ] Documentar Auth
+    - [ ] Documentar Users
+    - [ ] Documentar Roles & Permisos
+    - [ ] Documentar Customers (Completo)
+  - [ ] **Fase 4:** Ejemplos de request/response y validación final
 
 #### 5.3 Logging y Debugging
 
