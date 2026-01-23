@@ -1,14 +1,14 @@
 import { injectable } from 'inversify';
 import { prisma } from '@config/prisma';
-import { IHealthCheckRepository } from '@modules/support/domain/repositories/health-check.repository';
+import { HealthCheckRepository } from '@modules/support/domain/repositories/health-check.repository';
 
 @injectable()
-export class PrismaHealthCheckRepository implements IHealthCheckRepository {
+export class PrismaHealthCheckRepository implements HealthCheckRepository {
   async checkDatabase(): Promise<boolean> {
     try {
       await prisma.$queryRaw`SELECT 1`;
       return true;
-    } catch (error) {
+    } catch {
       return false;
     }
   }

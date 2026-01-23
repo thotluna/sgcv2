@@ -1,5 +1,5 @@
 import { inject, injectable } from 'inversify';
-import { IHealthCheckRepository } from '../domain/repositories/health-check.repository';
+import { HealthCheckRepository } from '../domain/repositories/health-check.repository';
 import { TYPES } from '@modules/support/di/types';
 
 export interface HealthStatus {
@@ -13,8 +13,8 @@ export interface HealthStatus {
 export class GetHealthUseCase {
   constructor(
     @inject(TYPES.HealthCheckRepository)
-    private readonly repository: IHealthCheckRepository
-  ) { }
+    private readonly repository: HealthCheckRepository
+  ) {}
 
   async execute(): Promise<HealthStatus> {
     const isDbConnected = await this.repository.checkDatabase();
