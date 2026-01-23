@@ -24,6 +24,37 @@ export class CustomerController {
     @inject(TYPES.DeleteCustomerUseCase) private deleteUseCase: DeleteCustomerUseCase
   ) {}
 
+  /**
+   * @swagger
+   * /customers:
+   *   post:
+   *     summary: Create a new customer
+   *     tags: [Customers]
+   *     security:
+   *       - bearerAuth: []
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/CreateCustomerDto'
+   *     responses:
+   *       201:
+   *         description: Customer created successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               allOf:
+   *                 - $ref: '#/components/schemas/ApiResponse'
+   *                 - type: object
+   *                   properties:
+   *                     data:
+   *                       $ref: '#/components/schemas/CustomerDto'
+   *       400:
+   *         description: Bad request
+   *       409:
+   *         description: Conflict (Customer code or tax ID already exists)
+   */
   async create(req: Request, res: Response): Promise<Response> {
     try {
       const dto: CreateCustomerDto = req.body;
@@ -38,6 +69,45 @@ export class CustomerController {
     }
   }
 
+  /**
+   * @swagger
+   * /customers:
+   *   get:
+   *     summary: List all customers (paginated)
+   *     tags: [Customers]
+   *     security:
+   *       - bearerAuth: []
+   *     parameters:
+   *       - in: query
+   *         name: search
+   *         schema: { type: string }
+   *         description: Search by name, code or tax ID
+   *       - in: query
+   *         name: state
+   *         schema: { type: string, enum: [ACTIVE, INACTIVE, BLOCKED] }
+   *       - in: query
+   *         name: page
+   *         schema: { type: integer, default: 1 }
+   *       - in: query
+   *         name: perPage
+   *         schema: { type: integer, default: 10 }
+   *     responses:
+   *       200:
+   *         description: Paginated customer list
+   *         content:
+   *           application/json:
+   *             schema:
+   *               allOf:
+   *                 - $ref: '#/components/schemas/ApiResponse'
+   *                 - type: object
+   *                   properties:
+   *                     data:
+   *                       type: array
+   *                       items:
+   *                         $ref: '#/components/schemas/CustomerDto'
+   *                     metadata:
+   *                       $ref: '#/components/schemas/Pagination'
+   */
   async findAll(req: Request, res: Response): Promise<Response> {
     const query = req.query as CustomerFilterSchemaType;
     const { page = 1, perPage = 10, state, search } = query;
@@ -61,6 +131,34 @@ export class CustomerController {
     );
   }
 
+  /**
+   * @swagger
+   * /customers/{id}:
+   *   get:
+   *     summary: Get customer by ID
+   *     tags: [Customers]
+   *     security:
+   *       - bearerAuth: []
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema: { type: string, format: uuid }
+   *     responses:
+   *       200:
+   *         description: Customer details
+   *         content:
+   *           application/json:
+   *             schema:
+   *               allOf:
+   *                 - $ref: '#/components/schemas/ApiResponse'
+   *                 - type: object
+   *                   properties:
+   *                     data:
+   *                       $ref: '#/components/schemas/CustomerDto'
+   *       404:
+   *         description: Customer not found
+   */
   async findOne(req: Request, res: Response): Promise<Response> {
     try {
       const { id } = req.params;
@@ -74,6 +172,42 @@ export class CustomerController {
     }
   }
 
+  /**
+   * @swagger
+   * /customers/{id}:
+   *   put:
+   *     summary: Update customer
+   *     tags: [Customers]
+   *     security:
+   *       - bearerAuth: []
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema: { type: string, format: uuid }
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/UpdateCustomerDto'
+   *     responses:
+   *       200:
+   *         description: Customer updated
+   *         content:
+   *           application/json:
+   *             schema:
+   *               allOf:
+   *                 - $ref: '#/components/schemas/ApiResponse'
+   *                 - type: object
+   *                   properties:
+   *                     data:
+   *                       $ref: '#/components/schemas/CustomerDto'
+   *       404:
+   *         description: Customer not found
+   *       409:
+   *         description: Conflict (Customer code or tax ID already exists)
+   */
   async update(req: Request, res: Response): Promise<Response> {
     try {
       const { id } = req.params;
@@ -92,6 +226,34 @@ export class CustomerController {
     }
   }
 
+  /**
+   * @swagger
+   * /customers/{id}:
+   *   delete:
+   *     summary: Delete customer
+   *     tags: [Customers]
+   *     security:
+   *       - bearerAuth: []
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema: { type: string, format: uuid }
+   *     responses:
+   *       200:
+   *         description: Customer deleted successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               allOf:
+   *                 - $ref: '#/components/schemas/ApiResponse'
+   *                 - type: object
+   *                   properties:
+   *                     data:
+   *                       $ref: '#/components/schemas/CustomerDto'
+   *       404:
+   *         description: Customer not found
+   */
   async delete(req: Request, res: Response): Promise<Response> {
     try {
       const { id } = req.params;
