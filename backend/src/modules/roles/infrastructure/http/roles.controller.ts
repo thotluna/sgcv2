@@ -33,6 +33,37 @@ export class RolesController {
     private readonly listPermissionsUseCase: ListPermissionsUseCase
   ) {}
 
+  /**
+   * @swagger
+   * /roles:
+   *   post:
+   *     summary: Create a new role
+   *     tags: [Roles]
+   *     security:
+   *       - bearerAuth: []
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/CreateRoleDto'
+   *     responses:
+   *       201:
+   *         description: Role created successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               allOf:
+   *                 - $ref: '#/components/schemas/ApiResponse'
+   *                 - type: object
+   *                   properties:
+   *                     data:
+   *                       $ref: '#/components/schemas/RoleWithPermissionsDto'
+   *       400:
+   *         description: Bad request (e.g. permission not found)
+   *       409:
+   *         description: Conflict (role name already exists)
+   */
   async create(req: Request, res: Response): Promise<Response> {
     try {
       const dto: CreateRoleDto = req.body;
@@ -56,6 +87,41 @@ export class RolesController {
     }
   }
 
+  /**
+   * @swagger
+   * /roles:
+   *   get:
+   *     summary: List all roles (paginated)
+   *     tags: [Roles]
+   *     security:
+   *       - bearerAuth: []
+   *     parameters:
+   *       - in: query
+   *         name: search
+   *         schema: { type: string }
+   *       - in: query
+   *         name: page
+   *         schema: { type: integer, default: 1 }
+   *       - in: query
+   *         name: limit
+   *         schema: { type: integer, default: 10 }
+   *     responses:
+   *       200:
+   *         description: Paginated role list
+   *         content:
+   *           application/json:
+   *             schema:
+   *               allOf:
+   *                 - $ref: '#/components/schemas/ApiResponse'
+   *                 - type: object
+   *                   properties:
+   *                     data:
+   *                       type: array
+   *                       items:
+   *                         $ref: '#/components/schemas/RoleDto'
+   *                     metadata:
+   *                       $ref: '#/components/schemas/Pagination'
+   */
   async getAll(req: Request, res: Response): Promise<Response> {
     const rawQuery: any = req.query;
     const filter = {
@@ -78,6 +144,34 @@ export class RolesController {
     );
   }
 
+  /**
+   * @swagger
+   * /roles/{id}:
+   *   get:
+   *     summary: Get role by ID
+   *     tags: [Roles]
+   *     security:
+   *       - bearerAuth: []
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema: { type: integer }
+   *     responses:
+   *       200:
+   *         description: Role details
+   *         content:
+   *           application/json:
+   *             schema:
+   *               allOf:
+   *                 - $ref: '#/components/schemas/ApiResponse'
+   *                 - type: object
+   *                   properties:
+   *                     data:
+   *                       $ref: '#/components/schemas/RoleWithPermissionsDto'
+   *       404:
+   *         description: Role not found
+   */
   async getById(req: Request, res: Response): Promise<Response> {
     try {
       const id = parseInt(req.params.id);
@@ -91,6 +185,40 @@ export class RolesController {
     }
   }
 
+  /**
+   * @swagger
+   * /roles/{id}:
+   *   patch:
+   *     summary: Update role
+   *     tags: [Roles]
+   *     security:
+   *       - bearerAuth: []
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema: { type: integer }
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/UpdateRoleDto'
+   *     responses:
+   *       200:
+   *         description: Role updated
+   *         content:
+   *           application/json:
+   *             schema:
+   *               allOf:
+   *                 - $ref: '#/components/schemas/ApiResponse'
+   *                 - type: object
+   *                   properties:
+   *                     data:
+   *                       $ref: '#/components/schemas/RoleWithPermissionsDto'
+   *       404:
+   *         description: Role not found
+   */
   async update(req: Request, res: Response): Promise<Response> {
     try {
       const id = parseInt(req.params.id);
@@ -110,6 +238,27 @@ export class RolesController {
     }
   }
 
+  /**
+   * @swagger
+   * /roles/{id}:
+   *   delete:
+   *     summary: Delete role
+   *     tags: [Roles]
+   *     security:
+   *       - bearerAuth: []
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema: { type: integer }
+   *     responses:
+   *       204:
+   *         description: Role deleted successfully
+   *       400:
+   *         description: Cannot delete role in use
+   *       404:
+   *         description: Role not found
+   */
   async delete(req: Request, res: Response): Promise<Response> {
     try {
       const id = parseInt(req.params.id);
@@ -126,6 +275,29 @@ export class RolesController {
     }
   }
 
+  /**
+   * @swagger
+   * /roles/permissions:
+   *   get:
+   *     summary: List all available permissions
+   *     tags: [Roles]
+   *     security:
+   *       - bearerAuth: []
+   *     responses:
+   *       200:
+   *         description: List of system permissions
+   *         content:
+   *           application/json:
+   *             schema:
+   *               allOf:
+   *                 - $ref: '#/components/schemas/ApiResponse'
+   *                 - type: object
+   *                   properties:
+   *                     data:
+   *                       type: array
+   *                       items:
+   *                         $ref: '#/components/schemas/PermissionDto'
+   */
   async getAllPermissions(_req: Request, res: Response): Promise<Response> {
     const permissions = await this.listPermissionsUseCase.execute();
     return ResponseHelper.success(
