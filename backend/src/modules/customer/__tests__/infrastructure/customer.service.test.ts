@@ -1,7 +1,7 @@
-import { CustomerService } from '../../infrastructure/http/customer.service';
-import { CustomerRepository } from '../../domain/customer.repository';
-import { CustomerEntity, CustomerState } from '../../domain/customer.entity';
-import { CreateCustomerInput, UpdateCustomerInput } from '../../domain/inputs/customer.input';
+import { CustomerService } from '@customer/infrastructure/http/customer.service';
+import { CustomerRepository } from '@customer/domain/customer.repository';
+import { CustomerEntity, CustomerState } from '@customer/domain/customer.entity';
+import { CreateCustomerInput, UpdateCustomerInput } from '@customer/domain/inputs/customer.input';
 
 describe('CustomerService', () => {
   let customerService: CustomerService;

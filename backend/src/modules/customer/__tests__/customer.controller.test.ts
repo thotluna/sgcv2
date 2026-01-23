@@ -1,5 +1,6 @@
-import { CustomerState } from '@prisma/client';
 import { CustomerController } from '../infrastructure/http/customer.controller';
+import { CustomerMapper } from '../infrastructure/mappers/customer.mapper';
+import { CustomerState } from '../domain/customer.entity';
 import { Request, Response } from 'express';
 import { ConflictException, NotFoundException } from '@shared/exceptions';
 import { CreateCustomerUseCase } from '../application/create-customer.use-case';
@@ -82,7 +83,7 @@ describe('CustomerController', () => {
       expect(jsonMock).toHaveBeenCalledWith(
         expect.objectContaining({
           success: true,
-          data: createdCustomer,
+          data: CustomerMapper.toDto(createdCustomer as any),
         })
       );
     });
@@ -123,7 +124,7 @@ describe('CustomerController', () => {
 
   describe('findAll', () => {
     it('should return all customers with pagination', async () => {
-      req = { query: { page: '1', perPage: '10' } };
+      req = { query: { page: 1, perPage: 10 } as any };
       const result = {
         items: [],
         total: 0,
@@ -157,7 +158,18 @@ describe('CustomerController', () => {
   describe('findOne', () => {
     it('should return a customer', async () => {
       req = { params: { id: '1' } };
-      const customer = { id: '1', code: 'C001' };
+      const customer = {
+        id: '1',
+        code: 'C001',
+        businessName: 'Test Business',
+        legalName: 'Test Legal',
+        taxId: 'J-12345678-9',
+        address: 'Test Address',
+        phone: '1234567890',
+        state: CustomerState.ACTIVE,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
       getUseCase.execute.mockResolvedValue(customer as any);
 
       await customerController.findOne(req as Request, res as Response);
@@ -166,7 +178,7 @@ describe('CustomerController', () => {
       expect(jsonMock).toHaveBeenCalledWith(
         expect.objectContaining({
           success: true,
-          data: customer,
+          data: CustomerMapper.toDto(customer as any),
         })
       );
     });
@@ -185,7 +197,18 @@ describe('CustomerController', () => {
     it('should update a customer', async () => {
       const updateDto = { businessName: 'Updated' };
       req = { params: { id: '1' }, body: updateDto };
-      const updatedCustomer = { id: '1', ...updateDto };
+      const updatedCustomer = {
+        id: '1',
+        code: 'C001',
+        businessName: 'Updated',
+        legalName: 'Test Legal',
+        taxId: 'J-12345678-9',
+        address: 'Test Address',
+        phone: '1234567890',
+        state: CustomerState.ACTIVE,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
 
       updateUseCase.execute.mockResolvedValue(updatedCustomer as any);
 
@@ -195,7 +218,7 @@ describe('CustomerController', () => {
       expect(jsonMock).toHaveBeenCalledWith(
         expect.objectContaining({
           success: true,
-          data: updatedCustomer,
+          data: CustomerMapper.toDto(updatedCustomer as any),
         })
       );
     });
@@ -213,7 +236,18 @@ describe('CustomerController', () => {
   describe('delete', () => {
     it('should delete a customer', async () => {
       req = { params: { id: '1' } };
-      const deletedCustomer = { id: '1', state: 'INACTIVE' };
+      const deletedCustomer = {
+        id: '1',
+        code: 'C001',
+        businessName: 'Test Business',
+        legalName: 'Test Legal',
+        taxId: 'J-12345678-9',
+        address: 'Test Address',
+        phone: '1234567890',
+        state: CustomerState.INACTIVE,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
 
       deleteUseCase.execute.mockResolvedValue(deletedCustomer as any);
 
@@ -223,7 +257,7 @@ describe('CustomerController', () => {
       expect(jsonMock).toHaveBeenCalledWith(
         expect.objectContaining({
           success: true,
-          data: deletedCustomer,
+          data: CustomerMapper.toDto(deletedCustomer as any),
         })
       );
     });

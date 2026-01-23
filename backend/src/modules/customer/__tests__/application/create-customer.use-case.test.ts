@@ -1,8 +1,8 @@
-import { CreateCustomerUseCase } from '../../application/create-customer.use-case';
-import { CreateCustomerService } from '../../domain/create-customer.service';
-import { CustomerEntity, CustomerState } from '../../domain/customer.entity';
-import { CreateCustomerInput } from '../../domain/inputs/customer.input';
-import { CustomerAlreadyExistsException } from '../../domain/exceptions/customer-already-exists.exception';
+import { CreateCustomerUseCase } from '@customer/application/create-customer.use-case';
+import { CreateCustomerService } from '@customer/domain/create-customer.service';
+import { CustomerEntity, CustomerState } from '@customer/domain/customer.entity';
+import { CreateCustomerInput } from '@customer/domain/inputs/customer.input';
+import { CustomerAlreadyExistsException } from '@customer/domain/exceptions/customer-already-exists.exception';
 
 describe('CreateCustomerUseCase', () => {
   let useCase: CreateCustomerUseCase;
