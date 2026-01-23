@@ -28,3 +28,10 @@ export interface Paginated<T> {
   items: T[];
   total: number;
 }
+
+export interface HealthStatus {
+  status: 'ok' | 'error';
+  timestamp: string;
+  environment: string;
+  database: 'connected' | 'disconnected';
+}
