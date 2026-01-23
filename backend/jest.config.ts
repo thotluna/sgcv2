@@ -3,9 +3,9 @@ import type { Config } from 'jest';
 const config: Config = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  roots: ['<rootDir>/src'],
+  roots: ['<rootDir>/src', '<rootDir>/tests'],
   moduleFileExtensions: ['ts', 'js', 'json'],
-  testMatch: ['**/__tests__/**/*.test.ts'],
+  testMatch: ['**/__tests__/**/*.test.ts', '<rootDir>/tests/**/*.test.ts'],
   // globals: {
   //   'ts-jest': {
   //     tsconfig: 'tsconfig.test.json',
@@ -35,6 +35,8 @@ const config: Config = {
     // CRÍTICO: Mapear al código FUENTE de shared
     '^@sgcv2/shared$': '<rootDir>/../packages/shared/src/index.ts',
     '^@sgcv2/shared/(.*)$': '<rootDir>/../packages/shared/src/$1',
+    // Fix para uuid ESM en Jest
+    '^uuid$': require.resolve('uuid'),
   },
   transformIgnorePatterns: ['node_modules/(?!(uuid)/)'],
   collectCoverage: false,

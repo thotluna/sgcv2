@@ -2,17 +2,19 @@ import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import passport from 'passport';
+import cookieParser from 'cookie-parser';
+import swaggerUi from 'swagger-ui-express';
 import { container } from './container';
-import { JwtStrategy } from './modules/auth/infrastructure/http/strategies/jwt.strategy';
-import { LocalStrategy } from './modules/auth/infrastructure/http/strategies/local.strategy';
-import { TYPES as AuthTypes } from './modules/auth/di/types';
-import { prisma } from './config/prisma';
-import { loadRoutes } from 'routes';
+import { JwtStrategy } from '@modules/auth/infrastructure/http/strategies/jwt.strategy';
+import { LocalStrategy } from '@modules/auth/infrastructure/http/strategies/local.strategy';
+import { TYPES as AuthTypes } from '@modules/auth/di/types';
+import { loadRoutes } from './routes';
+import { prisma } from '@config/prisma';
 import { requestLogger } from '@shared/middleware/requestLogger';
 import { errorLogger } from '@shared/middleware/errorLogger';
-import logger from '@config/logger';
 import { globalErrorHandler } from '@shared/middleware/global-error.middleware';
-import cookieParser from 'cookie-parser';
+import { swaggerSpec } from '@config/swagger.config';
+import logger from '@config/logger';
 
 // Load environment variables
 dotenv.config();
@@ -53,40 +55,22 @@ passport.use(jwtStrategy);
 passport.use(localStrategy);
 app.use(passport.initialize());
 
-// ---------- Health check ----------
-app.get('/health', async (_req: Request, res: Response) => {
-  try {
-    await prisma.$queryRaw`SELECT 1`;
-    res.status(200).json({
-      status: 'ok',
-      timestamp: new Date().toISOString(),
-      environment: process.env.NODE_ENV || 'development',
-      database: 'connected',
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: 'error',
-      timestamp: new Date().toISOString(),
-      environment: process.env.NODE_ENV || 'development',
-      database: 'disconnected',
-      error: error instanceof Error ? error.message : 'Unknown error',
-    });
-  }
-});
-
 // ---------- API ----------
 const API_PREFIX = process.env.API_PREFIX || '/api';
 
 // Mount routes
 loadRoutes(app, API_PREFIX);
 
+// ---------- Swagger Documentation ----------
+app.use(`${API_PREFIX}/docs`, swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 app.get(`${API_PREFIX}/`, (_req: Request, res: Response) => {
   res.json({
     message: 'SGCV2 API',
     version: '1.0.0',
     endpoints: {
-      health: '/health',
-      api: API_PREFIX,
+      health: `${API_PREFIX}/health`,
+      docs: `${API_PREFIX}/docs`,
       auth: `${API_PREFIX}/auth`,
       users: `${API_PREFIX}/users`,
     },
