@@ -33,7 +33,12 @@ const options: swaggerJsdoc.Options = {
       },
     ],
   },
-  apis: ['./src/modules/**/*.controller.ts', './src/app.ts', './src/config/swagger.schemas.ts'], // Path to the API docs
+  apis: [
+    './src/modules/**/*.controller.ts',
+    './src/app.ts',
+    './src/shared/utils/response.helpers.ts',
+    './src/shared/middleware/global-error.middleware.ts',
+  ], // Path to the API docs
 };
 
 export const swaggerSpec = swaggerJsdoc(options);
