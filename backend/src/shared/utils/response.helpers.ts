@@ -18,7 +18,7 @@ import { AppResponse, Metadata, Pagination } from '@sgcv2/shared';
  *         metadata:
  *           type: object
  *           description: Optional metadata (timestamp, request_id)
- *     
+ *
  *     Pagination:
  *       type: object
  *       properties:
