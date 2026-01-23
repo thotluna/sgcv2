@@ -1,5 +1,5 @@
 import { ContainerModule } from 'inversify';
-import { TYPES } from './types';
+import { TYPES } from '@customer/di/types';
 import { CustomerController } from '@customer/infrastructure/http/customer.controller';
 import { CustomerRoutes } from '@customer/infrastructure/http/customer.routes';
 import { CustomerRepository } from '@customer/domain/customer.repository';

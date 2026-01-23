@@ -1,7 +1,7 @@
-import { GetCustomerUseCase } from '../../application/get-customer.use-case';
-import { GetCustomerService } from '../../domain/get-customer.service';
-import { CustomerEntity, CustomerState } from '../../domain/customer.entity';
-import { CustomerNotFoundException } from '../../domain/exceptions/customer-not-found.exception';
+import { GetCustomerUseCase } from '@customer/application/get-customer.use-case';
+import { GetCustomerService } from '@customer/domain/get-customer.service';
+import { CustomerEntity, CustomerState } from '@customer/domain/customer.entity';
+import { CustomerNotFoundException } from '@customer/domain/exceptions/customer-not-found.exception';
 
 describe('GetCustomerUseCase', () => {
   let useCase: GetCustomerUseCase;

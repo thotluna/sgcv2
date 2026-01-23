@@ -4,8 +4,8 @@ import {
   CustomerDto,
   CustomerState as SharedCustomerState,
 } from '@sgcv2/shared';
-import { CreateCustomerInput, UpdateCustomerInput } from '../../domain/inputs/customer.input';
-import { CustomerEntity, CustomerState } from '../../domain/customer.entity';
+import { CreateCustomerInput, UpdateCustomerInput } from '@customer/domain/inputs/customer.input';
+import { CustomerEntity, CustomerState } from '@customer/domain/customer.entity';
 
 export class CustomerMapper {
   static toCreateInput(dto: CreateCustomerDto): CreateCustomerInput {

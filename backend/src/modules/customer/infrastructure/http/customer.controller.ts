@@ -12,7 +12,7 @@ import { CustomerAlreadyExistsException } from '@customer/domain/exceptions/cust
 import { CustomerNotFoundException } from '@customer/domain/exceptions/customer-not-found.exception';
 import { ConflictException, NotFoundException } from '@shared/exceptions/http-exceptions';
 import { CreateCustomerDto, UpdateCustomerDto } from '@sgcv2/shared';
-import { CustomerFilterSchemaType } from './customer-filter.schema';
+import { CustomerFilterSchemaType } from '@customer/infrastructure/http/customer-filter.schema';
 
 @injectable()
 export class CustomerController {

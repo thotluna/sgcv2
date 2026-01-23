@@ -6,9 +6,9 @@ import { authenticate } from '@auth/infrastructure/http/auth.middleware';
 import { Permission } from '@modules/rbac/decorators/permissions.decorator';
 import { PERMISSIONS } from '@consts/permissions';
 import { validateSchema } from '@shared/middleware/validate-schema';
-import { CreateCustomerSchema } from './create-customer.schema';
-import { UpdateCustomerSchema } from './update-customer.schema';
-import { CustomerFilterSchema } from './customer-filter.schema';
+import { CreateCustomerSchema } from '@customer/infrastructure/http/create-customer.schema';
+import { UpdateCustomerSchema } from '@customer/infrastructure/http/update-customer.schema';
+import { CustomerFilterSchema } from '@customer/infrastructure/http/customer-filter.schema';
 
 @injectable()
 export class CustomerRoutes {

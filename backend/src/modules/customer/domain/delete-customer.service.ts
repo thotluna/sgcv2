@@ -1,4 +1,4 @@
-import { CustomerEntity } from './customer.entity';
+import { CustomerEntity } from '@customer/domain/customer.entity';
 
 export interface DeleteCustomerService {
   findById(id: string): Promise<CustomerEntity | null>;
