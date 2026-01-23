@@ -1,0 +1,107 @@
+import { Request, Response } from 'express';
+import { inject, injectable } from 'inversify';
+import { TYPES } from '@customer/di/types';
+import { CreateCustomerUseCase } from '@customer/application/create-customer.use-case';
+import { ListCustomersUseCase } from '@customer/application/list-customers.use-case';
+import { GetCustomerUseCase } from '@customer/application/get-customer.use-case';
+import { UpdateCustomerUseCase } from '@customer/application/update-customer.use-case';
+import { DeleteCustomerUseCase } from '@customer/application/delete-customer.use-case';
+import { CustomerMapper } from '@customer/infrastructure/mappers/customer.mapper';
+import { ResponseHelper } from '@shared/utils/response.helpers';
+import { CustomerAlreadyExistsException } from '@customer/domain/exceptions/customer-already-exists.exception';
+import { CustomerNotFoundException } from '@customer/domain/exceptions/customer-not-found.exception';
+import { ConflictException, NotFoundException } from '@shared/exceptions/http-exceptions';
+import { CreateCustomerDto, UpdateCustomerDto } from '@sgcv2/shared';
+import { CustomerFilterSchemaType } from './customer-filter.schema';
+
+@injectable()
+export class CustomerController {
+  constructor(
+    @inject(TYPES.CreateCustomerUseCase) private createUseCase: CreateCustomerUseCase,
+    @inject(TYPES.ListCustomersUseCase) private listUseCase: ListCustomersUseCase,
+    @inject(TYPES.GetCustomerUseCase) private getUseCase: GetCustomerUseCase,
+    @inject(TYPES.UpdateCustomerUseCase) private updateUseCase: UpdateCustomerUseCase,
+    @inject(TYPES.DeleteCustomerUseCase) private deleteUseCase: DeleteCustomerUseCase
+  ) {}
+
+  async create(req: Request, res: Response): Promise<Response> {
+    try {
+      const dto: CreateCustomerDto = req.body;
+      const input = CustomerMapper.toCreateInput(dto);
+      const customer = await this.createUseCase.execute(input);
+      return ResponseHelper.success(res, CustomerMapper.toDto(customer), 201);
+    } catch (error) {
+      if (error instanceof CustomerAlreadyExistsException) {
+        throw new ConflictException(error.message);
+      }
+      throw error;
+    }
+  }
+
+  async findAll(req: Request, res: Response): Promise<Response> {
+    const query = req.query as CustomerFilterSchemaType;
+    const { page = 1, perPage = 10, state, search } = query;
+
+    const { items, total } = await this.listUseCase.execute({
+      state,
+      search,
+      page,
+      limit: perPage,
+    });
+
+    return ResponseHelper.paginated(
+      res,
+      items.map(c => CustomerMapper.toDto(c)),
+      {
+        total,
+        page,
+        perPage,
+        totalPages: Math.ceil(total / perPage),
+      }
+    );
+  }
+
+  async findOne(req: Request, res: Response): Promise<Response> {
+    try {
+      const { id } = req.params;
+      const customer = await this.getUseCase.execute(id);
+      return ResponseHelper.success(res, CustomerMapper.toDto(customer));
+    } catch (error) {
+      if (error instanceof CustomerNotFoundException) {
+        throw new NotFoundException(error.message);
+      }
+      throw error;
+    }
+  }
+
+  async update(req: Request, res: Response): Promise<Response> {
+    try {
+      const { id } = req.params;
+      const dto: UpdateCustomerDto = req.body;
+      const input = CustomerMapper.toUpdateInput(dto);
+      const customer = await this.updateUseCase.execute(id, input);
+      return ResponseHelper.success(res, CustomerMapper.toDto(customer));
+    } catch (error) {
+      if (error instanceof CustomerNotFoundException) {
+        throw new NotFoundException(error.message);
+      }
+      if (error instanceof CustomerAlreadyExistsException) {
+        throw new ConflictException(error.message);
+      }
+      throw error;
+    }
+  }
+
+  async delete(req: Request, res: Response): Promise<Response> {
+    try {
+      const { id } = req.params;
+      const customer = await this.deleteUseCase.execute(id);
+      return ResponseHelper.success(res, CustomerMapper.toDto(customer));
+    } catch (error) {
+      if (error instanceof CustomerNotFoundException) {
+        throw new NotFoundException(error.message);
+      }
+      throw error;
+    }
+  }
+}

@@ -173,4 +173,4 @@ settings.local.json
 
 # Mantener estructura de carpetas vacías
 !.gitkeep
-.agent/workflows/commit.md
+

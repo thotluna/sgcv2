@@ -25,6 +25,7 @@
       "@roles/*": ["src/modules/roles/*"],
       "@const/*": ["src/const/*"],
       "@shared/*": ["src/shared/*"],
+      "@customer/*": ["src/modules/customer/*"],
       "@types/*": ["src/types/*"]
     }
   },

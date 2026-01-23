@@ -20,6 +20,7 @@
       "@auth/*": ["./modules/auth/*"],
       "@users/*": ["./modules/users/*"],
       "@roles/*": ["./modules/roles/*"],
+      "@customer/*": ["./modules/customer/*"],
       "@shared/*": ["./shared/*"]
     }
   },

@@ -1,8 +1,8 @@
 import request from 'supertest';
 import express from 'express';
 import { authenticate } from '@modules/auth/infrastructure/http/auth.middleware';
-import { CustomerRoutes } from '../customer.routes';
-import { CustomerController } from '../customer.controller';
+import { CustomerRoutes } from '../infrastructure/http/customer.routes';
+import { CustomerController } from '../infrastructure/http/customer.controller';
 
 // Define mock controller methods
 const mockCreate = jest.fn((_req, res) => res.status(201).json({ success: true, data: {} }));
@@ -55,7 +55,14 @@ describe('Customer Routes', () => {
 
   describe('POST /api/customers', () => {
     it('should require authentication and customers:create permission', async () => {
-      await request(app).post('/api/customers').send({});
+      const validCustomer = {
+        code: 'C001',
+        businessName: 'Test Business',
+        legalName: 'Test Legal Name',
+        taxId: 'J-12345678-9',
+        address: 'Test Address 123',
+      };
+      await request(app).post('/api/customers').send(validCustomer);
       expect(authenticate).toHaveBeenCalled();
       expect(mockCreate).toHaveBeenCalled();
     });

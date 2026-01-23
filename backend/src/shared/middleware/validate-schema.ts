@@ -30,7 +30,7 @@ export const validateSchema = <T extends z.ZodTypeAny>(
     // Overwrite the specific source with validated data
     try {
       req[source] = validationResult.data;
-    } catch (e) {
+    } catch {
       // Fallback for read-only properties (like req.query in some Express setups)
       Object.defineProperty(req, source, {
         value: validationResult.data,
