@@ -17,14 +17,15 @@ import {
 @injectable()
 export class CustomerService
   implements
-  CreateCustomerService,
-  ListCustomersService,
-  GetCustomerService,
-  UpdateCustomerService,
-  DeleteCustomerService {
+    CreateCustomerService,
+    ListCustomersService,
+    GetCustomerService,
+    UpdateCustomerService,
+    DeleteCustomerService
+{
   constructor(
     @inject(TYPES.CustomerRepository) private readonly customerRepository: CustomerRepository
-  ) { }
+  ) {}
 
   async findByCode(code: string): Promise<CustomerEntity | null> {
     return this.customerRepository.findByCode(code);
