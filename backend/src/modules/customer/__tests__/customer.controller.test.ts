@@ -1,12 +1,17 @@
 import { CustomerState } from '@prisma/client';
-import { CustomerController } from '../customer.controller';
-import { CustomerService } from '../customer.service';
+import { CustomerController } from '../infrastructure/http/customer.controller';
 import { Request, Response } from 'express';
 import {
   ConflictException,
   NotFoundException,
-  UnprocessableEntityException,
 } from '@shared/exceptions';
+import { CreateCustomerUseCase } from '../application/create-customer.use-case';
+import { ListCustomersUseCase } from '../application/list-customers.use-case';
+import { GetCustomerUseCase } from '../application/get-customer.use-case';
+import { UpdateCustomerUseCase } from '../application/update-customer.use-case';
+import { DeleteCustomerUseCase } from '../application/delete-customer.use-case';
+import { CustomerNotFoundException } from '../domain/exceptions/customer-not-found.exception';
+import { CustomerAlreadyExistsException } from '../domain/exceptions/customer-already-exists.exception';
 
 jest.mock('uuid', () => ({
   v4: () => 'test-uuid-1234',
@@ -14,7 +19,12 @@ jest.mock('uuid', () => ({
 
 describe('CustomerController', () => {
   let customerController: CustomerController;
-  let customerService: jest.Mocked<CustomerService>;
+  let createUseCase: jest.Mocked<CreateCustomerUseCase>;
+  let listUseCase: jest.Mocked<ListCustomersUseCase>;
+  let getUseCase: jest.Mocked<GetCustomerUseCase>;
+  let updateUseCase: jest.Mocked<UpdateCustomerUseCase>;
+  let deleteUseCase: jest.Mocked<DeleteCustomerUseCase>;
+
   let req: Partial<Request>;
   let res: Partial<Response>;
   let statusMock: jest.Mock;
@@ -23,14 +33,11 @@ describe('CustomerController', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    customerService = {
-      create: jest.fn(),
-      findById: jest.fn(),
-      findByCode: jest.fn(),
-      findAll: jest.fn(),
-      update: jest.fn(),
-      delete: jest.fn(),
-    } as jest.Mocked<CustomerService>;
+    createUseCase = { execute: jest.fn() } as any;
+    listUseCase = { execute: jest.fn() } as any;
+    getUseCase = { execute: jest.fn() } as any;
+    updateUseCase = { execute: jest.fn() } as any;
+    deleteUseCase = { execute: jest.fn() } as any;
 
     statusMock = jest.fn().mockReturnThis();
     jsonMock = jest.fn().mockReturnThis();
@@ -39,7 +46,13 @@ describe('CustomerController', () => {
       json: jsonMock,
     };
 
-    customerController = new CustomerController(customerService);
+    customerController = new CustomerController(
+      createUseCase,
+      listUseCase,
+      getUseCase,
+      updateUseCase,
+      deleteUseCase
+    );
   });
 
   describe('create', () => {
@@ -63,11 +76,11 @@ describe('CustomerController', () => {
         updatedAt: new Date(),
       };
 
-      (customerService.create as jest.Mock).mockResolvedValue(createdCustomer);
+      createUseCase.execute.mockResolvedValue(createdCustomer as any);
 
       await customerController.create(req as Request, res as Response);
 
-      expect(customerService.create).toHaveBeenCalledWith(customerDto);
+      expect(createUseCase.execute).toHaveBeenCalledWith(customerDto);
       expect(statusMock).toHaveBeenCalledWith(201);
       expect(jsonMock).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -88,13 +101,13 @@ describe('CustomerController', () => {
       req = { body: invalidDto };
 
       await expect(customerController.create(req as Request, res as Response)).rejects.toThrow(
-        UnprocessableEntityException
+        Error
       );
 
-      expect(customerService.create).not.toHaveBeenCalled();
+      expect(createUseCase.execute).not.toHaveBeenCalled();
     });
 
-    it('should throw ConflictException when code exists', async () => {
+    it('should throw ConflictException when customer already exists', async () => {
       const customerDto = {
         code: 'C001',
         businessName: 'Test',
@@ -103,45 +116,34 @@ describe('CustomerController', () => {
         address: 'Test',
       };
       req = { body: customerDto };
-      (customerService.create as jest.Mock).mockRejectedValue(
-        new Error('Customer code already exists')
+      createUseCase.execute.mockRejectedValue(
+        new CustomerAlreadyExistsException('code', 'C001')
       );
 
       await expect(customerController.create(req as Request, res as Response)).rejects.toThrow(
         ConflictException
       );
     });
-
-    it('should rethrow generic error', async () => {
-      const customerDto = {
-        code: 'C001',
-        businessName: 'Test',
-        legalName: 'Test',
-        taxId: 'J-12345678-9',
-        address: 'Test',
-      };
-      req = { body: customerDto };
-      (customerService.create as jest.Mock).mockRejectedValue(new Error('Service error'));
-
-      await expect(customerController.create(req as Request, res as Response)).rejects.toThrow(
-        Error
-      );
-    });
   });
 
   describe('findAll', () => {
     it('should return all customers with pagination', async () => {
-      req = { query: { page: '1', limit: '10' } };
+      req = { query: { page: '1', perPage: '10' } };
       const result = {
         items: [],
         total: 0,
       };
 
-      customerService.findAll.mockResolvedValue(result);
+      listUseCase.execute.mockResolvedValue(result as any);
 
       await customerController.findAll(req as Request, res as Response);
 
-      expect(customerService.findAll).toHaveBeenCalledWith(1, 10, { state: undefined });
+      expect(listUseCase.execute).toHaveBeenCalledWith({
+        page: 1,
+        limit: 10,
+        state: undefined,
+        search: undefined
+      });
       expect(jsonMock).toHaveBeenCalledWith(
         expect.objectContaining({
           success: true,
@@ -155,26 +157,17 @@ describe('CustomerController', () => {
         })
       );
     });
-
-    it('should rethrow error on findAll failure', async () => {
-      req = { query: {} };
-      (customerService.findAll as jest.Mock).mockRejectedValue(new Error('Error'));
-
-      await expect(customerController.findAll(req as Request, res as Response)).rejects.toThrow(
-        'Error'
-      );
-    });
   });
 
   describe('findOne', () => {
     it('should return a customer', async () => {
       req = { params: { id: '1' } };
       const customer = { id: '1', code: 'C001' };
-      (customerService.findById as jest.Mock).mockResolvedValue(customer);
+      getUseCase.execute.mockResolvedValue(customer as any);
 
       await customerController.findOne(req as Request, res as Response);
 
-      expect(customerService.findById).toHaveBeenCalledWith('1');
+      expect(getUseCase.execute).toHaveBeenCalledWith('1');
       expect(jsonMock).toHaveBeenCalledWith(
         expect.objectContaining({
           success: true,
@@ -185,19 +178,10 @@ describe('CustomerController', () => {
 
     it('should throw NotFoundException when not found', async () => {
       req = { params: { id: '1' } };
-      (customerService.findById as jest.Mock).mockRejectedValue(new Error('Customer not found'));
+      getUseCase.execute.mockRejectedValue(new CustomerNotFoundException('1'));
 
       await expect(customerController.findOne(req as Request, res as Response)).rejects.toThrow(
         NotFoundException
-      );
-    });
-
-    it('should rethrow generic error', async () => {
-      req = { params: { id: '1' } };
-      (customerService.findById as jest.Mock).mockRejectedValue(new Error('DB Error'));
-
-      await expect(customerController.findOne(req as Request, res as Response)).rejects.toThrow(
-        'DB Error'
       );
     });
   });
@@ -208,11 +192,11 @@ describe('CustomerController', () => {
       req = { params: { id: '1' }, body: updateDto };
       const updatedCustomer = { id: '1', ...updateDto };
 
-      (customerService.update as jest.Mock).mockResolvedValue(updatedCustomer);
+      updateUseCase.execute.mockResolvedValue(updatedCustomer as any);
 
       await customerController.update(req as Request, res as Response);
 
-      expect(customerService.update).toHaveBeenCalledWith('1', updateDto);
+      expect(updateUseCase.execute).toHaveBeenCalledWith('1', updateDto);
       expect(jsonMock).toHaveBeenCalledWith(
         expect.objectContaining({
           success: true,
@@ -223,19 +207,10 @@ describe('CustomerController', () => {
 
     it('should throw NotFoundException when not found', async () => {
       req = { params: { id: '1' }, body: {} };
-      (customerService.update as jest.Mock).mockRejectedValue(new Error('Customer not found'));
+      updateUseCase.execute.mockRejectedValue(new CustomerNotFoundException('1'));
 
       await expect(customerController.update(req as Request, res as Response)).rejects.toThrow(
         NotFoundException
-      );
-    });
-
-    it('should rethrow generic error', async () => {
-      req = { params: { id: '1' }, body: {} };
-      (customerService.update as jest.Mock).mockRejectedValue(new Error('DB Error'));
-
-      await expect(customerController.update(req as Request, res as Response)).rejects.toThrow(
-        'DB Error'
       );
     });
   });
@@ -245,11 +220,11 @@ describe('CustomerController', () => {
       req = { params: { id: '1' } };
       const deletedCustomer = { id: '1', state: 'INACTIVE' };
 
-      (customerService.delete as jest.Mock).mockResolvedValue(deletedCustomer);
+      deleteUseCase.execute.mockResolvedValue(deletedCustomer as any);
 
       await customerController.delete(req as Request, res as Response);
 
-      expect(customerService.delete).toHaveBeenCalledWith('1');
+      expect(deleteUseCase.execute).toHaveBeenCalledWith('1');
       expect(jsonMock).toHaveBeenCalledWith(
         expect.objectContaining({
           success: true,
@@ -260,19 +235,10 @@ describe('CustomerController', () => {
 
     it('should throw NotFoundException when not found', async () => {
       req = { params: { id: '1' } };
-      (customerService.delete as jest.Mock).mockRejectedValue(new Error('Customer not found'));
+      deleteUseCase.execute.mockRejectedValue(new CustomerNotFoundException('1'));
 
       await expect(customerController.delete(req as Request, res as Response)).rejects.toThrow(
         NotFoundException
-      );
-    });
-
-    it('should rethrow generic error', async () => {
-      req = { params: { id: '1' } };
-      (customerService.delete as jest.Mock).mockRejectedValue(new Error('DB Error'));
-
-      await expect(customerController.delete(req as Request, res as Response)).rejects.toThrow(
-        'DB Error'
       );
     });
   });

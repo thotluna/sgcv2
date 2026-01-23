@@ -14,11 +14,11 @@ Implementar el módulo completo de Gestión de Clientes, permitiendo administrar
 
 #### 1.1 Modelo de Datos y Migraciones
 
-- [x] Definir schema Prisma para `Client` (Empresa)
+- [x] Definir schema Prisma para `Customer` (Empresa)
   - Razón Social, RIF/NIT, Dirección Fiscal, Teléfono, Email, Estado (Activo/Inactivo)
-- [ ] Definir schema Prisma para `ClientLocation` (Localidades/Sedes)
+- [ ] Definir schema Prisma para `CustomerLocation` (Localidades/Sedes)
   - Nombre, Dirección, Coordenadas (opcional), Ciudad, Estado/Provincia
-- [ ] Definir schema Prisma para `ClientContact` (Contactos)
+- [ ] Definir schema Prisma para `CustomerContact` (Contactos)
   - Nombre, Cargo, Teléfono, Email
 - [ ] Ejecutar migraciones
 
@@ -29,32 +29,32 @@ Implementar el módulo completo de Gestión de Clientes, permitiendo administrar
 
 #### 1.2 Módulo de Clientes (CRUD)
 
-- [x] Crear módulo `clients/`:
-  - [x] `clients.controller.ts`
-  - [x] `clients.service.ts`
-  - [x] `clients.routes.ts`
-  - [x] DTOs (`create-client.dto.ts`, `update-client.dto.ts`)
+- [x] Crear módulo `customers/`:
+  - [x] `customers.controller.ts`
+  - [x] `customers.service.ts`
+  - [x] `customers.routes.ts`
+  - [x] DTOs (`create-customer.dto.ts`, `update-customer.dto.ts`)
 - [x] Implementar endpoints:
-  - [x] `GET /api/clients` (Listado con paginación y filtros)
-  - [x] `GET /api/clients/:id` (Detalle con localidades)
-  - [x] `POST /api/clients` (Crear)
-  - [x] `PUT /api/clients/:id` (Actualizar)
-  - [x] `DELETE /api/clients/:id` (Soft delete o desactivación)
+  - [x] `GET /api/customers` (Listado con paginación y filtros)
+  - [x] `GET /api/customers/:id` (Detalle con localidades)
+  - [x] `POST /api/customers` (Crear)
+  - [x] `PUT /api/customers/:id` (Actualizar)
+  - [x] `DELETE /api/customers/:id` (Soft delete o desactivación)
 
 #### 1.3 Sub-recursos (Localidades y Contactos)
 
 - [ ] Implementar gestión de localidades:
-  - `POST /api/clients/:id/locations`
+  - `POST /api/customers/:id/locations`
   - `PUT /api/locations/:id`
   - `DELETE /api/locations/:id`
 - [ ] Implementar gestión de contactos:
-  - `POST /api/clients/:id/contacts`
+  - `POST /api/customers/:id/contacts`
   - `PUT /api/contacts/:id`
   - `DELETE /api/contacts/:id`
 
 #### 1.4 Testing Backend
 
-- [x] Unit tests para `ClientsService`
+- [x] Unit tests para `CustomersService`
 - [x] Integration tests para endpoints de Clientes
 
 ---
@@ -63,8 +63,8 @@ Implementar el módulo completo de Gestión de Clientes, permitiendo administrar
 
 #### 2.1 Servicios y Tipos
 
-- [x] Definir interfaces TypeScript (`Client`, `Location`, `Contact`)
-- [x] Crear servicio `client.service.ts` en frontend (Axios)
+- [x] Definir interfaces TypeScript (`Customer`, `Location`, `Contact`)
+- [x] Crear servicio `customer.service.ts` en frontend (Axios)
 - [x] Crear hooks (React Query o useEffect custom) para fetching de datos
 
 #### 2.2 Listado de Clientes
@@ -114,6 +114,35 @@ Implementar el módulo completo de Gestión de Clientes, permitiendo administrar
 - [x] Implementar creación y edición de Roles con asignación de permisos
 - [x] Implementar vista de solo lectura para todos los Permisos del sistema (Nuevo)
 - [x] Tests unitarios y de integración para Roles y Permisos
+
+---
+
+### 5. Mejoras de Calidad y Observabilidad (Futuro)
+
+#### 5.1 Performance y Monitoreo
+
+- [ ] 📊 Implementar métricas de performance
+  - [ ] Agregar métricas de tiempo de respuesta por endpoint
+  - [ ] Implementar contadores de operaciones (create, update, delete, read)
+  - [ ] Configurar alertas para operaciones lentas (>500ms)
+  - [ ] Dashboard de métricas en tiempo real
+
+#### 5.2 Documentación API
+
+- [ ] 📝 Generar documentación OpenAPI
+  - [ ] Configurar Swagger/OpenAPI en el backend
+  - [ ] Documentar todos los endpoints de Customer
+  - [ ] Agregar ejemplos de request/response
+  - [ ] Publicar documentación interactiva en `/api/docs`
+
+#### 5.3 Logging y Debugging
+
+- [ ] 🔍 Agregar logging estructurado
+  - [ ] Implementar logger estructurado (Winston/Pino)
+  - [ ] Agregar logs en Use Cases (entrada/salida)
+  - [ ] Implementar correlation IDs para tracing
+  - [ ] Configurar niveles de log por ambiente (dev/staging/prod)
+  - [ ] Integrar con sistema de agregación de logs (opcional)
 
 ---
 

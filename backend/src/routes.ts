@@ -5,11 +5,11 @@ import logger from '@config/logger';
 import { AuthRoutes } from '@auth/infrastructure/http/auth.routes';
 import { UsersRoutes } from '@users/infrastructure/http/users.routes';
 import { RolesRoutes } from '@modules/roles/infrastructure/http/roles.routes';
-import { CustomerRoutes } from '@modules/customer/customer.routes';
+import { CustomerRoutes } from '@modules/customer/infrastructure/http/customer.routes';
 import { TYPES as AuthTypes } from '@auth/di/types';
 import { TYPES as UsersTypes } from '@users/di/types';
 import { TYPES as RolesTypes } from '@modules/roles/di/types';
-import { TYPES as CustomerTypes } from '@modules/customer/types';
+import { TYPES as CustomerTypes } from '@modules/customer/di/types';
 
 export function loadRoutes(app: Application, prefix: string = '') {
   try {
@@ -27,10 +27,10 @@ export function loadRoutes(app: Application, prefix: string = '') {
       error:
         error instanceof Error
           ? {
-              message: error.message,
-              stack: error.stack,
-              ...(error as any),
-            }
+            message: error.message,
+            stack: error.stack,
+            ...(error as any),
+          }
           : error,
     });
     throw error;

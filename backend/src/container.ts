@@ -3,7 +3,7 @@ import { Container } from 'inversify';
 import { authContainerModule } from '@modules/auth/di/container';
 import { usersContainerModule } from '@modules/users/di/container';
 import { rolesContainerModule } from '@modules/roles/di/container';
-import { customerContainerModule } from '@modules/customer/container';
+import { customerContainerModule } from '@modules/customer/di/container';
 
 const container = new Container();
 
