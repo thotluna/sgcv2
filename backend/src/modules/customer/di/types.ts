@@ -40,4 +40,6 @@ export const TYPES = {
   GetLocationUseCase: Symbol.for('GetLocationUseCase'),
   ListLocationsUseCase: Symbol.for('ListLocationsUseCase'),
   DeleteLocationUseCase: Symbol.for('DeleteLocationUseCase'),
+  LocationController: Symbol.for('LocationController'),
+  LocationRoutes: Symbol.for('LocationRoutes'),
 };

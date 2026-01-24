@@ -43,7 +43,7 @@ Implementar el módulo completo de Gestión de Clientes, permitiendo administrar
 
 #### 1.3 Sub-recursos (Localidades y Contactos)
 
-- [/] Implementar gestión de localidades: ✅ Phase 2 complete (Repository Interface, Domain Services, Use Cases with strict DI)
+- [x] Implementar gestión de localidades: ✅ Complete (All phases: Foundation, Application, Infrastructure, HTTP)
   - `POST /api/customers/:id/locations`
   - `PUT /api/locations/:id`
   - `DELETE /api/locations/:id`
