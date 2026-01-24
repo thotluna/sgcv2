@@ -96,3 +96,32 @@ export const SubCustomerFilterSchema = z.object({
 });
 
 export type SubCustomerFilterSchemaType = z.infer<typeof SubCustomerFilterSchema>;
+
+// --- CUSTOMER LOCATION SCHEMAS ---
+
+export const CreateCustomerLocationSchema = z.object({
+  subCustomerId: z.string().uuid().optional().nullable(),
+  name: z.string().min(1, 'Name is required').max(100, 'Name must be at most 100 characters'),
+  address: z
+    .string()
+    .min(1, 'Address is required')
+    .max(255, 'Address must be at most 255 characters'),
+});
+
+export type CreateCustomerLocationSchemaType = z.infer<typeof CreateCustomerLocationSchema>;
+
+export const UpdateCustomerLocationSchema = z.object({
+  subCustomerId: z.string().uuid().optional().nullable(),
+  name: z.string().min(1, 'Name must not be empty').max(100).optional(),
+  address: z.string().min(1, 'Address must not be empty').max(255).optional(),
+});
+
+export type UpdateCustomerLocationSchemaType = z.infer<typeof UpdateCustomerLocationSchema>;
+
+export const CustomerLocationFilterSchema = z.object({
+  search: z.string().max(255).optional(),
+  page: z.coerce.number().int().positive().default(1),
+  perPage: z.coerce.number().int().positive().default(10),
+});
+
+export type CustomerLocationFilterSchemaType = z.infer<typeof CustomerLocationFilterSchema>;

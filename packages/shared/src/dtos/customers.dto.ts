@@ -49,7 +49,7 @@ class BaseCustomerDto {
  *             - taxId
  *             - address
  */
-export class CreateCustomerDto extends BaseCustomerDto { }
+export class CreateCustomerDto extends BaseCustomerDto {}
 
 /**
  * @swagger
@@ -200,13 +200,6 @@ export class UpdateSubCustomerDto {
  *           example: "Main Node"
  *         address:
  *           type: string
- *         city:
- *           type: string
- *         zipCode:
- *           type: string
- *           nullable: true
- *         isMain:
- *           type: boolean
  *         createdAt:
  *           type: string
  *           format: date-time
@@ -220,9 +213,6 @@ export class CustomerLocationDto {
   subCustomerId?: string | null;
   name!: string;
   address!: string;
-  city!: string;
-  zipCode?: string | null;
-  isMain!: boolean;
   createdAt!: Date;
   updatedAt!: Date;
 }
@@ -236,7 +226,6 @@ export class CustomerLocationDto {
  *       required:
  *         - name
  *         - address
- *         - city
  *       properties:
  *         subCustomerId:
  *           type: string
@@ -246,18 +235,31 @@ export class CustomerLocationDto {
  *           type: string
  *         address:
  *           type: string
- *         city:
- *           type: string
- *         zipCode:
- *           type: string
- *         isMain:
- *           type: boolean
  */
 export class CreateCustomerLocationDto {
   subCustomerId?: string | null;
   name!: string;
   address!: string;
-  city!: string;
-  zipCode?: string;
-  isMain?: boolean;
+}
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     UpdateCustomerLocationDto:
+ *       type: object
+ *       properties:
+ *         subCustomerId:
+ *           type: string
+ *           format: uuid
+ *           nullable: true
+ *         name:
+ *           type: string
+ *         address:
+ *           type: string
+ */
+export class UpdateCustomerLocationDto {
+  subCustomerId?: string | null;
+  name?: string;
+  address?: string;
 }
