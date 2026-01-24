@@ -49,7 +49,7 @@ class BaseCustomerDto {
  *             - taxId
  *             - address
  */
-export class CreateCustomerDto extends BaseCustomerDto {}
+export class CreateCustomerDto extends BaseCustomerDto { }
 
 /**
  * @swagger
@@ -97,4 +97,166 @@ export class CustomerDto extends BaseCustomerDto {
   state!: CustomerState;
   createdAt!: Date;
   updatedAt!: Date;
+}
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     SubCustomerDto:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           format: uuid
+ *         customerId:
+ *           type: string
+ *           format: uuid
+ *         businessName:
+ *           type: string
+ *           example: "Branch Office"
+ *         externalCode:
+ *           type: string
+ *           example: "EXT-001"
+ *         state:
+ *           type: string
+ *           enum: [ACTIVE, INACTIVE, SUSPENDED]
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ */
+export class SubCustomerDto {
+  id!: string;
+  customerId!: string;
+  businessName!: string;
+  externalCode!: string;
+  createdAt!: Date;
+  updatedAt!: Date;
+}
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     CreateSubCustomerDto:
+ *       type: object
+ *       required:
+ *         - businessName
+ *         - externalCode
+ *       properties:
+ *         businessName:
+ *           type: string
+ *         externalCode:
+ *           type: string
+ */
+export class CreateSubCustomerDto {
+  businessName!: string;
+  externalCode!: string;
+}
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     UpdateSubCustomerDto:
+ *       type: object
+ *       properties:
+ *         businessName:
+ *           type: string
+ *         externalCode:
+ *           type: string
+ *         state:
+ *           type: string
+ *           enum: [ACTIVE, INACTIVE, SUSPENDED]
+ */
+export class UpdateSubCustomerDto {
+  businessName?: string;
+  externalCode?: string;
+}
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     CustomerLocationDto:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           format: uuid
+ *         customerId:
+ *           type: string
+ *           format: uuid
+ *         subCustomerId:
+ *           type: string
+ *           format: uuid
+ *           nullable: true
+ *         name:
+ *           type: string
+ *           example: "Main Node"
+ *         address:
+ *           type: string
+ *         city:
+ *           type: string
+ *         zipCode:
+ *           type: string
+ *           nullable: true
+ *         isMain:
+ *           type: boolean
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ */
+export class CustomerLocationDto {
+  id!: string;
+  customerId!: string;
+  subCustomerId?: string | null;
+  name!: string;
+  address!: string;
+  city!: string;
+  zipCode?: string | null;
+  isMain!: boolean;
+  createdAt!: Date;
+  updatedAt!: Date;
+}
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     CreateCustomerLocationDto:
+ *       type: object
+ *       required:
+ *         - name
+ *         - address
+ *         - city
+ *       properties:
+ *         subCustomerId:
+ *           type: string
+ *           format: uuid
+ *           nullable: true
+ *         name:
+ *           type: string
+ *         address:
+ *           type: string
+ *         city:
+ *           type: string
+ *         zipCode:
+ *           type: string
+ *         isMain:
+ *           type: boolean
+ */
+export class CreateCustomerLocationDto {
+  subCustomerId?: string | null;
+  name!: string;
+  address!: string;
+  city!: string;
+  zipCode?: string;
+  isMain?: boolean;
 }
