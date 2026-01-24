@@ -31,7 +31,7 @@ export class RolesController {
     @inject(TYPES.DeleteRoleUseCase) private readonly deleteRoleUseCase: DeleteRoleUseCase,
     @inject(TYPES.ListPermissionsUseCase)
     private readonly listPermissionsUseCase: ListPermissionsUseCase
-  ) { }
+  ) {}
 
   /**
    * @swagger

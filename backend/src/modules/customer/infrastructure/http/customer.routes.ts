@@ -7,11 +7,7 @@ import { authenticate } from '@auth/infrastructure/http/auth.middleware';
 import { Permission } from '@modules/rbac/decorators/permissions.decorator';
 import { PERMISSIONS } from '@consts/permissions';
 import { validateSchema } from '@shared/middleware/validate-schema';
-import {
-  CreateCustomerSchema,
-  UpdateCustomerSchema,
-  CustomerFilterSchema
-} from '@sgcv2/shared';
+import { CreateCustomerSchema, UpdateCustomerSchema, CustomerFilterSchema } from '@sgcv2/shared';
 
 @injectable()
 export class CustomerRoutes {
