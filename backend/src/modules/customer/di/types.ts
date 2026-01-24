@@ -12,4 +12,19 @@ export const TYPES = {
   DeleteCustomerUseCase: Symbol.for('DeleteCustomerUseCase'),
   CustomerController: Symbol.for('CustomerController'),
   CustomerRoutes: Symbol.for('CustomerRoutes'),
+
+  // SubCustomer
+  SubCustomerRepository: Symbol.for('SubCustomerRepository'),
+  CreateSubCustomerService: Symbol.for('CreateSubCustomerService'),
+  UpdateSubCustomerService: Symbol.for('UpdateSubCustomerService'),
+  GetSubCustomerService: Symbol.for('GetSubCustomerService'),
+  ListSubCustomersService: Symbol.for('ListSubCustomersService'),
+  DeleteSubCustomerService: Symbol.for('DeleteSubCustomerService'),
+  CreateSubCustomerUseCase: Symbol.for('CreateSubCustomerUseCase'),
+  UpdateSubCustomerUseCase: Symbol.for('UpdateSubCustomerUseCase'),
+  GetSubCustomerUseCase: Symbol.for('GetSubCustomerUseCase'),
+  ListSubCustomersUseCase: Symbol.for('ListSubCustomersUseCase'),
+  DeleteSubCustomerUseCase: Symbol.for('DeleteSubCustomerUseCase'),
+  SubCustomerController: Symbol.for('SubCustomerController'),
+  SubCustomerRoutes: Symbol.for('SubCustomerRoutes'),
 };

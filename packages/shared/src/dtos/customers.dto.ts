@@ -131,6 +131,7 @@ export class CustomerDto extends BaseCustomerDto {
 export class SubCustomerDto {
   id!: string;
   customerId!: string;
+  customerName?: string;
   businessName!: string;
   externalCode!: string;
   createdAt!: Date;
