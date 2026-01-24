@@ -16,7 +16,7 @@ Implementar el módulo completo de Gestión de Clientes, permitiendo administrar
 
 - [x] Definir schema Prisma para `Customer` (Empresa)
   - Razón Social, RIF/NIT, Dirección Fiscal, Teléfono, Email, Estado (Activo/Inactivo)
-- [ ] Definir schema Prisma para `CustomerLocation` (Localidades/Sedes)
+- [/] Definir schema Prisma para `CustomerLocation` (Localidades/Sedes) ✅ Foundation complete (Schemas, DTOs, Domain Entity, Exception)
   - Nombre, Dirección, Coordenadas (opcional), Ciudad, Estado/Provincia
 - [ ] Definir schema Prisma para `CustomerContact` (Contactos)
   - Nombre, Cargo, Teléfono, Email
