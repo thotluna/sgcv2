@@ -11,8 +11,7 @@ import { ResponseHelper } from '@shared/utils/response.helpers';
 import { CustomerAlreadyExistsException } from '@customer/domain/exceptions/customer-already-exists.exception';
 import { CustomerNotFoundException } from '@customer/domain/exceptions/customer-not-found.exception';
 import { ConflictException, NotFoundException } from '@shared/exceptions/http-exceptions';
-import { CreateCustomerDto, UpdateCustomerDto } from '@sgcv2/shared';
-import { CustomerFilterSchemaType } from '@customer/infrastructure/http/customer-filter.schema';
+import { CreateCustomerDto, UpdateCustomerDto, CustomerFilterSchemaType } from '@sgcv2/shared';
 
 @injectable()
 export class CustomerController {
@@ -22,7 +21,7 @@ export class CustomerController {
     @inject(TYPES.GetCustomerUseCase) private getUseCase: GetCustomerUseCase,
     @inject(TYPES.UpdateCustomerUseCase) private updateUseCase: UpdateCustomerUseCase,
     @inject(TYPES.DeleteCustomerUseCase) private deleteUseCase: DeleteCustomerUseCase
-  ) {}
+  ) { }
 
   /**
    * @swagger
@@ -161,7 +160,7 @@ export class CustomerController {
    */
   async findOne(req: Request, res: Response): Promise<Response> {
     try {
-      const { id } = req.params;
+      const id = String(req.params.id);
       const customer = await this.getUseCase.execute(id);
       return ResponseHelper.success(res, CustomerMapper.toDto(customer));
     } catch (error) {
@@ -210,7 +209,7 @@ export class CustomerController {
    */
   async update(req: Request, res: Response): Promise<Response> {
     try {
-      const { id } = req.params;
+      const id = String(req.params.id);
       const dto: UpdateCustomerDto = req.body;
       const input = CustomerMapper.toUpdateInput(dto);
       const customer = await this.updateUseCase.execute(id, input);
@@ -256,7 +255,7 @@ export class CustomerController {
    */
   async delete(req: Request, res: Response): Promise<Response> {
     try {
-      const { id } = req.params;
+      const id = String(req.params.id);
       const customer = await this.deleteUseCase.execute(id);
       return ResponseHelper.success(res, CustomerMapper.toDto(customer));
     } catch (error) {

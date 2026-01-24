@@ -2,24 +2,33 @@ import { Router } from 'express';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '@customer/di/types';
 import { CustomerController } from '@customer/infrastructure/http/customer.controller';
+import { SubCustomerRoutes } from '@customer/infrastructure/http/subcustomer.routes';
 import { authenticate } from '@auth/infrastructure/http/auth.middleware';
 import { Permission } from '@modules/rbac/decorators/permissions.decorator';
 import { PERMISSIONS } from '@consts/permissions';
 import { validateSchema } from '@shared/middleware/validate-schema';
-import { CreateCustomerSchema } from '@customer/infrastructure/http/create-customer.schema';
-import { UpdateCustomerSchema } from '@customer/infrastructure/http/update-customer.schema';
-import { CustomerFilterSchema } from '@customer/infrastructure/http/customer-filter.schema';
+import {
+  CreateCustomerSchema,
+  UpdateCustomerSchema,
+  CustomerFilterSchema
+} from '@sgcv2/shared';
 
 @injectable()
 export class CustomerRoutes {
   private router: Router;
 
-  constructor(@inject(TYPES.CustomerController) private customerController: CustomerController) {
+  constructor(
+    @inject(TYPES.CustomerController) private customerController: CustomerController,
+    @inject(TYPES.SubCustomerRoutes) private subCustomerRoutes: SubCustomerRoutes
+  ) {
     this.router = Router();
     this.setupRoutes();
   }
 
   private setupRoutes(): void {
+    // Sub-customer routes
+    this.router.use('/:customerId/sub-customers', this.subCustomerRoutes.getRouter());
+
     this.router.post(
       '/',
       authenticate,
