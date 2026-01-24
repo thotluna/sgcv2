@@ -22,11 +22,11 @@ trigger: always_on
 - **Auth:** Passport (JWT).
 
 ### Frontend (`/frontend`)
-- **Framework:** Next.js (App Router).
+- **Framework:** Next.js 16 (App Router).
 - **Styling:** Tailwind CSS v4.
 - **State:** Zustand.
-- **UI:** Radix UI + Lucide React.
-- **Validation:** Zod + React Hook Form.
+- **UI:**  shadcn UI + Lucide React.
+- **Validation:** Zod.
 
 ### Shared (`/packages/shared`)
 - **Purpose:** The glue between Frontend and Backend.
