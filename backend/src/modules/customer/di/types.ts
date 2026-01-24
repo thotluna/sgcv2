@@ -27,4 +27,17 @@ export const TYPES = {
   DeleteSubCustomerUseCase: Symbol.for('DeleteSubCustomerUseCase'),
   SubCustomerController: Symbol.for('SubCustomerController'),
   SubCustomerRoutes: Symbol.for('SubCustomerRoutes'),
+
+  // Location
+  LocationRepository: Symbol.for('LocationRepository'),
+  CreateLocationService: Symbol.for('CreateLocationService'),
+  UpdateLocationService: Symbol.for('UpdateLocationService'),
+  GetLocationService: Symbol.for('GetLocationService'),
+  ListLocationsService: Symbol.for('ListLocationsService'),
+  DeleteLocationService: Symbol.for('DeleteLocationService'),
+  CreateLocationUseCase: Symbol.for('CreateLocationUseCase'),
+  UpdateLocationUseCase: Symbol.for('UpdateLocationUseCase'),
+  GetLocationUseCase: Symbol.for('GetLocationUseCase'),
+  ListLocationsUseCase: Symbol.for('ListLocationsUseCase'),
+  DeleteLocationUseCase: Symbol.for('DeleteLocationUseCase'),
 };
