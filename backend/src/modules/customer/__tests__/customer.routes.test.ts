@@ -47,8 +47,17 @@ const mockSubCustomerRoutes = {
   getRouter: jest.fn(() => Router()),
 } as unknown as SubCustomerRoutes;
 
+// Mock LocationRoutes
+const mockLocationRoutes = {
+  getRouter: jest.fn(() => Router()),
+};
+
 // Create routes instance with mock controller and subcustomer routes
-const customerRoutes = new CustomerRoutes(mockController, mockSubCustomerRoutes);
+const customerRoutes = new CustomerRoutes(
+  mockController,
+  mockSubCustomerRoutes,
+  mockLocationRoutes as any
+);
 const router = customerRoutes.getRouter();
 
 const app = express();

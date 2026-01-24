@@ -33,6 +33,23 @@ import { DeleteSubCustomerUseCase } from '@customer/application/delete-subcustom
 import { SubCustomerController } from '@customer/infrastructure/http/subcustomer.controller';
 import { SubCustomerRoutes } from '@customer/infrastructure/http/subcustomer.routes';
 
+// Location
+import { LocationRepository } from '@customer/domain/location.repository';
+import { LocationPrismaRepository } from '@customer/infrastructure/persist/location-prisma.repository';
+import { CreateLocationService } from '@customer/domain/create-location.service';
+import { UpdateLocationService } from '@customer/domain/update-location.service';
+import { DeleteLocationService } from '@customer/domain/delete-location.service';
+import { GetLocationService } from '@customer/domain/get-location.service';
+import { ListLocationsService } from '@customer/domain/list-locations.service';
+import { LocationService } from '@customer/infrastructure/http/location.service';
+import { CreateLocationUseCase } from '@customer/application/create-location.use-case';
+import { UpdateLocationUseCase } from '@customer/application/update-location.use-case';
+import { DeleteLocationUseCase } from '@customer/application/delete-location.use-case';
+import { GetLocationUseCase } from '@customer/application/get-location.use-case';
+import { ListLocationsUseCase } from '@customer/application/list-locations.use-case';
+import { LocationController } from '@customer/infrastructure/http/location.controller';
+import { LocationRoutes } from '@customer/infrastructure/http/location.routes';
+
 export const customerContainerModule = new ContainerModule(options => {
   // Customer
   options.bind<CustomerRepository>(TYPES.CustomerRepository).to(CustomerPrismaRepository);
@@ -67,4 +84,21 @@ export const customerContainerModule = new ContainerModule(options => {
 
   options.bind(TYPES.SubCustomerController).to(SubCustomerController);
   options.bind(TYPES.SubCustomerRoutes).to(SubCustomerRoutes);
+
+  // Location
+  options.bind<LocationRepository>(TYPES.LocationRepository).to(LocationPrismaRepository);
+  options.bind<CreateLocationService>(TYPES.CreateLocationService).to(LocationService);
+  options.bind<UpdateLocationService>(TYPES.UpdateLocationService).to(LocationService);
+  options.bind<DeleteLocationService>(TYPES.DeleteLocationService).to(LocationService);
+  options.bind<GetLocationService>(TYPES.GetLocationService).to(LocationService);
+  options.bind<ListLocationsService>(TYPES.ListLocationsService).to(LocationService);
+
+  options.bind(TYPES.CreateLocationUseCase).to(CreateLocationUseCase);
+  options.bind(TYPES.UpdateLocationUseCase).to(UpdateLocationUseCase);
+  options.bind(TYPES.DeleteLocationUseCase).to(DeleteLocationUseCase);
+  options.bind(TYPES.GetLocationUseCase).to(GetLocationUseCase);
+  options.bind(TYPES.ListLocationsUseCase).to(ListLocationsUseCase);
+
+  options.bind(TYPES.LocationController).to(LocationController);
+  options.bind(TYPES.LocationRoutes).to(LocationRoutes);
 });

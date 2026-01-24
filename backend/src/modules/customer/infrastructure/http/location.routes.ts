@@ -1,71 +1,65 @@
 import { Router } from 'express';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '@customer/di/types';
-import { CustomerController } from '@customer/infrastructure/http/customer.controller';
-import { SubCustomerRoutes } from '@customer/infrastructure/http/subcustomer.routes';
-import { LocationRoutes } from '@customer/infrastructure/http/location.routes';
+import { LocationController } from '@customer/infrastructure/http/location.controller';
 import { authenticate } from '@auth/infrastructure/http/auth.middleware';
 import { Permission } from '@modules/rbac/decorators/permissions.decorator';
 import { PERMISSIONS } from '@consts/permissions';
 import { validateSchema } from '@shared/middleware/validate-schema';
-import { CreateCustomerSchema, UpdateCustomerSchema, CustomerFilterSchema } from '@sgcv2/shared';
+import {
+  CreateCustomerLocationSchema,
+  UpdateCustomerLocationSchema,
+  CustomerLocationFilterSchema,
+} from '@sgcv2/shared';
 
 @injectable()
-export class CustomerRoutes {
+export class LocationRoutes {
   private router: Router;
 
-  constructor(
-    @inject(TYPES.CustomerController) private customerController: CustomerController,
-    @inject(TYPES.SubCustomerRoutes) private subCustomerRoutes: SubCustomerRoutes,
-    @inject(TYPES.LocationRoutes) private locationRoutes: LocationRoutes
-  ) {
-    this.router = Router();
+  constructor(@inject(TYPES.LocationController) private locationController: LocationController) {
+    this.router = Router({ mergeParams: true });
     this.setupRoutes();
   }
 
   private setupRoutes(): void {
-    // Sub-customer routes
-    this.router.use('/:customerId/sub-customers', this.subCustomerRoutes.getRouter());
-
-    // Location routes
-    this.router.use('/:customerId/locations', this.locationRoutes.getRouter());
-
+    // Routes under /customers/:customerId/locations
     this.router.post(
       '/',
       authenticate,
       Permission(PERMISSIONS.CUSTOMERS.CREATE.resource, PERMISSIONS.CUSTOMERS.CREATE.action),
-      validateSchema(CreateCustomerSchema),
-      (req, res) => this.customerController.create(req, res)
+      validateSchema(CreateCustomerLocationSchema),
+      (req, res) => this.locationController.create(req, res)
     );
 
     this.router.get(
       '/',
       authenticate,
       Permission(PERMISSIONS.CUSTOMERS.READ.resource, PERMISSIONS.CUSTOMERS.READ.action),
-      validateSchema(CustomerFilterSchema, 'query'),
-      (req, res) => this.customerController.findAll(req, res)
+      validateSchema(CustomerLocationFilterSchema, 'query'),
+      (req, res) => this.locationController.findAll(req, res)
     );
 
+    // Individual location routes
     this.router.get(
       '/:id',
       authenticate,
       Permission(PERMISSIONS.CUSTOMERS.READ.resource, PERMISSIONS.CUSTOMERS.READ.action),
-      (req, res) => this.customerController.findOne(req, res)
+      (req, res) => this.locationController.findOne(req, res)
     );
 
     this.router.put(
       '/:id',
       authenticate,
       Permission(PERMISSIONS.CUSTOMERS.UPDATE.resource, PERMISSIONS.CUSTOMERS.UPDATE.action),
-      validateSchema(UpdateCustomerSchema),
-      (req, res) => this.customerController.update(req, res)
+      validateSchema(UpdateCustomerLocationSchema),
+      (req, res) => this.locationController.update(req, res)
     );
 
     this.router.delete(
       '/:id',
       authenticate,
       Permission(PERMISSIONS.CUSTOMERS.DELETE.resource, PERMISSIONS.CUSTOMERS.DELETE.action),
-      (req, res) => this.customerController.delete(req, res)
+      (req, res) => this.locationController.delete(req, res)
     );
   }
 
