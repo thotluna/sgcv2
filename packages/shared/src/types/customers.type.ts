@@ -1,1 +1,5 @@
-export type CustomerState = 'ACTIVE' | 'INACTIVE' | 'SUSPENDED';
+export enum CustomerState {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  SUSPENDED = 'SUSPENDED',
+}

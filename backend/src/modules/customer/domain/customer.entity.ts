@@ -1,8 +1,6 @@
-export enum CustomerState {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-  SUSPENDED = 'SUSPENDED',
-}
+import { CustomerState } from '@sgcv2/shared';
+
+export { CustomerState };
 
 export interface CustomerEntity {
   id: string;

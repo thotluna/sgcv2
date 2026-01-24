@@ -10,7 +10,46 @@ model Customer {
     createdAt    DateTime      @default(now()) @map("created_at")
     updatedAt    DateTime      @updatedAt @map("updated_at")
 
+    // Relations
+    subCustomers SubCustomer[]
+    locations    CustomerLocation[]
+
     @@map("customers")
+}
+
+model SubCustomer {
+    id           String        @id @default(uuid())
+    customerId   String        @map("customer_id")
+    businessName String        @map("business_name") @db.VarChar(100)
+    externalCode String        @map("external_code") @db.VarChar(10)
+    createdAt    DateTime      @default(now()) @map("created_at")
+    updatedAt    DateTime      @updatedAt @map("updated_at")
+
+    // Relations
+    customer  Customer           @relation(fields: [customerId], references: [id], onDelete: Cascade)
+    locations CustomerLocation[]
+
+    @@unique([customerId, externalCode])
+    @@map("sub_customers")
+}
+
+model CustomerLocation {
+    id            String   @id @default(uuid())
+    customerId    String   @map("customer_id")
+    subCustomerId String?  @map("sub_customer_id")
+    name          String   @db.VarChar(100)
+    address       String   @db.VarChar(255)
+    city          String   @db.VarChar(100)
+    zipCode       String?  @map("zip_code") @db.VarChar(20)
+    isMain        Boolean  @default(false) @map("is_main")
+    createdAt     DateTime @default(now()) @map("created_at")
+    updatedAt     DateTime @updatedAt @map("updated_at")
+
+    // Relations
+    customer    Customer     @relation(fields: [customerId], references: [id], onDelete: Cascade)
+    subCustomer SubCustomer? @relation(fields: [subCustomerId], references: [id], onDelete: Cascade)
+
+    @@map("customer_locations")
 }
 
 enum CustomerState {

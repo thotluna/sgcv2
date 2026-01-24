@@ -1,8 +1,10 @@
 import request from 'supertest';
+import { Router } from 'express';
 import express from 'express';
 import { authenticate } from '@modules/auth/infrastructure/http/auth.middleware';
 import { CustomerRoutes } from '@customer/infrastructure/http/customer.routes';
 import { CustomerController } from '@customer/infrastructure/http/customer.controller';
+import { SubCustomerRoutes } from '@customer/infrastructure/http/subcustomer.routes';
 
 // Define mock controller methods
 const mockCreate = jest.fn((_req, res) => res.status(201).json({ success: true, data: {} }));
@@ -40,8 +42,13 @@ const mockController = {
   delete: mockDelete,
 } as unknown as CustomerController;
 
-// Create routes instance with mock controller
-const customerRoutes = new CustomerRoutes(mockController);
+// Mock SubCustomerRoutes
+const mockSubCustomerRoutes = {
+  getRouter: jest.fn(() => Router()),
+} as unknown as SubCustomerRoutes;
+
+// Create routes instance with mock controller and subcustomer routes
+const customerRoutes = new CustomerRoutes(mockController, mockSubCustomerRoutes);
 const router = customerRoutes.getRouter();
 
 const app = express();

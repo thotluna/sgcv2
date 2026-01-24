@@ -174,7 +174,7 @@ export class RolesController {
    */
   async getById(req: Request, res: Response): Promise<Response> {
     try {
-      const id = parseInt(req.params.id);
+      const id = parseInt(String(req.params.id));
       const role = await this.getRoleUseCase.execute(id);
       return ResponseHelper.success(res, RolesMapper.toWithPermissionsDto(role));
     } catch (error) {
@@ -221,7 +221,7 @@ export class RolesController {
    */
   async update(req: Request, res: Response): Promise<Response> {
     try {
-      const id = parseInt(req.params.id);
+      const id = parseInt(String(req.params.id));
       const dto: UpdateRoleDto = req.body;
       const input = RolesMapper.toUpdateInput(dto);
 
@@ -261,7 +261,7 @@ export class RolesController {
    */
   async delete(req: Request, res: Response): Promise<Response> {
     try {
-      const id = parseInt(req.params.id);
+      const id = parseInt(String(req.params.id));
       await this.deleteRoleUseCase.execute(id);
       return ResponseHelper.success(res, null, 204);
     } catch (error) {

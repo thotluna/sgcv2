@@ -4,8 +4,8 @@
   "private": true,
   "devDependencies": {
     "@eslint/js": "^9.39.1",
-    "@types/jest": "^30.0.0",
-    "@types/node": "^24.10.1",
+    "@types/jest": "30.0.0",
+    "@types/node": "24.10.9",
     "@typescript-eslint/eslint-plugin": "^8.47.0",
     "@typescript-eslint/parser": "^8.47.0",
     "eslint": "^9.39.1",
@@ -20,6 +20,9 @@
   },
   "scripts": {
     "prepare": "husky",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f",
     "dev": "pnpm --filter @sgcv2/shared build && pnpm --parallel --filter backend --filter frontend dev",
     "dev:frontend": "pnpm --filter @sgcv2/shared build && pnpm --filter frontend dev",
     "dev:backend": "pnpm --filter @sgcv2/shared build && pnpm --filter backend dev",
@@ -67,6 +70,14 @@
   "pnpm": {
     "overrides": {
       "zod": "4.3.5"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "@prisma/engines",
+      "@scarf/scarf",
+      "bcrypt",
+      "prisma",
+      "sharp",
+      "unrs-resolver"
+    ]
   }
 }

@@ -1,66 +1,68 @@
 import { Router } from 'express';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '@customer/di/types';
-import { CustomerController } from '@customer/infrastructure/http/customer.controller';
-import { SubCustomerRoutes } from '@customer/infrastructure/http/subcustomer.routes';
+import { SubCustomerController } from '@customer/infrastructure/http/subcustomer.controller';
 import { authenticate } from '@auth/infrastructure/http/auth.middleware';
 import { Permission } from '@modules/rbac/decorators/permissions.decorator';
 import { PERMISSIONS } from '@consts/permissions';
 import { validateSchema } from '@shared/middleware/validate-schema';
-import { CreateCustomerSchema, UpdateCustomerSchema, CustomerFilterSchema } from '@sgcv2/shared';
+import {
+  CreateSubCustomerSchema,
+  UpdateSubCustomerSchema,
+  SubCustomerFilterSchema,
+} from '@sgcv2/shared';
 
 @injectable()
-export class CustomerRoutes {
+export class SubCustomerRoutes {
   private router: Router;
 
   constructor(
-    @inject(TYPES.CustomerController) private customerController: CustomerController,
-    @inject(TYPES.SubCustomerRoutes) private subCustomerRoutes: SubCustomerRoutes
+    @inject(TYPES.SubCustomerController) private subCustomerController: SubCustomerController
   ) {
-    this.router = Router();
+    this.router = Router({ mergeParams: true });
     this.setupRoutes();
   }
 
   private setupRoutes(): void {
-    // Sub-customer routes
-    this.router.use('/:customerId/sub-customers', this.subCustomerRoutes.getRouter());
-
+    // Routes under /customers/:customerId/sub-customers
     this.router.post(
       '/',
       authenticate,
       Permission(PERMISSIONS.CUSTOMERS.CREATE.resource, PERMISSIONS.CUSTOMERS.CREATE.action),
-      validateSchema(CreateCustomerSchema),
-      (req, res) => this.customerController.create(req, res)
+      validateSchema(CreateSubCustomerSchema),
+      (req, res) => this.subCustomerController.create(req, res)
     );
 
     this.router.get(
       '/',
       authenticate,
       Permission(PERMISSIONS.CUSTOMERS.READ.resource, PERMISSIONS.CUSTOMERS.READ.action),
-      validateSchema(CustomerFilterSchema, 'query'),
-      (req, res) => this.customerController.findAll(req, res)
+      validateSchema(SubCustomerFilterSchema, 'query'),
+      (req, res) => this.subCustomerController.findAll(req, res)
     );
 
+    // Individual sub-customer routes (can also be mounted elsewhere if preferred,
+    // but typically they are accessed via ID)
     this.router.get(
       '/:id',
       authenticate,
       Permission(PERMISSIONS.CUSTOMERS.READ.resource, PERMISSIONS.CUSTOMERS.READ.action),
-      (req, res) => this.customerController.findOne(req, res)
+      (req, res) => this.subCustomerController.findOne(req, res)
     );
 
     this.router.put(
       '/:id',
       authenticate,
       Permission(PERMISSIONS.CUSTOMERS.UPDATE.resource, PERMISSIONS.CUSTOMERS.UPDATE.action),
-      validateSchema(UpdateCustomerSchema),
-      (req, res) => this.customerController.update(req, res)
+      validateSchema(UpdateSubCustomerSchema),
+      (req, res) => this.subCustomerController.update(req, res)
     );
 
     this.router.delete(
       '/:id',
       authenticate,
       Permission(PERMISSIONS.CUSTOMERS.DELETE.resource, PERMISSIONS.CUSTOMERS.DELETE.action),
-      (req, res) => this.customerController.delete(req, res)
+      (req, res) => this.subCustomerController.delete(req, res)
     );
   }
 
