@@ -1,8 +1,8 @@
-node_modules
-dist
-build
-.next
-coverage
+**/node_modules/
+**/dist/
+**/build/
+**/.next/
+**/coverage/
 *.log
 .env
 .env.local
@@ -12,6 +12,6 @@ yarn.lock
 .husky
 playwright-report
 test-results
-logs/
+**/logs/
 .agent/
 .antigravity/
