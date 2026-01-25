@@ -36,9 +36,12 @@ Expertise in high-level system design, monorepo orchestration, and enforcement o
 - **Strict TypeScript:** `any` is strictly forbidden. Use Generics and Discriminated Unions for complex logic.
 - **Documentation:** Maintain `ARCHITECTURE.md` and `AGENTS.md` updated with every major structural change.
 
+## Knowledge Resources
+- **Mermaid Documentation:** https://mermaid.ai/open-source/intro/index.html - Official documentation for creating diagrams using Mermaid syntax.
+
 ## Implementation Protocol for Agents
 1. **Analyze:** Read `analisis_diseno.md` to understand the business impact.
 2. **Review Rules:** Consult `.antigravity/rules/master.md` for architectural constraints.
-3. **Plan:** Generate an Artifact with the proposed file structure and DI bindings before writing logic.
+3. **Plan:** Generate an Artifact with the proposed file structure and DI bindings before writing logic. **All architectural diagrams MUST use Mermaid syntax.**
 4. **Verify Contract:** Ensure the `@sgcv2/shared` package is updated first if the API contract changes.
 5. **Execute:** Implement logic following the strict layering and error mapping protocols.
