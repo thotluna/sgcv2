@@ -1,5 +1,8 @@
 import z from 'zod';
-import { createSchema, updateSchema } from '../_schemas/schemas';
+import {
+  CreateCustomerSchema as createSchema,
+  UpdateCustomerSchema as updateSchema,
+} from '@sgcv2/shared';
 
 export type CreateCustomerFormData = z.infer<typeof createSchema>;
 export type UpdateCustomerFormData = z.infer<typeof updateSchema>;

@@ -11,7 +11,7 @@
 | Fase                                           | Estado         | Progreso | Prioridad  |
 | ---------------------------------------------- | -------------- | -------- | ---------- |
 | **Fase 1: Setup y Autenticación**              | ✅ Completa    | 95%      | -          |
-| **Fase 2: Gestión de Clientes**                | 🟡 En Progreso | 60%      | 🔴 Alta    |
+| **Fase 2: Gestión de Clientes**                | 🟡 En Progreso | 75%      | 🔴 Alta    |
 | **Fase 3: Workflow Engine**                    | ❌ No Iniciada | 0%       | 🔴 CRÍTICA |
 | **Fase 4: Módulo ODS Core**                    | ❌ No Iniciada | 0%       | 🔴 CRÍTICA |
 | **Fase 5: Logística - Equipos**                | ❌ No Iniciada | 0%       | 🟠 Alta    |
@@ -25,39 +25,55 @@
 
 **Objetivo:** Finalizar el módulo completo de Clientes con Localidades y Contactos  
 **Prioridad:** 🔴 Alta  
-**Estimación:** 2-3 semanas  
-**Progreso Actual:** 60%
+**Estimación:** 1-2 semanas  
+**Progreso Actual:** 75%
 
-### 2.1 Backend - Customer Locations
+**✅ Completado:**
 
-- [ ] **Application Layer**
-  - [ ] Crear `CreateLocationUseCase`
-  - [ ] Crear `UpdateLocationUseCase`
-  - [ ] Crear `DeleteLocationUseCase`
-  - [ ] Crear `GetLocationsByCustomerUseCase`
-  - [ ] Crear `GetLocationByIdUseCase`
+- CRUD completo de Customers
+- CRUD completo de SubCustomers
+- **Backend de Locations (100%):**
+  - ✅ Domain Layer (Entity, Repository, Services, Exceptions)
+  - ✅ Application Layer (5 Use Cases: Create, Update, Delete, Get, List)
+  - ✅ Infrastructure Layer (Repository Prisma, Service, Mapper)
+  - ✅ HTTP Layer (Controller, Routes integradas)
+  - ✅ Tests completos (9 test suites pasando)
 
-- [ ] **Infrastructure Layer**
-  - [ ] Implementar `LocationRepository` con Prisma
-  - [ ] Implementar `LocationService` (implementa `ILocationService`)
+**🟡 Pendiente:**
 
-- [ ] **HTTP Layer**
-  - [ ] Crear `LocationController`
-  - [ ] Implementar endpoints:
-    - [ ] `POST /api/customers/:customerId/locations` - Crear localidad
-    - [ ] `GET /api/customers/:customerId/locations` - Listar localidades
-    - [ ] `GET /api/locations/:id` - Obtener localidad
-    - [ ] `PUT /api/locations/:id` - Actualizar localidad
-    - [ ] `DELETE /api/locations/:id` - Eliminar localidad
-  - [ ] Crear rutas en `location.routes.ts`
-  - [ ] Integrar con `app.ts`
+- Frontend UI para Locations
+- Backend y Frontend para Contacts
 
-- [ ] **Testing**
-  - [ ] Unit tests para `LocationService`
-  - [ ] Unit tests para Use Cases
-  - [ ] Integration tests para endpoints
+### 2.1 Backend - Customer Locations ✅ COMPLETADO
 
-**Estimación:** 1 semana
+- [x] **Application Layer**
+  - [x] Crear `CreateLocationUseCase`
+  - [x] Crear `UpdateLocationUseCase`
+  - [x] Crear `DeleteLocationUseCase`
+  - [x] Crear `GetLocationsByCustomerUseCase`
+  - [x] Crear `GetLocationByIdUseCase`
+
+- [x] **Infrastructure Layer**
+  - [x] Implementar `LocationRepository` con Prisma
+  - [x] Implementar `LocationService` (implementa `ILocationService`)
+
+- [x] **HTTP Layer**
+  - [x] Crear `LocationController`
+  - [x] Implementar endpoints:
+    - [x] `POST /api/customers/:customerId/locations` - Crear localidad
+    - [x] `GET /api/customers/:customerId/locations` - Listar localidades
+    - [x] `GET /api/locations/:id` - Obtener localidad
+    - [x] `PUT /api/locations/:id` - Actualizar localidad
+    - [x] `DELETE /api/locations/:id` - Eliminar localidad
+  - [x] Crear rutas en `location.routes.ts`
+  - [x] Integrar con `app.ts`
+
+- [x] **Testing**
+  - [x] Unit tests para `LocationService`
+  - [x] Unit tests para Use Cases
+  - [x] Integration tests para endpoints
+
+**Estado:** ✅ Completado (9 test suites pasando)
 
 ---
 
@@ -65,6 +81,7 @@
 
 - [ ] **Domain Layer**
   - [ ] Crear schema Prisma para `CustomerContact`:
+
     ```prisma
     model CustomerContact {
       id            String   @id @default(uuid())
@@ -85,6 +102,7 @@
       @@map("customer_contacts")
     }
     ```
+
   - [ ] Crear DTOs (CreateContactDTO, UpdateContactDTO)
   - [ ] Crear Domain Entity `CustomerContact`
   - [ ] Crear Domain Exceptions
@@ -116,9 +134,9 @@
 ### 2.3 Frontend - Customer Locations y Contacts
 
 - [ ] **Locations UI**
-  - [ ] Crear componente `LocationsList`
+  - [x] Crear componente `LocationsList` (Skeleton/Placeholder)
   - [ ] Crear formulario `LocationForm` (Create/Edit)
-  - [ ] Integrar en página de detalle de cliente
+  - [x] Integrar en página de detalle de cliente (Layout con Tabs)
   - [ ] Implementar Server Actions para Locations
   - [ ] Tests de componentes
 
@@ -130,10 +148,11 @@
   - [ ] Tests de componentes
 
 - [ ] **Mejoras UX**
-  - [ ] Tabs para separar Locations y Contacts
+  - [x] Tabs para separar Locations y Contacts (Implementado en Layout Base)
   - [ ] Indicador visual de contacto primario
-  - [ ] Validaciones de formulario con Zod
-  - [ ] Manejo de errores con toast notifications
+  - [x] Validaciones de formulario con Zod (Unificado en @sgcv2/shared)
+  - [x] Manejo de errores con toast notifications (Integrado con Server Actions y useActionState)
+  - [x] Soporte para No-JS y Server Actions en CustomerForm
 
 **Estimación:** 1 semana
 
@@ -141,10 +160,9 @@
 
 ### 2.4 Mejoras al Módulo de Clientes
 
-- [ ] **Campos Adicionales en Customer**
-  - [ ] Agregar campo `website` (opcional)
-  - [ ] Agregar campo `notes` (TEXT, observaciones)
-  - [ ] Agregar relación con `CustomerContact` (contacto principal)
+- [x] **Unificación de Esquemas**
+  - [x] Esquemas de validación movidos a `@sgcv2/shared` para consistencia.
+  - [x] Eliminación de lógica de validación duplicada en frontend.
 
 - [ ] **Validaciones de Negocio**
   - [ ] Validar que `taxId` sea único y válido
@@ -159,6 +177,7 @@
 
 ---
 
+
 ## 🔴 FASE 3: Workflow Engine (CRÍTICA)
 
 **Objetivo:** Implementar el motor de workflows dinámicos para ODS  
@@ -170,6 +189,7 @@
 
 - [ ] **Schema Prisma**
   - [ ] Crear modelo `ServiceType`:
+
     ```prisma
     model ServiceType {
       id          Int       @id @default(autoincrement())
@@ -183,7 +203,9 @@
       @@map("service_types")
     }
     ```
+
   - [ ] Crear modelo `WorkflowDefinition`:
+
     ```prisma
     model WorkflowDefinition {
       id            Int       @id @default(autoincrement())
@@ -203,7 +225,9 @@
       @@map("workflow_definitions")
     }
     ```
+
   - [ ] Crear modelo `WorkflowState`:
+
     ```prisma
     model WorkflowState {
       id          Int       @id @default(autoincrement())
@@ -226,7 +250,9 @@
       @@map("workflow_states")
     }
     ```
+
   - [ ] Crear modelo `WorkflowTransition`:
+
     ```prisma
     model WorkflowTransition {
       id                  Int       @id @default(autoincrement())
@@ -248,6 +274,7 @@
       @@map("workflow_transitions")
     }
     ```
+
   - [ ] Crear modelo `ValidationRule`:
 
     ```prisma
@@ -397,6 +424,7 @@
 
 - [ ] **Schema Prisma**
   - [ ] Crear modelo `ServiceOrder` (ODS):
+
     ```prisma
     model ServiceOrder {
       id                String   @id @default(uuid())
@@ -423,7 +451,9 @@
       @@map("service_orders")
     }
     ```
+
   - [ ] Crear modelo `StateHistory`:
+
     ```prisma
     model StateHistory {
       id            Int       @id @default(autoincrement())
@@ -442,6 +472,7 @@
       @@map("state_history")
     }
     ```
+
   - [ ] Crear modelo `OrderModification`:
 
     ```prisma
@@ -639,6 +670,7 @@
     ```
 
   - [ ] Crear modelo `EquipmentMovement`:
+
     ```prisma
     model EquipmentMovement {
       id            Int       @id @default(autoincrement())
@@ -657,6 +689,7 @@
       @@map("equipment_movements")
     }
     ```
+
   - [ ] Crear modelo `DeliveryNote`:
 
     ```prisma
