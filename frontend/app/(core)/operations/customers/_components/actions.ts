@@ -1,81 +1,88 @@
 'use server';
 
+import { serverCustomersService as customerService } from '@/lib/api/server-customers.service';
+import { CreateCustomerSchema, UpdateCustomerSchema } from '@sgcv2/shared';
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
-import { serverCustomersService } from '@/lib/api/server-customers.service';
-import {
-  CreateCustomerSchema as createSchema,
-  UpdateCustomerSchema as updateSchema,
-  UpdateCustomerDto,
-} from '@sgcv2/shared';
 
 export type ActionState = {
-  success?: boolean;
-  fieldErrors?: { [key: string]: string[] };
-  message?: string;
+  success: boolean;
+  error?: {
+    message: string;
+    code?: string;
+  };
 };
 
-export async function createCustomerAction(
-  _prevState: ActionState,
-  formData: FormData
-): Promise<ActionState> {
-  // Extract data from FormData
+export async function createCustomerAction(prevState: any, formData: FormData): Promise<ActionState> {
   const rawData = Object.fromEntries(formData.entries());
 
-  // Validate with Zod
-  const validatedFields = createSchema.safeParse(rawData);
+  const validated = CreateCustomerSchema.safeParse(rawData);
 
-  if (!validatedFields.success) {
+  if (!validated.success) {
     return {
       success: false,
-      fieldErrors: validatedFields.error.flatten().fieldErrors,
-      message: 'Error de validación',
+      error: {
+        message: 'Invalid form data',
+      },
     };
   }
 
-  const response = await serverCustomersService.create(validatedFields.data);
+  const response = await customerService.create(validated.data);
 
   if (!response.success) {
     return {
       success: false,
-      message: response.error?.message || 'Error al crear el cliente',
+      error: response.error,
     };
   }
 
   revalidatePath('/operations/customers');
-  redirect('/operations/customers');
+  return { success: true };
 }
 
 export async function updateCustomerAction(
   id: string,
-  _prevState: ActionState,
+  prevState: any,
   formData: FormData
 ): Promise<ActionState> {
   const rawData = Object.fromEntries(formData.entries());
 
-  const validatedFields = updateSchema.safeParse(rawData);
+  const validated = UpdateCustomerSchema.safeParse(rawData);
 
-  if (!validatedFields.success) {
+  if (!validated.success) {
     return {
       success: false,
-      fieldErrors: validatedFields.error.flatten().fieldErrors,
-      message: 'Error de validación',
+      error: {
+        message: 'Invalid form data',
+      },
     };
   }
 
-  const response = await serverCustomersService.update(
-    id,
-    validatedFields.data as UpdateCustomerDto
-  );
+  const response = await customerService.update(id, validated.data);
 
   if (!response.success) {
     return {
       success: false,
-      message: response.error?.message || 'Error al actualizar el cliente',
+      error: response.error,
     };
   }
 
   revalidatePath('/operations/customers');
   revalidatePath(`/operations/customers/${id}`);
-  redirect(`/operations/customers/${id}`);
+  return { success: true };
 }
+
+export async function deleteCustomerAction(id: string): Promise<ActionState> {
+  const response = await customerService.delete(id);
+
+  if (!response.success) {
+    return {
+      success: false,
+      error: response.error,
+    };
+  }
+
+  revalidatePath('/operations/customers');
+  return { success: true };
+}
+
+export const serverCustomersService = customerService;
