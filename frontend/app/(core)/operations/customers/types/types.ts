@@ -1,9 +1,6 @@
-import z from 'zod';
-import {
-  CreateCustomerSchema as createSchema,
-  UpdateCustomerSchema as updateSchema,
-} from '@sgcv2/shared';
+import { CreateCustomerSchemaType, UpdateCustomerSchemaType } from '@sgcv2/shared';
 
-export type CreateCustomerFormData = z.infer<typeof createSchema>;
-export type UpdateCustomerFormData = z.infer<typeof updateSchema>;
-export type CustomerFormData = CreateCustomerFormData | UpdateCustomerFormData;
+export type CustomerCreateInput = CreateCustomerSchemaType;
+export type CustomerUpdateInput = UpdateCustomerSchemaType;
+
+export interface CustomerFormValues extends CreateCustomerSchemaType {}
