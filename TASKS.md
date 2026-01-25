@@ -798,174 +798,27 @@
 - [ ] Catálogo de insumos
 - [ ] Control de inventario
 - [ ] Asignación a ODS
-- [ ] Registro de devoluciones
 
 **Estimación:** 1.5 semanas
 
 ---
 
-## 🟡 FASE 7: Módulo de Finanzas
+## 🛠️ Infraestructura y DevOps
 
-**Objetivo:** Gestión de proformas, facturas y pagos  
-**Prioridad:** 🟡 Media  
-**Estimación:** 3-4 semanas  
-**Dependencias:** Fase 4 (ODS)
-
-### 7.1 Backend - Finanzas
-
-- [ ] Modelo de datos (Proforma, Invoice, Payment)
-- [ ] Generación de proformas desde ODS
-- [ ] Generación de facturas
-- [ ] Registro de pagos
-- [ ] Cuentas por cobrar
-- [ ] Generación de PDFs
-
-**Estimación:** 3 semanas
+- [x] Configuración de monorepo (pnpm workspaces)
+- [x] Setup de CI/CD (GitHub Actions)
+- [x] Dockerización de base de datos para tests
+- [ ] Monitoreo y logs centralizados
+- [ ] Backup automático de base de datos
 
 ---
 
-### 7.2 Frontend - Finanzas
+## 📑 Notas Generales
 
-- [ ] UI de proformas
-- [ ] UI de facturas
-- [ ] UI de pagos
-- [ ] Dashboard financiero
-
-**Estimación:** 1 semana
-
----
-
-## 🟢 FASE 8: Módulo de RRHH (Básico)
-
-**Objetivo:** Gestión básica de personal  
-**Prioridad:** 🟢 Baja  
-**Estimación:** 3-4 semanas  
-**Dependencias:** Ninguna
-
-### 8.1 Backend - RRHH
-
-- [ ] Modelo de datos (Employee, Payroll, Attendance)
-- [ ] CRUD de empleados
-- [ ] Gestión de nómina básica
-- [ ] Registro de asistencia
-
-**Estimación:** 2 semanas
-
----
-
-### 8.2 Frontend - RRHH
-
-- [ ] UI de empleados
-- [ ] UI de nómina
-- [ ] Reportes básicos
-
-**Estimación:** 1 semana
-
----
-
-## 🔧 Deuda Técnica y Mejoras
-
-### Seguridad
-
-- [ ] Implementar tabla de Auditoría completa
-- [ ] Agregar campo `lastLoginAt` a User
-- [ ] Agregar campo `failedLoginAttempts` a User
-- [ ] Implementar bloqueo automático por intentos fallidos
-- [ ] Implementar renovación automática de JWT
-- [ ] Agregar rate limiting a endpoints críticos
-
-**Estimación:** 1 semana
-
----
-
-### Observabilidad
-
-- [ ] Implementar logging estructurado (Winston/Pino)
-- [ ] Agregar métricas de performance por endpoint
-- [ ] Implementar health checks avanzados
-- [ ] Configurar alertas para operaciones lentas
-- [ ] Dashboard de métricas en tiempo real
-
-**Estimación:** 1 semana
-
----
-
-### Documentación
-
-- [ ] Completar documentación OpenAPI/Swagger para todos los módulos
-- [ ] Actualizar README.md con guía completa
-- [ ] Crear CONTRIBUTING.md
-- [ ] Documentar arquitectura en ARCHITECTURE.md
-- [ ] Crear guía de desarrollo
-
-**Estimación:** 1 semana
-
----
-
-### Testing
-
-- [ ] Aumentar cobertura de tests a \>80% en todos los módulos
-- [ ] Agregar tests E2E para flujos críticos
-- [ ] Implementar tests de performance
-- [ ] Configurar CI/CD con GitHub Actions
-
-**Estimación:** 2 semanas
-
----
-
-## 📊 Estimación Total
-
-| Fase                                     | Estimación        | Prioridad       |
-| ---------------------------------------- | ----------------- | --------------- |
-| Fase 2: Completar Clientes               | 2-3 semanas       | 🔴 Alta         |
-| Fase 3: Workflow Engine                  | 4-6 semanas       | 🔴 CRÍTICA      |
-| Fase 4: ODS Core                         | 6-8 semanas       | 🔴 CRÍTICA      |
-| Fase 5: Logística - Equipos              | 3-4 semanas       | 🟠 Alta         |
-| Fase 6: Logística - Herramientas/Insumos | 2-3 semanas       | 🟡 Media        |
-| Fase 7: Finanzas                         | 3-4 semanas       | 🟡 Media        |
-| Fase 8: RRHH                             | 3-4 semanas       | 🟢 Baja         |
-| Deuda Técnica                            | 5 semanas         | 🟡 Media        |
-| **TOTAL**                                | **28-37 semanas** | **(7-9 meses)** |
-
----
-
-## 🎯 Roadmap Sugerido 2026
-
-### Q1 2026 (Enero - Marzo)
-
-- ✅ Completar Fase 2 (Clientes)
-- 🔴 Implementar Fase 3 (Workflow Engine)
-- 🔴 Iniciar Fase 4 (ODS Core)
-
-### Q2 2026 (Abril - Junio)
-
-- 🔴 Completar Fase 4 (ODS Core)
-- 🟠 Implementar Fase 5 (Logística - Equipos)
-- 🟡 Iniciar Fase 6 (Herramientas/Insumos)
-
-### Q3 2026 (Julio - Septiembre)
-
-- 🟡 Completar Fase 6
-- 🟡 Implementar Fase 7 (Finanzas)
-- 🟢 Iniciar Fase 8 (RRHH)
-
-### Q4 2026 (Octubre - Diciembre)
-
-- 🟢 Completar Fase 8
-- 🔧 Resolver Deuda Técnica
-- 🚀 Optimización y Despliegue a Producción
-
----
-
-## 📝 Notas Importantes
-
-1. **Priorizar Workflow Engine:** Es bloqueante para ODS y crítico para el negocio
-2. **Mantener calidad de código:** No sacrificar tests ni arquitectura por velocidad
-3. **Commits frecuentes:** Hacer commits pequeños y descriptivos
-4. **Documentar decisiones:** Actualizar documentación con cada cambio importante
-5. **Revisar progreso semanalmente:** Actualizar este archivo con el estado real
-
----
+- Todos los desarrollos deben seguir la arquitectura definida en `master.md`.
+- El frontend debe utilizar Shadcn UI y ser responsive.
+- El backend debe implementar DI con InversifyJS.
+- La comunicación entre FE y BE se hace a través de DTOs compartidos.
 
 **Versión:** 1.0  
 **Creado:** 2026-01-25  
