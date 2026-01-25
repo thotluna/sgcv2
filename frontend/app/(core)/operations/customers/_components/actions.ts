@@ -1,42 +1,40 @@
 'use server';
 
-import { serverCustomersService as customerService } from '@/lib/api/server-customers.service';
-import { CreateCustomerSchema, UpdateCustomerSchema } from '@sgcv2/shared';
+import { ActionState } from '../types/types';
+import {
+  CreateCustomerSchema,
+  UpdateCustomerSchema,
+  customerService,
+} from '@sgcv2/shared';
+import { serverCustomersService } from '@/lib/api/server-customers.service';
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 
-export type ActionState = {
-  success: boolean;
-  error?: {
-    message: string;
-    code?: string;
-  };
-};
-
-export async function createCustomerAction(_prevState: any, formData: FormData): Promise<ActionState> {
+export async function createCustomerAction(
+  _prevState: any,
+  formData: FormData
+): Promise<ActionState> {
   const rawData = Object.fromEntries(formData.entries());
 
   const validated = CreateCustomerSchema.safeParse(rawData);
 
   if (!validated.success) {
     return {
-      success: false,
-      error: {
-        message: 'Invalid form data',
-      },
+      errors: validated.error.flatten().fieldErrors,
+      message: 'Error de validación',
     };
   }
 
-  const response = await customerService.create(validated.data);
+  const response = await serverCustomersService.create(validated.data);
 
-  if (!response.success) {
+  if (response.error) {
     return {
-      success: false,
-      error: response.error,
+      message: response.error,
     };
   }
 
   revalidatePath('/operations/customers');
-  return { success: true };
+  redirect('/operations/customers');
 }
 
 export async function updateCustomerAction(
@@ -44,45 +42,41 @@ export async function updateCustomerAction(
   _prevState: any,
   formData: FormData
 ): Promise<ActionState> {
-   const rawData = Object.fromEntries(formData.entries());
+  const rawData = Object.fromEntries(formData.entries());
 
+  // Convert empty values to undefined for partial update if needed
+  // or use the schema to handle it.
   const validated = UpdateCustomerSchema.safeParse(rawData);
 
   if (!validated.success) {
     return {
-      success: false,
-      error: {
-        message: 'Invalid form data',
-      },
+      errors: validated.error.flatten().fieldErrors,
+      message: 'Error de validación',
     };
   }
 
-  const response = await customerService.update(id, validated.data);
+  const response = await serverCustomersService.update(id, validated.data);
 
-  if (!response.success) {
+  if (response.error) {
     return {
-      success: false,
-      error: response.error,
+      message: response.error,
     };
   }
 
   revalidatePath('/operations/customers');
   revalidatePath(`/operations/customers/${id}`);
-  return { success: true };
+  redirect(`/operations/customers/${id}`);
 }
 
 export async function deleteCustomerAction(id: string): Promise<ActionState> {
-  const response = await customerService.delete(id);
+  const response = await serverCustomersService.delete(id);
 
-  if (!response.success) {
+  if (response.error) {
     return {
-      success: false,
-      error: response.error,
+      message: response.error,
     };
   }
 
   revalidatePath('/operations/customers');
   return { success: true };
 }
-
-export const serverCustomersService = customerService;
