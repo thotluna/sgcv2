@@ -1,5 +1,10 @@
 import { createServerApiClient } from './server-client';
-import { CustomerDto as Customer, AppResponse } from '@sgcv2/shared';
+import {
+  CustomerDto as Customer,
+  AppResponse,
+  CreateCustomerDto,
+  UpdateCustomerDto,
+} from '@sgcv2/shared';
 import { AxiosError } from 'axios';
 
 /**
@@ -48,6 +53,68 @@ export const serverCustomersService = {
         error: {
           code: 'INTERNAL_SERVER_ERROR',
           message: isAxiosError ? error.response?.data?.message : 'Error al cargar los clientes',
+        },
+      };
+    }
+  },
+
+  create: async (data: CreateCustomerDto): Promise<AppResponse<Customer>> => {
+    try {
+      const client = await createServerApiClient();
+      const response = await client.post('/customers', data);
+      return {
+        success: true,
+        data: response.data.data,
+      };
+    } catch (error) {
+      console.error('Error creating customer:', error);
+      const isAxiosError = error instanceof AxiosError;
+      return {
+        success: false,
+        error: {
+          code: 'INTERNAL_SERVER_ERROR',
+          message: isAxiosError ? error.response?.data?.message : 'Error al crear el cliente',
+        },
+      };
+    }
+  },
+
+  update: async (id: string, data: UpdateCustomerDto): Promise<AppResponse<Customer>> => {
+    try {
+      const client = await createServerApiClient();
+      const response = await client.put(`/customers/${id}`, data);
+      return {
+        success: true,
+        data: response.data.data,
+      };
+    } catch (error) {
+      console.error('Error updating customer:', error);
+      const isAxiosError = error instanceof AxiosError;
+      return {
+        success: false,
+        error: {
+          code: 'INTERNAL_SERVER_ERROR',
+          message: isAxiosError ? error.response?.data?.message : 'Error al actualizar el cliente',
+        },
+      };
+    }
+  },
+
+  delete: async (id: string): Promise<AppResponse<void>> => {
+    try {
+      const client = await createServerApiClient();
+      await client.delete(`/customers/${id}`);
+      return {
+        success: true,
+      };
+    } catch (error) {
+      console.error('Error deleting customer:', error);
+      const isAxiosError = error instanceof AxiosError;
+      return {
+        success: false,
+        error: {
+          code: 'INTERNAL_SERVER_ERROR',
+          message: isAxiosError ? error.response?.data?.message : 'Error al eliminar el cliente',
         },
       };
     }

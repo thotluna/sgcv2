@@ -4,47 +4,37 @@ import { CustomerState } from '../types/customers.type';
 // --- CUSTOMER SCHEMAS ---
 
 export const CreateCustomerSchema = z.object({
-  code: z.string().min(1, 'Code is required').max(50, 'Code must be at most 50 characters'),
+  code: z
+    .string()
+    .min(3, 'Code must be at least 3 characters')
+    .max(5, 'Code must be at most 5 characters')
+    .regex(/^[A-Z0-9]+$/, 'Code must be alphanumeric and uppercase'),
   businessName: z
     .string()
-    .min(1, 'Business name is required')
-    .max(255, 'Business name must be at most 255 characters'),
+    .min(3, 'Business name must be at least 3 characters')
+    .max(50, 'Business name must be at most 50 characters')
+    .optional()
+    .or(z.literal('')),
   legalName: z
     .string()
-    .min(1, 'Legal name is required')
-    .max(255, 'Legal name must be at most 255 characters'),
-  taxId: z.string().min(1, 'Tax ID is required').max(50, 'Tax ID must be at most 50 characters'),
+    .min(3, 'Legal name must be at least 3 characters')
+    .max(100, 'Legal name must be at most 100 characters'),
+  taxId: z.string().regex(/^[VEPJG]-[0-9]{8}-[0-9]$/, 'Invalid Tax ID format. Use: V-12345678-9'),
   address: z
     .string()
-    .min(1, 'Address is required')
-    .max(500, 'Address must be at most 500 characters'),
-  phone: z.string().max(20, 'Phone must be at most 20 characters').optional().nullable(),
+    .min(3, 'Address must be at least 3 characters')
+    .max(255, 'Address must be at most 255 characters'),
+  phone: z
+    .string()
+    .min(10, 'Phone must be at least 10 characters')
+    .max(15, 'Phone must be at most 15 characters')
+    .optional()
+    .or(z.literal('')),
 });
 
 export type CreateCustomerSchemaType = z.infer<typeof CreateCustomerSchema>;
 
-export const UpdateCustomerSchema = z.object({
-  businessName: z
-    .string()
-    .min(1, 'Business name must not be empty')
-    .max(255, 'Business name must be at most 255 characters')
-    .optional(),
-  legalName: z
-    .string()
-    .min(1, 'Legal name must not be empty')
-    .max(255, 'Legal name must be at most 255 characters')
-    .optional(),
-  taxId: z
-    .string()
-    .min(1, 'Tax ID must not be empty')
-    .max(50, 'Tax ID must be at most 50 characters')
-    .optional(),
-  address: z
-    .string()
-    .min(1, 'Address must not be empty')
-    .max(500, 'Address must be at most 500 characters')
-    .optional(),
-  phone: z.string().max(20, 'Phone must be at most 20 characters').optional().nullable(),
+export const UpdateCustomerSchema = CreateCustomerSchema.partial().extend({
   state: z.nativeEnum(CustomerState).optional(),
 });
 
