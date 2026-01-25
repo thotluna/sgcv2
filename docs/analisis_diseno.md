@@ -20,48 +20,44 @@ XTEL Comunicaciones es una empresa contratista de telecomunicaciones que requier
 
 ### **2.2 Mapa del Dominio**
 
-DOMINIO: Gestión de Servicios de Telecomunicaciones
-
-├── CLIENTES  
-│ ├── Empresa Cliente (Carrier)  
-│ ├── Contacto en Localidad  
-│ └── Órdenes del Cliente  
-│  
-├── SERVICIOS  
-│ ├── Inspección/Site Survey  
-│ ├── Instalación  
-│ ├── Desinstalación  
-│ ├── Migración  
-│ ├── Mantenimiento Preventivo  
-│ ├── Mantenimiento Correctivo  
-│ └── Asistencia Técnica  
-│  
-├── RECURSOS  
-│ ├── Equipos (del cliente)  
-│ │ ├── En Almacén  
-│ │ ├── En Tránsito  
-│ │ ├── Instalados  
-│ │ └── Por Devolver  
-│ ├── Herramientas (de XTEL)  
-│ ├── Insumos (consumibles)  
-│ └── Vehículos  
-│  
-├── PERSONAL  
-│ ├── Técnicos  
-│ ├── Coordinadores  
-│ ├── Asistentes de Operación  
-│ └── Personal Administrativo  
-│  
-├── ÓRDENES DE SERVICIO (ODS)  
-│ ├── Estados del Workflow  
-│ ├── Asignaciones  
-│ └── Documentación  
-│  
-└── FINANZAS  
- ├── Proformas  
- ├── Facturas
-
-    └── Pagos
+```mermaid
+mindmap
+  root((Gestión de Servicios de Telecomunicaciones))
+    CLIENTES
+      Empresa Cliente - Carrier
+      Contacto en Localidad
+      Órdenes del Cliente
+    SERVICIOS
+      Inspección/Site Survey
+      Instalación
+      Desinstalación
+      Migración
+      Mantenimiento Preventivo
+      Mantenimiento Correctivo
+      Asistencia Técnica
+    RECURSOS
+      Equipos - del cliente
+        En Almacén
+        En Tránsito
+        Instalados
+        Por Devolver
+      Herramientas - de XTEL
+      Insumos - consumibles
+      Vehículos
+    PERSONAL
+      Técnicos
+      Coordinadores
+      Asistentes de Operación
+      Personal Administrativo
+    ÓRDENES DE SERVICIO - ODS
+      Estados del Workflow
+      Asignaciones
+      Documentación
+    FINANZAS
+      Proformas
+      Facturas
+      Pagos
+```
 
 ---
 
@@ -87,6 +83,20 @@ DOMINIO: Gestión de Servicios de Telecomunicaciones
 - Equipos del cliente pasan por múltiples estados: recepción → almacén → tránsito → instalado → fallado → devolución
 - Necesidad de tracking individual de cada equipo
 - Equipos asociados a múltiples ODS a lo largo de su ciclo de vida
+
+```mermaid
+stateDiagram-v2
+    [*] --> Recepción
+    Recepción --> Almacén
+    Almacén --> Tránsito
+    Tránsito --> Instalado
+    Instalado --> Fallado
+    Fallado --> Devolución
+    Devolución --> [*]
+
+    Tránsito --> Almacén: No usado
+    Instalado --> Devolución: Fin de servicio
+```
 
 **P4: Gestión de Asignaciones Temporales**
 
@@ -118,6 +128,17 @@ DOMINIO: Gestión de Servicios de Telecomunicaciones
 - Múltiples estados: culminado → proforma → facturado → pagado
 - Seguimiento de aprobaciones del cliente
 - Relación entre ODS y documentos financieros
+
+```mermaid
+stateDiagram-v2
+    [*] --> Culminado
+    Culminado --> Proforma: Generar proforma
+    Proforma --> Facturado: Cliente aprueba
+    Facturado --> Pagado: Cliente paga
+    Pagado --> [*]
+
+    Proforma --> Culminado: Cliente rechaza
+```
 
 **P8: Gestión de RRHH**
 
@@ -1735,6 +1756,45 @@ DOMINIO: Gestión de Servicios de Telecomunicaciones
 - Factura pagada y registrada
 - Historial completo de la actividad documentado
 
+**Diagrama de Flujo:**
+
+```mermaid
+flowchart TD
+    Start([Cliente notifica instalación]) --> CreateODS[Asistente crea ODS<br/>Estado: PENDIENTE POR ASIGNACIONES]
+    CreateODS --> LoadConfig[Operaciones carga configuración]
+    LoadConfig --> ReviewReq[Logística revisa requerimientos]
+    ReviewReq --> ReceiveEquip[Logística recibe equipos<br/>Estado: ALMACÉN]
+    ReceiveEquip --> ChangeState1[ODS → POR COORDINAR]
+    ChangeState1 --> Schedule[Coordinador agenda actividad]
+    Schedule --> Coordinate[Asistente coordina con cliente]
+
+    Coordinate --> ClientApprove{Cliente<br/>aprueba?}
+    ClientApprove -->|Sí| Approved[ODS → COORDINADO]
+    ClientApprove -->|No| Rejected[ODS → COORDINACIÓN RECHAZADA<br/>Registra motivo]
+    Rejected --> Schedule
+
+    Approved --> AssignTech[Coordinador asigna técnicos<br/>ODS → POR REALIZAR]
+    AssignTech --> RequestTools[Técnico solicita herramientas]
+    RequestTools --> PrepareRes[Logística prepara recursos<br/>Equipos → TRÁNSITO<br/>Herramientas → TRÁSLADO]
+    PrepareRes --> GoField[Técnico se dirige a campo<br/>ODS → REALIZANDO]
+    GoField --> Install[Técnico ejecuta instalación<br/>Cliente firma informe]
+    Install --> CompleteReport[Técnico completa informe de servicio]
+    CompleteReport --> UploadReport[Asistente carga informe<br/>ODS → POR INFORME]
+    UploadReport --> ReturnRes[Técnico devuelve recursos<br/>Herramientas → ALMACÉN<br/>Equipos → INSTALADO]
+    ReturnRes --> PostInstall[Técnico crea informe post-instalación<br/>ODS → CULMINADO]
+    PostInstall --> GenProforma[Administración genera proforma<br/>ODS → PROFORMA]
+    GenProforma --> ApproveProforma[Cliente aprueba proforma<br/>Sistema genera factura<br/>ODS → FACTURADO]
+    ApproveProforma --> Payment[Cliente paga factura<br/>ODS → PAGADO]
+    Payment --> End([Fin del flujo])
+
+    style Start fill:#e1f5e1
+    style End fill:#ffe1e1
+    style ClientApprove fill:#fff4e1
+    style CreateODS fill:#e1f0ff
+    style Install fill:#f0e1ff
+    style Payment fill:#e1ffe1
+```
+
 ---
 
 ### **6.2 CU-002: Mantenimiento Correctivo de Emergencia**
@@ -1803,6 +1863,37 @@ DOMINIO: Gestión de Servicios de Telecomunicaciones
 - Servicio restaurado
 - Equipos fallidos devueltos al cliente
 - Actividad facturada y pagada
+
+**Diagrama de Flujo:**
+
+```mermaid
+flowchart TD
+    Start([Cliente reporta falla]) --> CreateEmergency[Asistente crea ODS emergencia<br/>Tipo: Mantenimiento Correctivo<br/>Prioridad: ALTA<br/>Estado: NUEVO]
+    CreateEmergency --> Analyze[Coordinador analiza y asigna<br/>Identifica técnico disponible<br/>ODS → PENDIENTE ASIGNACIÓN]
+    Analyze --> RequestRes[Técnico solicita recursos<br/>Herramientas + Equipos repuesto]
+    RequestRes --> AssignEmergency[Logística asigna recursos emergencia<br/>Equipos temporales → TRÁNSITO]
+    AssignEmergency --> GoField[Técnico se dirige a campo<br/>ODS → REALIZANDO<br/>Diagnostica en sitio]
+    GoField --> Resolve[Técnico resuelve falla<br/>Reemplaza equipo si aplica<br/>Cliente firma informe]
+    Resolve --> ReturnRes[Técnico devuelve recursos<br/>Equipo fallido → PENDIENTE NOTA ENTREGA]
+
+    ReturnRes --> UsedTemp{Usó equipo<br/>temporal?}
+    UsedTemp -->|Sí| TempInstalled[Equipo temporal → INSTALADO<br/>ODS → POR NOTA DE ENTREGA]
+    UsedTemp -->|No| BackStock[Equipo regresa a stock<br/>ODS → POR NOTA DE ENTREGA]
+
+    TempInstalled --> GenNote[Logística genera nota de entrega<br/>Agrupa equipos fallidos<br/>Estado: PENDIENTE]
+    BackStock --> GenNote
+
+    GenNote --> CoordReturn[Logística coordina devolución<br/>Prepara transporte<br/>ODS → EQUIPOS POR ENTREGAR]
+    CoordReturn --> ClientReceive[Cliente recibe equipos<br/>Confirma recepción<br/>Nota → ENTREGADO<br/>ODS → CULMINADO]
+    ClientReceive --> Billing[Proceso de facturación<br/>Proforma → Factura → Pago]
+    Billing --> End([Fin del flujo])
+
+    style Start fill:#ffe1e1
+    style End fill:#e1ffe1
+    style UsedTemp fill:#fff4e1
+    style CreateEmergency fill:#ffcccc
+    style Resolve fill:#f0e1ff
+```
 
 ---
 
@@ -2296,46 +2387,52 @@ DOMINIO: Gestión de Servicios de Telecomunicaciones
 
 **Patrón Arquitectónico:** Arquitectura en capas (Layered Architecture) con separación clara de responsabilidades.
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                  CAPA DE PRESENTACIÓN                   │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  │
-│  │ Web Browser  │  │ Mobile App   │  │  Tablet App  │  │
-│  │  (Desktop)   │  │  (Técnicos)  │  │ (Logística)  │  │
-│  └──────────────┘  └──────────────┘  └──────────────┘  │
-└─────────────────────────────────────────────────────────┘
-                          ↓ HTTPS/REST API
-┌─────────────────────────────────────────────────────────┐
-│                    CAPA DE APLICACIÓN                   │
-│  ┌──────────────────────────────────────────────────┐  │
-│  │           API Gateway / Backend Services         │  │
-│  │  • Autenticación y Autorización                  │  │
-│  │  • Lógica de Negocio                             │  │
-│  │  • Orquestación de Workflows                     │  │
-│  │  • Generación de Documentos                      │  │
-│  │  • Notificaciones                                │  │
-│  └──────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────┘
-                          ↓
-┌─────────────────────────────────────────────────────────┐
-│                   CAPA DE SERVICIOS                     │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐  │
-│  │   ODS    │ │Logística │ │  Admin   │ │  RRHH    │  │
-│  │ Service  │ │ Service  │ │ Service  │ │ Service  │  │
-│  └──────────┘ └──────────┘ └──────────┘ └──────────┘  │
-└─────────────────────────────────────────────────────────┘
-                          ↓
-┌─────────────────────────────────────────────────────────┐
-│                  CAPA DE PERSISTENCIA                   │
-│  ┌──────────────────────────────────────────────────┐  │
-│  │         Base de Datos Relacional (SQL)           │  │
-│  │         • PostgreSQL / MySQL / SQL Server        │  │
-│  └──────────────────────────────────────────────────┘  │
-│  ┌──────────────────────────────────────────────────┐  │
-│  │         Almacenamiento de Archivos               │  │
-│  │         • Sistema de archivos / S3 / Blob        │  │
-│  └──────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────┘
+```mermaid
+graph TB
+    subgraph Presentation["CAPA DE PRESENTACIÓN"]
+        WebBrowser["Web Browser<br/>(Desktop)"]
+        MobileApp["Mobile App<br/>(Técnicos)"]
+        TabletApp["Tablet App<br/>(Logística)"]
+    end
+
+    subgraph Application["CAPA DE APLICACIÓN"]
+        APIGateway["API Gateway / Backend Services<br/>• Autenticación y Autorización<br/>• Lógica de Negocio<br/>• Orquestación de Workflows<br/>• Generación de Documentos<br/>• Notificaciones"]
+    end
+
+    subgraph Services["CAPA DE SERVICIOS"]
+        ODSService["ODS<br/>Service"]
+        LogisticaService["Logística<br/>Service"]
+        AdminService["Admin<br/>Service"]
+        RRHHService["RRHH<br/>Service"]
+    end
+
+    subgraph Persistence["CAPA DE PERSISTENCIA"]
+        Database["Base de Datos Relacional (SQL)<br/>• PostgreSQL / MySQL / SQL Server"]
+        FileStorage["Almacenamiento de Archivos<br/>• Sistema de archivos / S3 / Blob"]
+    end
+
+    WebBrowser -->|HTTPS/REST API| APIGateway
+    MobileApp -->|HTTPS/REST API| APIGateway
+    TabletApp -->|HTTPS/REST API| APIGateway
+
+    APIGateway --> ODSService
+    APIGateway --> LogisticaService
+    APIGateway --> AdminService
+    APIGateway --> RRHHService
+
+    ODSService --> Database
+    LogisticaService --> Database
+    AdminService --> Database
+    RRHHService --> Database
+
+    ODSService --> FileStorage
+    LogisticaService --> FileStorage
+    AdminService --> FileStorage
+
+    style Presentation fill:#e1f0ff
+    style Application fill:#f0e1ff
+    style Services fill:#ffe1f0
+    style Persistence fill:#f0ffe1
 ```
 
 ### **8.2 Componentes Principales**
