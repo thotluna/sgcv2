@@ -12,7 +12,7 @@ export type ActionState = {
   };
 };
 
-export async function createCustomerAction(prevState: any, formData: FormData): Promise<ActionState> {
+export async function createCustomerAction(_prevState: any, formData: FormData): Promise<ActionState> {
   const rawData = Object.fromEntries(formData.entries());
 
   const validated = CreateCustomerSchema.safeParse(rawData);
@@ -41,10 +41,10 @@ export async function createCustomerAction(prevState: any, formData: FormData): 
 
 export async function updateCustomerAction(
   id: string,
-  prevState: any,
+  _prevState: any,
   formData: FormData
 ): Promise<ActionState> {
-  const rawData = Object.fromEntries(formData.entries());
+   const rawData = Object.fromEntries(formData.entries());
 
   const validated = UpdateCustomerSchema.safeParse(rawData);
 

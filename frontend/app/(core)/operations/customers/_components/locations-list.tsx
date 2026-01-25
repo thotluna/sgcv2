@@ -4,7 +4,7 @@ interface LocationsListProps {
   customerId: string;
 }
 
-export function LocationsList({ customerId }: LocationsListProps) {
+export function LocationsList({ customerId: _customerId }: LocationsListProps) {
   return (
     <Card>
       <CardHeader>

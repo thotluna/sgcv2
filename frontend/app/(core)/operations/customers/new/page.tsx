@@ -1,4 +1,3 @@
-import { serverCustomersService } from '../_components/actions';
 import { CustomerForm } from '../_components/customer-form';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 

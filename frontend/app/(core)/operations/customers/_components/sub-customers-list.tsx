@@ -4,7 +4,7 @@ interface SubCustomersListProps {
   customerId: string;
 }
 
-export function SubCustomersList({ customerId }: SubCustomersListProps) {
+export function SubCustomersList({ customerId: _customerId }: SubCustomersListProps) {
   return (
     <Card>
       <CardHeader>

@@ -2,7 +2,6 @@ import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { serverCustomersService } from '../_components/actions';
 import { CustomerDetailsHeader } from '../_components/customer-details-header';
-import { CustomerDetailsTabs } from '../_components/customer-details-tabs';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Info, MapPin, Users } from 'lucide-react';

@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { CustomersTable } from '../table';
 import { CustomerDto, CustomerState } from '@sgcv2/shared';
 
@@ -23,12 +23,12 @@ const mockCustomers: CustomerDto[] = [
 
 describe('CustomersTable', () => {
   it('renders empty state when no customers', () => {
-    render(<CustomersTable customers={[]} total={0} page={1} perPage={10} />);
-    expect(screen.getByText('No se encontraron clientes')).toBeInTheDocument();
+    render(<CustomersTable data={[]} isLoading={false} onDelete={jest.fn()} />);
+    expect(screen.getByText('No se encontraron resultados.')).toBeInTheDocument();
   });
 
   it('renders customer data', () => {
-    render(<CustomersTable customers={mockCustomers} total={1} page={1} perPage={10} />);
+    render(<CustomersTable data={mockCustomers} isLoading={false} onDelete={jest.fn()} />);
     expect(screen.getByText('C001')).toBeInTheDocument();
     expect(screen.getByText('Test Customer 1')).toBeInTheDocument();
     expect(screen.getByText('V-12345678-9')).toBeInTheDocument();

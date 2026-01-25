@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react';
 import NewCustomerPage from '../page';
-import { useRouter } from 'next/navigation';
 
 // Mock components
 jest.mock('../_components/customer-form', () => ({
