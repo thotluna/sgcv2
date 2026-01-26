@@ -14,16 +14,11 @@ interface LocationFormProps {
   onCancel?: () => void;
 }
 
-export function LocationForm({
-  parentId,
-  subCustomerId = null,
-  onCancel,
-}: LocationFormProps) {
+export function LocationForm({ parentId, subCustomerId = null, onCancel }: LocationFormProps) {
   const [state, formAction, isPending] = useActionState(
     createLocationAction.bind(null, parentId, subCustomerId),
     { success: false } as ActionState
   );
-
 
   return (
     <form action={formAction} className="space-y-4">
@@ -40,7 +35,7 @@ export function LocationForm({
           name="name"
           placeholder="Ej: Sede Principal, Depósito Norte..."
           defaultValue=""
-          aria-describedby={state.errors?.name ? "name-error" : undefined}
+          aria-describedby={state.errors?.name ? 'name-error' : undefined}
         />
         {state.errors?.name && (
           <p id="name-error" className="text-sm font-medium text-destructive">
@@ -56,7 +51,7 @@ export function LocationForm({
           name="address"
           placeholder="Calle, Av, Edificio..."
           defaultValue=""
-          aria-describedby={state.errors?.address ? "address-error" : undefined}
+          aria-describedby={state.errors?.address ? 'address-error' : undefined}
         />
         {state.errors?.address && (
           <p id="address-error" className="text-sm font-medium text-destructive">

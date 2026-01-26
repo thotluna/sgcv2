@@ -80,7 +80,10 @@ export const serverLocationsService = {
     }
   },
 
-  update: async (id: string, data: UpdateCustomerLocationDto): Promise<AppResponse<CustomerLocation>> => {
+  update: async (
+    id: string,
+    data: UpdateCustomerLocationDto
+  ): Promise<AppResponse<CustomerLocation>> => {
     try {
       const client = await createServerApiClient();
       const response = await client.put(`/locations/${id}`, data);

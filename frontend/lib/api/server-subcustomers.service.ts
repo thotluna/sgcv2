@@ -50,13 +50,18 @@ export const serverSubCustomersService = {
         success: false,
         error: {
           code: 'INTERNAL_SERVER_ERROR',
-          message: isAxiosError ? error.response?.data?.message : 'Error al cargar los sub-clientes',
+          message: isAxiosError
+            ? error.response?.data?.message
+            : 'Error al cargar los sub-clientes',
         },
       };
     }
   },
 
-  create: async (customerId: string, data: CreateSubCustomerDto): Promise<AppResponse<SubCustomer>> => {
+  create: async (
+    customerId: string,
+    data: CreateSubCustomerDto
+  ): Promise<AppResponse<SubCustomer>> => {
     try {
       const client = await createServerApiClient();
       const response = await client.post(`/customers/${customerId}/sub-customers`, data);
@@ -96,7 +101,9 @@ export const serverSubCustomersService = {
         success: false,
         error: {
           code: 'INTERNAL_SERVER_ERROR',
-          message: isAxiosError ? error.response?.data?.message : 'Error al actualizar el sub-cliente',
+          message: isAxiosError
+            ? error.response?.data?.message
+            : 'Error al actualizar el sub-cliente',
         },
       };
     }
@@ -116,7 +123,9 @@ export const serverSubCustomersService = {
         success: false,
         error: {
           code: 'INTERNAL_SERVER_ERROR',
-          message: isAxiosError ? error.response?.data?.message : 'Error al eliminar el sub-cliente',
+          message: isAxiosError
+            ? error.response?.data?.message
+            : 'Error al eliminar el sub-cliente',
         },
       };
     }

@@ -54,7 +54,11 @@ export function CustomersTable({ data }: CustomersTableProps) {
       columns={columns}
       emptyMessage="No se encontraron resultados."
       rowActions={customer => (
-        <CustomerDropMenu id={customer.id} customerName={customer.legalName} onDelete={handleDelete} />
+        <CustomerDropMenu
+          id={customer.id}
+          customerName={customer.legalName}
+          onDelete={handleDelete}
+        />
       )}
     />
   );

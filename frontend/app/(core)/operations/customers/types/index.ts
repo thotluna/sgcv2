@@ -3,7 +3,7 @@ import { CreateCustomerSchemaType, UpdateCustomerSchemaType } from '@sgcv2/share
 export type CustomerCreateInput = CreateCustomerSchemaType;
 export type CustomerUpdateInput = UpdateCustomerSchemaType;
 
-export interface CustomerFormValues extends CreateCustomerSchemaType { }
+export type CustomerFormValues = CreateCustomerSchemaType;
 
 export type CreateCustomerFormData = CreateCustomerSchemaType;
 export type UpdateCustomerFormData = UpdateCustomerSchemaType;

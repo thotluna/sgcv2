@@ -67,11 +67,7 @@ export default async function CustomersPage({ searchParams }: CustomersPageProps
 
       <CustomersTable data={customers} />
 
-      <DataPagination
-        currentPage={page}
-        totalPages={totalPages}
-        createPageUrl={createPageUrl}
-      />
+      <DataPagination currentPage={page} totalPages={totalPages} createPageUrl={createPageUrl} />
     </div>
   );
 }

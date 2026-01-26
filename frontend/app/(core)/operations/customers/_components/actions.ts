@@ -1,10 +1,7 @@
 'use server';
 
 import { ActionState } from '../types';
-import {
-  CreateCustomerSchema,
-  UpdateCustomerSchema,
-} from '@sgcv2/shared';
+import { CreateCustomerSchema, UpdateCustomerSchema } from '@sgcv2/shared';
 import { serverCustomersService } from '@/lib/api/server-customers.service';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
@@ -28,7 +25,7 @@ export async function handleCustomerFilters(formData: FormData) {
 }
 
 export async function createCustomerAction(
-  _prevState: any,
+  _prevState: ActionState,
   formData: FormData
 ): Promise<ActionState> {
   const rawData = Object.fromEntries(formData.entries());
@@ -58,7 +55,7 @@ export async function createCustomerAction(
 
 export async function updateCustomerAction(
   id: string,
-  _prevState: any,
+  _prevState: ActionState,
   formData: FormData
 ): Promise<ActionState> {
   const rawData = Object.fromEntries(formData.entries());

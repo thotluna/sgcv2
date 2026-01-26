@@ -82,7 +82,7 @@ export async function SubCustomersList({ customerId }: SubCustomersListProps) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {subCustomers.map((sub) => (
+                {subCustomers.map(sub => (
                   <TableRow key={sub.id}>
                     <TableCell className="font-medium">{sub.externalCode}</TableCell>
                     <TableCell>{sub.businessName}</TableCell>

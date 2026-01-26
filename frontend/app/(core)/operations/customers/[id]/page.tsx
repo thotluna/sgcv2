@@ -55,7 +55,9 @@ export default async function CustomerDetailPage({ params }: PageProps) {
                   <span>{customer.legalName}</span>
                 </div>
                 <div className="grid gap-1">
-                  <span className="text-sm font-medium text-muted-foreground">Nombre Comercial</span>
+                  <span className="text-sm font-medium text-muted-foreground">
+                    Nombre Comercial
+                  </span>
                   <span>{customer.businessName || 'N/A'}</span>
                 </div>
                 <div className="grid gap-1">
@@ -75,7 +77,9 @@ export default async function CustomerDetailPage({ params }: PageProps) {
                   <span>{customer.phone || 'N/A'}</span>
                 </div>
                 <div className="grid gap-1">
-                  <span className="text-sm font-medium text-muted-foreground">Dirección Fiscal</span>
+                  <span className="text-sm font-medium text-muted-foreground">
+                    Dirección Fiscal
+                  </span>
                   <span className="whitespace-pre-wrap">{customer.address}</span>
                 </div>
               </CardContent>

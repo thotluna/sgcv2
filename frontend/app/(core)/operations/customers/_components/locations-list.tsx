@@ -82,7 +82,7 @@ export async function LocationsList({ customerId }: LocationsListProps) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {locations.map((loc) => (
+                {locations.map(loc => (
                   <TableRow key={loc.id}>
                     <TableCell className="font-medium flex items-center gap-2">
                       {loc.subCustomerId ? (

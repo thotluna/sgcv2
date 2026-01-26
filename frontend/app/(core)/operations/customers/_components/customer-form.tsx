@@ -21,7 +21,6 @@ export function CustomerForm({ customer }: CustomerFormProps) {
     { success: false } as ActionState
   );
 
-
   return (
     <form action={formAction} className="space-y-4">
       {state.message && !state.success && (
@@ -39,7 +38,7 @@ export function CustomerForm({ customer }: CustomerFormProps) {
             placeholder="CUST01"
             defaultValue={customer?.code || ''}
             disabled={isUpdate}
-            aria-describedby={state.errors?.code ? "code-error" : undefined}
+            aria-describedby={state.errors?.code ? 'code-error' : undefined}
           />
           {state.errors?.code && (
             <p id="code-error" className="text-sm font-medium text-destructive">
@@ -55,7 +54,7 @@ export function CustomerForm({ customer }: CustomerFormProps) {
             name="taxId"
             placeholder="J-12345678-9"
             defaultValue={customer?.taxId || ''}
-            aria-describedby={state.errors?.taxId ? "taxId-error" : undefined}
+            aria-describedby={state.errors?.taxId ? 'taxId-error' : undefined}
           />
           {state.errors?.taxId && (
             <p id="taxId-error" className="text-sm font-medium text-destructive">
@@ -71,7 +70,7 @@ export function CustomerForm({ customer }: CustomerFormProps) {
             name="legalName"
             placeholder="Nombre de la empresa"
             defaultValue={customer?.legalName || ''}
-            aria-describedby={state.errors?.legalName ? "legalName-error" : undefined}
+            aria-describedby={state.errors?.legalName ? 'legalName-error' : undefined}
           />
           {state.errors?.legalName && (
             <p id="legalName-error" className="text-sm font-medium text-destructive">
@@ -87,7 +86,7 @@ export function CustomerForm({ customer }: CustomerFormProps) {
             name="businessName"
             placeholder="Nombre comercial"
             defaultValue={customer?.businessName || ''}
-            aria-describedby={state.errors?.businessName ? "businessName-error" : undefined}
+            aria-describedby={state.errors?.businessName ? 'businessName-error' : undefined}
           />
           {state.errors?.businessName && (
             <p id="businessName-error" className="text-sm font-medium text-destructive">
@@ -103,7 +102,7 @@ export function CustomerForm({ customer }: CustomerFormProps) {
             name="phone"
             placeholder="+58 412..."
             defaultValue={customer?.phone || ''}
-            aria-describedby={state.errors?.phone ? "phone-error" : undefined}
+            aria-describedby={state.errors?.phone ? 'phone-error' : undefined}
           />
           {state.errors?.phone && (
             <p id="phone-error" className="text-sm font-medium text-destructive">
@@ -119,7 +118,7 @@ export function CustomerForm({ customer }: CustomerFormProps) {
             name="address"
             placeholder="Dirección principal"
             defaultValue={customer?.address || ''}
-            aria-describedby={state.errors?.address ? "address-error" : undefined}
+            aria-describedby={state.errors?.address ? 'address-error' : undefined}
           />
           {state.errors?.address && (
             <p id="address-error" className="text-sm font-medium text-destructive">

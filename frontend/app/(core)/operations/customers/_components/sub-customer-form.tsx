@@ -20,7 +20,6 @@ export function SubCustomerForm({ parentId, onCancel }: SubCustomerFormProps) {
     { success: false } as ActionState
   );
 
-
   return (
     <form action={formAction} className="space-y-6">
       {state.message && !state.success && (
@@ -42,7 +41,7 @@ export function SubCustomerForm({ parentId, onCancel }: SubCustomerFormProps) {
               name="externalCode"
               placeholder="Ej: 001, B-12..."
               defaultValue=""
-              aria-describedby={state.errors?.externalCode ? "externalCode-error" : undefined}
+              aria-describedby={state.errors?.externalCode ? 'externalCode-error' : undefined}
             />
             {state.errors?.externalCode && (
               <p id="externalCode-error" className="text-sm font-medium text-destructive">
@@ -58,7 +57,7 @@ export function SubCustomerForm({ parentId, onCancel }: SubCustomerFormProps) {
               name="businessName"
               placeholder="Ej: Farmacia Central"
               defaultValue=""
-              aria-describedby={state.errors?.businessName ? "businessName-error" : undefined}
+              aria-describedby={state.errors?.businessName ? 'businessName-error' : undefined}
             />
             {state.errors?.businessName && (
               <p id="businessName-error" className="text-sm font-medium text-destructive">
@@ -84,7 +83,7 @@ export function SubCustomerForm({ parentId, onCancel }: SubCustomerFormProps) {
               name="locationName"
               placeholder="Ej: Sede Principal"
               defaultValue="Sede Principal"
-              aria-describedby={state.errors?.locationName ? "locationName-error" : undefined}
+              aria-describedby={state.errors?.locationName ? 'locationName-error' : undefined}
             />
             {state.errors?.locationName && (
               <p id="locationName-error" className="text-sm font-medium text-destructive">
@@ -100,7 +99,7 @@ export function SubCustomerForm({ parentId, onCancel }: SubCustomerFormProps) {
               name="locationAddress"
               placeholder="Calle, Av, Edificio..."
               defaultValue=""
-              aria-describedby={state.errors?.locationAddress ? "locationAddress-error" : undefined}
+              aria-describedby={state.errors?.locationAddress ? 'locationAddress-error' : undefined}
             />
             {state.errors?.locationAddress && (
               <p id="locationAddress-error" className="text-sm font-medium text-destructive">

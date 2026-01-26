@@ -5,7 +5,7 @@ import {
 } from '@/app/(core)/operations/customers/types';
 
 export class CustomerPOM {
-  constructor(private page: Page) { }
+  constructor(private page: Page) {}
 
   async login() {
     await this.page.goto('/login');
