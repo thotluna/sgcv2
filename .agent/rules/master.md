@@ -85,6 +85,12 @@ You must strictly separate **Domain Errors** from **Application/HTTP Errors**.
 ### Frontend Specifics
 - **Server Components:** Default choice. Use `'use client'` only for interactive hooks.
 - **Components:** Use functional components (`const Component: FC<Props> = ...`).
+- **Form Architecture (Progressive Enhancement):**
+  - **Mandatory Server Actions:** All form submissions must use Next.js Server Actions.
+  - **JS-Free Functionality:** Forms MUST be functional even if JavaScript is disabled in the browser.
+  - **SSR First:** Render forms on the server to reduce TBT (Total Blocking Time) and client bundle size.
+  - **useActionState:** Use this hook for managing server-side state and feedback.
+  - **Avoid Heavy Client Libs:** Minimize usage of `react-hook-form` if it prevents the form from working without JS or adds unnecessary bundle weight. Prefer native `formData` validation in Server Actions.
 
 ## 4. GIT & WORKFLOW
 

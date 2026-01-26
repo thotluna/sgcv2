@@ -22,7 +22,11 @@ Expertise in building high-performance, accessible, and maintainable enterprise 
 
 ### 2. State & Data Flow
 - **Zustand Stores:** Define small, focused stores in `features/[module]/store`. Avoid global monolithic stores.
-- **Server Actions:** All mutations (POST/PATCH/DELETE) must be handled via Next.js Server Actions.
+- **Server Actions & Forms:** 
+  - All mutations (POST/PATCH/DELETE) must be handled via Next.js Server Actions.
+  - Use `useActionState` for form feedback.
+  - Prioritize native `formData` and Progressive Enhancement.
+  - Minimize `react-hook-form` usage to ensure forms work without JavaScript.
 - **Shared Types:** Always import DTOs and Zod schemas from `@sgcv2/shared`.
 
 ### 3. Styling Standards (Tailwind v4)
