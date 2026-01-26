@@ -1,63 +1,42 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import * as z from 'zod';
-import { useState } from 'react';
-import { useAuth } from '@/hooks/use-auth';
+import { useActionState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { LogIn, Loader2 } from 'lucide-react';
+import { LogIn, Loader2, AlertCircle } from 'lucide-react';
+import { loginAction } from './actions';
+import { ActionState } from '@/lib/types';
+import { useFormStatus } from 'react-dom';
 
-const loginSchema = z.object({
-  username: z.string().min(1, { message: 'Username is required' }),
-  password: z.string().min(1, { message: 'Password is required' }),
-});
+function SubmitButton() {
+  const { pending } = useFormStatus();
 
-type LoginFormData = z.infer<typeof loginSchema>;
+  return (
+    <Button type="submit" className="w-full" disabled={pending}>
+      {pending ? (
+        <>
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          Iniciando sesión...
+        </>
+      ) : (
+        <>
+          <LogIn className="mr-2 h-4 w-4" />
+          Ingresar
+        </>
+      )}
+    </Button>
+  );
+}
+
+const initialState: ActionState = {
+  success: false,
+  message: '',
+};
 
 export default function LoginPage() {
-  const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      username: '',
-      password: '',
-    },
-  });
-
-  async function onSubmit(data: LoginFormData) {
-    setIsLoading(true);
-    try {
-      await login(data.username, data.password);
-      toast.success('Login successful!', {
-        description: 'Welcome back!',
-      });
-    } catch (error) {
-      let errorMessage = 'Invalid credentials. Please try again.';
-      if (error && typeof error === 'object' && 'response' in error) {
-        const axiosError = error as { response: { data: { message: string } } };
-        if (axiosError.response?.data?.message) {
-          errorMessage = axiosError.response.data.message;
-        }
-      }
-
-      toast.error('Login failed', {
-        description: errorMessage,
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  }
+  const [state, formAction] = useActionState(loginAction, initialState);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 p-4">
@@ -71,46 +50,43 @@ export default function LoginPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form action={formAction} className="space-y-4">
+            {!state.success && state.message && (
+              <div className="bg-destructive/15 text-destructive p-3 rounded-md text-sm font-medium flex items-center gap-2 border border-destructive/20">
+                <AlertCircle className="h-4 w-4" />
+                {state.message}
+              </div>
+            )}
+
             <div className="space-y-2">
-              <Label htmlFor="username">Username</Label>
+              <Label htmlFor="username">Usuario</Label>
               <Input
                 id="username"
+                name="username"
                 type="text"
-                placeholder="me@domain.com"
-                disabled={isLoading}
-                {...register('username')}
-                className={errors.username ? 'border-red-500' : ''}
+                placeholder="usuario"
+                className={state.errors?.username ? 'border-red-500 chain-error' : ''}
               />
-              {errors.username && <p className="text-sm text-red-500">{errors.username.message}</p>}
+              {state.errors?.username && (
+                <p className="text-sm text-red-500 font-medium">{state.errors.username[0]}</p>
+              )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">Contraseña</Label>
               <Input
                 id="password"
+                name="password"
                 type="password"
-                placeholder="introduce tu contraseña"
-                disabled={isLoading}
-                {...register('password')}
-                className={errors.password ? 'border-red-500' : ''}
+                placeholder="••••••••"
+                className={state.errors?.password ? 'border-red-500' : ''}
               />
-              {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
+              {state.errors?.password && (
+                <p className="text-sm text-red-500 font-medium">{state.errors.password[0]}</p>
+              )}
             </div>
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Logging in...
-                </>
-              ) : (
-                <>
-                  <LogIn className="mr-2 h-4 w-4" />
-                  Sign in
-                </>
-              )}
-            </Button>
+            <SubmitButton />
           </form>
         </CardContent>
       </Card>
