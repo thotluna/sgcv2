@@ -1,11 +1,8 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useActionState, useEffect } from 'react';
 import { updatePasswordAction } from '@feature/users/profile.actions';
-import { updatePasswordSchema } from '@feature/users/schemas';
 import {
-  Button,
   Input,
   Label,
   Card,
@@ -16,74 +13,61 @@ import {
   CardTitle,
 } from '@/components/ui';
 import { toast } from 'sonner';
-import { z } from 'zod';
+import { ActionState } from '@lib/types';
+import { SubmitButton } from '../submit-button';
 
-type PasswordValues = z.infer<typeof updatePasswordSchema>;
+const initialState: ActionState = {
+  success: false,
+  message: '',
+};
 
 export function PasswordForm() {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<PasswordValues>({
-    resolver: zodResolver(updatePasswordSchema),
-    defaultValues: {
-      currentPassword: '',
-      password: '',
-      confirmPassword: '',
-    },
-  });
+  const [state, formAction] = useActionState(updatePasswordAction, initialState);
 
-  const onSubmit = async (data: PasswordValues) => {
-    const formData = new FormData();
-    formData.append('currentPassword', data.currentPassword);
-    formData.append('password', data.password);
-    formData.append('confirmPassword', data.confirmPassword);
-
-    const result = await updatePasswordAction(formData);
-    if (result.success) {
-      toast.success('Password updated successfully');
-      reset();
-    } else {
-      toast.error(result.error || 'Something went wrong');
+  useEffect(() => {
+    if (state.success) {
+      toast.success(state.message || 'Contraseña actualizada con éxito');
+    } else if (state.message && state.success === false && !state.errors) {
+      toast.error(state.message);
     }
-  };
+  }, [state]);
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Change Password</CardTitle>
-        <CardDescription>Update your password to stay secure.</CardDescription>
+        <CardTitle>Cambiar Contraseña</CardTitle>
+        <CardDescription>Actualiza tu contraseña para mantener tu cuenta segura.</CardDescription>
       </CardHeader>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form action={formAction}>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="currentPassword">Current Password</Label>
-            <Input id="currentPassword" type="password" {...register('currentPassword')} />
-            {errors.currentPassword && (
-              <p className="text-destructive text-sm">{errors.currentPassword.message}</p>
+            <Label htmlFor="currentPassword">Contraseña Actual</Label>
+            <Input id="currentPassword" name="currentPassword" type="password" />
+            {state?.errors?.currentPassword && (
+              <p className="text-destructive text-sm font-medium">
+                {state.errors.currentPassword[0]}
+              </p>
             )}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password">New Password</Label>
-            <Input id="password" type="password" {...register('password')} />
-            {errors.password && (
-              <p className="text-destructive text-sm">{errors.password.message}</p>
+            <Label htmlFor="password">Nueva Contraseña</Label>
+            <Input id="password" name="password" type="password" />
+            {state?.errors?.password && (
+              <p className="text-destructive text-sm font-medium">{state.errors.password[0]}</p>
             )}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="confirmPassword">Confirm New Password</Label>
-            <Input id="confirmPassword" type="password" {...register('confirmPassword')} />
-            {errors.confirmPassword && (
-              <p className="text-destructive text-sm">{errors.confirmPassword.message}</p>
+            <Label htmlFor="confirmPassword">Confirmar Nueva Contraseña</Label>
+            <Input id="confirmPassword" name="confirmPassword" type="password" />
+            {state?.errors?.confirmPassword && (
+              <p className="text-destructive text-sm font-medium">
+                {state.errors.confirmPassword[0]}
+              </p>
             )}
           </div>
         </CardContent>
         <CardFooter className="border-t px-6 py-4">
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? 'Updating...' : 'Update Password'}
-          </Button>
+          <SubmitButton label="Actualizar Contraseña" loadingLabel="Actualizando..." />
         </CardFooter>
       </form>
     </Card>
