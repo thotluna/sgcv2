@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui';
 import { UserWithRolesDto } from '@sgcv2/shared';
 
 interface ProfileHeaderProps {

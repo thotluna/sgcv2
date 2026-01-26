@@ -35,3 +35,16 @@ export const updateUserSchema = z.object({
   status: userStatusEnum.optional(),
   roleIds: z.array(z.number()).optional(),
 });
+
+// Atomic schemas for Profile updates
+export const updateEmailSchema = updateUserSchema.pick({ email: true }).required();
+export const updateAvatarSchema = updateUserSchema.pick({ avatar: true }).required();
+export const updatePasswordBaseSchema = updateUserSchema
+  .pick({
+    password: true,
+    currentPassword: true,
+  })
+  .required({
+    currentPassword: true,
+    password: true,
+  });

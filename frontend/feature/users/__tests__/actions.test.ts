@@ -1,6 +1,8 @@
-import { createUserAction, updateUserAction, getUser, ActionState } from '../actions';
+import { createUserAction, updateUserAction, getUser } from '@feature/users/actions';
+import { ActionState } from '@lib/types';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
+import * as usersService from '@feature/users/service';
 
 jest.mock('next/navigation', () => ({
   redirect: jest.fn(),
@@ -10,15 +12,7 @@ jest.mock('next/cache', () => ({
   revalidatePath: jest.fn(),
 }));
 
-jest.mock('@/lib/api/server-users.service', () => ({
-  serverUsersService: {
-    create: jest.fn(),
-    updateUser: jest.fn(),
-    getUserById: jest.fn(),
-  },
-}));
-
-import { serverUsersService } from '@/lib/api/server-users.service';
+jest.mock('@feature/users/service');
 
 describe('User Actions', () => {
   beforeEach(() => {
@@ -65,12 +59,12 @@ describe('User Actions', () => {
       formData.append('firstName', '');
       formData.append('lastName', '');
 
-      (serverUsersService.create as jest.Mock).mockResolvedValue({ success: true });
+      (usersService.create as jest.Mock).mockResolvedValue({ success: true });
 
       const prevState: ActionState = { success: false };
       await createUserAction(prevState, formData);
 
-      expect(serverUsersService.create).toHaveBeenCalledWith(
+      expect(usersService.create).toHaveBeenCalledWith(
         expect.objectContaining({
           username: 'testuser',
           email: 'test@example.com',
@@ -94,10 +88,10 @@ describe('User Actions', () => {
       expect(result.message).toBe('Error de validación');
       expect(result.errors).toHaveProperty('username');
       expect(result.errors).toHaveProperty('email');
-      expect(serverUsersService.create).not.toHaveBeenCalled();
+      expect(usersService.create).not.toHaveBeenCalled();
     });
 
-    it('should return error when password is missing for new user', async () => {
+    it('should return validation errors when password is missing for new user', async () => {
       const formData = new FormData();
       formData.append('username', 'testuser');
       formData.append('email', 'test@example.com');
@@ -110,7 +104,8 @@ describe('User Actions', () => {
       const result = await createUserAction(prevState, formData);
 
       expect(result.success).toBe(false);
-      expect(result.message).toBe('La contraseña es obligatoria para nuevos usuarios');
+      expect(result.message).toBe('Error de validación');
+      expect(result.errors).toHaveProperty('password');
     });
 
     it('should handle API errors', async () => {
@@ -122,7 +117,7 @@ describe('User Actions', () => {
       formData.append('firstName', '');
       formData.append('lastName', '');
 
-      (serverUsersService.create as jest.Mock).mockResolvedValue({
+      (usersService.create as jest.Mock).mockResolvedValue({
         success: false,
         error: { message: 'Username already exists' },
       });
@@ -132,27 +127,6 @@ describe('User Actions', () => {
 
       expect(result.success).toBe(false);
       expect(result.message).toBe('Username already exists');
-    });
-
-    it('should return error on unexpected status code', async () => {
-      const formData = new FormData();
-      formData.append('username', 'testuser');
-      formData.append('email', 'test@example.com');
-      formData.append('password', 'password123');
-      formData.append('status', 'ACTIVE');
-      formData.append('firstName', '');
-      formData.append('lastName', '');
-
-      (serverUsersService.create as jest.Mock).mockResolvedValue({
-        success: false,
-        error: { message: 'Respuesta inesperada del servidor' },
-      });
-
-      const prevState: ActionState = { success: false };
-      const result = await createUserAction(prevState, formData);
-
-      expect(result.success).toBe(false);
-      expect(result.message).toBe('Respuesta inesperada del servidor');
     });
   });
 
@@ -165,12 +139,12 @@ describe('User Actions', () => {
       formData.append('lastName', 'Name');
       formData.append('password', '');
 
-      (serverUsersService.updateUser as jest.Mock).mockResolvedValue({ success: true });
+      (usersService.updateUser as jest.Mock).mockResolvedValue({ success: true });
 
       const prevState: ActionState = { success: false };
       await updateUserAction(123, prevState, formData);
 
-      expect(serverUsersService.updateUser).toHaveBeenCalledWith(
+      expect(usersService.updateUser).toHaveBeenCalledWith(
         123,
         expect.objectContaining({
           email: 'updated@example.com',
@@ -191,12 +165,12 @@ describe('User Actions', () => {
       formData.append('firstName', '');
       formData.append('lastName', '');
 
-      (serverUsersService.updateUser as jest.Mock).mockResolvedValue({ success: true });
+      (usersService.updateUser as jest.Mock).mockResolvedValue({ success: true });
 
       const prevState: ActionState = { success: false };
       await updateUserAction(123, prevState, formData);
 
-      expect(serverUsersService.updateUser).toHaveBeenCalledWith(
+      expect(usersService.updateUser).toHaveBeenCalledWith(
         123,
         expect.objectContaining({
           password: 'newpassword123',
@@ -212,7 +186,7 @@ describe('User Actions', () => {
       formData.append('firstName', '');
       formData.append('lastName', '');
 
-      (serverUsersService.updateUser as jest.Mock).mockResolvedValue({
+      (usersService.updateUser as jest.Mock).mockResolvedValue({
         success: false,
         error: { message: 'Conflict' },
       });
@@ -222,26 +196,6 @@ describe('User Actions', () => {
 
       expect(result.success).toBe(false);
       expect(result.message).toBe('Conflict');
-    });
-
-    it('should handle unexpected status code during update', async () => {
-      const formData = new FormData();
-      formData.append('email', 'updated@example.com');
-      formData.append('status', 'ACTIVE');
-      formData.append('password', '');
-      formData.append('firstName', '');
-      formData.append('lastName', '');
-
-      (serverUsersService.updateUser as jest.Mock).mockResolvedValue({
-        success: false,
-        error: { message: 'Respuesta inesperada del servidor' },
-      });
-
-      const prevState: ActionState = { success: false };
-      const result = await updateUserAction(123, prevState, formData);
-
-      expect(result.success).toBe(false);
-      expect(result.message).toBe('Respuesta inesperada del servidor');
     });
 
     it('should return validation errors when update data is invalid', async () => {
@@ -260,7 +214,7 @@ describe('User Actions', () => {
   describe('getUser', () => {
     it('should fetch user data successfully', async () => {
       const mockUser = { id: 123, username: 'testuser' };
-      (serverUsersService.getUserById as jest.Mock).mockResolvedValue({
+      (usersService.getUserById as jest.Mock).mockResolvedValue({
         success: true,
         data: mockUser,
       });
@@ -271,28 +225,16 @@ describe('User Actions', () => {
       expect(result.data).toEqual(mockUser);
     });
 
-    it('should handle user not found', async () => {
-      (serverUsersService.getUserById as jest.Mock).mockResolvedValue({
-        success: false,
-        error: { message: 'User not found' },
-      });
+    it('should handle API failure when fetching user', async () => {
+      (usersService.getUserById as jest.Mock).mockRejectedValue(new Error('Boom'));
 
       const result = await getUser(123);
 
       expect(result.success).toBe(false);
-      expect(result.error).toBe('User not found');
-    });
-
-    it('should handle API error when fetching user', async () => {
-      (serverUsersService.getUserById as jest.Mock).mockResolvedValue({
-        success: false,
-        error: { message: 'Network Error' },
+      expect(result.error).toEqual({
+        code: 'FETCH_ERROR',
+        message: 'Error connecting to server',
       });
-
-      const result = await getUser(123);
-
-      expect(result.success).toBe(false);
-      expect(result.error).toBe('Network Error');
     });
   });
 });

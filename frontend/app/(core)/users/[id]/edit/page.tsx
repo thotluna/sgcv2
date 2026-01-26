@@ -1,5 +1,5 @@
 import { serverUsersService } from '@/lib/api/server-users.service';
-import { UserForm } from '../../_components/user-form';
+import { UserForm } from '../../../../../feature/users/components/admin/user-form';
 import { notFound } from 'next/navigation';
 
 interface EditUserPageProps {

@@ -10,6 +10,12 @@ const config: Config = {
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   moduleNameMapper: {
+    '^@sgcv2/shared$': '<rootDir>/../packages/shared/src',
+    '^@feature/(.*)$': '<rootDir>/feature/$1',
+    '^@components/(.*)$': '<rootDir>/components/$1',
+    '^@lib/(.*)$': '<rootDir>/lib/$1',
+    '^@hooks/(.*)$': '<rootDir>/hooks/$1',
+    '^@stores/(.*)$': '<rootDir>/stores/$1',
     '^@/(.*)$': '<rootDir>/$1',
   },
   testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
