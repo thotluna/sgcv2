@@ -14,3 +14,22 @@ Object.defineProperty(window, 'matchMedia', {
     dispatchEvent: jest.fn(),
   })),
 });
+// Mock next/navigation
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+    replace: jest.fn(),
+    refresh: jest.fn(),
+    back: jest.fn(),
+  }),
+  usePathname: () => '',
+  useSearchParams: () => new URLSearchParams(),
+  redirect: jest.fn(),
+  notFound: jest.fn(),
+}));
+
+// Mock next/cache
+jest.mock('next/cache', () => ({
+  revalidatePath: jest.fn(),
+  revalidateTag: jest.fn(),
+}));

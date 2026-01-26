@@ -1,44 +1,51 @@
 'use server';
 
+import { ActionState } from '../types';
+import { CreateCustomerSchema, UpdateCustomerSchema } from '@sgcv2/shared';
+import { serverCustomersService } from '@/lib/api/server-customers.service';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { serverCustomersService } from '@/lib/api/server-customers.service';
-import {
-  CreateCustomerSchema as createSchema,
-  UpdateCustomerSchema as updateSchema,
-  UpdateCustomerDto,
-} from '@sgcv2/shared';
 
-export type ActionState = {
-  success?: boolean;
-  fieldErrors?: { [key: string]: string[] };
-  message?: string;
-};
+export async function handleCustomerFilters(formData: FormData) {
+  const search = formData.get('search') as string;
+  const status = formData.get('status') as string;
+
+  const params = new URLSearchParams();
+
+  if (search && search.trim() !== '') {
+    params.set('search', search.trim());
+  }
+
+  if (status && status !== '') {
+    params.set('status', status);
+  }
+
+  const queryString = params.toString();
+  redirect(`/operations/customers${queryString ? `?${queryString}` : ''}`);
+}
 
 export async function createCustomerAction(
   _prevState: ActionState,
   formData: FormData
 ): Promise<ActionState> {
-  // Extract data from FormData
   const rawData = Object.fromEntries(formData.entries());
 
-  // Validate with Zod
-  const validatedFields = createSchema.safeParse(rawData);
+  const validated = CreateCustomerSchema.safeParse(rawData);
 
-  if (!validatedFields.success) {
+  if (!validated.success) {
     return {
       success: false,
-      fieldErrors: validatedFields.error.flatten().fieldErrors,
       message: 'Error de validación',
+      errors: validated.error.flatten().fieldErrors,
     };
   }
 
-  const response = await serverCustomersService.create(validatedFields.data);
+  const response = await serverCustomersService.create(validated.data);
 
-  if (!response.success) {
+  if (response.error) {
     return {
       success: false,
-      message: response.error?.message || 'Error al crear el cliente',
+      message: response.error.message,
     };
   }
 
@@ -53,29 +60,42 @@ export async function updateCustomerAction(
 ): Promise<ActionState> {
   const rawData = Object.fromEntries(formData.entries());
 
-  const validatedFields = updateSchema.safeParse(rawData);
+  // Convert empty values to undefined for partial update if needed
+  // or use the schema to handle it.
+  const validated = UpdateCustomerSchema.safeParse(rawData);
 
-  if (!validatedFields.success) {
+  if (!validated.success) {
     return {
       success: false,
-      fieldErrors: validatedFields.error.flatten().fieldErrors,
       message: 'Error de validación',
+      errors: validated.error.flatten().fieldErrors,
     };
   }
 
-  const response = await serverCustomersService.update(
-    id,
-    validatedFields.data as UpdateCustomerDto
-  );
+  const response = await serverCustomersService.update(id, validated.data);
 
-  if (!response.success) {
+  if (response.error) {
     return {
       success: false,
-      message: response.error?.message || 'Error al actualizar el cliente',
+      message: response.error.message,
     };
   }
 
   revalidatePath('/operations/customers');
   revalidatePath(`/operations/customers/${id}`);
   redirect(`/operations/customers/${id}`);
+}
+
+export async function deleteCustomerAction(id: string): Promise<ActionState> {
+  const response = await serverCustomersService.delete(id);
+
+  if (response.error) {
+    return {
+      success: false,
+      message: response.error.message,
+    };
+  }
+
+  revalidatePath('/operations/customers');
+  return { success: true };
 }

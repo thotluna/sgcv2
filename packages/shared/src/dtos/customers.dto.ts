@@ -64,7 +64,13 @@ export class CreateCustomerDto extends BaseCustomerDto {}
  *               type: string
  *               enum: [ACTIVE, INACTIVE, BLOCKED]
  */
-export class UpdateCustomerDto extends BaseCustomerDto {
+export class UpdateCustomerDto {
+  code?: string;
+  legalName?: string;
+  taxId?: string;
+  address?: string;
+  businessName?: string;
+  phone?: string;
   state?: CustomerState;
 }
 

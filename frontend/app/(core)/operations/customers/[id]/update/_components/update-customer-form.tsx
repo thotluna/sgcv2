@@ -1,20 +1,10 @@
-'use client';
-
-import { CustomerDto } from '@sgcv2/shared';
-import { useRouter } from 'next/navigation';
 import { CustomerForm } from '../../../_components/customer-form';
-import { updateCustomerAction } from '../../../_components/actions';
+import { CustomerDto } from '@sgcv2/shared';
 
-export function UpdateCustomerForm({ customer }: { customer: CustomerDto }) {
-  const router = useRouter();
-  const updateAction = updateCustomerAction.bind(null, customer.id);
+interface UpdateCustomerFormProps {
+  customer: CustomerDto;
+}
 
-  return (
-    <CustomerForm
-      action={updateAction}
-      defaultValues={customer}
-      onCancel={() => router.back()}
-      isUpdate={true}
-    />
-  );
+export function UpdateCustomerForm({ customer }: UpdateCustomerFormProps) {
+  return <CustomerForm customer={customer} />;
 }

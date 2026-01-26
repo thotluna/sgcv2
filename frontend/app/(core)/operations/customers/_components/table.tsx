@@ -5,14 +5,23 @@ import { CustomerDropMenu } from './customerDropMenu';
 import { statusMap } from '../_const/const';
 import { Badge } from '@/components/ui/badge';
 import { DataTable, Column } from '@/components/table/data-table';
+import { deleteCustomerAction } from './actions';
+import { toast } from 'sonner';
 
 interface CustomersTableProps {
   data: CustomerDto[];
-  isLoading: boolean;
-  onDelete: (id: string) => Promise<void>;
 }
 
-export function CustomersTable({ data, isLoading, onDelete }: CustomersTableProps) {
+export function CustomersTable({ data }: CustomersTableProps) {
+  const handleDelete = async (id: string) => {
+    const result = await deleteCustomerAction(id);
+    if (result.success) {
+      toast.success('Cliente eliminado exitosamente');
+    } else {
+      toast.error(result.message || 'Error al eliminar el cliente');
+    }
+  };
+
   const columns: Column<CustomerDto>[] = [
     {
       header: 'Código',
@@ -29,7 +38,7 @@ export function CustomersTable({ data, isLoading, onDelete }: CustomersTableProp
     },
     {
       header: 'Teléfono',
-      accessor: customer => customer.phone,
+      accessor: customer => customer.phone || 'N/A',
     },
     {
       header: 'Estado',
@@ -43,10 +52,13 @@ export function CustomersTable({ data, isLoading, onDelete }: CustomersTableProp
     <DataTable
       data={data}
       columns={columns}
-      isLoading={isLoading}
       emptyMessage="No se encontraron resultados."
       rowActions={customer => (
-        <CustomerDropMenu id={customer.id} customerName={customer.legalName} onDelete={onDelete} />
+        <CustomerDropMenu
+          id={customer.id}
+          customerName={customer.legalName}
+          onDelete={handleDelete}
+        />
       )}
     />
   );

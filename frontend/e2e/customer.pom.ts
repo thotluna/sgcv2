@@ -2,7 +2,7 @@ import { Page, expect } from '@playwright/test';
 import {
   CreateCustomerFormData,
   UpdateCustomerFormData,
-} from '@/app/(core)/operations/customers/types/types';
+} from '@/app/(core)/operations/customers/types';
 
 export class CustomerPOM {
   constructor(private page: Page) {}

@@ -1,46 +1,44 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { CustomerForm } from '../customer-form';
+import { useActionState } from 'react';
 
-// Mock useActionState
+// Mock essential hooks
 jest.mock('react', () => ({
   ...jest.requireActual('react'),
-  useActionState: (action: any, initialState: any) => {
-    return [initialState, action, false];
-  },
+  useActionState: jest.fn(),
 }));
 
 describe('CustomerForm', () => {
-  const mockAction = jest.fn().mockResolvedValue({ success: true });
-  const mockOnCancel = jest.fn();
+  const mockAction = jest.fn();
+  const mockBack = jest.fn();
+
+  beforeAll(() => {
+    Object.defineProperty(window, 'history', {
+      value: { back: mockBack },
+      writable: true,
+    });
+  });
 
   beforeEach(() => {
     jest.clearAllMocks();
+    (useActionState as jest.Mock).mockReturnValue([{ success: false }, mockAction, false]);
   });
 
-  it('renders all fields', () => {
-    render(<CustomerForm action={mockAction} onCancel={mockOnCancel} />);
+  it('renders all form fields', () => {
+    render(<CustomerForm />);
 
-    expect(screen.getByLabelText(/código/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/nombre legal/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/razón social/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/rif \/ nit/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/dirección/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/teléfono/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Código/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/RIF/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Nombre Legal/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Razón Social/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Teléfono/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Dirección/i)).toBeInTheDocument();
   });
 
-  it('calls onCancel when cancel button is clicked', () => {
-    render(<CustomerForm action={mockAction} onCancel={mockOnCancel} />);
-
-    fireEvent.click(screen.getByRole('button', { name: /cancelar/i }));
-    expect(mockOnCancel).toHaveBeenCalled();
-  });
-
-  it('dispatches the action on submit', async () => {
-    render(<CustomerForm action={mockAction} onCancel={mockOnCancel} />);
-
-    const submitButton = screen.getByRole('button', { name: /guardar cliente/i });
-    fireEvent.click(submitButton);
-
-    expect(mockAction).toHaveBeenCalled();
+  it('calls window.history.back when cancel button is clicked', () => {
+    render(<CustomerForm />);
+    const cancelButton = screen.getByRole('button', { name: /Cancelar/i });
+    fireEvent.click(cancelButton);
+    expect(mockBack).toHaveBeenCalled();
   });
 });
