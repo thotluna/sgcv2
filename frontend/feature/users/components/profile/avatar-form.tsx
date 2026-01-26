@@ -2,23 +2,23 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { UpdateAvatarSchema } from '../_schemas/profile.schema';
-import { updateAvatarAction } from '../_actions/profile.actions';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { updateAvatarAction } from '@feature/users';
+import { updateAvatarSchema } from '@sgcv2/shared';
 import {
+  Button,
+  Input,
+  Label,
   Card,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+} from '@/components/ui';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-type AvatarValues = z.infer<typeof UpdateAvatarSchema>;
+type AvatarValues = z.infer<typeof updateAvatarSchema>;
 
 interface AvatarFormProps {
   initialAvatar?: string;
@@ -30,15 +30,15 @@ export function AvatarForm({ initialAvatar }: AvatarFormProps) {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<AvatarValues>({
-    resolver: zodResolver(UpdateAvatarSchema),
+    resolver: zodResolver(updateAvatarSchema),
     defaultValues: {
-      avatarUrl: initialAvatar || '',
+      avatar: initialAvatar || '',
     },
   });
 
   const onSubmit = async (data: AvatarValues) => {
     const formData = new FormData();
-    formData.append('avatarUrl', data.avatarUrl || '');
+    formData.append('avatar', data.avatar || '');
 
     const result = await updateAvatarAction(formData);
     if (result.success) {
@@ -59,15 +59,13 @@ export function AvatarForm({ initialAvatar }: AvatarFormProps) {
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="avatarUrl">Avatar URL</Label>
+            <Label htmlFor="avatar">Avatar URL</Label>
             <Input
-              id="avatarUrl"
-              {...register('avatarUrl')}
+              id="avatar"
+              {...register('avatar')}
               placeholder="https://example.com/avatar.png"
             />
-            {errors.avatarUrl && (
-              <p className="text-destructive text-sm">{errors.avatarUrl.message}</p>
-            )}
+            {errors.avatar && <p className="text-destructive text-sm">{errors.avatar.message}</p>}
           </div>
         </CardContent>
         <CardFooter className="border-t px-6 py-4">

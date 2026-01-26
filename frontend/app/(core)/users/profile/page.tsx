@@ -1,28 +1,22 @@
-import { serverUsersService } from '@/lib/api/server-users.service';
-import { ProfileHeader } from './_components/profile-header';
-import { ProfileInfo } from './_components/profile-info';
-import { EmailForm } from './_components/email-form';
-import { PasswordForm } from './_components/password-form';
-import { AvatarForm } from './_components/avatar-form';
-import { Separator } from '@/components/ui/separator';
+import { getMe } from '@feature/users';
+import {
+  ProfileHeader,
+  ProfileInfo,
+  EmailForm,
+  PasswordForm,
+  AvatarForm,
+} from '@feature/users/components';
+import { Separator } from '@/components';
 import { redirect } from 'next/navigation';
-import axios from 'axios';
 
 export default async function ProfilePage() {
-  let user;
-  try {
-    const response = await serverUsersService.getMe();
-    user = response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error) && error.response?.status === 401) {
-      redirect('/login?expired=true');
-    }
-    throw error;
+  const response = await getMe();
+
+  if (!response.success || !response.data) {
+    redirect('/login?expired=true');
   }
 
-  if (!user) {
-    redirect('/login');
-  }
+  const user = response.data;
 
   return (
     <div className="container mx-auto max-w-6xl space-y-8 p-6">
@@ -36,14 +30,11 @@ export default async function ProfilePage() {
 
       <ProfileHeader user={user} />
 
-      {/* Layout principal con flex para evitar que el formulario se estire demasiado y forzar el lado a lado */}
       <div className="flex flex-col lg:flex-row gap-8 items-start">
-        {/* Columna de Información (Punto 1): Ancho fijo controlado */}
         <aside className="w-full lg:w-[280px] shrink-0 lg:sticky lg:top-6">
           <ProfileInfo user={user} />
         </aside>
 
-        {/* Columna de Formularios (Punto 2): Toma el resto pero con un ancho máximo pequeño */}
         <div className="flex-1 w-full max-w-2xl space-y-8">
           <AvatarForm initialAvatar={user.avatar ?? undefined} />
           <EmailForm initialEmail={user.email} />

@@ -2,23 +2,22 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { UpdatePasswordSchema } from '../_schemas/profile.schema';
-import { updatePasswordAction } from '../_actions/profile.actions';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { updatePasswordAction, updatePasswordSchema } from '@feature/users';
 import {
+  Button,
+  Input,
+  Label,
   Card,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+} from '@/components/ui';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-type PasswordValues = z.infer<typeof UpdatePasswordSchema>;
+type PasswordValues = z.infer<typeof updatePasswordSchema>;
 
 export function PasswordForm() {
   const {
@@ -27,10 +26,10 @@ export function PasswordForm() {
     reset,
     formState: { errors, isSubmitting },
   } = useForm<PasswordValues>({
-    resolver: zodResolver(UpdatePasswordSchema),
+    resolver: zodResolver(updatePasswordSchema),
     defaultValues: {
       currentPassword: '',
-      newPassword: '',
+      password: '',
       confirmPassword: '',
     },
   });
@@ -38,7 +37,7 @@ export function PasswordForm() {
   const onSubmit = async (data: PasswordValues) => {
     const formData = new FormData();
     formData.append('currentPassword', data.currentPassword);
-    formData.append('newPassword', data.newPassword);
+    formData.append('password', data.password);
     formData.append('confirmPassword', data.confirmPassword);
 
     const result = await updatePasswordAction(formData);
@@ -66,10 +65,10 @@ export function PasswordForm() {
             )}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="newPassword">New Password</Label>
-            <Input id="newPassword" type="password" {...register('newPassword')} />
-            {errors.newPassword && (
-              <p className="text-destructive text-sm">{errors.newPassword.message}</p>
+            <Label htmlFor="password">New Password</Label>
+            <Input id="password" type="password" {...register('password')} />
+            {errors.password && (
+              <p className="text-destructive text-sm">{errors.password.message}</p>
             )}
           </div>
           <div className="space-y-2">

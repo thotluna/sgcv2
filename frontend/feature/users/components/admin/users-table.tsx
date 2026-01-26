@@ -2,9 +2,9 @@
 
 import { UserDto } from '@sgcv2/shared';
 import { UserDropMenu } from './userDropMenu';
-import { Badge } from '@/components/ui/badge';
-import { DataTable, Column } from '@/components/table/data-table';
-import { blockUserAction } from './actions';
+import { Badge } from '@/components/ui';
+import { DataTable, type Column } from '@/components/table/data-table';
+import { blockUserAction } from '@feature/users/actions';
 import { toast } from 'sonner';
 
 interface UsersTableProps {
@@ -24,7 +24,7 @@ export function UsersTable({ data = [], isLoading }: UsersTableProps) {
     if (result.success) {
       toast.success('Usuario bloqueado correctamente');
     } else {
-      toast.error(result.error || 'Error al bloquear el usuario');
+      toast.error(result.error?.message || 'Error al bloquear el usuario');
     }
   };
 

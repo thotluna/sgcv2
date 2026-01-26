@@ -1,33 +1,17 @@
 'use server';
 
-import { redirect } from 'next/navigation';
+import { ActionState } from '@lib/types';
+import {
+  CreateUserDto,
+  UpdateUserDto,
+  AppResponse,
+  UserDto,
+  createUserSchema,
+  updateUserSchema,
+} from '@sgcv2/shared';
 import { revalidatePath } from 'next/cache';
-import { serverUsersService } from '@/lib/api/server-users.service';
-import { CreateUserDto, UpdateUserDto, UserDto } from '@sgcv2/shared';
-import * as z from 'zod';
-
-const userSchema = z.object({
-  username: z.string().min(3, 'El nombre de usuario debe tener al menos 3 caracteres'),
-  email: z.string().email('Dirección de correo electrónico no válida'),
-  password: z.string().optional().or(z.literal('')),
-  firstName: z.string().optional().or(z.literal('')),
-  lastName: z.string().optional().or(z.literal('')),
-  status: z.enum(['ACTIVE', 'INACTIVE', 'BLOCKED']),
-});
-
-interface ApiResponseError {
-  response?: {
-    data?: {
-      message?: string;
-    };
-  };
-}
-
-export type ActionResult<T> = {
-  success: boolean;
-  data?: T;
-  error?: string;
-};
+import { redirect } from 'next/navigation';
+import * as usersService from './service';
 
 export async function handleUserFilters(formData: FormData) {
   const search = formData.get('search') as string;
@@ -47,17 +31,11 @@ export async function handleUserFilters(formData: FormData) {
   redirect(`/users${queryString ? `?${queryString}` : ''}`);
 }
 
-export type ActionState = {
-  success: boolean;
-  message?: string;
-  errors?: Record<string, string[]>;
-};
-
 export async function createUserAction(
   _prevState: ActionState,
   formData: FormData
 ): Promise<ActionState> {
-  const validatedFields = userSchema.safeParse({
+  const validatedFields = createUserSchema.safeParse({
     username: formData.get('username'),
     email: formData.get('email'),
     password: formData.get('password'),
@@ -94,7 +72,7 @@ export async function createUserAction(
   };
 
   try {
-    const response = await serverUsersService.create(data);
+    const response = await usersService.create(data);
 
     if (response.success) {
       revalidatePath('/users');
@@ -103,12 +81,9 @@ export async function createUserAction(
     }
   } catch (error) {
     console.error('Error creating user:', error);
-    const message =
-      (error as ApiResponseError).response?.data?.message || 'Error al conectar con el servidor';
-
     return {
       success: false,
-      message,
+      message: 'Error al conectar con el servidor',
     };
   }
 
@@ -120,13 +95,18 @@ export async function updateUserAction(
   _prevState: ActionState,
   formData: FormData
 ): Promise<ActionState> {
-  const validatedFields = userSchema.safeParse({
-    username: 'dummy',
-    email: formData.get('email'),
-    password: formData.get('password'),
-    firstName: formData.get('firstName'),
-    lastName: formData.get('lastName'),
-    status: formData.get('status'),
+  const formDataEmail = formData.get('email') as string;
+  const formDataPassword = formData.get('password') as string;
+  const formDataFirstName = formData.get('firstName') as string;
+  const formDataLastName = formData.get('lastName') as string;
+  const formDataStatus = formData.get('status') as string;
+
+  const validatedFields = updateUserSchema.safeParse({
+    email: formDataEmail,
+    password: formDataPassword || undefined,
+    firstName: formDataFirstName || undefined,
+    lastName: formDataLastName || undefined,
+    status: formDataStatus || undefined,
   });
 
   if (!validatedFields.success) {
@@ -151,7 +131,7 @@ export async function updateUserAction(
   }
 
   try {
-    const response = await serverUsersService.updateUser(userId, data);
+    const response = await usersService.updateUser(userId, data);
 
     if (response.success) {
       revalidatePath('/users');
@@ -160,42 +140,35 @@ export async function updateUserAction(
     }
   } catch (error) {
     console.error('Error updating user:', error);
-    const message =
-      (error as ApiResponseError).response?.data?.message || 'Error al conectar con el servidor';
-
     return {
       success: false,
-      message,
+      message: 'Error al conectar con el servidor',
     };
   }
 
   redirect('/users');
 }
 
-export async function getUser(id: number): Promise<ActionResult<UserDto>> {
+export async function getUser(id: number): Promise<AppResponse<UserDto>> {
   try {
-    const response = await serverUsersService.getUserById(id);
-
-    if (response.success) {
-      return { success: true, data: response.data };
-    }
-
-    return { success: false, error: response.error?.message || 'User not found' };
+    return await usersService.getUserById(id);
   } catch (error) {
     console.error('Error fetching user:', error);
-    const errorMsg =
-      (error as ApiResponseError).response?.data?.message || 'Error connecting to server';
+    const message = 'Error connecting to server';
 
     return {
       success: false,
-      error: errorMsg,
+      error: {
+        code: 'FETCH_ERROR',
+        message,
+      },
     };
   }
 }
 
-export async function blockUserAction(userId: number): Promise<ActionResult<void>> {
+export async function blockUserAction(userId: number): Promise<AppResponse<void>> {
   try {
-    const response = await serverUsersService.updateUser(userId, {
+    const response = await usersService.updateUser(userId, {
       status: 'BLOCKED',
     } as UpdateUserDto);
 
@@ -204,15 +177,20 @@ export async function blockUserAction(userId: number): Promise<ActionResult<void
       return { success: true };
     }
 
-    return { success: false, error: response.error?.message || 'Failed to block user' };
+    return {
+      success: false,
+      error: response.error || { code: 'BLOCK_ERROR', message: 'Failed to block user' },
+    };
   } catch (error) {
     console.error('Error blocking user:', error);
-    const errorMsg =
-      (error as ApiResponseError).response?.data?.message || 'Error connecting to server';
+    const message = 'Error connecting to server';
 
     return {
       success: false,
-      error: errorMsg,
+      error: {
+        code: 'ACTION_ERROR',
+        message,
+      },
     };
   }
 }

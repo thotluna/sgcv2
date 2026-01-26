@@ -1,25 +1,34 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import {
-  UpdateEmailSchema,
-  UpdatePasswordSchema,
-  UpdateAvatarSchema,
-  UpdateRoleSchema,
-} from '../_schemas/profile.schema';
-import { serverUsersService } from '@/lib/api/server-users.service';
-import axios from 'axios';
+import { z } from 'zod';
+import { updateEmailSchema, updateAvatarSchema, updatePasswordBaseSchema } from '@sgcv2/shared';
+import * as usersService from './service';
+
+// Extend base password schema for UI confirmation
+export const updatePasswordSchema = updatePasswordBaseSchema
+  .extend({
+    confirmPassword: z.string(),
+  })
+  .refine(
+    (data: z.infer<typeof updatePasswordBaseSchema> & { confirmPassword: string }) =>
+      data.password === data.confirmPassword,
+    {
+      message: "Passwords don't match",
+      path: ['confirmPassword'],
+    }
+  );
 
 export async function updateEmailAction(formData: FormData) {
   const data = Object.fromEntries(formData);
-  const validated = UpdateEmailSchema.safeParse(data);
+  const validated = updateEmailSchema.safeParse(data);
 
   if (!validated.success) {
     return { error: 'Invalid data' };
   }
 
   try {
-    const result = await serverUsersService.updateMe({
+    const result = await usersService.updateMe({
       email: validated.data.email,
     });
 
@@ -30,24 +39,22 @@ export async function updateEmailAction(formData: FormData) {
     revalidatePath('/users/profile');
     return { success: true };
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      return { error: error.response?.data?.error?.message || 'Server error' };
-    }
+    console.error('Error updating email:', error);
     return { error: 'An unexpected error occurred' };
   }
 }
 
 export async function updatePasswordAction(formData: FormData) {
   const data = Object.fromEntries(formData);
-  const validated = UpdatePasswordSchema.safeParse(data);
+  const validated = updatePasswordSchema.safeParse(data);
 
   if (!validated.success) {
     return { error: 'Invalid data' };
   }
 
   try {
-    const result = await serverUsersService.updateMe({
-      password: validated.data.newPassword,
+    const result = await usersService.updateMe({
+      password: validated.data.password,
       currentPassword: validated.data.currentPassword,
     });
 
@@ -58,24 +65,23 @@ export async function updatePasswordAction(formData: FormData) {
     revalidatePath('/users/profile');
     return { success: true };
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      return { error: error.response?.data?.error?.message || 'Server error' };
-    }
+    console.error('Error updating password:', error);
     return { error: 'An unexpected error occurred' };
   }
 }
 
 export async function updateAvatarAction(formData: FormData) {
   const data = Object.fromEntries(formData);
-  const validated = UpdateAvatarSchema.safeParse(data);
+  // Expecting 'avatar' field in formData to match shared schema
+  const validated = updateAvatarSchema.safeParse(data);
 
   if (!validated.success) {
     return { error: 'Invalid data' };
   }
 
   try {
-    const result = await serverUsersService.updateMe({
-      avatar: validated.data.avatarUrl,
+    const result = await usersService.updateMe({
+      avatar: validated.data.avatar,
     });
 
     if (!result.success) {
@@ -85,24 +91,21 @@ export async function updateAvatarAction(formData: FormData) {
     revalidatePath('/users/profile');
     return { success: true };
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      return { error: error.response?.data?.error?.message || 'Server error' };
-    }
+    console.error('Error updating avatar:', error);
     return { error: 'An unexpected error occurred' };
   }
 }
 
 export async function updateRoleAction(formData: FormData) {
   const roleIds = formData.getAll('roleIds').map(Number);
-  const validated = UpdateRoleSchema.safeParse({ roleIds });
 
-  if (!validated.success) {
-    return { error: 'Invalid data' };
+  if (roleIds.some(isNaN)) {
+    return { error: 'Invalid role data' };
   }
 
   try {
-    const result = await serverUsersService.updateMe({
-      roleIds: validated.data.roleIds,
+    const result = await usersService.updateMe({
+      roleIds,
     });
 
     if (!result.success) {
@@ -112,9 +115,7 @@ export async function updateRoleAction(formData: FormData) {
     revalidatePath('/users/profile');
     return { success: true };
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      return { error: error.response?.data?.error?.message || 'Server error' };
-    }
+    console.error('Error updating roles:', error);
     return { error: 'An unexpected error occurred' };
   }
 }
