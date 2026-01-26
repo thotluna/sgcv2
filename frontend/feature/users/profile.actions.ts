@@ -1,23 +1,9 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { z } from 'zod';
-import { updateEmailSchema, updateAvatarSchema, updatePasswordBaseSchema } from '@sgcv2/shared';
+import { updateEmailSchema, updateAvatarSchema } from '@sgcv2/shared';
+import { updatePasswordSchema } from './schemas';
 import * as usersService from './service';
-
-// Extend base password schema for UI confirmation
-export const updatePasswordSchema = updatePasswordBaseSchema
-  .extend({
-    confirmPassword: z.string(),
-  })
-  .refine(
-    (data: z.infer<typeof updatePasswordBaseSchema> & { confirmPassword: string }) =>
-      data.password === data.confirmPassword,
-    {
-      message: "Passwords don't match",
-      path: ['confirmPassword'],
-    }
-  );
 
 export async function updateEmailAction(formData: FormData) {
   const data = Object.fromEntries(formData);

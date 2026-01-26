@@ -2,7 +2,8 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { updateAvatarAction } from '@feature/users';
+import { updateAvatarAction } from '@feature/users/profile.actions';
+
 import { updateAvatarSchema } from '@sgcv2/shared';
 import {
   Button,

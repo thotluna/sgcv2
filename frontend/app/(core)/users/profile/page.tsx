@@ -1,4 +1,4 @@
-import { getMe } from '@feature/users';
+import { getMe } from '@feature/users/service';
 import {
   ProfileHeader,
   ProfileInfo,

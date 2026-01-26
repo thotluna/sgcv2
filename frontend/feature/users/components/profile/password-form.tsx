@@ -2,7 +2,8 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { updatePasswordAction, updatePasswordSchema } from '@feature/users';
+import { updatePasswordAction } from '@feature/users/profile.actions';
+import { updatePasswordSchema } from '@feature/users/schemas';
 import {
   Button,
   Input,

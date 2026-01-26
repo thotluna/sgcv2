@@ -2,7 +2,8 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { updateEmailAction } from '@feature/users';
+import { updateEmailAction } from '@feature/users/profile.actions';
+
 import { updateEmailSchema } from '@sgcv2/shared';
 import {
   Button,
