@@ -6,7 +6,7 @@ import {
   PasswordForm,
   AvatarForm,
 } from '@feature/users/components';
-import { Separator } from '@/components';
+import { Separator } from '@/components/ui';
 import { redirect } from 'next/navigation';
 
 export default async function ProfilePage() {

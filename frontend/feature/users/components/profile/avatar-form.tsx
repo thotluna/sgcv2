@@ -1,12 +1,8 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useActionState, useEffect } from 'react';
 import { updateAvatarAction } from '@feature/users/profile.actions';
-
-import { updateAvatarSchema } from '@sgcv2/shared';
 import {
-  Button,
   Input,
   Label,
   Card,
@@ -17,62 +13,52 @@ import {
   CardTitle,
 } from '@/components/ui';
 import { toast } from 'sonner';
-import { z } from 'zod';
-
-type AvatarValues = z.infer<typeof updateAvatarSchema>;
+import { ActionState } from '@lib/types';
+import { SubmitButton } from '../submit-button';
 
 interface AvatarFormProps {
   initialAvatar?: string;
 }
 
+const initialState: ActionState = {
+  success: false,
+  message: '',
+};
+
 export function AvatarForm({ initialAvatar }: AvatarFormProps) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<AvatarValues>({
-    resolver: zodResolver(updateAvatarSchema),
-    defaultValues: {
-      avatar: initialAvatar || '',
-    },
-  });
+  const [state, formAction] = useActionState(updateAvatarAction, initialState);
 
-  const onSubmit = async (data: AvatarValues) => {
-    const formData = new FormData();
-    formData.append('avatar', data.avatar || '');
-
-    const result = await updateAvatarAction(formData);
-    if (result.success) {
-      toast.success('Avatar updated successfully');
-    } else {
-      toast.error(result.error || 'Something went wrong');
+  useEffect(() => {
+    if (state.success) {
+      toast.success(state.message || 'Avatar actualizado con éxito');
+    } else if (state.message && state.success === false && !state.errors) {
+      toast.error(state.message);
     }
-  };
+  }, [state]);
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Profile Picture</CardTitle>
-        <CardDescription>
-          Update your profile picture URL (currently using Gravatar by default).
-        </CardDescription>
+        <CardTitle>Foto de Perfil</CardTitle>
+        <CardDescription>Actualiza la URL de tu foto de perfil.</CardDescription>
       </CardHeader>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form action={formAction}>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="avatar">Avatar URL</Label>
+            <Label htmlFor="avatar">URL del Avatar</Label>
             <Input
               id="avatar"
-              {...register('avatar')}
+              name="avatar"
+              defaultValue={initialAvatar || ''}
               placeholder="https://example.com/avatar.png"
             />
-            {errors.avatar && <p className="text-destructive text-sm">{errors.avatar.message}</p>}
+            {state?.errors?.avatar && (
+              <p className="text-destructive text-sm font-medium">{state.errors.avatar[0]}</p>
+            )}
           </div>
         </CardContent>
         <CardFooter className="border-t px-6 py-4">
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? 'Saving...' : 'Save Avatar'}
-          </Button>
+          <SubmitButton label="Guardar Avatar" loadingLabel="Guardando..." />
         </CardFooter>
       </form>
     </Card>

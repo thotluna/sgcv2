@@ -31,9 +31,9 @@ export function RolesTable({ data }: RolesTableProps) {
     startTransition(async () => {
       const result = await deleteRoleAction(id);
       if (result.success) {
-        toast.success('Rol eliminado con éxito');
+        toast.success(result.message || 'Rol eliminado con éxito');
       } else {
-        toast.error(result.error);
+        toast.error(result.message || 'Error al eliminar el rol');
       }
     });
   };

@@ -8,7 +8,6 @@ export * from './checkbox';
 export * from './collapsible';
 export * from './dropdown-menu';
 export * from './field';
-export * from './form';
 export * from './input-group';
 export * from './input';
 export * from './label';

@@ -1,12 +1,8 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useActionState, useEffect } from 'react';
 import { updateEmailAction } from '@feature/users/profile.actions';
-
-import { updateEmailSchema } from '@sgcv2/shared';
 import {
-  Button,
   Input,
   Label,
   Card,
@@ -17,56 +13,55 @@ import {
   CardTitle,
 } from '@/components/ui';
 import { toast } from 'sonner';
-import { z } from 'zod';
-
-type EmailValues = z.infer<typeof updateEmailSchema>;
+import { ActionState } from '@lib/types';
+import { SubmitButton } from '../submit-button';
 
 interface EmailFormProps {
-  initialEmail: string;
+  initialEmail?: string;
 }
 
+const initialState: ActionState = {
+  success: false,
+  message: '',
+};
+
 export function EmailForm({ initialEmail }: EmailFormProps) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<EmailValues>({
-    resolver: zodResolver(updateEmailSchema),
-    defaultValues: {
-      email: initialEmail,
-    },
-  });
+  const [state, formAction] = useActionState(updateEmailAction, initialState);
 
-  const onSubmit = async (data: EmailValues) => {
-    const formData = new FormData();
-    formData.append('email', data.email);
-
-    const result = await updateEmailAction(formData);
-    if (result.success) {
-      toast.success('Email updated successfully');
-    } else {
-      toast.error(result.error || 'Something went wrong');
+  useEffect(() => {
+    if (state.success) {
+      toast.success(state.message || 'Correo actualizado con éxito');
+    } else if (state.message && state.success === false && !state.errors) {
+      toast.error(state.message);
     }
-  };
+  }, [state]);
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Email Address</CardTitle>
-        <CardDescription>Update your account email address.</CardDescription>
+        <CardTitle>Correo Electrónico</CardTitle>
+        <CardDescription>
+          Cambia la dirección de correo electrónico asociada a tu cuenta.
+        </CardDescription>
       </CardHeader>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form action={formAction}>
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" {...register('email')} placeholder="email@example.com" />
-            {errors.email && <p className="text-destructive text-sm">{errors.email.message}</p>}
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              defaultValue={initialEmail}
+              placeholder="john@example.com"
+            />
+            {state?.errors?.email && (
+              <p className="text-destructive text-sm font-medium">{state.errors.email[0]}</p>
+            )}
           </div>
         </CardContent>
         <CardFooter className="border-t px-6 py-4">
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? 'Saving...' : 'Save Email'}
-          </Button>
+          <SubmitButton label="Guardar Correo" loadingLabel="Guardando..." />
         </CardFooter>
       </form>
     </Card>

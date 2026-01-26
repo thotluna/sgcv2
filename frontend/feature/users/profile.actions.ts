@@ -1,16 +1,24 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { ActionState } from '@lib/types';
 import { updateEmailSchema, updateAvatarSchema } from '@sgcv2/shared';
 import { updatePasswordSchema } from './schemas';
 import * as usersService from './service';
 
-export async function updateEmailAction(formData: FormData) {
+export async function updateEmailAction(
+  _prevState: ActionState,
+  formData: FormData
+): Promise<ActionState> {
   const data = Object.fromEntries(formData);
   const validated = updateEmailSchema.safeParse(data);
 
   if (!validated.success) {
-    return { error: 'Invalid data' };
+    return {
+      success: false,
+      message: 'Error de validación',
+      errors: validated.error.flatten().fieldErrors,
+    };
   }
 
   try {
@@ -19,23 +27,36 @@ export async function updateEmailAction(formData: FormData) {
     });
 
     if (!result.success) {
-      return { error: result.error?.message || 'Failed to update email' };
+      return {
+        success: false,
+        message: result.error?.message || 'Error al actualizar el correo',
+      };
     }
 
     revalidatePath('/users/profile');
-    return { success: true };
+    return { success: true, message: 'Correo actualizado con éxito' };
   } catch (error) {
     console.error('Error updating email:', error);
-    return { error: 'An unexpected error occurred' };
+    return {
+      success: false,
+      message: 'Error inesperado al conectar con el servidor',
+    };
   }
 }
 
-export async function updatePasswordAction(formData: FormData) {
+export async function updatePasswordAction(
+  _prevState: ActionState,
+  formData: FormData
+): Promise<ActionState> {
   const data = Object.fromEntries(formData);
   const validated = updatePasswordSchema.safeParse(data);
 
   if (!validated.success) {
-    return { error: 'Invalid data' };
+    return {
+      success: false,
+      message: 'Error de validación',
+      errors: validated.error.flatten().fieldErrors,
+    };
   }
 
   try {
@@ -45,24 +66,36 @@ export async function updatePasswordAction(formData: FormData) {
     });
 
     if (!result.success) {
-      return { error: result.error?.message || 'Failed to update password' };
+      return {
+        success: false,
+        message: result.error?.message || 'Error al actualizar la contraseña',
+      };
     }
 
     revalidatePath('/users/profile');
-    return { success: true };
+    return { success: true, message: 'Contraseña actualizada con éxito' };
   } catch (error) {
     console.error('Error updating password:', error);
-    return { error: 'An unexpected error occurred' };
+    return {
+      success: false,
+      message: 'Error inesperado al conectar con el servidor',
+    };
   }
 }
 
-export async function updateAvatarAction(formData: FormData) {
+export async function updateAvatarAction(
+  _prevState: ActionState,
+  formData: FormData
+): Promise<ActionState> {
   const data = Object.fromEntries(formData);
-  // Expecting 'avatar' field in formData to match shared schema
   const validated = updateAvatarSchema.safeParse(data);
 
   if (!validated.success) {
-    return { error: 'Invalid data' };
+    return {
+      success: false,
+      message: 'Error de validación',
+      errors: validated.error.flatten().fieldErrors,
+    };
   }
 
   try {
@@ -71,22 +104,31 @@ export async function updateAvatarAction(formData: FormData) {
     });
 
     if (!result.success) {
-      return { error: result.error?.message || 'Failed to update avatar' };
+      return {
+        success: false,
+        message: result.error?.message || 'Error al actualizar el avatar',
+      };
     }
 
     revalidatePath('/users/profile');
-    return { success: true };
+    return { success: true, message: 'Avatar actualizado con éxito' };
   } catch (error) {
     console.error('Error updating avatar:', error);
-    return { error: 'An unexpected error occurred' };
+    return {
+      success: false,
+      message: 'Error inesperado al conectar con el servidor',
+    };
   }
 }
 
-export async function updateRoleAction(formData: FormData) {
+export async function updateRoleAction(
+  _prevState: ActionState,
+  formData: FormData
+): Promise<ActionState> {
   const roleIds = formData.getAll('roleIds').map(Number);
 
   if (roleIds.some(isNaN)) {
-    return { error: 'Invalid role data' };
+    return { success: false, message: 'Datos de roles inválidos' };
   }
 
   try {
@@ -95,13 +137,19 @@ export async function updateRoleAction(formData: FormData) {
     });
 
     if (!result.success) {
-      return { error: result.error?.message || 'Failed to update roles' };
+      return {
+        success: false,
+        message: result.error?.message || 'Error al actualizar roles',
+      };
     }
 
     revalidatePath('/users/profile');
-    return { success: true };
+    return { success: true, message: 'Roles actualizados con éxito' };
   } catch (error) {
     console.error('Error updating roles:', error);
-    return { error: 'An unexpected error occurred' };
+    return {
+      success: false,
+      message: 'Error inesperado al conectar con el servidor',
+    };
   }
 }
