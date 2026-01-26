@@ -8,7 +8,6 @@ import {
 import { serverCustomersService } from '@/lib/api/server-customers.service';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { CustomerState } from '@sgcv2/shared';
 
 export async function handleCustomerFilters(formData: FormData) {
   const search = formData.get('search') as string;
