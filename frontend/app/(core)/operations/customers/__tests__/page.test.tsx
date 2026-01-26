@@ -1,35 +1,27 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import CustomersPage from '../page';
-import { customersService } from '@/lib/api/customers.service';
-import { useRouter } from 'next/navigation';
+import { serverCustomersService } from '@/lib/api/server-customers.service';
 
 // Mocks
-jest.mock('@/lib/api/customers.service');
-jest.mock('next/navigation', () => ({
-  useRouter: jest.fn(),
+jest.mock('@/lib/api/server-customers.service');
+jest.mock('../_components/filters', () => ({
+  CustomersFilters: ({ search, status }: any) => (
+    <div data-testid="filters">
+      Filters: {search} - {status}
+    </div>
+  ),
 }));
-jest.mock('sonner', () => ({
-  toast: {
-    success: jest.fn(),
-    error: jest.fn(),
-  },
+jest.mock('../_components/table', () => ({
+  CustomersTable: ({ data }: any) => (
+    <div data-testid="table">
+      {data.map((c: any) => (
+        <div key={c.id}>{c.legalName}</div>
+      ))}
+    </div>
+  ),
 }));
-jest.mock('@/components/ui/pagination', () => ({
-  Pagination: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="pagination">{children}</div>
-  ),
-  PaginationContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  PaginationItem: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  PaginationLink: ({ children, onClick }: { children: React.ReactNode; onClick?: () => void }) => (
-    <button onClick={onClick}>{children}</button>
-  ),
-  PaginationPrevious: ({ onClick }: { onClick?: () => void }) => (
-    <button onClick={onClick}>Previous</button>
-  ),
-  PaginationNext: ({ onClick }: { onClick?: () => void }) => (
-    <button onClick={onClick}>Next</button>
-  ),
-  PaginationEllipsis: () => <span>...</span>,
+jest.mock('@/components/data-pagination', () => ({
+  DataPagination: ({ currentPage }: any) => <div data-testid="pagination">Page: {currentPage}</div>,
 }));
 
 // Mock Data
@@ -52,19 +44,16 @@ const mockCustomers = [
   },
 ];
 
-describe('CustomersPage', () => {
-  const mockPush = jest.fn();
-
+describe('CustomersPage (Server Component)', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    (useRouter as jest.Mock).mockReturnValue({ push: mockPush });
-    (customersService.getAll as jest.Mock).mockResolvedValue({
+    (serverCustomersService.getAll as jest.Mock).mockResolvedValue({
       success: true,
       data: mockCustomers,
       metadata: {
         pagination: {
           page: 1,
-          perPage: 10,
+          perPage: 5,
           total: 2,
           totalPages: 1,
         },
@@ -72,126 +61,41 @@ describe('CustomersPage', () => {
     });
   });
 
-  it('renders customers table with data', async () => {
-    render(<CustomersPage />);
+  it('renders customers table with data from server', async () => {
+    const jsx = await CustomersPage({ searchParams: Promise.resolve({}) });
+    render(jsx);
 
     expect(screen.getByText('Clientes')).toBeInTheDocument();
-
-    await waitFor(() => {
-      expect(screen.getByText('Test Company 1')).toBeInTheDocument();
-      expect(screen.getByText('Test Company 2')).toBeInTheDocument();
-    });
+    expect(screen.getByText('Test Company 1')).toBeInTheDocument();
+    expect(screen.getByText('Test Company 2')).toBeInTheDocument();
+    expect(screen.getByTestId('pagination')).toHaveTextContent('Page: 1');
   });
 
-  it('handles search input', async () => {
-    render(<CustomersPage />);
+  it('passes search parameters to filters and service', async () => {
+    const searchParams = Promise.resolve({ search: 'Company 1', status: 'ACTIVE', page: '2' });
+    const jsx = await CustomersPage({ searchParams });
+    render(jsx);
 
-    const searchInput = screen.getByPlaceholderText('Buscar clientes...');
-    fireEvent.change(searchInput, { target: { value: 'Company 1' } });
-
-    await waitFor(
-      () => {
-        expect(customersService.getAll).toHaveBeenCalledWith(
-          1,
-          5,
-          expect.objectContaining({ search: 'Company 1' })
-        );
-      },
-      { timeout: 1000 }
-    ); // Increased timeout for debounce
-  });
-
-  it('handles status filter change', async () => {
-    render(<CustomersPage />);
-
-    screen.getByRole('combobox'); // Assuming select render as combobox role or investigate toolbar implementation
-    // Actually toolbar uses a native select
-    // Let's find by generic way if role fails
-    // Looking at toolbar.tsx: <select value={status} ...>
-
-    // Testing-library often struggles with native select if not labeled correctly, let's try direct change
-    // We might need to find the select first. It has options.
-    // Let's use getByDisplayValue or just query selector if needed, but displayValue works for "Todos los estados"
-
-    // Wait for initial load
-    await waitFor(() => expect(screen.getByText('Test Company 1')).toBeInTheDocument());
-
-    // Change select
-    const selects = document.querySelectorAll('select');
-    fireEvent.change(selects[0], { target: { value: 'ACTIVE' } });
-
-    await waitFor(
-      () => {
-        expect(customersService.getAll).toHaveBeenCalledWith(
-          1,
-          5,
-          expect.objectContaining({ state: 'ACTIVE' })
-        );
-      },
-      { timeout: 1000 }
+    expect(serverCustomersService.getAll).toHaveBeenCalledWith(
+      2,
+      5,
+      expect.objectContaining({ search: 'Company 1', state: 'ACTIVE' })
     );
+
+    expect(screen.getByTestId('filters')).toHaveTextContent('Filters: Company 1 - ACTIVE');
+    expect(screen.getByTestId('pagination')).toHaveTextContent('Page: 2');
   });
 
-  it('navigates to new customer page when create button is clicked', () => {
-    render(<CustomersPage />);
-
-    const createButton = screen.getByText('Nuevo Cliente');
-    fireEvent.click(createButton);
-
-    expect(mockPush).toHaveBeenCalledWith('/operations/customers/new');
-  });
-
-  it('handles pagination', async () => {
-    // Setup for multiple pages
-    (customersService.getAll as jest.Mock).mockResolvedValue({
-      success: true,
-      data: mockCustomers,
-      metadata: {
-        pagination: {
-          page: 1,
-          perPage: 5,
-          total: 15,
-          totalPages: 3,
-        },
-      },
+  it('handles empty data or errors gracefully', async () => {
+    (serverCustomersService.getAll as jest.Mock).mockResolvedValue({
+      success: false,
+      error: { message: 'Error loading data' },
     });
 
-    render(<CustomersPage />);
+    const jsx = await CustomersPage({ searchParams: Promise.resolve({}) });
+    render(jsx);
 
-    await waitFor(() => {
-      expect(screen.getByText('Next')).toBeInTheDocument();
-    });
-
-    const nextButton = screen.getByText('Next');
-    fireEvent.click(nextButton);
-
-    // Wait for state update and effect
-    await waitFor(() => {
-      expect(customersService.getAll).toHaveBeenCalledWith(2, 5, expect.anything());
-    });
-  });
-
-  it('handles delete error gracefully', async () => {
-    // Mock delete to fail
-    const errorMsg = 'Error deleting';
-    (customersService.delete as jest.Mock).mockRejectedValue({
-      response: { data: { message: errorMsg } },
-    });
-
-    render(<CustomersPage />);
-
-    await waitFor(() => {
-      expect(screen.getByText('Test Company 1')).toBeInTheDocument();
-    });
-
-    // Find delete trigger - this is tricky because it's inside a dropdown
-    // Effectively we aren't testing the Dropdown interactions deeply here as that belongs to Table/Menu tests.
-    // However, the page passes `handleDelete` to the table.
-    // We can simulate the delete logic if we extracted the handler or if we trigger the table prop.
-    // Since we are testing integration Page -> Table, we rely on Table correctly calling onDelete.
-    // To properly test this, we should mock the CustomersTable to verify it receives the props, OR
-    // interact with the UI.
-
-    // Let's try to mock the Table to simply call onDelete to verify Page logic
+    expect(screen.getByText('Clientes')).toBeInTheDocument();
+    expect(screen.queryByText('Test Company 1')).not.toBeInTheDocument();
   });
 });

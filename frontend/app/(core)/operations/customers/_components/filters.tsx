@@ -1,41 +1,35 @@
-'use client';
-
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search, Plus } from 'lucide-react';
 import { CustomerState } from '@sgcv2/shared';
+import { handleCustomerFilters } from './actions';
+import Link from 'next/link';
 
-interface CustomersToolbarProps {
-  search: string;
-  onSearchChange: (value: string) => void;
-  status: CustomerState | undefined;
-  onStatusChange: (value: CustomerState) => void;
-  onCreateClick: () => void;
+interface CustomersFiltersProps {
+  search?: string;
+  status?: CustomerState;
 }
 
-export function CustomersToolbar({
-  search,
-  onSearchChange,
-  status,
-  onStatusChange,
-  onCreateClick,
-}: CustomersToolbarProps) {
+export function CustomersFilters({ search, status }: CustomersFiltersProps) {
   return (
     <div className="flex flex-col sm:flex-row gap-4 justify-between items-center mb-6">
-      <div className="flex flex-1 w-full sm:w-auto gap-2 items-center">
+      <form
+        action={handleCustomerFilters}
+        className="flex flex-1 w-full sm:w-auto gap-2 items-center"
+      >
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
+            name="search"
             placeholder="Buscar clientes..."
-            value={search}
-            onChange={e => onSearchChange(e.target.value)}
+            defaultValue={search || ''}
             className="pl-8"
           />
         </div>
         <div className="relative">
           <select
-            value={status || ''}
-            onChange={e => onStatusChange(e.target.value as CustomerState)}
+            name="status"
+            defaultValue={status || ''}
             className="h-9 w-[150px] rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
           >
             <option value="">Todos los estados</option>
@@ -44,10 +38,15 @@ export function CustomersToolbar({
             <option value="SUSPENDED">Suspendido</option>
           </select>
         </div>
-      </div>
-      <Button onClick={onCreateClick}>
-        <Plus className="mr-2 h-4 w-4" />
-        Nuevo Cliente
+        <Button type="submit" variant="secondary" size="sm">
+          Buscar
+        </Button>
+      </form>
+      <Button asChild>
+        <Link href="/operations/customers/new">
+          <Plus className="mr-2 h-4 w-4" />
+          Nuevo Cliente
+        </Link>
       </Button>
     </div>
   );

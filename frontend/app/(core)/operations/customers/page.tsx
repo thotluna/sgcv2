@@ -1,83 +1,61 @@
-'use client';
-
-import { AxiosError } from 'axios';
-import { useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import { serverCustomersService } from '@/lib/api/server-customers.service';
 import { CustomersTable } from './_components/table';
-import { CustomersToolbar } from './_components/toolbar';
-import { customersService } from '@/lib/api/customers.service';
+import { CustomersFilters } from './_components/filters';
 import { CustomerDto, CustomerState } from '@sgcv2/shared';
-import { toast } from 'sonner';
 import { DataPagination } from '@/components/data-pagination';
 
-interface FilterType {
-  search?: string;
-  state?: CustomerState;
+interface CustomersPageProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default function CustomersPage() {
-  const router = useRouter();
-  const [data, setData] = useState<CustomerDto[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [search, setSearch] = useState('');
-  const [status, setStatus] = useState<CustomerState | undefined>(undefined);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const itemsPerPage = 5;
+export default async function CustomersPage({ searchParams }: CustomersPageProps) {
+  const params = await searchParams;
+  const page = typeof params.page === 'string' ? parseInt(params.page) : 1;
+  const perPage = typeof params.perPage === 'string' ? parseInt(params.perPage) : 5;
 
-  const fetchData = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const filters: FilterType = {};
-      if (status) filters.state = status;
-      if (search) filters.search = search;
-
-      const response = await customersService.getAll(currentPage, itemsPerPage, filters);
-
-      if (response.error) {
-        toast.error(response.error.message);
-        setData([]);
-        setTotalPages(1);
-      }
-
-      if (response.success) {
-        setData(response.data || []);
-        const pages = response.metadata?.pagination?.totalPages || 1;
-        setTotalPages(pages);
-      }
-    } catch (error) {
-      console.error('Failed to fetch customers', error);
-      toast.error('Error al cargar clientes');
-    } finally {
-      setIsLoading(false);
-    }
-  }, [currentPage, itemsPerPage, search, status]);
-
-  const handleDelete = async (id: string) => {
-    try {
-      await customersService.delete(id);
-      toast.success('Cliente eliminado exitosamente');
-      await fetchData();
-    } catch (error) {
-      console.error('Failed to delete customer', error);
-      let errorMessage = 'Error al eliminar el cliente';
-      if (error instanceof AxiosError) {
-        errorMessage = error.response?.data?.message || errorMessage;
-      }
-      toast.error(errorMessage);
-    }
+  const filters = {
+    search: typeof params.search === 'string' ? params.search : undefined,
+    state: typeof params.status === 'string' ? (params.status as CustomerState) : undefined,
   };
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
+  let customers: CustomerDto[] = [];
+  let totalPages = 1;
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      fetchData();
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [fetchData]);
+  try {
+    const response = await serverCustomersService.getAll(page, perPage, filters);
+    if (response.success) {
+      customers = response.data || [];
+      // Note: Assuming the service or a future update provides actual total pages
+      // For now, if we have a way to calculate it or if metadata exists.
+      // Based on users page pattern:
+      totalPages = response.metadata?.pagination?.totalPages || 1;
+    }
+  } catch (error) {
+    console.error('Error fetching customers:', error);
+  }
+
+  const createPageUrl = (newPage: number) => {
+    const urlParams = new URLSearchParams();
+
+    if (filters.search) {
+      urlParams.set('search', filters.search);
+    }
+
+    if (filters.state) {
+      urlParams.set('status', filters.state);
+    }
+
+    if (newPage > 1) {
+      urlParams.set('page', newPage.toString());
+    }
+
+    if (perPage !== 5) {
+      urlParams.set('perPage', perPage.toString());
+    }
+
+    const queryString = urlParams.toString();
+    return queryString ? `?${queryString}` : '/operations/customers';
+  };
 
   return (
     <div className="p-6 space-y-4">
@@ -85,20 +63,14 @@ export default function CustomersPage() {
         <h1 className="text-3xl font-bold tracking-tight">Clientes</h1>
       </div>
 
-      <CustomersToolbar
-        search={search}
-        onSearchChange={setSearch}
-        status={status}
-        onStatusChange={setStatus}
-        onCreateClick={() => router.push('/operations/customers/new')}
-      />
+      <CustomersFilters search={filters.search} status={filters.state} />
 
-      <CustomersTable data={data} isLoading={isLoading} onDelete={handleDelete} />
+      <CustomersTable data={customers} />
 
       <DataPagination
-        currentPage={currentPage}
+        currentPage={page}
         totalPages={totalPages}
-        onPageChange={handlePageChange}
+        createPageUrl={createPageUrl}
       />
     </div>
   );

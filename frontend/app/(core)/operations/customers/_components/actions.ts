@@ -8,6 +8,25 @@ import {
 import { serverCustomersService } from '@/lib/api/server-customers.service';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { CustomerState } from '@sgcv2/shared';
+
+export async function handleCustomerFilters(formData: FormData) {
+  const search = formData.get('search') as string;
+  const status = formData.get('status') as string;
+
+  const params = new URLSearchParams();
+
+  if (search && search.trim() !== '') {
+    params.set('search', search.trim());
+  }
+
+  if (status && status !== '') {
+    params.set('status', status);
+  }
+
+  const queryString = params.toString();
+  redirect(`/operations/customers${queryString ? `?${queryString}` : ''}`);
+}
 
 export async function createCustomerAction(
   _prevState: any,

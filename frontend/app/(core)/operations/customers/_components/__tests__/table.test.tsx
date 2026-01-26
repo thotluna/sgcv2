@@ -23,12 +23,12 @@ const mockCustomers: CustomerDto[] = [
 
 describe('CustomersTable', () => {
   it('renders empty state when no customers', () => {
-    render(<CustomersTable data={[]} isLoading={false} onDelete={jest.fn()} />);
+    render(<CustomersTable data={[]} />);
     expect(screen.getByText('No se encontraron resultados.')).toBeInTheDocument();
   });
 
   it('renders customer data', () => {
-    render(<CustomersTable data={mockCustomers} isLoading={false} onDelete={jest.fn()} />);
+    render(<CustomersTable data={mockCustomers} />);
     expect(screen.getByText('C001')).toBeInTheDocument();
     expect(screen.getByText('Test Customer 1')).toBeInTheDocument();
     expect(screen.getByText('V-12345678-9')).toBeInTheDocument();
