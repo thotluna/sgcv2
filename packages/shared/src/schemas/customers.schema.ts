@@ -64,6 +64,21 @@ export const CreateSubCustomerSchema = z.object({
 
 export type CreateSubCustomerSchemaType = z.infer<typeof CreateSubCustomerSchema>;
 
+export const CreateSubCustomerWithLocationSchema = CreateSubCustomerSchema.extend({
+  locationName: z
+    .string()
+    .min(1, 'Location name is required')
+    .max(100, 'Location name must be at most 100 characters'),
+  locationAddress: z
+    .string()
+    .min(1, 'Location address is required')
+    .max(255, 'Location address must be at most 255 characters'),
+});
+
+export type CreateSubCustomerWithLocationSchemaType = z.infer<
+  typeof CreateSubCustomerWithLocationSchema
+>;
+
 export const UpdateSubCustomerSchema = z.object({
   businessName: z
     .string()

@@ -29,6 +29,12 @@ jest.mock('next/link', () => ({
   __esModule: true,
   default: ({ children, href }: any) => <a href={href}>{children}</a>,
 }));
+jest.mock('../_components/sub-customers-list', () => ({
+  SubCustomersList: () => <div data-testid="sub-customers-list" />,
+}));
+jest.mock('../_components/locations-list', () => ({
+  LocationsList: () => <div data-testid="locations-list" />,
+}));
 
 const mockCustomer = {
   id: '1',
@@ -55,11 +61,11 @@ describe('CustomerViewPage', () => {
     const jsx = await CustomerViewPage({ params: Promise.resolve({ id: '1' }) });
     render(jsx);
 
-    expect(screen.getByText('Detalles del Cliente')).toBeInTheDocument();
+    expect(screen.getByText('Datos Generales')).toBeInTheDocument();
     // There might be multiple occurrences (title and detail). Check length or just getAll
     expect(screen.getAllByText('Test Company').length).toBeGreaterThan(0);
     expect(screen.getAllByText('C001').length).toBeGreaterThan(0);
-    expect(screen.getByText('Badge: Activo')).toBeInTheDocument();
+    expect(screen.getByText('Badge: ACTIVE')).toBeInTheDocument();
   });
 
   it('calls notFound when error occurs', async () => {

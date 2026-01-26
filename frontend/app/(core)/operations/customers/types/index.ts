@@ -7,3 +7,9 @@ export interface CustomerFormValues extends CreateCustomerSchemaType { }
 
 export type CreateCustomerFormData = CreateCustomerSchemaType;
 export type UpdateCustomerFormData = UpdateCustomerSchemaType;
+
+export type ActionState = {
+  success?: boolean;
+  message?: string;
+  errors?: Record<string, string[]>;
+};

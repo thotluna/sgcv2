@@ -133,19 +133,18 @@
 
 ### 2.3 Frontend - Customer Locations y Contacts
 
-- [ ] **Locations UI**
-  - [x] Crear componente `LocationsList` (Skeleton/Placeholder)
-  - [ ] Crear formulario `LocationForm` (Create/Edit)
+- [x] **Locations UI**
+  - [x] Crear componente `LocationsList`
+  - [x] Crear formulario `LocationForm` (Create/Edit)
   - [x] Integrar en página de detalle de cliente (Layout con Tabs)
-  - [ ] Implementar Server Actions para Locations
+  - [x] Implementar Server Actions para Locations
   - [ ] Tests de componentes
 
-- [ ] **Contacts UI**
-  - [ ] Crear componente `ContactsList`
-  - [ ] Crear formulario `ContactForm` (Create/Edit)
-  - [ ] Integrar en página de detalle de cliente
-  - [ ] Implementar Server Actions para Contacts
-  - [ ] Tests de componentes
+- [x] **SubCustomers UI**
+  - [x] Crear componente `SubCustomersList`
+  - [x] Crear formulario `SubCustomerForm` (Creación unificada con Sede)
+  - [x] Integrar en página de detalle de cliente
+  - [x] Implementar Server Actions para SubCustomers (incluye creación combinada)
 
 - [ ] **Mejoras UX**
   - [x] Tabs para separar Locations y Contacts (Implementado en Layout Base)

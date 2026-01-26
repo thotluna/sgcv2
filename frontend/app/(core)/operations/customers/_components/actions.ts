@@ -1,10 +1,9 @@
 'use server';
 
-import { ActionState } from '../types/types';
+import { ActionState } from '../types';
 import {
   CreateCustomerSchema,
   UpdateCustomerSchema,
-  customerService,
 } from '@sgcv2/shared';
 import { serverCustomersService } from '@/lib/api/server-customers.service';
 import { revalidatePath } from 'next/cache';
@@ -20,8 +19,9 @@ export async function createCustomerAction(
 
   if (!validated.success) {
     return {
-      errors: validated.error.flatten().fieldErrors,
+      success: false,
       message: 'Error de validación',
+      errors: validated.error.flatten().fieldErrors,
     };
   }
 
@@ -29,7 +29,8 @@ export async function createCustomerAction(
 
   if (response.error) {
     return {
-      message: response.error,
+      success: false,
+      message: response.error.message,
     };
   }
 
@@ -50,8 +51,9 @@ export async function updateCustomerAction(
 
   if (!validated.success) {
     return {
-      errors: validated.error.flatten().fieldErrors,
+      success: false,
       message: 'Error de validación',
+      errors: validated.error.flatten().fieldErrors,
     };
   }
 
@@ -59,7 +61,8 @@ export async function updateCustomerAction(
 
   if (response.error) {
     return {
-      message: response.error,
+      success: false,
+      message: response.error.message,
     };
   }
 
@@ -73,7 +76,8 @@ export async function deleteCustomerAction(id: string): Promise<ActionState> {
 
   if (response.error) {
     return {
-      message: response.error,
+      success: false,
+      message: response.error.message,
     };
   }
 

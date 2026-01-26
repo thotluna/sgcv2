@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import NewCustomerPage from '../page';
+import NewCustomerPage from '../new/page';
 
 // Mock components
 jest.mock('../_components/customer-form', () => ({

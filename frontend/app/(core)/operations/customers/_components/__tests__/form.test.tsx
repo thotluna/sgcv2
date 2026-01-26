@@ -1,24 +1,26 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { CustomerForm } from '../customer-form';
-import { useRouter } from 'next/navigation';
 import { useActionState } from 'react';
 
 // Mock essential hooks
-jest.mock('next/navigation', () => ({
-  useRouter: jest.fn(),
-}));
-
 jest.mock('react', () => ({
   ...jest.requireActual('react'),
   useActionState: jest.fn(),
 }));
 
 describe('CustomerForm', () => {
-  const mockBack = jest.fn();
   const mockAction = jest.fn();
+  const mockBack = jest.fn();
+
+  beforeAll(() => {
+    Object.defineProperty(window, 'history', {
+      value: { back: mockBack },
+      writable: true,
+    });
+  });
 
   beforeEach(() => {
-    (useRouter as jest.Mock).mockReturnValue({ back: mockBack });
+    jest.clearAllMocks();
     (useActionState as jest.Mock).mockReturnValue([{ success: false }, mockAction, false]);
   });
 
@@ -33,7 +35,7 @@ describe('CustomerForm', () => {
     expect(screen.getByLabelText(/Dirección/i)).toBeInTheDocument();
   });
 
-  it('calls router.back when cancel button is clicked', () => {
+  it('calls window.history.back when cancel button is clicked', () => {
     render(<CustomerForm />);
     const cancelButton = screen.getByRole('button', { name: /Cancelar/i });
     fireEvent.click(cancelButton);
