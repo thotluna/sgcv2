@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import LoginPage from '../page';
-import * as actions from '../actions';
+import * as actions from '@feature/auth/actions';
 
 // Mock the actions
-jest.mock('../actions', () => ({
+jest.mock('@feature/auth/actions', () => ({
   loginAction: jest.fn(),
 }));
 
@@ -42,7 +42,7 @@ describe('LoginPage', () => {
       ).toBeInTheDocument();
       expect(screen.getByLabelText(/usuario/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/contraseña/i)).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /ingresar/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /iniciar sesión/i })).toBeInTheDocument();
     });
 
     it('should have username and password inputs', () => {
@@ -61,7 +61,7 @@ describe('LoginPage', () => {
       // Since we are mocking the action, checking if it is called might require submitting
       // But verifying <form> exists is good enough for structure
       render(<LoginPage />);
-      const form = screen.getByRole('button', { name: /ingresar/i }).closest('form');
+      const form = screen.getByRole('button', { name: /iniciar sesión/i }).closest('form');
       expect(form).toBeInTheDocument();
     });
   });
