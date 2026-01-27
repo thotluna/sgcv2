@@ -9,7 +9,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useRouter } from 'next/navigation';
 import { createRoleAction, updateRoleAction } from './actions';
 import { toast } from 'sonner';
-import { SubmitButton } from './submit-button';
+import { SubmitButton } from '@/components/submit-button';
 
 interface RoleFormProps {
   initialData?: RoleWithPermissionsDto;
