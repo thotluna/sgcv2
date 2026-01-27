@@ -1,11 +1,12 @@
 // src/modules/rbac/guards/roles.guard.ts
-import { Request, Response, NextFunction } from 'express';
-import { rbacService } from '../rbac.service';
 import {
   ForbiddenException,
   InternalServerErrorException,
   UnauthorizedException,
 } from '@shared/exceptions';
+import { NextFunction, Request, Response } from 'express';
+
+import { rbacService } from '../rbac.service';
 
 /**
  * Middleware to ensure the user has at least one of the specified roles.

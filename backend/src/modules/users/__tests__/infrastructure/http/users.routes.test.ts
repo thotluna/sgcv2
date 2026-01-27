@@ -1,10 +1,10 @@
+import { authenticate } from '@auth/infrastructure/http/auth.middleware';
 import { UsersController } from '@modules/users/infrastructure/http/users.controller';
 import { UsersRoutes } from '@modules/users/infrastructure/http/users.routes';
+import { globalErrorHandler } from '@shared/middleware/global-error.middleware';
 import { Application, Request, Response } from 'express';
 import express from 'express';
 import request from 'supertest';
-import { globalErrorHandler } from '@shared/middleware/global-error.middleware';
-import { authenticate } from '@auth/infrastructure/http/auth.middleware';
 
 jest.mock('@auth/infrastructure/http/auth.middleware', () => ({
   authenticate: jest.fn(),

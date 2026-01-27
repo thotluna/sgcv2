@@ -1,9 +1,13 @@
+import Link from 'next/link';
+
 import {
   IconCreditCard,
   IconDotsVertical,
   IconNotification,
   IconUserCircle,
 } from '@tabler/icons-react';
+import { sha256 } from 'js-sha256';
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -16,9 +20,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { serverUsersService } from '@/lib/api/server-users.service';
+
 import { DropdownMenuLogout } from '../dropdown-menu-logout';
-import { sha256 } from 'js-sha256';
-import Link from 'next/link';
 
 export async function NavUser() {
   // const { isMobile } = useSidebar();

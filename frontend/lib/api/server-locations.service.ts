@@ -1,11 +1,13 @@
-import { createServerApiClient } from './server-client';
+import { AxiosError } from 'axios';
+
 import {
-  CustomerLocationDto as CustomerLocation,
   AppResponse,
   CreateCustomerLocationDto,
+  CustomerLocationDto as CustomerLocation,
   UpdateCustomerLocationDto,
 } from '@sgcv2/shared';
-import { AxiosError } from 'axios';
+
+import { createServerApiClient } from './server-client';
 
 /**
  * Server-side locations service for use in Server Components

@@ -1,14 +1,15 @@
-import { Router } from 'express';
-import { inject, injectable } from 'inversify';
+import { authenticate } from '@auth/infrastructure/http/auth.middleware';
+import { PERMISSIONS } from '@consts/permissions';
 import { TYPES } from '@customer/di/types';
 import { CustomerController } from '@customer/infrastructure/http/customer.controller';
-import { SubCustomerRoutes } from '@customer/infrastructure/http/subcustomer.routes';
 import { LocationRoutes } from '@customer/infrastructure/http/location.routes';
-import { authenticate } from '@auth/infrastructure/http/auth.middleware';
+import { SubCustomerRoutes } from '@customer/infrastructure/http/subcustomer.routes';
 import { Permission } from '@modules/rbac/decorators/permissions.decorator';
-import { PERMISSIONS } from '@consts/permissions';
 import { validateSchema } from '@shared/middleware/validate-schema';
-import { CreateCustomerSchema, UpdateCustomerSchema, CustomerFilterSchema } from '@sgcv2/shared';
+import { Router } from 'express';
+import { inject, injectable } from 'inversify';
+
+import { CreateCustomerSchema, CustomerFilterSchema, UpdateCustomerSchema } from '@sgcv2/shared';
 
 @injectable()
 export class CustomerRoutes {

@@ -1,7 +1,9 @@
-import { inject, injectable } from 'inversify';
-import { HealthService } from '../domain/services/health.service';
 import { TYPES } from '@modules/support/di/types';
+import { inject, injectable } from 'inversify';
+
 import { HealthStatus } from '@sgcv2/shared';
+
+import { HealthService } from '../domain/services/health.service';
 
 @injectable()
 export class GetHealthUseCase {

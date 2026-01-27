@@ -1,8 +1,8 @@
-import { Strategy as PassportJwtStrategy, VerifiedCallback } from 'passport-jwt';
-import { inject, injectable } from 'inversify';
-import { jwtOptions } from '@auth/infrastructure/http/strategies/jwt.options';
 import { TYPES } from '@auth/di/types';
+import { jwtOptions } from '@auth/infrastructure/http/strategies/jwt.options';
 import { AuthUserIdentityRepository } from '@modules/auth/domain/auth-user-identity.repository';
+import { inject, injectable } from 'inversify';
+import { Strategy as PassportJwtStrategy, VerifiedCallback } from 'passport-jwt';
 
 export interface Payload {
   sub: number;

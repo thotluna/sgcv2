@@ -1,10 +1,10 @@
-import { CustomerLocationEntity } from '@customer/domain/location.entity';
 import {
   CreateLocationInput,
-  UpdateLocationInput,
   LocationFilterInput,
   PaginatedLocations,
+  UpdateLocationInput,
 } from '@customer/domain/inputs/location.input';
+import { CustomerLocationEntity } from '@customer/domain/location.entity';
 
 export interface LocationRepository {
   create(data: CreateLocationInput): Promise<CustomerLocationEntity>;

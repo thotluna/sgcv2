@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { updatePasswordBaseSchema } from '@sgcv2/shared';
 
 // Extend base password schema for UI confirmation

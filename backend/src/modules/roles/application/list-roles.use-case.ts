@@ -1,7 +1,7 @@
-import { injectable, inject } from 'inversify';
 import { TYPES } from '@roles/di/types';
-import { ListService } from '@roles/domain/list.service';
 import { PaginatedRoles, RoleFilterInput } from '@roles/domain/inputs/roles.input';
+import { ListService } from '@roles/domain/list.service';
+import { inject, injectable } from 'inversify';
 
 @injectable()
 export class ListRolesUseCase {

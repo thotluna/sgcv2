@@ -1,21 +1,21 @@
-import { Prisma } from '@prisma/client';
-import { prisma } from '@config/prisma';
-import { injectable } from 'inversify';
-import { userInclude } from './include';
-import { UserEntity, UserWithRolesEntity } from '@users/domain/user-entity';
-import { UserRepository } from '@users/domain/user-repository';
 import { AuthUser } from '@auth/domain/auth-user';
-import { UserCredentialsRepository } from '@modules/auth/domain/user-credentials.repository';
-import { UserEntityModelMapper } from '@users/infrastructure/persist/user-entity-model.mapper';
-import { UsersMapper } from '@users/infrastructure/mappers/users';
+import { prisma } from '@config/prisma';
 import { AuthUserIdentityRepository } from '@modules/auth/domain/auth-user-identity.repository';
-
+import { UserCredentialsRepository } from '@modules/auth/domain/user-credentials.repository';
 import {
   CreateUserInput,
-  UserFilterInput,
   PaginatedUsers,
   UpdateUserPersistenceInput,
+  UserFilterInput,
 } from '@modules/users/domain/dtos/user.dtos';
+import { Prisma } from '@prisma/client';
+import { UserEntity, UserWithRolesEntity } from '@users/domain/user-entity';
+import { UserRepository } from '@users/domain/user-repository';
+import { UsersMapper } from '@users/infrastructure/mappers/users';
+import { UserEntityModelMapper } from '@users/infrastructure/persist/user-entity-model.mapper';
+import { injectable } from 'inversify';
+
+import { userInclude } from './include';
 
 @injectable()
 export class UsersPrismaRepository

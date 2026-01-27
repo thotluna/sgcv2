@@ -1,4 +1,5 @@
 import logger from '@config/logger';
+
 import { ErrorCodes } from '../enums/error-codes.enum';
 
 export class AppException extends Error {

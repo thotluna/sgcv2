@@ -1,7 +1,7 @@
-import { inject, injectable } from 'inversify';
 import { TYPES } from '@users/di/types';
-import { ListUsersService } from '@users/domain/list.service';
 import { PaginatedUsers, UserFilterInput } from '@users/domain/dtos/user.dtos';
+import { ListUsersService } from '@users/domain/list.service';
+import { inject, injectable } from 'inversify';
 
 @injectable()
 export class ListUseCase {

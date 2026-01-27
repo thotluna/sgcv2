@@ -1,10 +1,10 @@
-import { SubCustomerEntity } from '@customer/domain/subcustomer.entity';
 import {
   CreateSubCustomerInput,
-  UpdateSubCustomerInput,
-  SubCustomerFilterInput,
   PaginatedSubCustomers,
+  SubCustomerFilterInput,
+  UpdateSubCustomerInput,
 } from '@customer/domain/inputs/subcustomer.input';
+import { SubCustomerEntity } from '@customer/domain/subcustomer.entity';
 
 export interface SubCustomerRepository {
   create(data: CreateSubCustomerInput): Promise<SubCustomerEntity>;

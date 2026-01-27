@@ -1,15 +1,8 @@
-import { serverLocationsService } from '@/lib/api/server-locations.service';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Home, MapPin, Plus, Trash2 } from 'lucide-react';
+
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Plus, MapPin, Trash2, Home } from 'lucide-react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Sheet,
   SheetContent,
@@ -18,8 +11,17 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { serverLocationsService } from '@/lib/api/server-locations.service';
+
 import { LocationForm } from './location-form';
-import { Badge } from '@/components/ui/badge';
 
 interface LocationsListProps {
   customerId: string;

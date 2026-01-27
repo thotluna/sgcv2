@@ -1,9 +1,11 @@
-import 'dotenv/config';
-import { prisma } from '../src/config/prisma';
 import { CustomerState, Role } from '@prisma/client';
 import bcrypt from 'bcrypt';
-import { ROLES } from '../src/consts/roles';
+
+import { prisma } from '../src/config/prisma';
 import { PERMISSIONS } from '../src/consts/permissions';
+import { ROLES } from '../src/consts/roles';
+
+import 'dotenv/config';
 
 async function main() {
   const password = 'admin123';

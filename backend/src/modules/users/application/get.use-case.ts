@@ -1,8 +1,8 @@
-import { inject, injectable } from 'inversify';
-import { UserWithRolesEntity } from '@users/domain/user-entity';
 import { TYPES } from '@users/di/types';
-import { ShowUserService } from '@users/domain/show.service';
 import { UserNotFoundException } from '@users/domain/exceptions/user-not-found.exception';
+import { ShowUserService } from '@users/domain/show.service';
+import { UserWithRolesEntity } from '@users/domain/user-entity';
+import { inject, injectable } from 'inversify';
 
 @injectable()
 export class GetUseCase {

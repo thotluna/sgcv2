@@ -1,15 +1,15 @@
+import { CreateCustomerUseCase } from '@customer/application/create-customer.use-case';
+import { DeleteCustomerUseCase } from '@customer/application/delete-customer.use-case';
+import { GetCustomerUseCase } from '@customer/application/get-customer.use-case';
+import { ListCustomersUseCase } from '@customer/application/list-customers.use-case';
+import { UpdateCustomerUseCase } from '@customer/application/update-customer.use-case';
+import { CustomerState } from '@customer/domain/customer.entity';
+import { CustomerAlreadyExistsException } from '@customer/domain/exceptions/customer-already-exists.exception';
+import { CustomerNotFoundException } from '@customer/domain/exceptions/customer-not-found.exception';
 import { CustomerController } from '@customer/infrastructure/http/customer.controller';
 import { CustomerMapper } from '@customer/infrastructure/mappers/customer.mapper';
-import { CustomerState } from '@customer/domain/customer.entity';
-import { Request, Response } from 'express';
 import { ConflictException, NotFoundException } from '@shared/exceptions/http-exceptions';
-import { CreateCustomerUseCase } from '@customer/application/create-customer.use-case';
-import { ListCustomersUseCase } from '@customer/application/list-customers.use-case';
-import { GetCustomerUseCase } from '@customer/application/get-customer.use-case';
-import { UpdateCustomerUseCase } from '@customer/application/update-customer.use-case';
-import { DeleteCustomerUseCase } from '@customer/application/delete-customer.use-case';
-import { CustomerNotFoundException } from '@customer/domain/exceptions/customer-not-found.exception';
-import { CustomerAlreadyExistsException } from '@customer/domain/exceptions/customer-already-exists.exception';
+import { Request, Response } from 'express';
 
 jest.mock('uuid', () => ({
   v4: () => 'test-uuid-1234',

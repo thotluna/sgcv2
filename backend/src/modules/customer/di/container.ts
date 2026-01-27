@@ -1,54 +1,52 @@
-import { ContainerModule } from 'inversify';
-import { TYPES } from '@customer/di/types';
-import { CustomerController } from '@customer/infrastructure/http/customer.controller';
-import { CustomerRoutes } from '@customer/infrastructure/http/customer.routes';
-import { CustomerRepository } from '@customer/domain/customer.repository';
-import { CustomerPrismaRepository } from '@customer/infrastructure/persist/customer-prisma.repository';
 import { CreateCustomerUseCase } from '@customer/application/create-customer.use-case';
-import { UpdateCustomerUseCase } from '@customer/application/update-customer.use-case';
-import { GetCustomerUseCase } from '@customer/application/get-customer.use-case';
-import { ListCustomersUseCase } from '@customer/application/list-customers.use-case';
-import { DeleteCustomerUseCase } from '@customer/application/delete-customer.use-case';
-import { CustomerService } from '@customer/infrastructure/http/customer.service';
-import { CreateCustomerService } from '@customer/domain/create-customer.service';
-import { UpdateCustomerService } from '@customer/domain/update-customer.service';
-import { GetCustomerService } from '@customer/domain/get-customer.service';
-import { ListCustomersService } from '@customer/domain/list-customers.service';
-import { DeleteCustomerService } from '@customer/domain/delete-customer.service';
-
-// SubCustomer
-import { SubCustomerRepository } from '@customer/domain/subcustomer.repository';
-import { SubCustomerPrismaRepository } from '@customer/infrastructure/persist/subcustomer-prisma.repository';
-import { CreateSubCustomerService } from '@customer/domain/create-subcustomer.service';
-import { UpdateSubCustomerService } from '@customer/domain/update-subcustomer.service';
-import { GetSubCustomerService } from '@customer/domain/get-subcustomer.service';
-import { ListSubCustomersService } from '@customer/domain/list-subcustomers.service';
-import { DeleteSubCustomerService } from '@customer/domain/delete-subcustomer.service';
-import { SubCustomerService } from '@customer/infrastructure/http/subcustomer.service';
+import { CreateLocationUseCase } from '@customer/application/create-location.use-case';
 import { CreateSubCustomerUseCase } from '@customer/application/create-subcustomer.use-case';
-import { UpdateSubCustomerUseCase } from '@customer/application/update-subcustomer.use-case';
-import { GetSubCustomerUseCase } from '@customer/application/get-subcustomer.use-case';
-import { ListSubCustomersUseCase } from '@customer/application/list-subcustomers.use-case';
+import { DeleteCustomerUseCase } from '@customer/application/delete-customer.use-case';
+import { DeleteLocationUseCase } from '@customer/application/delete-location.use-case';
 import { DeleteSubCustomerUseCase } from '@customer/application/delete-subcustomer.use-case';
-import { SubCustomerController } from '@customer/infrastructure/http/subcustomer.controller';
-import { SubCustomerRoutes } from '@customer/infrastructure/http/subcustomer.routes';
-
+import { GetCustomerUseCase } from '@customer/application/get-customer.use-case';
+import { GetLocationUseCase } from '@customer/application/get-location.use-case';
+import { GetSubCustomerUseCase } from '@customer/application/get-subcustomer.use-case';
+import { ListCustomersUseCase } from '@customer/application/list-customers.use-case';
+import { ListLocationsUseCase } from '@customer/application/list-locations.use-case';
+import { ListSubCustomersUseCase } from '@customer/application/list-subcustomers.use-case';
+import { UpdateCustomerUseCase } from '@customer/application/update-customer.use-case';
+import { UpdateLocationUseCase } from '@customer/application/update-location.use-case';
+import { UpdateSubCustomerUseCase } from '@customer/application/update-subcustomer.use-case';
+import { TYPES } from '@customer/di/types';
+import { CreateCustomerService } from '@customer/domain/create-customer.service';
+import { CreateLocationService } from '@customer/domain/create-location.service';
+import { CreateSubCustomerService } from '@customer/domain/create-subcustomer.service';
+import { CustomerRepository } from '@customer/domain/customer.repository';
+import { DeleteCustomerService } from '@customer/domain/delete-customer.service';
+import { DeleteLocationService } from '@customer/domain/delete-location.service';
+import { DeleteSubCustomerService } from '@customer/domain/delete-subcustomer.service';
+import { GetCustomerService } from '@customer/domain/get-customer.service';
+import { GetLocationService } from '@customer/domain/get-location.service';
+import { GetSubCustomerService } from '@customer/domain/get-subcustomer.service';
+import { ListCustomersService } from '@customer/domain/list-customers.service';
+import { ListLocationsService } from '@customer/domain/list-locations.service';
+import { ListSubCustomersService } from '@customer/domain/list-subcustomers.service';
 // Location
 import { LocationRepository } from '@customer/domain/location.repository';
-import { LocationPrismaRepository } from '@customer/infrastructure/persist/location-prisma.repository';
-import { CreateLocationService } from '@customer/domain/create-location.service';
+// SubCustomer
+import { SubCustomerRepository } from '@customer/domain/subcustomer.repository';
+import { UpdateCustomerService } from '@customer/domain/update-customer.service';
 import { UpdateLocationService } from '@customer/domain/update-location.service';
-import { DeleteLocationService } from '@customer/domain/delete-location.service';
-import { GetLocationService } from '@customer/domain/get-location.service';
-import { ListLocationsService } from '@customer/domain/list-locations.service';
-import { LocationService } from '@customer/infrastructure/http/location.service';
-import { CreateLocationUseCase } from '@customer/application/create-location.use-case';
-import { UpdateLocationUseCase } from '@customer/application/update-location.use-case';
-import { DeleteLocationUseCase } from '@customer/application/delete-location.use-case';
-import { GetLocationUseCase } from '@customer/application/get-location.use-case';
-import { ListLocationsUseCase } from '@customer/application/list-locations.use-case';
+import { UpdateSubCustomerService } from '@customer/domain/update-subcustomer.service';
+import { CustomerController } from '@customer/infrastructure/http/customer.controller';
+import { CustomerRoutes } from '@customer/infrastructure/http/customer.routes';
+import { CustomerService } from '@customer/infrastructure/http/customer.service';
 import { LocationController } from '@customer/infrastructure/http/location.controller';
 import { LocationRoutes } from '@customer/infrastructure/http/location.routes';
+import { LocationService } from '@customer/infrastructure/http/location.service';
+import { SubCustomerController } from '@customer/infrastructure/http/subcustomer.controller';
+import { SubCustomerRoutes } from '@customer/infrastructure/http/subcustomer.routes';
+import { SubCustomerService } from '@customer/infrastructure/http/subcustomer.service';
+import { CustomerPrismaRepository } from '@customer/infrastructure/persist/customer-prisma.repository';
+import { LocationPrismaRepository } from '@customer/infrastructure/persist/location-prisma.repository';
+import { SubCustomerPrismaRepository } from '@customer/infrastructure/persist/subcustomer-prisma.repository';
+import { ContainerModule } from 'inversify';
 
 export const customerContainerModule = new ContainerModule(options => {
   // Customer

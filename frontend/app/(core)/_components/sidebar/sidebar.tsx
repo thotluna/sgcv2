@@ -1,4 +1,25 @@
 import Link from 'next/link';
+
+import {
+  Box,
+  Calendar,
+  ChevronDown,
+  ClipboardList,
+  CreditCard,
+  DollarSign,
+  FileCheck,
+  FileText,
+  HomeIcon,
+  Package,
+  Receipt,
+  Settings,
+  Truck,
+  UserCog,
+  Users,
+  Wallet,
+  Wrench,
+} from 'lucide-react';
+
 import {
   Sidebar,
   SidebarContent,
@@ -10,32 +31,14 @@ import {
   SidebarMenuSub,
   SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
-import {
-  ChevronDown,
-  HomeIcon,
-  ClipboardList,
-  Users,
-  Calendar,
-  FileText,
-  Package,
-  Wrench,
-  Box,
-  Truck,
-  FileCheck,
-  Receipt,
-  CreditCard,
-  DollarSign,
-  Wallet,
-  UserCog,
-  Settings,
-} from 'lucide-react';
+import { serverUsersService } from '@/lib/api/server-users.service';
+
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from '../../../../components/ui/collapsible';
 import { NavUser } from '../nav-user';
-import { serverUsersService } from '@/lib/api/server-users.service';
 
 export default async function SidebarApp() {
   const response = await serverUsersService.getMe();

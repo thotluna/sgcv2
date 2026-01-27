@@ -1,15 +1,7 @@
-import { serverSubCustomersService } from '@/lib/api/server-subcustomers.service';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { MapPin, Plus, Trash2, Users } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
-import { Plus, Users, Trash2, MapPin } from 'lucide-react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Sheet,
   SheetContent,
@@ -18,8 +10,18 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { SubCustomerForm } from './sub-customer-form';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { serverSubCustomersService } from '@/lib/api/server-subcustomers.service';
+
 import { LocationForm } from './location-form';
+import { SubCustomerForm } from './sub-customer-form';
 
 interface SubCustomersListProps {
   customerId: string;

@@ -1,6 +1,6 @@
+import { mockPermission } from '@roles/__tests__/helpers';
 import { ListPermissionsUseCase } from '@roles/application/list-permissions.use-case';
 import { ListPermissionsService } from '@roles/domain/list-permissions.service';
-import { mockPermission } from '@roles/__tests__/helpers';
 
 const mockListPermissionsService = {
   getAllPermissions: jest.fn(),

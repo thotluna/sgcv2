@@ -1,6 +1,6 @@
 import { prisma } from '@config/prisma';
-import { CustomerPrismaRepository } from '@customer/infrastructure/persist/customer-prisma.repository';
 import { CustomerState } from '@customer/domain/customer.entity';
+import { CustomerPrismaRepository } from '@customer/infrastructure/persist/customer-prisma.repository';
 
 jest.mock('@config/prisma', () => ({
   prisma: {

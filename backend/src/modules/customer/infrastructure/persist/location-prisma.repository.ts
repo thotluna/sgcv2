@@ -1,15 +1,15 @@
-import { Prisma } from '@prisma/client';
 import { prisma } from '@config/prisma';
-import { injectable } from 'inversify';
-import { CustomerLocationEntity } from '@customer/domain/location.entity';
-import { LocationRepository } from '@customer/domain/location.repository';
 import {
   CreateLocationInput,
-  UpdateLocationInput,
   LocationFilterInput,
   PaginatedLocations,
+  UpdateLocationInput,
 } from '@customer/domain/inputs/location.input';
+import { CustomerLocationEntity } from '@customer/domain/location.entity';
+import { LocationRepository } from '@customer/domain/location.repository';
 import { LocationMapper } from '@customer/infrastructure/mappers/location.mapper';
+import { Prisma } from '@prisma/client';
+import { injectable } from 'inversify';
 
 @injectable()
 export class LocationPrismaRepository implements LocationRepository {

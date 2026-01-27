@@ -1,8 +1,10 @@
-import { inject, injectable } from 'inversify';
-import { HealthStatus } from '@sgcv2/shared';
-import { HealthService } from './health.service';
-import { HealthCheckRepository } from '../repositories/health-check.repository';
 import { TYPES } from '@modules/support/di/types';
+import { inject, injectable } from 'inversify';
+
+import { HealthStatus } from '@sgcv2/shared';
+
+import { HealthCheckRepository } from '../repositories/health-check.repository';
+import { HealthService } from './health.service';
 
 @injectable()
 export class HealthServiceImpl implements HealthService {

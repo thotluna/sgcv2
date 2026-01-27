@@ -1,10 +1,12 @@
-import 'reflect-metadata';
-import { UpdateMeUseCase } from '@modules/users/application/update-me.use-case';
-import { UpdateUserService } from '@modules/users/domain/update.service';
 import { PasswordHasher } from '@modules/auth/domain/password-hasher';
+import { UpdateMeUseCase } from '@modules/users/application/update-me.use-case';
 import { UserNotFoundException } from '@modules/users/domain/exceptions/user-not-found.exception';
+import { UpdateUserService } from '@modules/users/domain/update.service';
 import { BadRequestException } from '@shared/exceptions';
+
 import { mockUserWithRole } from '../helpers';
+
+import 'reflect-metadata';
 
 describe('UpdateMeUseCaseService', () => {
   let useCase: UpdateMeUseCase;

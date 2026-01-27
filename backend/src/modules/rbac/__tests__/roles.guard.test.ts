@@ -1,6 +1,7 @@
 // src/modules/rbac/__tests__/roles.guard.test.ts
+import { NextFunction, Request, Response } from 'express';
+
 import { requireRoles } from '../guards/roles.guard';
-import { Request, Response, NextFunction } from 'express';
 
 // Mock the entire rbac.service module
 jest.mock('../rbac.service', () => ({

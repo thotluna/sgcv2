@@ -1,8 +1,8 @@
-import { Request, Response } from 'express';
-import { inject, injectable } from 'inversify';
 import { GetHealthUseCase } from '@modules/support/application/get-health.use-case';
 import { TYPES } from '@modules/support/di/types';
 import { ResponseHelper } from '@shared/utils/response.helpers';
+import { Request, Response } from 'express';
+import { inject, injectable } from 'inversify';
 
 @injectable()
 export class HealthController {

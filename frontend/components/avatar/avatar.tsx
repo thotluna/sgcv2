@@ -1,6 +1,7 @@
 'use client';
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { useAuth } from '@/hooks/use-auth';
+
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 export function AvatarUser() {
   const { logout, user } = useAuth();

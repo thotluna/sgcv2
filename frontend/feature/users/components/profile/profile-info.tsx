@@ -1,14 +1,16 @@
+import { IconClock, IconHash, IconMail, IconShield, IconUser } from '@tabler/icons-react';
+
 import { UserWithRolesDto } from '@sgcv2/shared';
+
 import {
+  Badge,
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-  Badge,
   Separator,
 } from '@/components/ui';
-import { IconUser, IconMail, IconHash, IconClock, IconShield } from '@tabler/icons-react';
 
 interface ProfileInfoProps {
   user: UserWithRolesDto;

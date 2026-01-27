@@ -1,7 +1,9 @@
-import { serverUsersService } from '@/lib/api/server-users.service';
 import { UsersTable } from '@feature/users/components/admin/users-table';
-import { DataPagination } from '@/components/data-pagination';
+
 import { UserDto, UserFilterDto } from '@sgcv2/shared';
+
+import { DataPagination } from '@/components/data-pagination';
+import { serverUsersService } from '@/lib/api/server-users.service';
 
 interface UsersTableContentProps {
   limit: number;

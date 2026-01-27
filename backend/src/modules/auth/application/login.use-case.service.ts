@@ -1,9 +1,10 @@
-import { inject, injectable } from 'inversify';
-import { InvalidPasswordException } from '@auth/domain/exceptions/invalid-password.exception';
 import { TYPES } from '@auth/di/types';
-import { LoginService } from '../domain/login.service';
-import { LoginInput, AuthResult } from '../domain/dtos/auth.domain.dtos';
+import { InvalidPasswordException } from '@auth/domain/exceptions/invalid-password.exception';
+import { inject, injectable } from 'inversify';
+
 import { AuthUser } from '../domain/auth-user';
+import { AuthResult, LoginInput } from '../domain/dtos/auth.domain.dtos';
+import { LoginService } from '../domain/login.service';
 
 @injectable()
 export class LoginUseCaseService {

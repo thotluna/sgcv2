@@ -2,8 +2,8 @@ import { prisma } from '@config/prisma';
 import { PermissionFilterInput } from '@roles/domain/inputs/permission.input';
 import { PermissionRepository } from '@roles/domain/permission.repository';
 import { PermissionEntity } from '@roles/domain/roles.entity';
-import { injectable } from 'inversify';
 import { RoleEntityModelMapper } from '@roles/infrastructure/persist/role-entity-model.mapper';
+import { injectable } from 'inversify';
 
 @injectable()
 export class PermissionsPrismaRepository implements PermissionRepository {

@@ -1,16 +1,17 @@
 import {
+  CreateRoleInput,
+  RoleFilterInput,
+  UpdateRoleInput,
+} from '@roles/domain/inputs/roles.input';
+import { RoleEntity } from '@roles/domain/roles.entity';
+
+import {
   CreateRoleDto,
   RoleDto,
   RoleFilterDto,
   RoleWithPermissionsDto,
   UpdateRoleDto,
 } from '@sgcv2/shared';
-import {
-  CreateRoleInput,
-  RoleFilterInput,
-  UpdateRoleInput,
-} from '@roles/domain/inputs/roles.input';
-import { RoleEntity } from '@roles/domain/roles.entity';
 
 export class RolesMapper {
   static toCreateInput(dto: CreateRoleDto): CreateRoleInput {

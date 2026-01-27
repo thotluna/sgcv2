@@ -1,9 +1,10 @@
-import 'reflect-metadata';
-import { AuthService } from '@modules/auth/infrastructure/http/auth.service';
-import { UserCredentialsRepository } from '@modules/auth/domain/user-credentials.repository';
 import { AuthUser } from '@modules/auth/domain/auth-user';
+import { UserCredentialsRepository } from '@modules/auth/domain/user-credentials.repository';
+import { AuthService } from '@modules/auth/infrastructure/http/auth.service';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+
+import 'reflect-metadata';
 
 jest.mock('bcrypt');
 jest.mock('jsonwebtoken');

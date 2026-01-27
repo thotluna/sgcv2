@@ -1,8 +1,9 @@
-import { LoginUseCaseService } from '../../application/login.use-case.service';
 import { AuthUser } from '@auth/domain/auth-user';
 import { InvalidPasswordException } from '@modules/auth/domain/exceptions/invalid-password.exception';
-import { getUserMock, MOCK_LOGIN_REQUEST } from '../helpers';
 import { LoginService } from '@modules/auth/domain/login.service';
+
+import { LoginUseCaseService } from '../../application/login.use-case.service';
+import { getUserMock, MOCK_LOGIN_REQUEST } from '../helpers';
 
 const mockAuthLoginService: jest.Mocked<LoginService> = {
   validateCredentials: jest.fn(),

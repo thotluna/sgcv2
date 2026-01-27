@@ -1,6 +1,7 @@
-import { UserStatus } from '../user-status';
 import { PaginationResult } from '@shared/domain/pagination';
+
 import { UserEntity } from '../user-entity';
+import { UserStatus } from '../user-status';
 
 export interface CreateUserInput {
   username: string;

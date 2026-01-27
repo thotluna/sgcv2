@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
-import { v4 as uuidv4 } from 'uuid';
 import logger from '@config/logger';
+import { NextFunction, Request, Response } from 'express';
+import { v4 as uuidv4 } from 'uuid';
 
 interface LogMetadata {
   requestId: string;

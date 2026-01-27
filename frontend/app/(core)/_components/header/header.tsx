@@ -1,6 +1,8 @@
 'use client';
 
-import { SidebarTrigger } from '@/components/ui/sidebar';
+import { Fragment } from 'react';
+import { usePathname } from 'next/navigation';
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,8 +11,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
-import { usePathname } from 'next/navigation';
-import { Fragment } from 'react';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 
 export default function Header() {
   const pathname = usePathname();

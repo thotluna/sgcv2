@@ -1,8 +1,11 @@
-import { CustomersFilters } from './_components/filters';
-import { CustomerState } from '@sgcv2/shared';
 import { Suspense } from 'react';
-import { CustomersTableContent } from './_components/table-content';
+
+import { CustomerState } from '@sgcv2/shared';
+
 import { TableSkeleton } from '@/components/table/table-skeleton';
+
+import { CustomersFilters } from './_components/filters';
+import { CustomersTableContent } from './_components/table-content';
 
 interface CustomersPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;

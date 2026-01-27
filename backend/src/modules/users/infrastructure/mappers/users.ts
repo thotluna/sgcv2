@@ -1,9 +1,10 @@
-import { AuthenticatedUserDto } from '@sgcv2/shared/src/dtos/auth.dto';
-import { UserEntity, UserWithRolesEntity } from '@users/domain/user-entity';
-import { UserDto, UserWithRolesDto, CreateUserDto, UpdateUserDto } from '@sgcv2/shared';
-import { CreateUserInput, UpdateUserInput } from '@modules/users/domain/dtos/user.dtos';
-import { UserWithRolesModel } from '@users/infrastructure/persist/include';
 import { AuthUser } from '@modules/auth/domain/auth-user';
+import { CreateUserInput, UpdateUserInput } from '@modules/users/domain/dtos/user.dtos';
+import { UserEntity, UserWithRolesEntity } from '@users/domain/user-entity';
+import { UserWithRolesModel } from '@users/infrastructure/persist/include';
+
+import { CreateUserDto, UpdateUserDto, UserDto, UserWithRolesDto } from '@sgcv2/shared';
+import { AuthenticatedUserDto } from '@sgcv2/shared/src/dtos/auth.dto';
 
 export class UsersMapper {
   static toUserWithRolesDto(userWithRoles: UserWithRolesEntity): UserWithRolesDto {

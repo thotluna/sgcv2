@@ -1,8 +1,8 @@
 import { prisma } from '@config/prisma';
-import { UsersPrismaRepository } from '@modules/users/infrastructure/persist/users-prisma.repository';
 import { UserWithRolesModel } from '@modules/users/infrastructure/persist/include';
-import { User } from '@prisma/client';
 import { UserEntityModelMapper } from '@modules/users/infrastructure/persist/user-entity-model.mapper';
+import { UsersPrismaRepository } from '@modules/users/infrastructure/persist/users-prisma.repository';
+import { User } from '@prisma/client';
 
 jest.mock('@config/prisma', () => ({
   prisma: {

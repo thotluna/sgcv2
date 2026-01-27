@@ -1,7 +1,7 @@
 import { ListCustomersUseCase } from '@customer/application/list-customers.use-case';
-import { ListCustomersService } from '@customer/domain/list-customers.service';
 import { CustomerEntity, CustomerState } from '@customer/domain/customer.entity';
 import { CustomerFilterInput } from '@customer/domain/inputs/customer.input';
+import { ListCustomersService } from '@customer/domain/list-customers.service';
 
 describe('ListCustomersUseCase', () => {
   let useCase: ListCustomersUseCase;

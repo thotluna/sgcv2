@@ -1,6 +1,6 @@
 import { UpdateLocationUseCase } from '@customer/application/update-location.use-case';
-import { UpdateLocationService } from '@customer/domain/update-location.service';
 import { LocationNotFoundException } from '@customer/domain/exceptions/location-not-found.exception';
+import { UpdateLocationService } from '@customer/domain/update-location.service';
 
 describe('UpdateLocationUseCase', () => {
   let useCase: UpdateLocationUseCase;

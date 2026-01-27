@@ -1,10 +1,13 @@
 'use server';
 
-import { ActionState } from '../types';
-import { CreateCustomerSchema, UpdateCustomerSchema } from '@sgcv2/shared';
-import { serverCustomersService } from '@/lib/api/server-customers.service';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+
+import { CreateCustomerSchema, UpdateCustomerSchema } from '@sgcv2/shared';
+
+import { serverCustomersService } from '@/lib/api/server-customers.service';
+
+import { ActionState } from '../types';
 
 export async function handleCustomerFilters(formData: FormData) {
   const search = formData.get('search') as string;

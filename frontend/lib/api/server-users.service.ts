@@ -1,11 +1,12 @@
 import {
   AppResponse,
-  UserWithRolesDto,
-  UpdateUserDto,
-  UserFilterDto,
-  UserDto,
   CreateUserDto,
+  UpdateUserDto,
+  UserDto,
+  UserFilterDto,
+  UserWithRolesDto,
 } from '@sgcv2/shared';
+
 import { createServerApiClient } from './server-client';
 
 export const serverUsersService = {

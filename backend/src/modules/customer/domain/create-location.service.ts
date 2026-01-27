@@ -1,6 +1,6 @@
-import { CustomerLocationEntity } from '@customer/domain/location.entity';
-import { CreateLocationInput } from '@customer/domain/inputs/location.input';
 import { CustomerEntity } from '@customer/domain/customer.entity';
+import { CreateLocationInput } from '@customer/domain/inputs/location.input';
+import { CustomerLocationEntity } from '@customer/domain/location.entity';
 import { SubCustomerEntity } from '@customer/domain/subcustomer.entity';
 
 export interface CreateLocationService {

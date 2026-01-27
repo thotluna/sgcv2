@@ -1,12 +1,15 @@
 'use client';
 
 import { useActionState } from 'react';
+
+import { AlertCircle } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { createLocationAction } from './sub-customer-actions';
+
 import { ActionState } from '../types';
-import { AlertCircle } from 'lucide-react';
+import { createLocationAction } from './sub-customer-actions';
 
 interface LocationFormProps {
   parentId: string;

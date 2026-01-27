@@ -1,10 +1,12 @@
 'use server';
 
-import { ActionState } from '@/lib/types';
-import { loginSchema } from '@sgcv2/shared';
-import { authService } from '@/lib/api/auth.service';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+
+import { loginSchema } from '@sgcv2/shared';
+
+import { authService } from '@/lib/api/auth.service';
+import { ActionState } from '@/lib/types';
 
 export async function loginAction(
   _prevState: ActionState,

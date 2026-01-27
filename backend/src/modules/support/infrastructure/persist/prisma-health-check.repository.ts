@@ -1,6 +1,6 @@
-import { injectable } from 'inversify';
 import { prisma } from '@config/prisma';
 import { HealthCheckRepository } from '@modules/support/domain/repositories/health-check.repository';
+import { injectable } from 'inversify';
 
 @injectable()
 export class PrismaHealthCheckRepository implements HealthCheckRepository {

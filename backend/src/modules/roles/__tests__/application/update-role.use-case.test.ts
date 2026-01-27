@@ -1,10 +1,10 @@
+import { mockPermission, mockRole } from '@roles/__tests__/helpers';
 import { UpdateRoleUseCase } from '@roles/application/update-role.use-case';
-import { UpdateRoleService } from '@roles/domain/update.role.service';
-import { GetRoleService } from '@roles/domain/get.role.service';
-import { RoleNotFoundException } from '@roles/domain/exceptions/role-not-found-exception';
-import { RoleAlreadyExistsException } from '@roles/domain/exceptions/role-already-exists-exception';
 import { PermissionNotFoundException } from '@roles/domain/exceptions/permission-not-found-exception';
-import { mockRole, mockPermission } from '@roles/__tests__/helpers';
+import { RoleAlreadyExistsException } from '@roles/domain/exceptions/role-already-exists-exception';
+import { RoleNotFoundException } from '@roles/domain/exceptions/role-not-found-exception';
+import { GetRoleService } from '@roles/domain/get.role.service';
+import { UpdateRoleService } from '@roles/domain/update.role.service';
 
 const mockUpdateService = {
   update: jest.fn(),

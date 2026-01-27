@@ -1,7 +1,9 @@
 import { UserDto } from '@sgcv2/shared';
-import { UserDropMenu } from './userDropMenu';
+
+import { type Column, DataTable } from '@/components/table/data-table';
 import { Badge } from '@/components/ui';
-import { DataTable, type Column } from '@/components/table/data-table';
+
+import { UserDropMenu } from './userDropMenu';
 
 interface UsersTableProps {
   data: UserDto[];

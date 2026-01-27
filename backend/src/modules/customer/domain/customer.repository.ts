@@ -1,9 +1,9 @@
 import { CustomerEntity } from '@customer/domain/customer.entity';
 import {
   CreateCustomerInput,
-  UpdateCustomerInput,
   CustomerFilterInput,
   PaginatedCustomers,
+  UpdateCustomerInput,
 } from '@customer/domain/inputs/customer.input';
 
 export interface CustomerRepository {

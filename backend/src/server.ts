@@ -1,9 +1,11 @@
 import dotenv from 'dotenv';
+
 import 'reflect-metadata';
 dotenv.config();
 
-import app from './app';
 import logger from '@config/logger';
+
+import app from './app';
 
 const PORT = process.env.PORT || 4000;
 const HOST = process.env.HOST || 'localhost';

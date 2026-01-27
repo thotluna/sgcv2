@@ -1,16 +1,18 @@
-import { TYPES } from '@users/di/types';
-import { UserEntity } from '@modules/users/domain/user-entity';
-import { ResponseHelper } from '@shared/utils/response.helpers';
-import { inject, injectable } from 'inversify';
-import { Request, Response } from 'express';
-import { NotFoundException, UnauthorizedException } from '@shared/exceptions';
-import { GetUseCase } from '@modules/users/application/get.use-case';
-import { UpdateMeUseCase } from '@modules/users/application/update-me.use-case';
-import { UsersMapper } from '../mappers/users';
-import { UpdateUserDto, UserFilterDto, CreateUserDto as SharedCreateUserDto } from '@sgcv2/shared';
-import { ListUseCase } from '@modules/users/application/list.use-case';
 import { CreateUseCase } from '@modules/users/application/create.use-case';
+import { GetUseCase } from '@modules/users/application/get.use-case';
+import { ListUseCase } from '@modules/users/application/list.use-case';
 import { UpdateUseCase } from '@modules/users/application/update.use-case';
+import { UpdateMeUseCase } from '@modules/users/application/update-me.use-case';
+import { UserEntity } from '@modules/users/domain/user-entity';
+import { NotFoundException, UnauthorizedException } from '@shared/exceptions';
+import { ResponseHelper } from '@shared/utils/response.helpers';
+import { TYPES } from '@users/di/types';
+import { Request, Response } from 'express';
+import { inject, injectable } from 'inversify';
+
+import { CreateUserDto as SharedCreateUserDto, UpdateUserDto, UserFilterDto } from '@sgcv2/shared';
+
+import { UsersMapper } from '../mappers/users';
 
 @injectable()
 export class UsersController {

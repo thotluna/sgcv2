@@ -1,6 +1,6 @@
 import { GetSubCustomerUseCase } from '@customer/application/get-subcustomer.use-case';
-import { GetSubCustomerService } from '@customer/domain/get-subcustomer.service';
 import { SubCustomerNotFoundException } from '@customer/domain/exceptions/subcustomer-not-found.exception';
+import { GetSubCustomerService } from '@customer/domain/get-subcustomer.service';
 
 describe('GetSubCustomerUseCase', () => {
   let useCase: GetSubCustomerUseCase;

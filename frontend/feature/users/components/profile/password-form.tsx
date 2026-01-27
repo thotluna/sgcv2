@@ -1,20 +1,22 @@
 'use client';
 
 import { useActionState, useEffect } from 'react';
+
 import { updatePasswordAction } from '@feature/users/profile.actions';
+import { ActionState } from '@lib/types';
+import { toast } from 'sonner';
+
+import { SubmitButton } from '@/components/submit-button';
 import {
-  Input,
-  Label,
   Card,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
+  Input,
+  Label,
 } from '@/components/ui';
-import { toast } from 'sonner';
-import { ActionState } from '@lib/types';
-import { SubmitButton } from '@/components/submit-button';
 
 const initialState: ActionState = {
   success: false,

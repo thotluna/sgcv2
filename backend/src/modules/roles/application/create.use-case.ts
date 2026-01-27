@@ -1,10 +1,10 @@
-import { inject, injectable } from 'inversify';
 import { TYPES } from '@roles/di/types';
 import { CreateService } from '@roles/domain/create.service';
+import { PermissionNotFoundException } from '@roles/domain/exceptions/permission-not-found-exception';
+import { RoleAlreadyExistsException } from '@roles/domain/exceptions/role-already-exists-exception';
 import { CreateRoleInput } from '@roles/domain/inputs/roles.input';
 import { RoleEntity } from '@roles/domain/roles.entity';
-import { RoleAlreadyExistsException } from '@roles/domain/exceptions/role-already-exists-exception';
-import { PermissionNotFoundException } from '@roles/domain/exceptions/permission-not-found-exception';
+import { inject, injectable } from 'inversify';
 
 @injectable()
 export class CreateRoleUseCase {

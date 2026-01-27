@@ -1,12 +1,12 @@
-import { inject, injectable } from 'inversify';
-import { UserWithRolesEntity } from '@users/domain/user-entity';
-import { TYPES } from '@users/di/types';
 import { TYPES as AuthTypes } from '@modules/auth/di/types';
-import { UserNotFoundException } from '@users/domain/exceptions/user-not-found.exception';
 import { PasswordHasher } from '@modules/auth/domain/password-hasher';
 import { BadRequestException } from '@shared/exceptions';
+import { TYPES } from '@users/di/types';
 import { UpdateUserInput, UpdateUserPersistenceInput } from '@users/domain/dtos/user.dtos';
+import { UserNotFoundException } from '@users/domain/exceptions/user-not-found.exception';
 import { UpdateUserService } from '@users/domain/update.service';
+import { UserWithRolesEntity } from '@users/domain/user-entity';
+import { inject, injectable } from 'inversify';
 
 @injectable()
 export class UpdateMeUseCase {

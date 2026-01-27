@@ -1,20 +1,20 @@
-import { inject, injectable } from 'inversify';
 import { TYPES } from '@customer/di/types';
-import { SubCustomerRepository } from '@customer/domain/subcustomer.repository';
-import { CustomerRepository } from '@customer/domain/customer.repository';
 import { CreateSubCustomerService } from '@customer/domain/create-subcustomer.service';
-import { ListSubCustomersService } from '@customer/domain/list-subcustomers.service';
-import { GetSubCustomerService } from '@customer/domain/get-subcustomer.service';
-import { UpdateSubCustomerService } from '@customer/domain/update-subcustomer.service';
-import { DeleteSubCustomerService } from '@customer/domain/delete-subcustomer.service';
-import { SubCustomerEntity } from '@customer/domain/subcustomer.entity';
 import { CustomerEntity } from '@customer/domain/customer.entity';
+import { CustomerRepository } from '@customer/domain/customer.repository';
+import { DeleteSubCustomerService } from '@customer/domain/delete-subcustomer.service';
+import { GetSubCustomerService } from '@customer/domain/get-subcustomer.service';
 import {
   CreateSubCustomerInput,
-  UpdateSubCustomerInput,
-  SubCustomerFilterInput,
   PaginatedSubCustomers,
+  SubCustomerFilterInput,
+  UpdateSubCustomerInput,
 } from '@customer/domain/inputs/subcustomer.input';
+import { ListSubCustomersService } from '@customer/domain/list-subcustomers.service';
+import { SubCustomerEntity } from '@customer/domain/subcustomer.entity';
+import { SubCustomerRepository } from '@customer/domain/subcustomer.repository';
+import { UpdateSubCustomerService } from '@customer/domain/update-subcustomer.service';
+import { inject, injectable } from 'inversify';
 
 @injectable()
 export class SubCustomerService

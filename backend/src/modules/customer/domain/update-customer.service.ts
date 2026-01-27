@@ -1,5 +1,5 @@
-import { UpdateCustomerInput } from '@customer/domain/inputs/customer.input';
 import { CustomerEntity } from '@customer/domain/customer.entity';
+import { UpdateCustomerInput } from '@customer/domain/inputs/customer.input';
 
 export interface UpdateCustomerService {
   findById(id: string): Promise<CustomerEntity | null>;

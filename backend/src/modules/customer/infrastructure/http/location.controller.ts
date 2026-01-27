@@ -1,21 +1,22 @@
-import { Request, Response } from 'express';
-import { inject, injectable } from 'inversify';
-import { TYPES } from '@customer/di/types';
 import { CreateLocationUseCase } from '@customer/application/create-location.use-case';
-import { UpdateLocationUseCase } from '@customer/application/update-location.use-case';
 import { DeleteLocationUseCase } from '@customer/application/delete-location.use-case';
 import { GetLocationUseCase } from '@customer/application/get-location.use-case';
 import { ListLocationsUseCase } from '@customer/application/list-locations.use-case';
-import { LocationMapper } from '@customer/infrastructure/mappers/location.mapper';
-import { ResponseHelper } from '@shared/utils/response.helpers';
-import { LocationNotFoundException } from '@customer/domain/exceptions/location-not-found.exception';
+import { UpdateLocationUseCase } from '@customer/application/update-location.use-case';
+import { TYPES } from '@customer/di/types';
 import { CustomerNotFoundException } from '@customer/domain/exceptions/customer-not-found.exception';
+import { LocationNotFoundException } from '@customer/domain/exceptions/location-not-found.exception';
 import { SubCustomerNotFoundException } from '@customer/domain/exceptions/subcustomer-not-found.exception';
+import { LocationMapper } from '@customer/infrastructure/mappers/location.mapper';
 import { NotFoundException } from '@shared/exceptions/http-exceptions';
+import { ResponseHelper } from '@shared/utils/response.helpers';
+import { Request, Response } from 'express';
+import { inject, injectable } from 'inversify';
+
 import {
   CreateCustomerLocationDto,
-  UpdateCustomerLocationDto,
   CustomerLocationFilterSchemaType,
+  UpdateCustomerLocationDto,
 } from '@sgcv2/shared';
 
 @injectable()

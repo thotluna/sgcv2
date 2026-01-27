@@ -1,6 +1,8 @@
-import { AuthenticatedUserDto } from '@sgcv2/shared/src/dtos/auth.dto';
-import { LocalStrategy } from '../../../../infrastructure/http/strategies/local.strategy';
 import { UserValidationService } from '@auth/domain/user-validation.service';
+
+import { AuthenticatedUserDto } from '@sgcv2/shared/src/dtos/auth.dto';
+
+import { LocalStrategy } from '../../../../infrastructure/http/strategies/local.strategy';
 
 const mockValidationService: jest.Mocked<UserValidationService> = {
   validateCredentials: jest.fn(),

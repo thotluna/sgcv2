@@ -1,11 +1,13 @@
 'use client';
 
 import { useActionState } from 'react';
+import { useRouter } from 'next/navigation';
+
 import { createUserAction, updateUserAction } from '@feature/users/actions';
 import { ActionState } from '@lib/types';
-import { useRouter } from 'next/navigation';
-import { Button, Input, Label } from '@/components/ui';
+
 import { SubmitButton } from '@/components/submit-button';
+import { Button, Input, Label } from '@/components/ui';
 
 interface UserFormValues {
   username: string;

@@ -1,8 +1,8 @@
 import { CreateLocationUseCase } from '@customer/application/create-location.use-case';
 import { CreateLocationService } from '@customer/domain/create-location.service';
-import { CreateLocationInput } from '@customer/domain/inputs/location.input';
 import { CustomerNotFoundException } from '@customer/domain/exceptions/customer-not-found.exception';
 import { SubCustomerNotFoundException } from '@customer/domain/exceptions/subcustomer-not-found.exception';
+import { CreateLocationInput } from '@customer/domain/inputs/location.input';
 
 describe('CreateLocationUseCase', () => {
   let useCase: CreateLocationUseCase;

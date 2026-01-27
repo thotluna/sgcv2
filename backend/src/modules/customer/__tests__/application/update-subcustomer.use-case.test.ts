@@ -1,7 +1,7 @@
 import { UpdateSubCustomerUseCase } from '@customer/application/update-subcustomer.use-case';
-import { UpdateSubCustomerService } from '@customer/domain/update-subcustomer.service';
-import { SubCustomerNotFoundException } from '@customer/domain/exceptions/subcustomer-not-found.exception';
 import { SubCustomerAlreadyExistsException } from '@customer/domain/exceptions/subcustomer-already-exists.exception';
+import { SubCustomerNotFoundException } from '@customer/domain/exceptions/subcustomer-not-found.exception';
+import { UpdateSubCustomerService } from '@customer/domain/update-subcustomer.service';
 
 describe('UpdateSubCustomerUseCase', () => {
   let useCase: UpdateSubCustomerUseCase;

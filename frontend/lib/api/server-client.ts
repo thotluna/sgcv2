@@ -1,5 +1,6 @@
-import axios from 'axios';
 import { cookies } from 'next/headers';
+
+import axios from 'axios';
 
 /**
  * Server-side API client for use in Server Components and Server Actions

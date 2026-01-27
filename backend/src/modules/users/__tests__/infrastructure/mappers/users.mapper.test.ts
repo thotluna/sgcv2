@@ -1,5 +1,5 @@
-import { UsersMapper } from '@users/infrastructure/mappers/users';
 import { UserEntity } from '@users/domain/user-entity';
+import { UsersMapper } from '@users/infrastructure/mappers/users';
 import { UserWithRolesModel } from '@users/infrastructure/persist/include';
 
 describe('UsersMapper', () => {

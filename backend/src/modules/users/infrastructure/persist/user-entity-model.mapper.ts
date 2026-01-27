@@ -1,8 +1,10 @@
-import { User } from '@prisma/client';
-import { UserEntity, UserWithRolesEntity } from '../../domain/user-entity';
 import { RoleEntity } from '@modules/roles/domain/roles.entity';
-import { UserWithRolesModel } from './include';
+import { User } from '@prisma/client';
+
 import { UserStatus } from '@sgcv2/shared';
+
+import { UserEntity, UserWithRolesEntity } from '../../domain/user-entity';
+import { UserWithRolesModel } from './include';
 
 export class UserEntityModelMapper {
   static toEntity(userModel: User): UserEntity {
