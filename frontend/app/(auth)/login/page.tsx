@@ -79,6 +79,7 @@ export default function LoginPage() {
                 name="password"
                 type="password"
                 placeholder="••••••••"
+                autoComplete='new-password'
                 className={state.errors?.password ? 'border-red-500' : ''}
               />
               {state.errors?.password && (

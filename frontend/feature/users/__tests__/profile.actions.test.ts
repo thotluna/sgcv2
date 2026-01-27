@@ -66,8 +66,10 @@ describe('Profile Actions', () => {
       (usersService.updateMe as jest.Mock).mockRejectedValue(new Error('Boom'));
 
       const result = await updateEmailAction(initialState, formData);
-      expect(result.success).toBe(false);
-      expect(result.message).toBe('Error inesperado al conectar con el servidor');
+      expect(result).toMatchObject({
+        success: false,
+        message: 'Error inesperado al conectar con el servidor',
+      });
     });
   });
 
