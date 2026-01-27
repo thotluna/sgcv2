@@ -20,7 +20,12 @@ jest.mock('@/lib/api/users.service', () => ({
 describe('useAuthStore', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    jest.spyOn(console, 'error').mockImplementation(() => {});
     useAuthStore.setState({ user: null, isAuthenticated: false });
+  });
+
+  afterEach(() => {
+    (console.error as jest.Mock).mockRestore();
   });
 
   describe('initial state', () => {

@@ -1,9 +1,8 @@
-import { serverPermissionsService } from '@/lib/api/server-permissions.service';
-
-import { RoleForm } from '../_components/role-form';
+import { RoleForm } from '@feature/roles/components';
+import { getAllPermissions } from '@feature/roles/service';
 
 export default async function NewRolePage() {
-  const permissionsRes = await serverPermissionsService.getAll();
+  const permissionsRes = await getAllPermissions();
   const permissions = permissionsRes?.success ? permissionsRes.data || [] : [];
 
   return (

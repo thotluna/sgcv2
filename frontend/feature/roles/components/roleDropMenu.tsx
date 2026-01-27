@@ -3,6 +3,7 @@
 import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 
+import { deleteRoleAction } from '@feature/roles/actions';
 import { MoreHorizontal, SquarePen, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -17,8 +18,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-
-import { deleteRoleAction } from './actions';
 
 interface RoleDropMenuProps {
   role: RoleDto;
