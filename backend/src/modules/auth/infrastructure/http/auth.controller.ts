@@ -72,7 +72,7 @@ export class AuthController {
       });
 
       const authenticatedUser = AuthMapper.toAuthenticatedUserDto(user);
-      return ResponseHelper.success(res, { user: authenticatedUser });
+      return ResponseHelper.success(res, { user: authenticatedUser, token });
     } catch (error) {
       if (error instanceof AuthUserNotFoundException) {
         throw new NotFoundException(error.message);

@@ -23,13 +23,15 @@ import { EllipsisIcon, Eye, Trash } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
+import { blockUserAction } from '@feature/users/actions';
+import { toast } from 'sonner';
+
 interface UserDropMenuProps {
   id: number;
   username: string;
-  onDelete?: (id: number) => Promise<void>;
 }
 
-export function UserDropMenu({ id, username, onDelete }: UserDropMenuProps) {
+export function UserDropMenu({ id, username }: UserDropMenuProps) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -47,13 +49,18 @@ export function UserDropMenu({ id, username, onDelete }: UserDropMenuProps) {
   };
 
   const handleDeleteConfirm = async () => {
-    if (!onDelete) return;
     setIsDeleting(true);
     try {
-      await onDelete(id);
-      setShowDeleteDialog(false);
+      const result = await blockUserAction(id);
+      if (result.success) {
+        toast.success('Usuario bloqueado correctamente');
+        setShowDeleteDialog(false);
+      } else {
+        toast.error(result.error?.message || 'Error al bloquear el usuario');
+      }
     } catch (error) {
-      console.error('Error deleting user:', error);
+      console.error('Error blocking user:', error);
+      toast.error('Ocurrió un error inesperado');
     } finally {
       setIsDeleting(false);
     }
@@ -79,13 +86,11 @@ export function UserDropMenu({ id, username, onDelete }: UserDropMenuProps) {
             </DropdownMenuItem>
           ))}
 
-          {onDelete && (
-            <DropdownMenuItem onClick={handleDeleteClick} className="text-red-600">
-              <Trash className="mr-2 h-4 w-4" />
-              Bloquear
-              <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-            </DropdownMenuItem>
-          )}
+          <DropdownMenuItem onClick={handleDeleteClick} className="text-red-600">
+            <Trash className="mr-2 h-4 w-4" />
+            Bloquear
+            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 

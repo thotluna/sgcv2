@@ -1,5 +1,3 @@
-'use client';
-
 import {
   Table,
   TableBody,
@@ -19,7 +17,6 @@ export interface Column<T> {
 interface DataTableProps<T> {
   data: T[];
   columns: Column<T>[];
-  isLoading?: boolean;
   emptyMessage?: string;
   rowActions?: (item: T) => ReactNode;
 }
@@ -27,17 +24,9 @@ interface DataTableProps<T> {
 export function DataTable<T>({
   data,
   columns,
-  isLoading = false,
   emptyMessage = 'No results found.',
   rowActions,
 }: DataTableProps<T>) {
-  if (isLoading) {
-    return (
-      <div className="w-full h-24 flex items-center justify-center text-muted-foreground animate-pulse">
-        Loading...
-      </div>
-    );
-  }
 
   const hasActions = !!rowActions;
   const colSpan = columns.length + (hasActions ? 1 : 0);

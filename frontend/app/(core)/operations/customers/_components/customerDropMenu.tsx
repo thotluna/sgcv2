@@ -23,13 +23,15 @@ import { EllipsisIcon, Eye, Pencil, Trash } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
+import { deleteCustomerAction } from './actions';
+import { toast } from 'sonner';
+
 interface CustomerDropMenuProps {
   id: string;
   customerName: string;
-  onDelete: (id: string) => Promise<void>;
 }
 
-export function CustomerDropMenu({ id, customerName, onDelete }: CustomerDropMenuProps) {
+export function CustomerDropMenu({ id, customerName }: CustomerDropMenuProps) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -55,10 +57,16 @@ export function CustomerDropMenu({ id, customerName, onDelete }: CustomerDropMen
   const handleDeleteConfirm = async () => {
     setIsDeleting(true);
     try {
-      await onDelete(id);
-      setShowDeleteDialog(false);
+      const result = await deleteCustomerAction(id);
+      if (result.success) {
+        toast.success('Cliente eliminado exitosamente');
+        setShowDeleteDialog(false);
+      } else {
+        toast.error(result.message || 'Error al eliminar el cliente');
+      }
     } catch (error) {
       console.error('Error deleting customer:', error);
+      toast.error('Ocurrió un error inesperado');
     } finally {
       setIsDeleting(false);
     }

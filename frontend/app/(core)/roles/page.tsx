@@ -1,10 +1,10 @@
-import { serverRolesService } from '@/lib/api/server-roles.service';
-import { RolesTable } from './_components/table';
 import { RolesFilters } from './_components/filters';
-import { RoleDto, RoleFilterDto } from '@sgcv2/shared';
-import { DataPagination } from '@/components/data-pagination';
+import { RoleFilterDto } from '@sgcv2/shared';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { Suspense } from 'react';
+import { RolesTableContent } from './_components/table-content';
+import { TableSkeleton } from '@/components/table/table-skeleton';
 
 interface RolesPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -21,40 +21,6 @@ export default async function RolesPage({ searchParams }: RolesPageProps) {
       limit,
       offset,
     },
-  };
-
-  let roles: RoleDto[] = [];
-  let totalPages = 1;
-  const currentPage = Math.floor(offset / limit) + 1;
-
-  try {
-    const response = await serverRolesService.getAll(filter);
-    if (response?.success) {
-      roles = response.data || [];
-      totalPages = response.metadata?.pagination?.totalPages || 1;
-    }
-  } catch (error) {
-    console.error('Error fetching roles:', error);
-  }
-
-  const createPageUrl = (page: number) => {
-    const newOffset = (page - 1) * limit;
-    const searchParams = new URLSearchParams();
-
-    if (params.search && params.search.toString() !== '') {
-      searchParams.set('search', params.search.toString());
-    }
-
-    if (newOffset > 0) {
-      searchParams.set('offset', newOffset.toString());
-    }
-
-    if (limit !== 10) {
-      searchParams.set('limit', limit.toString());
-    }
-
-    const queryString = searchParams.toString();
-    return queryString ? `?${queryString}` : '/roles';
   };
 
   return (
@@ -74,13 +40,9 @@ export default async function RolesPage({ searchParams }: RolesPageProps) {
       <main className="flex w-full flex-col gap-4">
         <RolesFilters search={filter.search} />
 
-        <RolesTable data={roles} />
-
-        <DataPagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          createPageUrl={createPageUrl}
-        />
+        <Suspense key={JSON.stringify(params)} fallback={<TableSkeleton columnCount={3} />}>
+          <RolesTableContent limit={limit} offset={offset} filter={filter} />
+        </Suspense>
       </main>
     </div>
   );

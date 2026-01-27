@@ -5,7 +5,7 @@ import { createUserAction, updateUserAction } from '@feature/users/actions';
 import { ActionState } from '@lib/types';
 import { useRouter } from 'next/navigation';
 import { Button, Input, Label } from '@/components/ui';
-import { SubmitButton } from '../submit-button';
+import { SubmitButton } from '@/components/submit-button';
 
 interface UserFormValues {
   username: string;

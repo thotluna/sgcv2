@@ -14,7 +14,7 @@ import {
 } from '@/components/ui';
 import { toast } from 'sonner';
 import { ActionState } from '@lib/types';
-import { SubmitButton } from '../submit-button';
+import { SubmitButton } from '@/components/submit-button';
 
 interface EmailFormProps {
   initialEmail?: string;
