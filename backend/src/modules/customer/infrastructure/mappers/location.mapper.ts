@@ -1,11 +1,12 @@
-import { CustomerLocation } from '@prisma/client';
+import { CreateLocationInput, UpdateLocationInput } from '@customer/domain/inputs/location.input';
 import { CustomerLocationEntity } from '@customer/domain/location.entity';
+import { CustomerLocation } from '@prisma/client';
+
 import {
   CreateCustomerLocationDto,
-  UpdateCustomerLocationDto,
   CustomerLocationDto,
+  UpdateCustomerLocationDto,
 } from '@sgcv2/shared';
-import { CreateLocationInput, UpdateLocationInput } from '@customer/domain/inputs/location.input';
 
 export class LocationMapper {
   static toEntity(model: CustomerLocation): CustomerLocationEntity {

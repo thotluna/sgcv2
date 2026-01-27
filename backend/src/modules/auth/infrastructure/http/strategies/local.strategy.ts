@@ -1,7 +1,7 @@
-import { Strategy as PassportLocalStrategy } from 'passport-local';
-import { inject, injectable } from 'inversify';
-import { TYPES } from '@modules/auth/di/types';
 import { UserValidationService } from '@auth/domain/user-validation.service';
+import { TYPES } from '@modules/auth/di/types';
+import { inject, injectable } from 'inversify';
+import { Strategy as PassportLocalStrategy } from 'passport-local';
 
 @injectable()
 export class LocalStrategy extends PassportLocalStrategy {

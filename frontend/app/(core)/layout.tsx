@@ -1,10 +1,13 @@
+import { cookies } from 'next/headers';
+
+import { AuthenticatedUserDto } from '@sgcv2/shared';
+
+import StoreInitializer from '@/components/auth/store-initializer';
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
+import { serverUsersService } from '@/lib/api/server-users.service';
+
 import Header from './_components/header/header';
 import SidebarApp from './_components/sidebar/sidebar';
-import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
-import { cookies } from 'next/headers';
-import StoreInitializer from '@/components/auth/store-initializer';
-import { serverUsersService } from '@/lib/api/server-users.service';
-import { AuthenticatedUserDto } from '@sgcv2/shared';
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();

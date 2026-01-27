@@ -1,7 +1,9 @@
-import { serverCustomersService } from '@/lib/api/server-customers.service';
-import { CustomersTable } from './table';
-import { DataPagination } from '@/components/data-pagination';
 import { CustomerDto, CustomerState } from '@sgcv2/shared';
+
+import { DataPagination } from '@/components/data-pagination';
+import { serverCustomersService } from '@/lib/api/server-customers.service';
+
+import { CustomersTable } from './table';
 
 interface CustomersTableContentProps {
   page: number;

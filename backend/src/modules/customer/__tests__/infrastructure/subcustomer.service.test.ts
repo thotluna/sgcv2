@@ -1,13 +1,13 @@
-import { SubCustomerService } from '@customer/infrastructure/http/subcustomer.service';
-import { SubCustomerRepository } from '@customer/domain/subcustomer.repository';
-import { CustomerRepository } from '@customer/domain/customer.repository';
-import { SubCustomerEntity } from '@customer/domain/subcustomer.entity';
 import { CustomerEntity, CustomerState } from '@customer/domain/customer.entity';
+import { CustomerRepository } from '@customer/domain/customer.repository';
 import {
   CreateSubCustomerInput,
-  UpdateSubCustomerInput,
   SubCustomerFilterInput,
+  UpdateSubCustomerInput,
 } from '@customer/domain/inputs/subcustomer.input';
+import { SubCustomerEntity } from '@customer/domain/subcustomer.entity';
+import { SubCustomerRepository } from '@customer/domain/subcustomer.repository';
+import { SubCustomerService } from '@customer/infrastructure/http/subcustomer.service';
 
 describe('SubCustomerService', () => {
   let service: SubCustomerService;

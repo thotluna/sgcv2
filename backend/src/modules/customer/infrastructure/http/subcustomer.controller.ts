@@ -1,21 +1,22 @@
-import { Request, Response } from 'express';
-import { inject, injectable } from 'inversify';
-import { TYPES } from '@customer/di/types';
 import { CreateSubCustomerUseCase } from '@customer/application/create-subcustomer.use-case';
-import { ListSubCustomersUseCase } from '@customer/application/list-subcustomers.use-case';
-import { GetSubCustomerUseCase } from '@customer/application/get-subcustomer.use-case';
-import { UpdateSubCustomerUseCase } from '@customer/application/update-subcustomer.use-case';
 import { DeleteSubCustomerUseCase } from '@customer/application/delete-subcustomer.use-case';
-import { SubCustomerMapper } from '@customer/infrastructure/mappers/subcustomer.mapper';
-import { ResponseHelper } from '@shared/utils/response.helpers';
+import { GetSubCustomerUseCase } from '@customer/application/get-subcustomer.use-case';
+import { ListSubCustomersUseCase } from '@customer/application/list-subcustomers.use-case';
+import { UpdateSubCustomerUseCase } from '@customer/application/update-subcustomer.use-case';
+import { TYPES } from '@customer/di/types';
+import { CustomerNotFoundException } from '@customer/domain/exceptions/customer-not-found.exception';
 import { SubCustomerAlreadyExistsException } from '@customer/domain/exceptions/subcustomer-already-exists.exception';
 import { SubCustomerNotFoundException } from '@customer/domain/exceptions/subcustomer-not-found.exception';
-import { CustomerNotFoundException } from '@customer/domain/exceptions/customer-not-found.exception';
+import { SubCustomerMapper } from '@customer/infrastructure/mappers/subcustomer.mapper';
 import { ConflictException, NotFoundException } from '@shared/exceptions/http-exceptions';
+import { ResponseHelper } from '@shared/utils/response.helpers';
+import { Request, Response } from 'express';
+import { inject, injectable } from 'inversify';
+
 import {
   CreateSubCustomerDto,
-  UpdateSubCustomerDto,
   SubCustomerFilterSchemaType,
+  UpdateSubCustomerDto,
 } from '@sgcv2/shared';
 
 @injectable()

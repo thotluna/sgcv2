@@ -1,9 +1,9 @@
+import { mockRole } from '@roles/__tests__/helpers';
 import { DeleteRoleUseCase } from '@roles/application/delete-role.use-case';
 import { DeleteRoleService } from '@roles/domain/delete.role.service';
-import { GetRoleService } from '@roles/domain/get.role.service';
-import { RoleNotFoundException } from '@roles/domain/exceptions/role-not-found-exception';
 import { RoleInUseException } from '@roles/domain/exceptions/role-in-use-exception';
-import { mockRole } from '@roles/__tests__/helpers';
+import { RoleNotFoundException } from '@roles/domain/exceptions/role-not-found-exception';
+import { GetRoleService } from '@roles/domain/get.role.service';
 
 const mockDeleteService = {
   countUsersWithRole: jest.fn(),

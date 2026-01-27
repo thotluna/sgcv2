@@ -1,5 +1,6 @@
-import z from 'zod';
 import { NextFunction, RequestHandler, Response } from 'express';
+import z from 'zod';
+
 import { ValidationException } from '../exceptions/http-exceptions';
 
 export const validateSchema = <T extends z.ZodTypeAny>(

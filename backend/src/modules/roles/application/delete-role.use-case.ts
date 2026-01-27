@@ -1,9 +1,9 @@
-import { inject, injectable } from 'inversify';
-import { DeleteRoleService } from '@roles/domain/delete.role.service';
 import { TYPES } from '@roles/di/types';
-import { GetRoleService } from '@roles/domain/get.role.service';
-import { RoleNotFoundException } from '@roles/domain/exceptions/role-not-found-exception';
+import { DeleteRoleService } from '@roles/domain/delete.role.service';
 import { RoleInUseException } from '@roles/domain/exceptions/role-in-use-exception';
+import { RoleNotFoundException } from '@roles/domain/exceptions/role-not-found-exception';
+import { GetRoleService } from '@roles/domain/get.role.service';
+import { inject, injectable } from 'inversify';
 
 @injectable()
 export class DeleteRoleUseCase {

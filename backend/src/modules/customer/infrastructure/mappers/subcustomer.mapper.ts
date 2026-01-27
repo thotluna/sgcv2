@@ -1,10 +1,11 @@
-import { SubCustomer, Customer } from '@prisma/client';
-import { SubCustomerEntity } from '@customer/domain/subcustomer.entity';
-import { CreateSubCustomerDto, UpdateSubCustomerDto, SubCustomerDto } from '@sgcv2/shared';
 import {
   CreateSubCustomerInput,
   UpdateSubCustomerInput,
 } from '@customer/domain/inputs/subcustomer.input';
+import { SubCustomerEntity } from '@customer/domain/subcustomer.entity';
+import { Customer, SubCustomer } from '@prisma/client';
+
+import { CreateSubCustomerDto, SubCustomerDto, UpdateSubCustomerDto } from '@sgcv2/shared';
 
 export type SubCustomerWithCustomer = SubCustomer & {
   customer?: Customer;

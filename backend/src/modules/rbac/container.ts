@@ -1,6 +1,7 @@
 import { Container } from 'inversify';
-import { TYPES } from './types';
+
 import { RbacService } from './rbac.service';
+import { TYPES } from './types';
 
 export const rbacContainer = new Container();
 

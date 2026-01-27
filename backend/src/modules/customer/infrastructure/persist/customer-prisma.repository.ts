@@ -1,14 +1,14 @@
-import { Customer, Prisma, CustomerState as PrismaCustomerState } from '@prisma/client';
 import { prisma } from '@config/prisma';
-import { injectable } from 'inversify';
 import { CustomerEntity, CustomerState } from '@customer/domain/customer.entity';
 import { CustomerRepository } from '@customer/domain/customer.repository';
 import {
   CreateCustomerInput,
-  UpdateCustomerInput,
   CustomerFilterInput,
   PaginatedCustomers,
+  UpdateCustomerInput,
 } from '@customer/domain/inputs/customer.input';
+import { Customer, CustomerState as PrismaCustomerState, Prisma } from '@prisma/client';
+import { injectable } from 'inversify';
 
 @injectable()
 export class CustomerPrismaRepository implements CustomerRepository {

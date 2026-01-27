@@ -1,10 +1,10 @@
-import request from 'supertest';
+import { CustomerController } from '@customer/infrastructure/http/customer.controller';
+import { CustomerRoutes } from '@customer/infrastructure/http/customer.routes';
+import { SubCustomerRoutes } from '@customer/infrastructure/http/subcustomer.routes';
+import { authenticate } from '@modules/auth/infrastructure/http/auth.middleware';
 import { Router } from 'express';
 import express from 'express';
-import { authenticate } from '@modules/auth/infrastructure/http/auth.middleware';
-import { CustomerRoutes } from '@customer/infrastructure/http/customer.routes';
-import { CustomerController } from '@customer/infrastructure/http/customer.controller';
-import { SubCustomerRoutes } from '@customer/infrastructure/http/subcustomer.routes';
+import request from 'supertest';
 
 // Define mock controller methods
 const mockCreate = jest.fn((_req, res) => res.status(201).json({ success: true, data: {} }));

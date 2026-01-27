@@ -1,9 +1,10 @@
 import { AuthController } from '@modules/auth/infrastructure/http/auth.controller';
 import { AuthRoutes } from '@modules/auth/infrastructure/http/auth.routes';
+import { globalErrorHandler } from '@shared/middleware/global-error.middleware';
 import express, { Application } from 'express';
 import request from 'supertest';
+
 import { MOCK_LOGIN_REQUEST, MOCK_USER_TOKEN_DTO } from '../../helpers';
-import { globalErrorHandler } from '@shared/middleware/global-error.middleware';
 
 const controller = {
   login: jest.fn(),

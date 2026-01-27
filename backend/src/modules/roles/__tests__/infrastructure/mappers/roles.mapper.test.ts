@@ -1,5 +1,5 @@
-import { RolesMapper } from '@roles/infrastructure/mappers/roles.mapper';
 import { mockRole } from '@roles/__tests__/helpers';
+import { RolesMapper } from '@roles/infrastructure/mappers/roles.mapper';
 
 describe('RolesMapper', () => {
   describe('toCreateInput', () => {

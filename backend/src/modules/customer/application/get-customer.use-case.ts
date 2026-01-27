@@ -1,8 +1,8 @@
-import { inject, injectable } from 'inversify';
 import { TYPES } from '@customer/di/types';
 import { CustomerEntity } from '@customer/domain/customer.entity';
-import { GetCustomerService } from '@customer/domain/get-customer.service';
 import { CustomerNotFoundException } from '@customer/domain/exceptions/customer-not-found.exception';
+import { GetCustomerService } from '@customer/domain/get-customer.service';
+import { inject, injectable } from 'inversify';
 
 @injectable()
 export class GetCustomerUseCase {

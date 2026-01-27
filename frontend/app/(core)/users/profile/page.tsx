@@ -1,13 +1,15 @@
-import { getMe } from '@feature/users/service';
+import { redirect } from 'next/navigation';
+
 import {
-  ProfileHeader,
-  ProfileInfo,
+  AvatarForm,
   EmailForm,
   PasswordForm,
-  AvatarForm,
+  ProfileHeader,
+  ProfileInfo,
 } from '@feature/users/components';
+import { getMe } from '@feature/users/service';
+
 import { Separator } from '@/components/ui';
-import { redirect } from 'next/navigation';
 
 export default async function ProfilePage() {
   const response = await getMe();

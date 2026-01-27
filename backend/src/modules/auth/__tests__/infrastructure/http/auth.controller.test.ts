@@ -1,9 +1,10 @@
-import { AuthController } from '@modules/auth/infrastructure/http/auth.controller';
 import { AuthUserNotFoundException } from '@auth/domain/exceptions/auth-user-not-found.exception';
-import { InvalidPasswordException } from '@modules/auth/domain/exceptions/invalid-password.exception';
-import { MOCK_LOGIN_REQUEST, getUserMock } from '../../helpers';
-import { NotFoundException, UnauthorizedException } from '@shared/exceptions';
 import { LoginUseCaseService } from '@modules/auth/application/login.use-case.service';
+import { InvalidPasswordException } from '@modules/auth/domain/exceptions/invalid-password.exception';
+import { AuthController } from '@modules/auth/infrastructure/http/auth.controller';
+import { NotFoundException, UnauthorizedException } from '@shared/exceptions';
+
+import { getUserMock, MOCK_LOGIN_REQUEST } from '../../helpers';
 
 const mockLoginUseCaseService = {
   execute: jest.fn(),

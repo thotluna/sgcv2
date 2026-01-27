@@ -1,9 +1,10 @@
+import { TYPES } from '@auth/di/types';
+import { AuthController } from '@auth/infrastructure/http/auth.controller';
+import { validateSchema } from '@shared/middleware/validate-schema';
 import { Router } from 'express';
 import { inject, injectable } from 'inversify';
-import { AuthController } from '@auth/infrastructure/http/auth.controller';
-import { TYPES } from '@auth/di/types';
+
 import { loginDtoSchema } from './login-dto-schema';
-import { validateSchema } from '@shared/middleware/validate-schema';
 
 @injectable()
 export class AuthRoutes {

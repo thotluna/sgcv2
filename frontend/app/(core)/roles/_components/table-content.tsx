@@ -1,7 +1,9 @@
-import { serverRolesService } from '@/lib/api/server-roles.service';
-import { RolesTable } from './table';
-import { DataPagination } from '@/components/data-pagination';
 import { RoleDto, RoleFilterDto } from '@sgcv2/shared';
+
+import { DataPagination } from '@/components/data-pagination';
+import { serverRolesService } from '@/lib/api/server-roles.service';
+
+import { RolesTable } from './table';
 
 interface RolesTableContentProps {
   limit: number;

@@ -1,8 +1,8 @@
-import { RemovePermissionsFromRoleUseCase } from '@roles/application/remove-permissions-from-role.use-case';
-import { PermissionAssignmentService } from '@roles/domain/permission-assignment.service';
-import { GetRoleService } from '@roles/domain/get.role.service';
-import { RoleNotFoundException } from '@roles/domain/exceptions/role-not-found-exception';
 import { mockRole } from '@roles/__tests__/helpers';
+import { RemovePermissionsFromRoleUseCase } from '@roles/application/remove-permissions-from-role.use-case';
+import { RoleNotFoundException } from '@roles/domain/exceptions/role-not-found-exception';
+import { GetRoleService } from '@roles/domain/get.role.service';
+import { PermissionAssignmentService } from '@roles/domain/permission-assignment.service';
 
 const mockPermissionAssignmentService = {
   findPermissionById: jest.fn(),

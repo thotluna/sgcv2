@@ -1,7 +1,8 @@
+import { NextFunction, Response } from 'express';
 import { z } from 'zod';
-import { validateSchema } from '../validate-schema';
+
 import { ValidationException } from '../../exceptions/http-exceptions';
-import { Response, NextFunction } from 'express';
+import { validateSchema } from '../validate-schema';
 
 describe('validateSchema Middleware', () => {
   const schema = z.object({

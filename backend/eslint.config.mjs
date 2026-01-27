@@ -1,8 +1,11 @@
+import { builtinModules } from 'node:module';
+
 import js from '@eslint/js';
 import tsPlugin from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
 import prettierConfig from 'eslint-config-prettier';
 import prettierPlugin from 'eslint-plugin-prettier';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
 
 export default [
   js.configs.recommended,
@@ -28,11 +31,32 @@ export default [
     plugins: {
       '@typescript-eslint': tsPlugin,
       prettier: prettierPlugin,
+      'simple-import-sort': simpleImportSort,
     },
     rules: {
       ...tsPlugin.configs.recommended.rules,
       ...prettierConfig.rules,
       'prettier/prettier': 'error',
+      'simple-import-sort/imports': [
+        'error',
+        {
+          groups: [
+            // Node.js built-ins.
+            [`^node:`, `^(${builtinModules.join('|')})(/|$)`],
+            // External packages.
+            ['^@?\\w'],
+            // Shared package
+            ['^@sgcv2/shared'],
+            // Internal aliases
+            ['^@/'],
+            // Relative imports.
+            ['^\\.\\.(?!/?$)', '^\\.\\./?$', '^\\./(?=[^/]*$)', '^\\.(?!/?$)', '^\\./?$'],
+            // Side effect imports.
+            ['^\\u0000'],
+          ],
+        },
+      ],
+      'simple-import-sort/exports': 'error',
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-unused-vars': [
         'error',

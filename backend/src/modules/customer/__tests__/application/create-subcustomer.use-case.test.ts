@@ -1,8 +1,8 @@
 import { CreateSubCustomerUseCase } from '@customer/application/create-subcustomer.use-case';
 import { CreateSubCustomerService } from '@customer/domain/create-subcustomer.service';
-import { CreateSubCustomerInput } from '@customer/domain/inputs/subcustomer.input';
 import { CustomerNotFoundException } from '@customer/domain/exceptions/customer-not-found.exception';
 import { SubCustomerAlreadyExistsException } from '@customer/domain/exceptions/subcustomer-already-exists.exception';
+import { CreateSubCustomerInput } from '@customer/domain/inputs/subcustomer.input';
 
 describe('CreateSubCustomerUseCase', () => {
   let useCase: CreateSubCustomerUseCase;

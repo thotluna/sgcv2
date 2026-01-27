@@ -1,6 +1,6 @@
+import { mockRole } from '@roles/__tests__/helpers';
 import { ListRolesUseCase } from '@roles/application/list-roles.use-case';
 import { ListService } from '@roles/domain/list.service';
-import { mockRole } from '@roles/__tests__/helpers';
 
 const mockListService = {
   getListRoles: jest.fn(),

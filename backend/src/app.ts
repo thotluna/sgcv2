@@ -1,20 +1,21 @@
-import express, { Application, Request, Response } from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import passport from 'passport';
-import cookieParser from 'cookie-parser';
-import swaggerUi from 'swagger-ui-express';
-import { container } from './container';
+import logger from '@config/logger';
+import { prisma } from '@config/prisma';
+import { swaggerSpec } from '@config/swagger.config';
+import { TYPES as AuthTypes } from '@modules/auth/di/types';
 import { JwtStrategy } from '@modules/auth/infrastructure/http/strategies/jwt.strategy';
 import { LocalStrategy } from '@modules/auth/infrastructure/http/strategies/local.strategy';
-import { TYPES as AuthTypes } from '@modules/auth/di/types';
-import { loadRoutes } from './routes';
-import { prisma } from '@config/prisma';
-import { requestLogger } from '@shared/middleware/requestLogger';
 import { errorLogger } from '@shared/middleware/errorLogger';
 import { globalErrorHandler } from '@shared/middleware/global-error.middleware';
-import { swaggerSpec } from '@config/swagger.config';
-import logger from '@config/logger';
+import { requestLogger } from '@shared/middleware/requestLogger';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import express, { Application, Request, Response } from 'express';
+import passport from 'passport';
+import swaggerUi from 'swagger-ui-express';
+
+import { container } from './container';
+import { loadRoutes } from './routes';
 
 // Load environment variables
 dotenv.config();

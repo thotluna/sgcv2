@@ -1,7 +1,7 @@
-import { LocationController } from '@customer/infrastructure/http/location.controller';
 import { CustomerNotFoundException } from '@customer/domain/exceptions/customer-not-found.exception';
-import { SubCustomerNotFoundException } from '@customer/domain/exceptions/subcustomer-not-found.exception';
 import { LocationNotFoundException } from '@customer/domain/exceptions/location-not-found.exception';
+import { SubCustomerNotFoundException } from '@customer/domain/exceptions/subcustomer-not-found.exception';
+import { LocationController } from '@customer/infrastructure/http/location.controller';
 import { NotFoundException } from '@shared/exceptions/http-exceptions';
 
 describe('LocationController', () => {

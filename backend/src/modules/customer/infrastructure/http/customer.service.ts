@@ -1,18 +1,18 @@
-import { inject, injectable } from 'inversify';
 import { TYPES } from '@customer/di/types';
-import { CustomerRepository } from '@customer/domain/customer.repository';
 import { CreateCustomerService } from '@customer/domain/create-customer.service';
-import { ListCustomersService } from '@customer/domain/list-customers.service';
-import { GetCustomerService } from '@customer/domain/get-customer.service';
-import { UpdateCustomerService } from '@customer/domain/update-customer.service';
-import { DeleteCustomerService } from '@customer/domain/delete-customer.service';
 import { CustomerEntity } from '@customer/domain/customer.entity';
+import { CustomerRepository } from '@customer/domain/customer.repository';
+import { DeleteCustomerService } from '@customer/domain/delete-customer.service';
+import { GetCustomerService } from '@customer/domain/get-customer.service';
 import {
   CreateCustomerInput,
-  UpdateCustomerInput,
   CustomerFilterInput,
   PaginatedCustomers,
+  UpdateCustomerInput,
 } from '@customer/domain/inputs/customer.input';
+import { ListCustomersService } from '@customer/domain/list-customers.service';
+import { UpdateCustomerService } from '@customer/domain/update-customer.service';
+import { inject, injectable } from 'inversify';
 
 @injectable()
 export class CustomerService

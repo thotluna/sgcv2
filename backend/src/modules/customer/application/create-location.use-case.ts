@@ -1,10 +1,10 @@
-import { inject, injectable } from 'inversify';
 import { TYPES } from '@customer/di/types';
-import { CreateLocationInput } from '@customer/domain/inputs/location.input';
-import { CustomerLocationEntity } from '@customer/domain/location.entity';
 import { CreateLocationService } from '@customer/domain/create-location.service';
 import { CustomerNotFoundException } from '@customer/domain/exceptions/customer-not-found.exception';
 import { SubCustomerNotFoundException } from '@customer/domain/exceptions/subcustomer-not-found.exception';
+import { CreateLocationInput } from '@customer/domain/inputs/location.input';
+import { CustomerLocationEntity } from '@customer/domain/location.entity';
+import { inject, injectable } from 'inversify';
 
 @injectable()
 export class CreateLocationUseCase {

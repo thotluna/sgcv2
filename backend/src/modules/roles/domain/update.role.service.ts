@@ -1,5 +1,5 @@
-import { UpdateRoleInput } from './inputs/roles.input';
 import { PermissionEntity, RoleEntity } from './roles.entity';
+import { UpdateRoleInput } from './inputs/roles.input';
 
 export interface UpdateRoleService {
   update(id: number, data: UpdateRoleInput): Promise<RoleEntity>;

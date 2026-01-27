@@ -1,6 +1,8 @@
-import { serverUsersService } from '@/lib/api/server-users.service';
-import { UserForm } from '../../../../../feature/users/components/admin/user-form';
 import { notFound } from 'next/navigation';
+
+import { serverUsersService } from '@/lib/api/server-users.service';
+
+import { UserForm } from '../../../../../feature/users/components/admin/user-form';
 
 interface EditUserPageProps {
   params: Promise<{ id: string }>;

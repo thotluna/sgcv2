@@ -1,7 +1,8 @@
+import { InternalServerErrorException, UnauthorizedException } from '@shared/exceptions';
 import { NextFunction, Request, Response } from 'express';
 import passport from 'passport';
+
 import { authenticate, optionalAuth } from '../../../infrastructure/http/auth.middleware';
-import { InternalServerErrorException, UnauthorizedException } from '@shared/exceptions';
 
 // Mock passport
 jest.mock('passport');

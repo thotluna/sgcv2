@@ -1,22 +1,22 @@
-import { inject, injectable } from 'inversify';
 import { TYPES } from '@customer/di/types';
-import { LocationRepository } from '@customer/domain/location.repository';
-import { CustomerRepository } from '@customer/domain/customer.repository';
-import { SubCustomerRepository } from '@customer/domain/subcustomer.repository';
 import { CreateLocationService } from '@customer/domain/create-location.service';
-import { UpdateLocationService } from '@customer/domain/update-location.service';
+import { CustomerEntity } from '@customer/domain/customer.entity';
+import { CustomerRepository } from '@customer/domain/customer.repository';
 import { DeleteLocationService } from '@customer/domain/delete-location.service';
 import { GetLocationService } from '@customer/domain/get-location.service';
-import { ListLocationsService } from '@customer/domain/list-locations.service';
-import { CustomerLocationEntity } from '@customer/domain/location.entity';
-import { CustomerEntity } from '@customer/domain/customer.entity';
-import { SubCustomerEntity } from '@customer/domain/subcustomer.entity';
 import {
   CreateLocationInput,
-  UpdateLocationInput,
   LocationFilterInput,
   PaginatedLocations,
+  UpdateLocationInput,
 } from '@customer/domain/inputs/location.input';
+import { ListLocationsService } from '@customer/domain/list-locations.service';
+import { CustomerLocationEntity } from '@customer/domain/location.entity';
+import { LocationRepository } from '@customer/domain/location.repository';
+import { SubCustomerEntity } from '@customer/domain/subcustomer.entity';
+import { SubCustomerRepository } from '@customer/domain/subcustomer.repository';
+import { UpdateLocationService } from '@customer/domain/update-location.service';
+import { inject, injectable } from 'inversify';
 
 @injectable()
 export class LocationService

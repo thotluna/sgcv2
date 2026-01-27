@@ -1,5 +1,6 @@
-import { CustomerMapper } from '@customer/infrastructure/mappers/customer.mapper';
 import { CustomerState } from '@customer/domain/customer.entity';
+import { CustomerMapper } from '@customer/infrastructure/mappers/customer.mapper';
+
 import { CustomerState as SharedCustomerState } from '@sgcv2/shared';
 
 describe('CustomerMapper', () => {

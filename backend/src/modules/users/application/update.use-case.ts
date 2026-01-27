@@ -1,10 +1,10 @@
-import { inject, injectable } from 'inversify';
-import { TYPES } from '@users/di/types';
-import { UpdateUserInput, UpdateUserPersistenceInput } from '@users/domain/dtos/user.dtos';
-import { UserWithRolesEntity } from '@users/domain/user-entity';
-import { UpdateUserService } from '@users/domain/update.service';
 import { TYPES as AuthTypes } from '@auth/di/types';
 import { PasswordHasher } from '@modules/auth/domain/password-hasher';
+import { TYPES } from '@users/di/types';
+import { UpdateUserInput, UpdateUserPersistenceInput } from '@users/domain/dtos/user.dtos';
+import { UpdateUserService } from '@users/domain/update.service';
+import { UserWithRolesEntity } from '@users/domain/user-entity';
+import { inject, injectable } from 'inversify';
 
 @injectable()
 export class UpdateUseCase {

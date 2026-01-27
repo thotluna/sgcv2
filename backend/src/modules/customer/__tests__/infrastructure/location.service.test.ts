@@ -1,8 +1,8 @@
-import { LocationService } from '@customer/infrastructure/http/location.service';
-import { LocationRepository } from '@customer/domain/location.repository';
 import { CustomerRepository } from '@customer/domain/customer.repository';
-import { SubCustomerRepository } from '@customer/domain/subcustomer.repository';
 import { CustomerLocationEntity } from '@customer/domain/location.entity';
+import { LocationRepository } from '@customer/domain/location.repository';
+import { SubCustomerRepository } from '@customer/domain/subcustomer.repository';
+import { LocationService } from '@customer/infrastructure/http/location.service';
 
 describe('LocationService', () => {
   let service: LocationService;

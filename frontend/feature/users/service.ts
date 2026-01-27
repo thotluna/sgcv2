@@ -1,12 +1,13 @@
-import { fetchClient } from '@/lib/api/fetch-client';
 import {
   AppResponse,
   CreateUserDto,
-  UserDto,
-  UserWithRolesDto,
   UpdateUserDto,
+  UserDto,
   UserFilterDto,
+  UserWithRolesDto,
 } from '@sgcv2/shared';
+
+import { fetchClient } from '@/lib/api/fetch-client';
 
 export async function getMe(): Promise<AppResponse<UserWithRolesDto>> {
   return fetchClient('/users/me', {

@@ -1,4 +1,5 @@
 import { AuthUser } from '@auth/domain/auth-user';
+
 import { LoginDto, UserTokenDto } from '@sgcv2/shared';
 import { AuthenticatedUserDto } from '@sgcv2/shared/src/dtos/auth.dto';
 

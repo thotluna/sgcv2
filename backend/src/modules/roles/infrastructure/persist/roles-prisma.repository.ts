@@ -1,15 +1,15 @@
 import { prisma } from '@config/prisma';
 import {
-  RoleFilterInput,
-  PaginatedRoles,
   CreateRoleInput,
+  PaginatedRoles,
+  RoleFilterInput,
   UpdateRoleInput,
 } from '@roles/domain/inputs/roles.input';
 import { RoleRepository } from '@roles/domain/role.repository';
 import { RoleEntity } from '@roles/domain/roles.entity';
-import { injectable } from 'inversify';
-import { RoleEntityModelMapper } from '@roles/infrastructure/persist/role-entity-model.mapper';
 import { roleInclude } from '@roles/infrastructure/persist/include';
+import { RoleEntityModelMapper } from '@roles/infrastructure/persist/role-entity-model.mapper';
+import { injectable } from 'inversify';
 
 @injectable()
 export class RolesPrismaRepository implements RoleRepository {

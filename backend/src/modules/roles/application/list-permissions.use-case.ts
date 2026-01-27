@@ -1,7 +1,7 @@
-import { inject, injectable } from 'inversify';
-import { ListPermissionsService } from '@roles/domain/list-permissions.service';
 import { TYPES } from '@roles/di/types';
+import { ListPermissionsService } from '@roles/domain/list-permissions.service';
 import { PermissionEntity } from '@roles/domain/roles.entity';
+import { inject, injectable } from 'inversify';
 
 @injectable()
 export class ListPermissionsUseCase {

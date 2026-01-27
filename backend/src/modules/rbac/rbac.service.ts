@@ -1,6 +1,7 @@
 // src/modules/rbac/rbac.service.ts
-import { prisma } from '../../config/prisma';
 import { injectable } from 'inversify';
+
+import { prisma } from '../../config/prisma';
 
 @injectable()
 export class RbacService {

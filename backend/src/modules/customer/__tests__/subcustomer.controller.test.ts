@@ -1,7 +1,7 @@
-import { SubCustomerController } from '@customer/infrastructure/http/subcustomer.controller';
 import { CustomerNotFoundException } from '@customer/domain/exceptions/customer-not-found.exception';
 import { SubCustomerAlreadyExistsException } from '@customer/domain/exceptions/subcustomer-already-exists.exception';
 import { SubCustomerNotFoundException } from '@customer/domain/exceptions/subcustomer-not-found.exception';
+import { SubCustomerController } from '@customer/infrastructure/http/subcustomer.controller';
 import { ConflictException, NotFoundException } from '@shared/exceptions/http-exceptions';
 
 describe('SubCustomerController', () => {

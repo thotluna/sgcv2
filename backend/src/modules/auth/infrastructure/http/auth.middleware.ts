@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from 'express';
-import passport from 'passport';
 import { AuthUser } from '@modules/auth/domain/auth-user';
 import { InternalServerErrorException, UnauthorizedException } from '@shared/exceptions';
+import { NextFunction, Request, Response } from 'express';
+import passport from 'passport';
 
 export const authenticate = (req: Request, res: Response, next: NextFunction) => {
   return passport.authenticate(

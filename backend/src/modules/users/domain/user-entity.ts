@@ -1,5 +1,6 @@
-import { UserStatus } from './user-status';
 import { RoleEntity } from '@modules/roles/domain/roles.entity';
+
+import { UserStatus } from './user-status';
 
 export interface UserEntity {
   id: number;

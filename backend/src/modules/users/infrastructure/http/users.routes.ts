@@ -1,14 +1,15 @@
+import { authenticate } from '@auth/infrastructure/http/auth.middleware';
+import { PERMISSIONS } from '@consts/permissions';
+import { Permission } from '@modules/rbac/decorators/permissions.decorator';
+import { UsersController } from '@modules/users/infrastructure/http/users.controller';
+import { validateSchema } from '@shared/middleware/validate-schema';
+import { TYPES } from '@users/di/types';
 import { Router } from 'express';
 import { inject, injectable } from 'inversify';
-import { UsersController } from '@modules/users/infrastructure/http/users.controller';
-import { authenticate } from '@auth/infrastructure/http/auth.middleware';
-import { TYPES } from '@users/di/types';
-import { validateSchema } from '@shared/middleware/validate-schema';
-import { UpdateMeSchema, AdminUpdateUserSchema } from './update-user.schema';
-import { Permission } from '@modules/rbac/decorators/permissions.decorator';
-import { PERMISSIONS } from '@consts/permissions';
-import { UserFilterSchema } from './user-filter.schema';
+
 import { CreateUserSchema } from './create-user.schema';
+import { AdminUpdateUserSchema, UpdateMeSchema } from './update-user.schema';
+import { UserFilterSchema } from './user-filter.schema';
 
 @injectable()
 export class UsersRoutes {

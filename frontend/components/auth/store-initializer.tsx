@@ -1,8 +1,10 @@
 'use client';
 
 import { useRef } from 'react';
-import { useAuthStore } from '@/stores/auth.store';
+
 import { AuthenticatedUserDto } from '@sgcv2/shared';
+
+import { useAuthStore } from '@/stores/auth.store';
 
 interface StoreInitializerProps {
   user: AuthenticatedUserDto | null;

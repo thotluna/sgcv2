@@ -1,9 +1,9 @@
 import { UpdateCustomerUseCase } from '@customer/application/update-customer.use-case';
-import { UpdateCustomerService } from '@customer/domain/update-customer.service';
 import { CustomerEntity, CustomerState } from '@customer/domain/customer.entity';
-import { UpdateCustomerInput } from '@customer/domain/inputs/customer.input';
-import { CustomerNotFoundException } from '@customer/domain/exceptions/customer-not-found.exception';
 import { CustomerAlreadyExistsException } from '@customer/domain/exceptions/customer-already-exists.exception';
+import { CustomerNotFoundException } from '@customer/domain/exceptions/customer-not-found.exception';
+import { UpdateCustomerInput } from '@customer/domain/inputs/customer.input';
+import { UpdateCustomerService } from '@customer/domain/update-customer.service';
 
 describe('UpdateCustomerUseCase', () => {
   let useCase: UpdateCustomerUseCase;

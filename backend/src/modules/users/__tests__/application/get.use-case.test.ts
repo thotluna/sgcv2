@@ -1,6 +1,7 @@
 import { GetUseCase } from '@modules/users/application/get.use-case';
 import { UserNotFoundException } from '@modules/users/domain/exceptions/user-not-found.exception';
 import { ShowUserService } from '@modules/users/domain/show.service';
+
 import { mockUserWithRole } from '../helpers';
 
 const mockService = {

@@ -2,6 +2,7 @@ import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
 import prettierConfig from "eslint-config-prettier";
+import simpleImportSort from "eslint-plugin-simple-import-sort";
 
 const eslintConfig = defineConfig([
   nextVitals,
@@ -29,7 +30,32 @@ const eslintConfig = defineConfig([
     'playwright-report/**',
   ]),
   {
+    plugins: {
+      "simple-import-sort": simpleImportSort,
+    },
     rules: {
+      "simple-import-sort/imports": [
+        "error",
+        {
+          groups: [
+            // React and Next.js
+            ["^react", "^next"],
+            // External packages
+            ["^@?\\w"],
+            // Shared package
+            ["^@sgcv2/shared"],
+            // Internal aliases
+            ["^@/"],
+            // Relative imports
+            ["^\\.\\.(?!/?$)", "^\\.\\./?$", "^\\./(?=[^/]*$)", "^\\.(?!/?$)", "^\\./?$"],
+            // Side effect imports
+            ["^\\u0000"],
+            // Styles and assets
+            ["^.+\\.s?css$", "^.+\\.(png|jpg|jpeg|gif|svg)$"],
+          ],
+        },
+      ],
+      "simple-import-sort/exports": "error",
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-restricted-types': [
         'error',

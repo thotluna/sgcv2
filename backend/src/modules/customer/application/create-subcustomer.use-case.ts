@@ -1,10 +1,10 @@
-import { inject, injectable } from 'inversify';
 import { TYPES } from '@customer/di/types';
+import { CreateSubCustomerService } from '@customer/domain/create-subcustomer.service';
+import { CustomerNotFoundException } from '@customer/domain/exceptions/customer-not-found.exception';
+import { SubCustomerAlreadyExistsException } from '@customer/domain/exceptions/subcustomer-already-exists.exception';
 import { CreateSubCustomerInput } from '@customer/domain/inputs/subcustomer.input';
 import { SubCustomerEntity } from '@customer/domain/subcustomer.entity';
-import { CreateSubCustomerService } from '@customer/domain/create-subcustomer.service';
-import { SubCustomerAlreadyExistsException } from '@customer/domain/exceptions/subcustomer-already-exists.exception';
-import { CustomerNotFoundException } from '@customer/domain/exceptions/customer-not-found.exception';
+import { inject, injectable } from 'inversify';
 
 @injectable()
 export class CreateSubCustomerUseCase {

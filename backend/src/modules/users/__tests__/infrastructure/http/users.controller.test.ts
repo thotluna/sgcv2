@@ -1,8 +1,10 @@
-import { UsersController } from '@modules/users/infrastructure/http/users.controller';
-import { Request, Response } from 'express';
-import { NotFoundException, UnauthorizedException } from '@shared/exceptions';
-import { UserWithRolesDto } from '@sgcv2/shared';
 import { UserNotFoundException } from '@modules/users/domain/exceptions/user-not-found.exception';
+import { UsersController } from '@modules/users/infrastructure/http/users.controller';
+import { NotFoundException, UnauthorizedException } from '@shared/exceptions';
+import { Request, Response } from 'express';
+
+import { UserWithRolesDto } from '@sgcv2/shared';
+
 import { mockUserWithRole } from '../../helpers';
 
 const mockGetUseCase = {

@@ -1,6 +1,7 @@
-import { errorLogger } from '../errorLogger';
-import { Request, Response, NextFunction } from 'express';
 import logger from '@config/logger';
+import { NextFunction, Request, Response } from 'express';
+
+import { errorLogger } from '../errorLogger';
 
 // Mock logger
 jest.mock('@config/logger', () => ({

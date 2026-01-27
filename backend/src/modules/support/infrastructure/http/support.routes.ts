@@ -1,7 +1,7 @@
+import { TYPES } from '@modules/support/di/types';
+import { HealthController } from '@modules/support/infrastructure/http/health.controller';
 import { Router } from 'express';
 import { inject, injectable } from 'inversify';
-import { HealthController } from '@modules/support/infrastructure/http/health.controller';
-import { TYPES } from '@modules/support/di/types';
 
 @injectable()
 export class SupportRoutes {

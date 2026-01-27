@@ -1,5 +1,6 @@
 import { UserRepository } from '@modules/users/domain/user-repository';
 import { UserServiceImpl } from '@modules/users/infrastructure/http/user.service.impl';
+
 import { mockUserWithRole } from '../../helpers';
 
 const mockRepository = {

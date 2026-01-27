@@ -1,7 +1,7 @@
-import { PrismaClient, Prisma } from '@prisma/client';
-import { PrismaPg } from '@prisma/adapter-pg';
-import { Pool } from 'pg';
 import logger from '@config/logger';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { Prisma, PrismaClient } from '@prisma/client';
+import { Pool } from 'pg';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const globalForPrisma = global as any as { prisma: PrismaClient; pool: Pool };

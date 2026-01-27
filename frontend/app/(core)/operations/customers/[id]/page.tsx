@@ -1,10 +1,13 @@
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
-import { serverCustomersService } from '@/lib/api/server-customers.service';
-import { CustomerDetailsHeader } from '../_components/customer-details-header';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+
 import { Info, MapPin, Users } from 'lucide-react';
+
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { serverCustomersService } from '@/lib/api/server-customers.service';
+
+import { CustomerDetailsHeader } from '../_components/customer-details-header';
 import { LocationsList } from '../_components/locations-list';
 import { SubCustomersList } from '../_components/sub-customers-list';
 

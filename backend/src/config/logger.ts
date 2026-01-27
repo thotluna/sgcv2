@@ -1,7 +1,8 @@
-import winston from 'winston';
-import DailyRotateFile from 'winston-daily-rotate-file';
 import path from 'path';
 import util from 'util';
+
+import winston from 'winston';
+import DailyRotateFile from 'winston-daily-rotate-file';
 
 const customFormat = winston.format.combine(
   winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),

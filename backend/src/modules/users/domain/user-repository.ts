@@ -1,10 +1,10 @@
+import { UserEntity, UserWithRolesEntity } from './user-entity';
 import {
   CreateUserInput,
-  UserFilterInput,
   PaginatedUsers,
   UpdateUserPersistenceInput,
+  UserFilterInput,
 } from './dtos/user.dtos';
-import { UserEntity, UserWithRolesEntity } from './user-entity';
 
 export interface UserRepository {
   getAll(filter: UserFilterInput): Promise<PaginatedUsers>;

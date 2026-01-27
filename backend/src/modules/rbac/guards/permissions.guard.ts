@@ -1,10 +1,11 @@
-import { Request, Response, NextFunction } from 'express';
-import { rbacService } from '../rbac.service';
 import {
   ForbiddenException,
   InternalServerErrorException,
   UnauthorizedException,
 } from '@shared/exceptions';
+import { NextFunction, Request, Response } from 'express';
+
+import { rbacService } from '../rbac.service';
 
 export const requirePermission = (resource: string, action: string) => {
   return async (req: Request, _res: Response, next: NextFunction): Promise<void> => {

@@ -1,9 +1,9 @@
-import { inject, injectable } from 'inversify';
 import { TYPES } from '@customer/di/types';
-import { CreateCustomerInput } from '@customer/domain/inputs/customer.input';
-import { CustomerEntity } from '@customer/domain/customer.entity';
 import { CreateCustomerService } from '@customer/domain/create-customer.service';
+import { CustomerEntity } from '@customer/domain/customer.entity';
 import { CustomerAlreadyExistsException } from '@customer/domain/exceptions/customer-already-exists.exception';
+import { CreateCustomerInput } from '@customer/domain/inputs/customer.input';
+import { inject, injectable } from 'inversify';
 
 @injectable()
 export class CreateCustomerUseCase {

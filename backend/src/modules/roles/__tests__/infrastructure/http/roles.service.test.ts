@@ -1,7 +1,7 @@
-import { RolesService } from '@roles/infrastructure/http/roles.service';
-import { RoleRepository } from '@roles/domain/role.repository';
+import { mockPermission, mockRole } from '@roles/__tests__/helpers';
 import { PermissionRepository } from '@roles/domain/permission.repository';
-import { mockRole, mockPermission } from '@roles/__tests__/helpers';
+import { RoleRepository } from '@roles/domain/role.repository';
+import { RolesService } from '@roles/infrastructure/http/roles.service';
 
 const mockRoleRepository = {
   findByName: jest.fn(),

@@ -1,7 +1,7 @@
-import { inject, injectable } from 'inversify';
 import { TYPES } from '@customer/di/types';
 import { CustomerFilterInput, PaginatedCustomers } from '@customer/domain/inputs/customer.input';
 import { ListCustomersService } from '@customer/domain/list-customers.service';
+import { inject, injectable } from 'inversify';
 
 @injectable()
 export class ListCustomersUseCase {

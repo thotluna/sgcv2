@@ -1,8 +1,11 @@
+import Link from 'next/link';
+
+import { Edit } from 'lucide-react';
+
+import { CustomerDto, CustomerState } from '@sgcv2/shared';
+
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { CustomerDto, CustomerState } from '@sgcv2/shared';
-import { Edit } from 'lucide-react';
-import Link from 'next/link';
 
 interface CustomerDetailsHeaderProps {
   customer: CustomerDto;

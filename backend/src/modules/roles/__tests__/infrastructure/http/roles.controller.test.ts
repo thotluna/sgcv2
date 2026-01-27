@@ -1,21 +1,21 @@
-import { RolesController } from '@roles/infrastructure/http/roles.controller';
+import { mockRole } from '@roles/__tests__/helpers';
 import { CreateRoleUseCase } from '@roles/application/create.use-case';
-import { ListRolesUseCase } from '@roles/application/list-roles.use-case';
-import { GetRoleUseCase } from '@roles/application/get-role.use-case';
-import { UpdateRoleUseCase } from '@roles/application/update-role.use-case';
 import { DeleteRoleUseCase } from '@roles/application/delete-role.use-case';
+import { GetRoleUseCase } from '@roles/application/get-role.use-case';
 import { ListPermissionsUseCase } from '@roles/application/list-permissions.use-case';
-import { Request, Response } from 'express';
-import { RoleAlreadyExistsException } from '@roles/domain/exceptions/role-already-exists-exception';
+import { ListRolesUseCase } from '@roles/application/list-roles.use-case';
+import { UpdateRoleUseCase } from '@roles/application/update-role.use-case';
 import { PermissionNotFoundException } from '@roles/domain/exceptions/permission-not-found-exception';
+import { RoleAlreadyExistsException } from '@roles/domain/exceptions/role-already-exists-exception';
+import { RoleInUseException } from '@roles/domain/exceptions/role-in-use-exception';
+import { RoleNotFoundException } from '@roles/domain/exceptions/role-not-found-exception';
+import { RolesController } from '@roles/infrastructure/http/roles.controller';
 import {
-  ConflictException,
   BadRequestException,
+  ConflictException,
   NotFoundException,
 } from '@shared/exceptions/http-exceptions';
-import { mockRole } from '@roles/__tests__/helpers';
-import { RoleNotFoundException } from '@roles/domain/exceptions/role-not-found-exception';
-import { RoleInUseException } from '@roles/domain/exceptions/role-in-use-exception';
+import { Request, Response } from 'express';
 
 const mockCreateRoleUseCase = {
   execute: jest.fn(),

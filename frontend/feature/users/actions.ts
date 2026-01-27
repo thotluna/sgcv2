@@ -1,16 +1,19 @@
 'use server';
 
-import { ActionState } from '@lib/types';
-import {
-  CreateUserDto,
-  UpdateUserDto,
-  AppResponse,
-  UserDto,
-  createUserSchema,
-  updateUserSchema,
-} from '@sgcv2/shared';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+
+import { ActionState } from '@lib/types';
+
+import {
+  AppResponse,
+  CreateUserDto,
+  createUserSchema,
+  UpdateUserDto,
+  updateUserSchema,
+  UserDto,
+} from '@sgcv2/shared';
+
 import * as usersService from './service';
 
 export async function handleUserFilters(formData: FormData) {

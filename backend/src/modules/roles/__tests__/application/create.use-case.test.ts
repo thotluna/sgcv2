@@ -1,8 +1,8 @@
+import { mockPermission, mockRole } from '@roles/__tests__/helpers';
 import { CreateRoleUseCase } from '@roles/application/create.use-case';
 import { CreateService } from '@roles/domain/create.service';
-import { RoleAlreadyExistsException } from '@roles/domain/exceptions/role-already-exists-exception';
 import { PermissionNotFoundException } from '@roles/domain/exceptions/permission-not-found-exception';
-import { mockRole, mockPermission } from '@roles/__tests__/helpers';
+import { RoleAlreadyExistsException } from '@roles/domain/exceptions/role-already-exists-exception';
 
 const mockCreateService = {
   findByName: jest.fn(),

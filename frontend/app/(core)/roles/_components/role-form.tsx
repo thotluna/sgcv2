@@ -1,15 +1,19 @@
 'use client';
 
 import { useActionState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+
+import { toast } from 'sonner';
+
 import { PermissionDto, RoleWithPermissionsDto } from '@sgcv2/shared';
+
+import { SubmitButton } from '@/components/submit-button';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
-import { useRouter } from 'next/navigation';
+
 import { createRoleAction, updateRoleAction } from './actions';
-import { toast } from 'sonner';
-import { SubmitButton } from '@/components/submit-button';
 
 interface RoleFormProps {
   initialData?: RoleWithPermissionsDto;

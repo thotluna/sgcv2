@@ -1,8 +1,8 @@
 import {
   CreateRoleInput,
+  PaginatedRoles,
   RoleFilterInput,
   UpdateRoleInput,
-  PaginatedRoles,
 } from '@roles/domain/inputs/roles.input';
 import { RoleEntity } from '@roles/domain/roles.entity';
 

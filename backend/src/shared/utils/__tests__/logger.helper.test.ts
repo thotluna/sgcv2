@@ -1,5 +1,6 @@
-import { LoggerHelper } from '../logger.helper';
 import logger from '@config/logger';
+
+import { LoggerHelper } from '../logger.helper';
 
 // Mock logger
 jest.mock('@config/logger', () => ({

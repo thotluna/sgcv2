@@ -1,10 +1,13 @@
-import { RolesFilters } from './_components/filters';
-import { RoleFilterDto } from '@sgcv2/shared';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
 import { Suspense } from 'react';
-import { RolesTableContent } from './_components/table-content';
+import Link from 'next/link';
+
+import { RoleFilterDto } from '@sgcv2/shared';
+
 import { TableSkeleton } from '@/components/table/table-skeleton';
+import { Button } from '@/components/ui/button';
+
+import { RolesFilters } from './_components/filters';
+import { RolesTableContent } from './_components/table-content';
 
 interface RolesPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;

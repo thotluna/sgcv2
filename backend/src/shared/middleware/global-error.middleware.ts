@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
 import logger from '@config/logger';
 import { AppException } from '@shared/exceptions/app.exception';
+import { NextFunction, Request, Response } from 'express';
 
 /**
  * @swagger

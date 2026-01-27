@@ -1,11 +1,12 @@
 import { TYPES } from '@auth/di/types';
-import { UserCredentialsRepository } from '@modules/auth/domain/user-credentials.repository';
 import { UserValidationService } from '@auth/domain/user-validation.service';
+import { AuthUser } from '@modules/auth/domain/auth-user';
+import { LoginService } from '@modules/auth/domain/login.service';
+import { UserCredentialsRepository } from '@modules/auth/domain/user-credentials.repository';
 import bcrypt from 'bcrypt';
 import { inject, injectable } from 'inversify';
 import jwt from 'jsonwebtoken';
-import { LoginService } from '@modules/auth/domain/login.service';
-import { AuthUser } from '@modules/auth/domain/auth-user';
+
 import { PasswordHasher } from '../../domain/password-hasher';
 
 @injectable()

@@ -1,20 +1,21 @@
-import { ContainerModule, ContainerModuleLoadOptions } from 'inversify';
-import { UsersService } from '@users/domain/user.service';
+import { TYPES as AuthTypes } from '@auth/di/types';
+import { AuthUserIdentityRepository } from '@modules/auth/domain/auth-user-identity.repository';
 import { UserCredentialsRepository } from '@modules/auth/domain/user-credentials.repository';
 import { UserServiceImpl } from '@modules/users/infrastructure/http/user.service.impl';
 import { UsersController } from '@modules/users/infrastructure/http/users.controller';
-import { UsersPrismaRepository } from '@users/infrastructure/persist/users-prisma.repository';
 import { UsersRoutes } from '@modules/users/infrastructure/http/users.routes';
 import { TYPES } from '@users/di/types';
-import { TYPES as AuthTypes } from '@auth/di/types';
-import { AuthUserIdentityRepository } from '@modules/auth/domain/auth-user-identity.repository';
-import { GetUseCase } from '../application/get.use-case';
-import { UpdateMeUseCase } from '../application/update-me.use-case';
-import { UserRepository } from '../domain/user-repository';
-import { ShowUserService } from '../domain/show.service';
-import { ListUseCase } from '../application/list.use-case';
+import { UsersService } from '@users/domain/user.service';
+import { UsersPrismaRepository } from '@users/infrastructure/persist/users-prisma.repository';
+import { ContainerModule, ContainerModuleLoadOptions } from 'inversify';
+
 import { CreateUseCase } from '../application/create.use-case';
+import { GetUseCase } from '../application/get.use-case';
+import { ListUseCase } from '../application/list.use-case';
 import { UpdateUseCase } from '../application/update.use-case';
+import { UpdateMeUseCase } from '../application/update-me.use-case';
+import { ShowUserService } from '../domain/show.service';
+import { UserRepository } from '../domain/user-repository';
 
 export const usersContainerModule = new ContainerModule((option: ContainerModuleLoadOptions) => {
   option

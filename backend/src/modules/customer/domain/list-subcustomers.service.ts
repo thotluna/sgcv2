@@ -1,6 +1,6 @@
 import {
-  SubCustomerFilterInput,
   PaginatedSubCustomers,
+  SubCustomerFilterInput,
 } from '@customer/domain/inputs/subcustomer.input';
 
 export interface ListSubCustomersService {

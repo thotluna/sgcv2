@@ -1,6 +1,7 @@
-import { requirePermission } from '../guards/permissions.guard';
-import { Request, Response, NextFunction } from 'express';
 import { ForbiddenException } from '@shared/exceptions';
+import { NextFunction, Request, Response } from 'express';
+
+import { requirePermission } from '../guards/permissions.guard';
 
 // Mock the entire rbac.service module
 jest.mock('../rbac.service', () => ({

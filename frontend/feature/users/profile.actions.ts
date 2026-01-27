@@ -1,8 +1,11 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+
 import { ActionState } from '@lib/types';
-import { updateEmailSchema, updateAvatarSchema } from '@sgcv2/shared';
+
+import { updateAvatarSchema, updateEmailSchema } from '@sgcv2/shared';
+
 import { updatePasswordSchema } from './schemas';
 import * as usersService from './service';
 

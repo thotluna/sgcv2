@@ -1,7 +1,7 @@
-import { inject, injectable } from 'inversify';
 import { TYPES } from '@customer/di/types';
 import { LocationFilterInput, PaginatedLocations } from '@customer/domain/inputs/location.input';
 import { ListLocationsService } from '@customer/domain/list-locations.service';
+import { inject, injectable } from 'inversify';
 
 @injectable()
 export class ListLocationsUseCase {

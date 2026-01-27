@@ -1,8 +1,8 @@
-import { inject, injectable } from 'inversify';
 import { TYPES } from '@customer/di/types';
-import { SubCustomerEntity } from '@customer/domain/subcustomer.entity';
 import { DeleteSubCustomerService } from '@customer/domain/delete-subcustomer.service';
 import { SubCustomerNotFoundException } from '@customer/domain/exceptions/subcustomer-not-found.exception';
+import { SubCustomerEntity } from '@customer/domain/subcustomer.entity';
+import { inject, injectable } from 'inversify';
 
 @injectable()
 export class DeleteSubCustomerUseCase {

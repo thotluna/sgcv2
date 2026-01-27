@@ -1,21 +1,21 @@
 import { TYPES } from '@roles/di/types';
 import { CreateService } from '@roles/domain/create.service';
+import { DeleteRoleService } from '@roles/domain/delete.role.service';
+import { GetRoleService } from '@roles/domain/get.role.service';
 import {
   CreateRoleInput,
   PaginatedRoles,
   RoleFilterInput,
   UpdateRoleInput,
 } from '@roles/domain/inputs/roles.input';
+import { ListService } from '@roles/domain/list.service';
+import { ListPermissionsService } from '@roles/domain/list-permissions.service';
 import { PermissionRepository } from '@roles/domain/permission.repository';
+import { PermissionAssignmentService } from '@roles/domain/permission-assignment.service';
 import { RoleRepository } from '@roles/domain/role.repository';
 import { PermissionEntity, RoleEntity } from '@roles/domain/roles.entity';
-import { inject, injectable } from 'inversify';
-import { ListService } from '@roles/domain/list.service';
-import { GetRoleService } from '@roles/domain/get.role.service';
 import { UpdateRoleService } from '@roles/domain/update.role.service';
-import { DeleteRoleService } from '@roles/domain/delete.role.service';
-import { ListPermissionsService } from '@roles/domain/list-permissions.service';
-import { PermissionAssignmentService } from '@roles/domain/permission-assignment.service';
+import { inject, injectable } from 'inversify';
 
 @injectable()
 export class RolesService

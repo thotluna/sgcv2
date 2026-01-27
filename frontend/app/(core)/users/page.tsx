@@ -1,10 +1,14 @@
-import { UsersFilters } from '@feature/users/components/admin/filters';
-import { UserFilterDto, UserStatus } from '@sgcv2/shared';
 import { Suspense } from 'react';
-import { UsersTableContent } from './_components/table-content';
+import Link from 'next/link';
+
+import { UsersFilters } from '@feature/users/components/admin/filters';
+
+import { UserFilterDto, UserStatus } from '@sgcv2/shared';
+
 import { TableSkeleton } from '@/components/table/table-skeleton';
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
+
+import { UsersTableContent } from './_components/table-content';
 
 interface UsersPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;

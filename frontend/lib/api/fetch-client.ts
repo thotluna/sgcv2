@@ -1,5 +1,6 @@
-import 'server-only';
 import { cookies } from 'next/headers';
+
+import 'server-only';
 
 export async function fetchClient(endpoint: string, options: RequestInit = {}) {
   const isServer = typeof window === 'undefined';

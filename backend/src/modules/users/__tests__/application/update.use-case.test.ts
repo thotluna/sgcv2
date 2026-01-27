@@ -1,7 +1,7 @@
+import { UpdateUserService } from '@modules/users/domain/update.service';
+
 import { UpdateUseCase } from '../../application/update.use-case';
 import { UpdateUserInput } from '../../domain/dtos/user.dtos';
-
-import { UpdateUserService } from '@modules/users/domain/update.service';
 
 describe('UpdateUserUseCaseService', () => {
   let service: UpdateUseCase;

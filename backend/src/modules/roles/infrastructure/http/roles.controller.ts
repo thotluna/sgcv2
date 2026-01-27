@@ -1,24 +1,25 @@
-import { Request, Response } from 'express';
-import { inject, injectable } from 'inversify';
-import { TYPES } from '@roles/di/types';
 import { CreateRoleUseCase } from '@roles/application/create.use-case';
-import { RolesMapper } from '@roles/infrastructure/mappers/roles.mapper';
-import { ResponseHelper } from '@shared/utils/response.helpers';
-import { RoleAlreadyExistsException } from '@roles/domain/exceptions/role-already-exists-exception';
+import { DeleteRoleUseCase } from '@roles/application/delete-role.use-case';
+import { GetRoleUseCase } from '@roles/application/get-role.use-case';
+import { ListPermissionsUseCase } from '@roles/application/list-permissions.use-case';
+import { ListRolesUseCase } from '@roles/application/list-roles.use-case';
+import { UpdateRoleUseCase } from '@roles/application/update-role.use-case';
+import { TYPES } from '@roles/di/types';
 import { PermissionNotFoundException } from '@roles/domain/exceptions/permission-not-found-exception';
+import { RoleAlreadyExistsException } from '@roles/domain/exceptions/role-already-exists-exception';
+import { RoleInUseException } from '@roles/domain/exceptions/role-in-use-exception';
+import { RoleNotFoundException } from '@roles/domain/exceptions/role-not-found-exception';
+import { RolesMapper } from '@roles/infrastructure/mappers/roles.mapper';
 import {
   BadRequestException,
   ConflictException,
   NotFoundException,
 } from '@shared/exceptions/http-exceptions';
+import { ResponseHelper } from '@shared/utils/response.helpers';
+import { Request, Response } from 'express';
+import { inject, injectable } from 'inversify';
+
 import { CreateRoleDto } from '@sgcv2/shared';
-import { ListRolesUseCase } from '@roles/application/list-roles.use-case';
-import { GetRoleUseCase } from '@roles/application/get-role.use-case';
-import { UpdateRoleUseCase } from '@roles/application/update-role.use-case';
-import { DeleteRoleUseCase } from '@roles/application/delete-role.use-case';
-import { ListPermissionsUseCase } from '@roles/application/list-permissions.use-case';
-import { RoleNotFoundException } from '@roles/domain/exceptions/role-not-found-exception';
-import { RoleInUseException } from '@roles/domain/exceptions/role-in-use-exception';
 import { UpdateRoleDto } from '@sgcv2/shared';
 
 @injectable()

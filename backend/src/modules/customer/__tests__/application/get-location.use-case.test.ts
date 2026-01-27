@@ -1,6 +1,6 @@
 import { GetLocationUseCase } from '@customer/application/get-location.use-case';
-import { GetLocationService } from '@customer/domain/get-location.service';
 import { LocationNotFoundException } from '@customer/domain/exceptions/location-not-found.exception';
+import { GetLocationService } from '@customer/domain/get-location.service';
 
 describe('GetLocationUseCase', () => {
   let useCase: GetLocationUseCase;

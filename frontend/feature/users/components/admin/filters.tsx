@@ -1,7 +1,9 @@
-import { Input, Button } from '@/components/ui';
-import { Search } from 'lucide-react';
-import { UserStatus } from '@sgcv2/shared';
 import { handleUserFilters } from '@feature/users/actions';
+import { Search } from 'lucide-react';
+
+import { UserStatus } from '@sgcv2/shared';
+
+import { Button, Input } from '@/components/ui';
 
 interface UsersFiltersProps {
   search?: string;

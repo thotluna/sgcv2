@@ -1,18 +1,18 @@
-import { UserEntity, UserWithRolesEntity } from '@modules/users/domain/user-entity';
-import { UsersService } from '@modules/users/domain/user.service';
 import { TYPES } from '@modules/users/di/types';
-import { inject, injectable } from 'inversify';
-import { UserRepository } from '@modules/users/domain/user-repository';
-import { ShowUserService } from '@modules/users/domain/show.service';
-import { ListUsersService } from '@modules/users/domain/list.service';
+import { CreateUserService } from '@modules/users/domain/create.service';
 import {
   CreateUserInput,
-  UserFilterInput,
   PaginatedUsers,
+  UserFilterInput,
 } from '@modules/users/domain/dtos/user.dtos';
-import { CreateUserService } from '@modules/users/domain/create.service';
-import { UpdateUserService } from '@modules/users/domain/update.service';
 import { UpdateUserPersistenceInput } from '@modules/users/domain/dtos/user.dtos';
+import { ListUsersService } from '@modules/users/domain/list.service';
+import { ShowUserService } from '@modules/users/domain/show.service';
+import { UpdateUserService } from '@modules/users/domain/update.service';
+import { UsersService } from '@modules/users/domain/user.service';
+import { UserEntity, UserWithRolesEntity } from '@modules/users/domain/user-entity';
+import { UserRepository } from '@modules/users/domain/user-repository';
+import { inject, injectable } from 'inversify';
 
 @injectable()
 export class UserServiceImpl

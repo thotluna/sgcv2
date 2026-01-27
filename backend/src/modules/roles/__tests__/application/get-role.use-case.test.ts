@@ -1,7 +1,7 @@
-import { GetRoleUseCase } from '@roles/application/get-role.use-case';
-import { GetRoleService } from '@roles/domain/get.role.service';
-import { RoleNotFoundException } from '@roles/domain/exceptions/role-not-found-exception';
 import { mockRole } from '@roles/__tests__/helpers';
+import { GetRoleUseCase } from '@roles/application/get-role.use-case';
+import { RoleNotFoundException } from '@roles/domain/exceptions/role-not-found-exception';
+import { GetRoleService } from '@roles/domain/get.role.service';
 
 const mockGetRoleService = {
   getRole: jest.fn(),
