@@ -1,10 +1,13 @@
-import { serverUsersService } from '@/lib/api/server-users.service';
-import { UsersTable } from './_components/table';
-import { UsersFilters } from './_components/filters';
+import Link from 'next/link';
+
 import { UserDto, UserFilterDto, UserStatus } from '@sgcv2/shared';
+
 import { DataPagination } from '@/components/data-pagination';
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
+import { serverUsersService } from '@/lib/api/server-users.service';
+
+import { UsersFilters } from './_components/filters';
+import { UsersTable } from './_components/table';
 
 interface UsersPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;

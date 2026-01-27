@@ -1,6 +1,7 @@
-import { apiClient } from './client';
-import { CustomerDto as Customer, CreateCustomerDto, UpdateCustomerDto } from '@sgcv2/shared';
+import { CreateCustomerDto, CustomerDto as Customer, UpdateCustomerDto } from '@sgcv2/shared';
 import { AppResponse, CustomerState } from '@sgcv2/shared';
+
+import { apiClient } from './client';
 
 interface Filters {
   state?: CustomerState;

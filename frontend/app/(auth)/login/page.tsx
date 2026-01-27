@@ -1,16 +1,18 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Loader2, LogIn } from 'lucide-react';
 import { toast } from 'sonner';
 import * as z from 'zod';
-import { useState } from 'react';
-import { useAuth } from '@/hooks/use-auth';
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { LogIn, Loader2 } from 'lucide-react';
+import { useAuth } from '@/hooks/use-auth';
 
 const loginSchema = z.object({
   username: z.string().min(1, { message: 'Username is required' }),

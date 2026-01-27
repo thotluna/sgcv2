@@ -1,13 +1,15 @@
 'use client';
 
+import { useTransition } from 'react';
+import { useRouter } from 'next/navigation';
+
+import { MoreHorizontal, SquarePen, Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
+
 import { RoleDto } from '@sgcv2/shared';
+
 import { Column, DataTable } from '@/components/table/data-table';
 import { Button } from '@/components/ui/button';
-import { MoreHorizontal, SquarePen, Trash2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useTransition } from 'react';
-import { deleteRoleAction } from './actions';
-import { toast } from 'sonner';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,6 +18,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+
+import { deleteRoleAction } from './actions';
 
 interface RolesTableProps {
   data: RoleDto[];

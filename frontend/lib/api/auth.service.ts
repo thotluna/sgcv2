@@ -1,5 +1,6 @@
+import { AppResponse, AuthenticatedUserDto, LoginDto } from '@sgcv2/shared';
+
 import { apiClient } from './client';
-import { LoginDto, AppResponse, AuthenticatedUserDto } from '@sgcv2/shared';
 
 interface LoginResponse {
   user: AuthenticatedUserDto;

@@ -1,14 +1,17 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+
+import axios from 'axios';
+
+import { serverUsersService } from '@/lib/api/server-users.service';
+
 import {
+  UpdateAvatarSchema,
   UpdateEmailSchema,
   UpdatePasswordSchema,
-  UpdateAvatarSchema,
   UpdateRoleSchema,
 } from '../_schemas/profile.schema';
-import { serverUsersService } from '@/lib/api/server-users.service';
-import axios from 'axios';
 
 export async function updateEmailAction(formData: FormData) {
   const data = Object.fromEntries(formData);

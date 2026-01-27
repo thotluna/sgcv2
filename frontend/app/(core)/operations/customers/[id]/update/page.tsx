@@ -1,7 +1,9 @@
-import { serverCustomersService } from '@/lib/api/server-customers.service';
-import { UpdateCustomerForm } from './_components/update-customer-form';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { notFound } from 'next/navigation';
+
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { serverCustomersService } from '@/lib/api/server-customers.service';
+
+import { UpdateCustomerForm } from './_components/update-customer-form';
 
 export default async function UpdateCustomerPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

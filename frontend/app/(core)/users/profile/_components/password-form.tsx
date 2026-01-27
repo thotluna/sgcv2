@@ -1,12 +1,12 @@
 'use client';
 
 import { useForm } from 'react-hook-form';
+
 import { zodResolver } from '@hookform/resolvers/zod';
-import { UpdatePasswordSchema } from '../_schemas/profile.schema';
-import { updatePasswordAction } from '../_actions/profile.actions';
+import { toast } from 'sonner';
+import { z } from 'zod';
+
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
   Card,
   CardContent,
@@ -15,8 +15,11 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { toast } from 'sonner';
-import { z } from 'zod';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+
+import { updatePasswordAction } from '../_actions/profile.actions';
+import { UpdatePasswordSchema } from '../_schemas/profile.schema';
 
 type PasswordValues = z.infer<typeof UpdatePasswordSchema>;
 

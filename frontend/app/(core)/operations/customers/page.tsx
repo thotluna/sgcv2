@@ -1,8 +1,10 @@
-import { serverCustomersService } from '@/lib/api/server-customers.service';
-import { CustomersTable } from './_components/table';
-import { CustomersFilters } from './_components/filters';
 import { CustomerDto, CustomerState } from '@sgcv2/shared';
+
 import { DataPagination } from '@/components/data-pagination';
+import { serverCustomersService } from '@/lib/api/server-customers.service';
+
+import { CustomersFilters } from './_components/filters';
+import { CustomersTable } from './_components/table';
 
 interface CustomersPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;

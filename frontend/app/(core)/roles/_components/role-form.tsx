@@ -1,14 +1,21 @@
 'use client';
 
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
+
 import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from 'sonner';
+
 import {
-  createRoleSchema,
   CreateRoleDto,
+  createRoleSchema,
   PermissionDto,
   RoleWithPermissionsDto,
 } from '@sgcv2/shared';
+
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Form,
   FormControl,
@@ -20,11 +27,8 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
-import { useRouter } from 'next/navigation';
+
 import { createRoleAction, updateRoleAction } from './actions';
-import { toast } from 'sonner';
-import { useState } from 'react';
 
 interface RoleFormProps {
   initialData?: RoleWithPermissionsDto;

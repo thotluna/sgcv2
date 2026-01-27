@@ -1,11 +1,13 @@
-import { createServerApiClient } from './server-client';
+import { AxiosError } from 'axios';
+
 import {
-  CustomerDto as Customer,
   AppResponse,
   CreateCustomerDto,
+  CustomerDto as Customer,
   UpdateCustomerDto,
 } from '@sgcv2/shared';
-import { AxiosError } from 'axios';
+
+import { createServerApiClient } from './server-client';
 
 /**
  * Server-side customers service for use in Server Components

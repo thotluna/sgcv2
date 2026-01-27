@@ -1,13 +1,17 @@
 'use client';
 
 import { useActionState } from 'react';
+
+import { AlertCircle } from 'lucide-react';
+
+import { CustomerDto } from '@sgcv2/shared';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { createCustomerAction, updateCustomerAction } from './actions';
-import { CustomerDto } from '@sgcv2/shared';
+
 import { ActionState } from '../types';
-import { AlertCircle } from 'lucide-react';
+import { createCustomerAction, updateCustomerAction } from './actions';
 
 interface CustomerFormProps {
   customer?: CustomerDto;

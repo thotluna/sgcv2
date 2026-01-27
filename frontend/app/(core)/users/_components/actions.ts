@@ -1,10 +1,13 @@
 'use server';
 
-import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
-import { serverUsersService } from '@/lib/api/server-users.service';
-import { CreateUserDto, UpdateUserDto, UserDto } from '@sgcv2/shared';
+import { redirect } from 'next/navigation';
+
 import * as z from 'zod';
+
+import { CreateUserDto, UpdateUserDto, UserDto } from '@sgcv2/shared';
+
+import { serverUsersService } from '@/lib/api/server-users.service';
 
 const userSchema = z.object({
   username: z.string().min(3, 'El nombre de usuario debe tener al menos 3 caracteres'),

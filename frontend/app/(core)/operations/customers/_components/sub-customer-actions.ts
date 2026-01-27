@@ -2,9 +2,12 @@
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { serverSubCustomersService } from '@/lib/api/server-subcustomers.service';
+
+import { CreateCustomerLocationSchema, CreateSubCustomerWithLocationSchema } from '@sgcv2/shared';
+
 import { serverLocationsService } from '@/lib/api/server-locations.service';
-import { CreateSubCustomerWithLocationSchema, CreateCustomerLocationSchema } from '@sgcv2/shared';
+import { serverSubCustomersService } from '@/lib/api/server-subcustomers.service';
+
 import { ActionState } from '../types';
 
 export async function createSubCustomerWithLocationAction(

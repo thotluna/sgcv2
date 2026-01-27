@@ -1,12 +1,15 @@
+import { redirect } from 'next/navigation';
+
+import axios from 'axios';
+
+import { Separator } from '@/components/ui/separator';
 import { serverUsersService } from '@/lib/api/server-users.service';
-import { ProfileHeader } from './_components/profile-header';
-import { ProfileInfo } from './_components/profile-info';
+
+import { AvatarForm } from './_components/avatar-form';
 import { EmailForm } from './_components/email-form';
 import { PasswordForm } from './_components/password-form';
-import { AvatarForm } from './_components/avatar-form';
-import { Separator } from '@/components/ui/separator';
-import { redirect } from 'next/navigation';
-import axios from 'axios';
+import { ProfileHeader } from './_components/profile-header';
+import { ProfileInfo } from './_components/profile-info';
 
 export default async function ProfilePage() {
   let user;

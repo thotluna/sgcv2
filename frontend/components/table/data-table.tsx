@@ -1,5 +1,7 @@
 'use client';
 
+import { ReactNode } from 'react';
+
 import {
   Table,
   TableBody,
@@ -8,7 +10,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { ReactNode } from 'react';
 
 export interface Column<T> {
   header: string;

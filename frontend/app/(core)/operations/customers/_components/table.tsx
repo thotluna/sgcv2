@@ -1,12 +1,15 @@
 'use client';
 
-import { CustomerDto } from '@sgcv2/shared';
-import { CustomerDropMenu } from './customerDropMenu';
-import { statusMap } from '../_const/const';
-import { Badge } from '@/components/ui/badge';
-import { DataTable, Column } from '@/components/table/data-table';
-import { deleteCustomerAction } from './actions';
 import { toast } from 'sonner';
+
+import { CustomerDto } from '@sgcv2/shared';
+
+import { Column, DataTable } from '@/components/table/data-table';
+import { Badge } from '@/components/ui/badge';
+
+import { statusMap } from '../_const/const';
+import { deleteCustomerAction } from './actions';
+import { CustomerDropMenu } from './customerDropMenu';
 
 interface CustomersTableProps {
   data: CustomerDto[];

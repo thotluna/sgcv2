@@ -1,11 +1,14 @@
 'use client';
 
-import { UserDto } from '@sgcv2/shared';
-import { UserDropMenu } from './userDropMenu';
-import { Badge } from '@/components/ui/badge';
-import { DataTable, Column } from '@/components/table/data-table';
-import { blockUserAction } from './actions';
 import { toast } from 'sonner';
+
+import { UserDto } from '@sgcv2/shared';
+
+import { Column, DataTable } from '@/components/table/data-table';
+import { Badge } from '@/components/ui/badge';
+
+import { blockUserAction } from './actions';
+import { UserDropMenu } from './userDropMenu';
 
 interface UsersTableProps {
   data: UserDto[];

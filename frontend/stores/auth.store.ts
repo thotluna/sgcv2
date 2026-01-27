@@ -1,9 +1,11 @@
-import { authService } from '@/lib/api/auth.service';
-import { usersService } from '@/lib/api/users.service';
-import { AuthenticatedUserDto } from '@sgcv2/shared';
+import { sha256 } from 'js-sha256';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { sha256 } from 'js-sha256';
+
+import { AuthenticatedUserDto } from '@sgcv2/shared';
+
+import { authService } from '@/lib/api/auth.service';
+import { usersService } from '@/lib/api/users.service';
 
 interface AuthState {
   user: AuthenticatedUserDto | null;
