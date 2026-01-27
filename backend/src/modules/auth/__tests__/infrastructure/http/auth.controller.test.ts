@@ -39,7 +39,10 @@ describe('AuthController', () => {
     expect(mockResponse.json).toHaveBeenCalledWith(
       expect.objectContaining({
         success: true,
-        data: { user: expect.objectContaining({ username: MOCK_LOGIN_REQUEST.username }) },
+        data: {
+          user: expect.objectContaining({ username: MOCK_LOGIN_REQUEST.username }),
+          token: authMockResult.token,
+        },
       })
     );
   });
