@@ -27,7 +27,6 @@ export function DataTable<T>({
   emptyMessage = 'No results found.',
   rowActions,
 }: DataTableProps<T>) {
-
   const hasActions = !!rowActions;
   const colSpan = columns.length + (hasActions ? 1 : 0);
 

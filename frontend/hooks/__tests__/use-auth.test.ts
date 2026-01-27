@@ -17,10 +17,18 @@ describe('useAuth', () => {
     // @ts-ignore
     delete window.location;
     window.location = { href: '' } as any;
+    // Silence JSDOM navigation error logs
+    jest.spyOn(console, 'error').mockImplementation((...args) => {
+      if (args[0]?.message?.includes('Not implemented: navigation')) return;
+      originalConsoleError(...args);
+    });
   });
+
+  const originalConsoleError = console.error;
 
   afterAll(() => {
     window.location = originalLocation as any;
+    (console.error as jest.Mock).mockRestore();
   });
 
   beforeEach(() => {

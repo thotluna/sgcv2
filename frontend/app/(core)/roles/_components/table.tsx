@@ -24,10 +24,6 @@ export function RolesTable({ data }: RolesTableProps) {
   ];
 
   return (
-    <DataTable
-      data={data}
-      columns={columns}
-      rowActions={role => <RoleDropMenu role={role} />}
-    />
+    <DataTable data={data} columns={columns} rowActions={role => <RoleDropMenu role={role} />} />
   );
 }
