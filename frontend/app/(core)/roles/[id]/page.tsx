@@ -1,9 +1,7 @@
 import { notFound } from 'next/navigation';
 
-import { serverPermissionsService } from '@/lib/api/server-permissions.service';
-import { serverRolesService } from '@/lib/api/server-roles.service';
-
-import { RoleForm } from '../_components/role-form';
+import { RoleForm } from '@feature/roles/components';
+import { getAllPermissions, getRoleById } from '@feature/roles/service';
 
 interface EditRolePageProps {
   params: Promise<{ id: string }>;
@@ -17,10 +15,7 @@ export default async function EditRolePage({ params }: EditRolePageProps) {
     return notFound();
   }
 
-  const [roleRes, permissionsRes] = await Promise.all([
-    serverRolesService.getById(roleId),
-    serverPermissionsService.getAll(),
-  ]);
+  const [roleRes, permissionsRes] = await Promise.all([getRoleById(roleId), getAllPermissions()]);
 
   if (!roleRes?.success || !roleRes.data) {
     return notFound();

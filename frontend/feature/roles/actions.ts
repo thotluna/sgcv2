@@ -5,8 +5,9 @@ import { redirect } from 'next/navigation';
 
 import { createRoleSchema, updateRoleSchema } from '@sgcv2/shared';
 
-import { serverRolesService } from '@/lib/api/server-roles.service';
 import { ActionState } from '@/lib/types';
+
+import { createRole, deleteRole, updateRole } from './service';
 
 export async function handleRoleFilters(formData: FormData) {
   const search = formData.get('search');
@@ -41,7 +42,7 @@ export async function createRoleAction(
   }
 
   try {
-    await serverRolesService.create(validated.data);
+    await createRole(validated.data);
     revalidatePath('/roles');
     return { success: true, message: 'Rol creado correctamente' };
   } catch (error) {
@@ -76,7 +77,7 @@ export async function updateRoleAction(
   }
 
   try {
-    await serverRolesService.update(id, validated.data);
+    await updateRole(id, validated.data);
     revalidatePath('/roles');
     revalidatePath(`/roles/${id}`);
     return { success: true, message: 'Rol actualizado correctamente' };
@@ -90,7 +91,7 @@ export async function updateRoleAction(
 
 export async function deleteRoleAction(id: number): Promise<ActionState> {
   try {
-    await serverRolesService.delete(id);
+    await deleteRole(id);
     revalidatePath('/roles');
     return { success: true, message: 'Rol eliminado correctamente' };
   } catch (error) {

@@ -1,8 +1,8 @@
 import { RoleDto, RoleFilterDto } from '@sgcv2/shared';
 
 import { DataPagination } from '@/components/data-pagination';
-import { serverRolesService } from '@/lib/api/server-roles.service';
 
+import { getAllRoles } from '../service';
 import { RolesTable } from './table';
 
 interface RolesTableContentProps {
@@ -17,7 +17,7 @@ export async function RolesTableContent({ limit, offset, filter }: RolesTableCon
   const currentPage = Math.floor(offset / limit) + 1;
 
   try {
-    const response = await serverRolesService.getAll(filter);
+    const response = await getAllRoles(filter);
     if (response?.success) {
       roles = response.data || [];
       totalPages = response.metadata?.pagination?.totalPages || 1;
