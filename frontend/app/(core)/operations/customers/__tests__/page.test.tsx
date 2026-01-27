@@ -11,9 +11,9 @@ jest.mock('../_components/filters', () => ({
   ),
 }));
 jest.mock('../_components/table-content', () => ({
-  CustomersTableContent: ({ filter }: any) => (
+  CustomersTableContent: ({ filters }: any) => (
     <div data-testid="table-content">
-      TableContent: {filter.search} - {filter.state}
+      TableContent: {filters.search} - {filters.state}
     </div>
   ),
 }));
@@ -37,6 +37,6 @@ describe('CustomersPage (Server Component)', () => {
     const jsx = await CustomersPage({ searchParams });
     render(jsx);
 
-    expect(screen.getByTestId('table-content')).toHaveTextContent('TableContent: - ');
+    expect(screen.getByTestId('table-content')).toHaveTextContent('TableContent: -');
   });
 });
