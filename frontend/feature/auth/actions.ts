@@ -1,12 +1,12 @@
 'use server';
-
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
+import { ActionState } from '@lib/types';
+
 import { loginSchema } from '@sgcv2/shared';
 
-import { authService } from '@/lib/api/auth.service';
-import { ActionState } from '@/lib/types';
+import { login } from './service';
 
 export async function loginAction(
   _prevState: ActionState,
@@ -26,7 +26,7 @@ export async function loginAction(
 
   try {
     const { username, password } = validated.data;
-    const response = await authService.login(username, password);
+    const response = await login(username, password);
 
     if (!response.success || !response.data?.token) {
       return {
