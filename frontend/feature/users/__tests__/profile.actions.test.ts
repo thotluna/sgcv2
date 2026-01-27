@@ -19,6 +19,11 @@ const initialState: ActionState = { success: false, message: '' };
 describe('Profile Actions', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    (console.error as jest.Mock).mockRestore();
   });
 
   describe('updateEmailAction', () => {
