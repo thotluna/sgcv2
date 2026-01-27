@@ -3,6 +3,8 @@ import { serverRolesService } from '@/lib/api/server-roles.service';
 import { PermissionsTable } from './_components/permissions-table';
 import { ShieldCheck } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+
 export default async function PermissionsPage() {
   let permissions: PermissionDto[] = [];
 

@@ -49,11 +49,14 @@ describe('CustomersTableContent', () => {
     const jsx = await CustomersTableContent({
       page: 1,
       perPage: 20,
-      filters: { search: 'test', state: 'ACTIVE' as any }
+      filters: { search: 'test', state: 'ACTIVE' as any },
     });
     render(jsx);
 
-    expect(serverCustomersService.getAll).toHaveBeenCalledWith(1, 20, { search: 'test', state: 'ACTIVE' });
+    expect(serverCustomersService.getAll).toHaveBeenCalledWith(1, 20, {
+      search: 'test',
+      state: 'ACTIVE',
+    });
     expect(screen.getByText('Test Company 1')).toBeInTheDocument();
     expect(screen.getByTestId('pagination')).toHaveTextContent('Page: 1');
   });
@@ -67,7 +70,7 @@ describe('CustomersTableContent', () => {
     const jsx = await CustomersTableContent({
       page: 1,
       perPage: 20,
-      filters: {}
+      filters: {},
     });
     render(jsx);
 
