@@ -138,6 +138,7 @@ describe('useAuthStore', () => {
         firstName: 'Test',
         lastName: 'User',
         status: 'ACTIVE', // Expect status to be defaulted to ACTIVE
+        permissions: [],
       });
     });
 
@@ -173,6 +174,7 @@ describe('useAuthStore', () => {
         firstName: 'Test',
         lastName: 'User',
         status: 'ACTIVE',
+        permissions: [],
       });
     });
 
