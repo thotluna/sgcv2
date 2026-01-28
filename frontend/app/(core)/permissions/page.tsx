@@ -1,43 +1,72 @@
-import { ShieldCheck } from 'lucide-react';
+import { Suspense } from 'react';
+import { Metadata } from 'next';
 
-import { PermissionDto } from '@sgcv2/shared';
+import { PermissionsFilters, PermissionsTableContent } from '@feature/permissions/components';
 
-import { serverRolesService } from '@/lib/api/server-roles.service';
+import { PermissionFilterDto } from '@sgcv2/shared';
 
-import { PermissionsTable } from './_components/permissions-table';
+import { Skeleton } from '@/components/ui/skeleton';
 
-export const dynamic = 'force-dynamic';
+export const metadata: Metadata = {
+  title: 'Permisos | SGCV2',
+  description: 'Gestión de permisos del sistema',
+};
 
-export default async function PermissionsPage() {
-  let permissions: PermissionDto[] = [];
+interface PermissionsPageProps {
+  searchParams: Promise<{
+    search?: string;
+    offset?: string;
+    limit?: string;
+  }>;
+}
 
-  try {
-    const response = await serverRolesService.getAllPermissions();
-    if (response?.success) {
-      permissions = response.data || [];
-    }
-  } catch (error) {
-    console.error('Error fetching permissions:', error);
-  }
+export default async function PermissionsPage({ searchParams }: PermissionsPageProps) {
+  const params = await searchParams;
+  const search = params.search;
+  const offset = params.offset ? parseInt(params.offset) : 0;
+  const limit = params.limit ? parseInt(params.limit) : 10;
+
+  const filter: PermissionFilterDto = {
+    search,
+    pagination: {
+      offset,
+      limit,
+    },
+  };
 
   return (
-    <div className="p-6 space-y-6">
-      <header className="flex justify-between items-center">
-        <div className="flex flex-col gap-1">
-          <div className="flex items-center gap-2">
-            <ShieldCheck className="h-8 w-8 text-primary" />
-            <h1 className="text-3xl font-bold tracking-tight">Permisos del Sistema</h1>
-          </div>
-          <p className="text-muted-foreground">
-            Lista completa de todos los permisos definidos en el sistema. Estos permisos se asignan
-            a los roles para controlar el acceso a los recursos.
-          </p>
-        </div>
-      </header>
+    <div className="flex flex-col gap-6 p-6">
+      <div className="flex flex-col gap-2">
+        <h1 className="text-3xl font-bold tracking-tight">Permisos</h1>
+        <p className="text-muted-foreground">
+          Consulta y gestiona los permisos disponibles en el sistema.
+        </p>
+      </div>
 
-      <main className="flex w-full flex-col gap-4">
-        <PermissionsTable data={permissions} />
-      </main>
+      <div className="flex flex-col gap-4">
+        <PermissionsFilters search={search} />
+
+        <Suspense fallback={<PermissionsTableSkeleton />}>
+          <PermissionsTableContent limit={limit} offset={offset} filter={filter} />
+        </Suspense>
+      </div>
+    </div>
+  );
+}
+
+function PermissionsTableSkeleton() {
+  return (
+    <div className="space-y-4">
+      <div className="rounded-md border">
+        <div className="h-10 border-b px-4 py-2">
+          <Skeleton className="h-6 w-[200px]" />
+        </div>
+        {[...Array(5)].map((_, i) => (
+          <div key={i} className="h-12 border-b px-4 py-3">
+            <Skeleton className="h-5 w-full" />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

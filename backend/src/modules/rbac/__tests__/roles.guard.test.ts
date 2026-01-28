@@ -1,8 +1,9 @@
 // src/modules/rbac/__tests__/roles.guard.test.ts
 import { ForbiddenException } from '@shared/exceptions';
 import { NextFunction, Request, Response } from 'express';
-import { requireRoles } from '../guards/roles.guard';
+
 import { TYPES } from '../di/types';
+import { requireRoles } from '../guards/roles.guard';
 
 // Mock the container
 const mockRbacService = {

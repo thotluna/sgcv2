@@ -1,7 +1,8 @@
 import { notFound } from 'next/navigation';
 
+import { getAllPermissions } from '@feature/permissions/service';
 import { RoleForm } from '@feature/roles/components';
-import { getAllPermissions, getRoleById } from '@feature/roles/service';
+import { getRoleById } from '@feature/roles/service';
 
 interface EditRolePageProps {
   params: Promise<{ id: string }>;

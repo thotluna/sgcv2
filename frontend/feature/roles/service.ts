@@ -3,7 +3,6 @@ import { fetchClient } from '@lib/api/fetch-client';
 import {
   AppResponse,
   CreateRoleDto,
-  PermissionDto,
   RoleDto,
   RoleFilterDto,
   RoleWithPermissionsDto,
@@ -54,11 +53,5 @@ export async function updateRole(id: number, data: UpdateRoleDto): Promise<AppRe
 export async function deleteRole(id: number): Promise<AppResponse<void>> {
   return fetchClient(`/roles/${id}`, {
     method: 'DELETE',
-  });
-}
-
-export async function getAllPermissions(): Promise<AppResponse<PermissionDto[]>> {
-  return fetchClient('/roles/permissions', {
-    method: 'GET',
   });
 }

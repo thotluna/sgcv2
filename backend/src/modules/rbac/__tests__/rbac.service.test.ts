@@ -1,6 +1,6 @@
 // src/modules/rbac/__tests__/rbac.service.test.ts
-import { RbacService } from '../rbac.service';
 import { RbacRepository } from '../domain/rbac.repository';
+import { RbacService } from '../rbac.service';
 
 describe('RbacService', () => {
   let rbacService: RbacService;

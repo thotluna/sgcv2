@@ -1,3 +1,5 @@
+import { PermissionDto } from '@sgcv2/shared';
+
 import { Card, CardContent } from '@/components/ui/card';
 import {
   Table,
@@ -8,15 +10,8 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-interface Permission {
-  id: number;
-  resource: string;
-  action: string;
-  description?: string;
-}
-
 interface PermissionsTableProps {
-  data: Permission[];
+  data: PermissionDto[];
 }
 
 export function PermissionsTable({ data }: PermissionsTableProps) {
