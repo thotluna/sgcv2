@@ -28,6 +28,7 @@ const config: Config = {
     '^@auth/(.*)$': '<rootDir>/src/modules/auth/$1',
     '^@users/(.*)$': '<rootDir>/src/modules/users/$1',
     '^@roles/(.*)$': '<rootDir>/src/modules/roles/$1',
+    '^@permissions/(.*)$': '<rootDir>/src/modules/permissions/$1',
     '^@consts/(.*)$': '<rootDir>/src/consts/$1',
     '^@shared/(.*)$': '<rootDir>/src/shared/$1',
     '^@customer/(.*)$': '<rootDir>/src/modules/customer/$1',

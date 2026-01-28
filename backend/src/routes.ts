@@ -3,6 +3,8 @@ import { AuthRoutes } from '@auth/infrastructure/http/auth.routes';
 import logger from '@config/logger';
 import { TYPES as CustomerTypes } from '@modules/customer/di/types';
 import { CustomerRoutes } from '@modules/customer/infrastructure/http/customer.routes';
+import { TYPES as PermissionsTypes } from '@modules/permissions/di/types';
+import { PermissionsRoutes } from '@modules/permissions/infrastructure/http/permissions.routes';
 import { TYPES as RolesTypes } from '@modules/roles/di/types';
 import { RolesRoutes } from '@modules/roles/infrastructure/http/roles.routes';
 import { TYPES as SupportTypes } from '@modules/support/di/types';
@@ -20,10 +22,12 @@ export function loadRoutes(app: Application, prefix: string = '') {
     const rolesRoutes = container.get<RolesRoutes>(RolesTypes.RolesRoutes);
     const customersRoutes = container.get<CustomerRoutes>(CustomerTypes.CustomerRoutes);
     const supportRoutes = container.get<SupportRoutes>(SupportTypes.SupportRoutes);
+    const permissionsRoutes = container.get<PermissionsRoutes>(PermissionsTypes.PermissionsRoutes);
 
     app.use(`${prefix}/auth`, authRoutes.getRouter());
     app.use(`${prefix}/users`, usersRoutes.getRouter());
     app.use(`${prefix}/roles`, rolesRoutes.getRouter());
+    app.use(`${prefix}/permissions`, permissionsRoutes.getRouter());
     app.use(`${prefix}/customers`, customersRoutes.getRouter());
     app.use(`${prefix}/`, supportRoutes.getRouter());
   } catch (error) {
@@ -33,7 +37,6 @@ export function loadRoutes(app: Application, prefix: string = '') {
           ? {
               message: error.message,
               stack: error.stack,
-              ...(error as any),
             }
           : error,
     });

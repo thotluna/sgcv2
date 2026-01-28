@@ -1,11 +1,9 @@
 import { CreateRoleUseCase } from '@roles/application/create.use-case';
 import { DeleteRoleUseCase } from '@roles/application/delete-role.use-case';
 import { GetRoleUseCase } from '@roles/application/get-role.use-case';
-import { ListPermissionsUseCase } from '@roles/application/list-permissions.use-case';
 import { ListRolesUseCase } from '@roles/application/list-roles.use-case';
 import { UpdateRoleUseCase } from '@roles/application/update-role.use-case';
 import { TYPES } from '@roles/di/types';
-import { PermissionNotFoundException } from '@roles/domain/exceptions/permission-not-found-exception';
 import { RoleAlreadyExistsException } from '@roles/domain/exceptions/role-already-exists-exception';
 import { RoleInUseException } from '@roles/domain/exceptions/role-in-use-exception';
 import { RoleNotFoundException } from '@roles/domain/exceptions/role-not-found-exception';
@@ -29,9 +27,7 @@ export class RolesController {
     @inject(TYPES.ListRoleUseCase) private readonly getAllRolesUseCase: ListRolesUseCase,
     @inject(TYPES.GetRoleUseCase) private readonly getRoleUseCase: GetRoleUseCase,
     @inject(TYPES.UpdateRoleUseCase) private readonly updateRoleUseCase: UpdateRoleUseCase,
-    @inject(TYPES.DeleteRoleUseCase) private readonly deleteRoleUseCase: DeleteRoleUseCase,
-    @inject(TYPES.ListPermissionsUseCase)
-    private readonly listPermissionsUseCase: ListPermissionsUseCase
+    @inject(TYPES.DeleteRoleUseCase) private readonly deleteRoleUseCase: DeleteRoleUseCase
   ) {}
 
   /**
@@ -81,9 +77,6 @@ export class RolesController {
       if (error instanceof RoleAlreadyExistsException) {
         throw new ConflictException(error.message);
       }
-      if (error instanceof PermissionNotFoundException) {
-        throw new BadRequestException(error.message);
-      }
       throw error;
     }
   }
@@ -124,11 +117,11 @@ export class RolesController {
    *                       $ref: '#/components/schemas/Pagination'
    */
   async getAll(req: Request, res: Response): Promise<Response> {
-    const rawQuery: any = req.query;
+    const rawQuery = req.query as Record<string, string | undefined>;
     const filter = {
       search: rawQuery.search,
-      page: rawQuery.page ? parseInt(rawQuery.page as string) : 1,
-      limit: rawQuery.limit ? parseInt(rawQuery.limit as string) : 10,
+      page: rawQuery.page ? parseInt(rawQuery.page) : 1,
+      limit: rawQuery.limit ? parseInt(rawQuery.limit) : 10,
     };
 
     const { items, total } = await this.getAllRolesUseCase.execute(filter);
@@ -232,9 +225,6 @@ export class RolesController {
       if (error instanceof RoleNotFoundException) {
         throw new NotFoundException(error.message);
       }
-      if (error instanceof PermissionNotFoundException) {
-        throw new BadRequestException(error.message);
-      }
       throw error;
     }
   }
@@ -274,41 +264,5 @@ export class RolesController {
       }
       throw error;
     }
-  }
-
-  /**
-   * @swagger
-   * /roles/permissions:
-   *   get:
-   *     summary: List all available permissions
-   *     tags: [Roles]
-   *     security:
-   *       - bearerAuth: []
-   *     responses:
-   *       200:
-   *         description: List of system permissions
-   *         content:
-   *           application/json:
-   *             schema:
-   *               allOf:
-   *                 - $ref: '#/components/schemas/ApiResponse'
-   *                 - type: object
-   *                   properties:
-   *                     data:
-   *                       type: array
-   *                       items:
-   *                         $ref: '#/components/schemas/PermissionDto'
-   */
-  async getAllPermissions(_req: Request, res: Response): Promise<Response> {
-    const permissions = await this.listPermissionsUseCase.execute();
-    return ResponseHelper.success(
-      res,
-      permissions.map(p => ({
-        id: p.id,
-        resource: p.resource,
-        action: p.action,
-        description: p.description,
-      }))
-    );
   }
 }

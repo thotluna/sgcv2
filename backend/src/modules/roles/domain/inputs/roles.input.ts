@@ -1,5 +1,15 @@
-import { RoleEntity } from '@roles/domain/roles.entity';
-import { PaginationResult } from '@shared/domain/pagination';
+import { RoleEntity } from '../roles.entity';
+
+export interface RoleFilterInput {
+  search?: string;
+  page: number;
+  limit: number;
+}
+
+export interface PaginatedRoles {
+  items: RoleEntity[];
+  total: number;
+}
 
 export interface CreateRoleInput {
   name: string;
@@ -11,17 +21,4 @@ export interface UpdateRoleInput {
   name?: string;
   description?: string;
   permissionIds?: number[];
-}
-
-export interface RoleFilterInput {
-  search?: string;
-  page?: number;
-  limit?: number;
-}
-
-export type PaginatedRoles = PaginationResult<RoleEntity>;
-
-export interface ManagePermissionsInput {
-  roleId: number;
-  permissionIds: number[];
 }

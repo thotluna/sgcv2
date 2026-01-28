@@ -1,5 +1,5 @@
 import { prisma } from '@config/prisma';
-import { PermissionsPrismaRepository } from '@roles/infrastructure/persist/permissions-prisma.repository';
+import { PermissionsPrismaRepository } from '@permissions/infrastructure/persist/permissions-prisma.repository';
 
 jest.mock('@config/prisma', () => ({
   prisma: {
