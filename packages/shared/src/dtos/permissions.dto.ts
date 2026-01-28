@@ -35,6 +35,11 @@ export class PermissionDto {
 }
 
 export class PermissionFilterDto {
+  search?: string;
   resource?: string;
   action?: string;
+  pagination?: {
+    limit: number;
+    offset: number;
+  };
 }
