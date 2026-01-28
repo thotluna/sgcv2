@@ -58,5 +58,12 @@ describe('PermissionsService', () => {
 
       expect(result).toBeNull();
     });
+
+    it('should throw error if repository fails', async () => {
+      const error = new Error('Database error');
+      repository.findById.mockRejectedValue(error);
+
+      await expect(service.findPermissionById(1)).rejects.toThrow(error);
+    });
   });
 });
