@@ -3,14 +3,14 @@ import CustomersPage from '../page';
 
 // Mocks
 jest.mock('@/lib/api/server-customers.service');
-jest.mock('../_components/filters', () => ({
+jest.mock('@/feature/customers/components/filters', () => ({
   CustomersFilters: ({ search, status }: any) => (
     <div data-testid="filters">
       Filters: {search} - {status}
     </div>
   ),
 }));
-jest.mock('../_components/table-content', () => ({
+jest.mock('@/feature/customers/components/table-content', () => ({
   CustomersTableContent: ({ filters }: any) => (
     <div data-testid="table-content">
       TableContent: {filters.search} - {filters.state}

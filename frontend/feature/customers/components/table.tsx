@@ -1,10 +1,10 @@
+import { CustomerDropMenu } from '@feature/customers/components/customerDropMenu';
+import { statusMap } from '@feature/customers/constant';
+
 import { CustomerDto } from '@sgcv2/shared';
 
 import { Column, DataTable } from '@/components/table/data-table';
-import { Badge } from '@/components/ui/badge';
-
-import { statusMap } from '../_const/const';
-import { CustomerDropMenu } from './customerDropMenu';
+import { Badge } from '@/components/ui';
 
 interface CustomersTableProps {
   data: CustomerDto[];

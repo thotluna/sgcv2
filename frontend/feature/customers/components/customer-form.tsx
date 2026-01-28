@@ -9,9 +9,11 @@ import { CustomerDto } from '@sgcv2/shared';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-
-import { ActionState } from '../types';
-import { createCustomerAction, updateCustomerAction } from './actions';
+import {
+  createCustomerAction,
+  updateCustomerAction,
+} from '@/feature/customers/actions/customers.actions';
+import { ActionState } from '@/feature/customers/types';
 
 interface CustomerFormProps {
   customer?: CustomerDto;
@@ -22,7 +24,7 @@ export function CustomerForm({ customer }: CustomerFormProps) {
 
   const [state, formAction, isPending] = useActionState(
     isUpdate ? updateCustomerAction.bind(null, customer.id) : createCustomerAction,
-    { success: false } as ActionState
+    { success: false, message: '', errors: {} } as ActionState
   );
 
   return (

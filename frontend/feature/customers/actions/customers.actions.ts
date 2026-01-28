@@ -1,13 +1,15 @@
 'use server';
-
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
+import {
+  createCustomer,
+  deleteCustomer,
+  updateCustomer,
+} from '@feature/customers/services/customers.service';
+import { ActionState } from '@lib/types';
+
 import { CreateCustomerSchema, UpdateCustomerSchema } from '@sgcv2/shared';
-
-import { serverCustomersService } from '@/lib/api/server-customers.service';
-
-import { ActionState } from '../types';
 
 export async function handleCustomerFilters(formData: FormData) {
   const search = formData.get('search') as string;
@@ -43,7 +45,7 @@ export async function createCustomerAction(
     };
   }
 
-  const response = await serverCustomersService.create(validated.data);
+  const response = await createCustomer(validated.data);
 
   if (response.error) {
     return {
@@ -75,7 +77,7 @@ export async function updateCustomerAction(
     };
   }
 
-  const response = await serverCustomersService.update(id, validated.data);
+  const response = await updateCustomer(id, validated.data);
 
   if (response.error) {
     return {
@@ -90,7 +92,7 @@ export async function updateCustomerAction(
 }
 
 export async function deleteCustomerAction(id: string): Promise<ActionState> {
-  const response = await serverCustomersService.delete(id);
+  const response = await deleteCustomer(id);
 
   if (response.error) {
     return {

@@ -8,9 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-
-import { ActionState } from '../types';
-import { createSubCustomerWithLocationAction } from './sub-customer-actions';
+import { createSubCustomerWithLocationAction } from '@/feature/customers/actions/sub-customer-actions';
+import { ActionState } from '@/feature/customers/types';
 
 interface SubCustomerFormProps {
   parentId: string;
@@ -20,7 +19,7 @@ interface SubCustomerFormProps {
 export function SubCustomerForm({ parentId, onCancel }: SubCustomerFormProps) {
   const [state, formAction, isPending] = useActionState(
     createSubCustomerWithLocationAction.bind(null, parentId),
-    { success: false } as ActionState
+    { success: false, message: '', errors: {} } as ActionState
   );
 
   return (
@@ -95,7 +94,7 @@ export function SubCustomerForm({ parentId, onCancel }: SubCustomerFormProps) {
             )}
           </div>
 
-          <div className="space-y-2 md:col-span-2">
+          <div className="space-y-2">
             <Label htmlFor="locationAddress">Dirección Directa</Label>
             <Input
               id="locationAddress"
@@ -107,6 +106,21 @@ export function SubCustomerForm({ parentId, onCancel }: SubCustomerFormProps) {
             {state.errors?.locationAddress && (
               <p id="locationAddress-error" className="text-sm font-medium text-destructive">
                 {state.errors.locationAddress[0]}
+              </p>
+            )}
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="locationCity">Ciudad</Label>
+            <Input
+              id="locationCity"
+              name="locationCity"
+              placeholder="Ej: Caracas"
+              defaultValue=""
+              aria-describedby={state.errors?.locationCity ? 'locationCity-error' : undefined}
+            />
+            {state.errors?.locationCity && (
+              <p id="locationCity-error" className="text-sm font-medium text-destructive">
+                {state.errors.locationCity[0]}
               </p>
             )}
           </div>

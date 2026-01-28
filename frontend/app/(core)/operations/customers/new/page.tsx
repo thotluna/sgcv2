@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
-import { CustomerForm } from '../_components/customer-form';
+import { CustomerForm } from '../../../../../feature/customers/components/customer-form';
 
 export const metadata = {
   title: 'Nuevo Cliente | SGCV2',

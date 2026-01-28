@@ -25,8 +25,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-
-import { deleteCustomerAction } from './actions';
+import { deleteCustomerAction } from '@/feature/customers/actions/customers.actions';
 
 interface CustomerDropMenuProps {
   id: string;

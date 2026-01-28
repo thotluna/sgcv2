@@ -2,14 +2,13 @@
 
 import { useActionState } from 'react';
 
+import { ActionState } from '@feature/customers/types';
 import { AlertCircle } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-
-import { ActionState } from '../types';
-import { createLocationAction } from './sub-customer-actions';
+import { createLocationAction } from '@/feature/customers/actions/sub-customer-actions';
 
 interface LocationFormProps {
   parentId: string;
@@ -20,7 +19,7 @@ interface LocationFormProps {
 export function LocationForm({ parentId, subCustomerId = null, onCancel }: LocationFormProps) {
   const [state, formAction, isPending] = useActionState(
     createLocationAction.bind(null, parentId, subCustomerId),
-    { success: false } as ActionState
+    { success: false, message: '', errors: {} } as ActionState
   );
 
   return (
@@ -46,7 +45,6 @@ export function LocationForm({ parentId, subCustomerId = null, onCancel }: Locat
           </p>
         )}
       </div>
-
       <div className="space-y-2">
         <Label htmlFor="address">Dirección Directa</Label>
         <Input
@@ -61,6 +59,40 @@ export function LocationForm({ parentId, subCustomerId = null, onCancel }: Locat
             {state.errors.address[0]}
           </p>
         )}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="city">Ciudad</Label>
+          <Input
+            id="city"
+            name="city"
+            placeholder="Ej: Caracas"
+            defaultValue=""
+            aria-describedby={state.errors?.city ? 'city-error' : undefined}
+          />
+          {state.errors?.city && (
+            <p id="city-error" className="text-sm font-medium text-destructive">
+              {state.errors.city[0]}
+            </p>
+          )}
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="zipCode">Código Postal</Label>
+          <Input
+            id="zipCode"
+            name="zipCode"
+            placeholder="Ej: 1010"
+            defaultValue=""
+            aria-describedby={state.errors?.zipCode ? 'zipCode-error' : undefined}
+          />
+          {state.errors?.zipCode && (
+            <p id="zipCode-error" className="text-sm font-medium text-destructive">
+              {state.errors.zipCode[0]}
+            </p>
+          )}
+        </div>
       </div>
 
       <div className="flex justify-end gap-3 pt-2">

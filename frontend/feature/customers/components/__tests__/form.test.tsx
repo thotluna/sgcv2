@@ -21,7 +21,11 @@ describe('CustomerForm', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    (useActionState as jest.Mock).mockReturnValue([{ success: false }, mockAction, false]);
+    (useActionState as jest.Mock).mockReturnValue([
+      { success: false, message: '', errors: {} },
+      mockAction,
+      false,
+    ]);
   });
 
   it('renders all form fields', () => {

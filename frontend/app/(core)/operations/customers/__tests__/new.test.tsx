@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import NewCustomerPage from '../new/page';
 
 // Mock components
-jest.mock('../_components/customer-form', () => ({
+jest.mock('@/feature/customers/components/customer-form', () => ({
   CustomerForm: () => <div data-testid="customer-form">Customer Form</div>,
 }));
 

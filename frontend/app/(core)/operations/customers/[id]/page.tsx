@@ -1,15 +1,16 @@
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 
+import {
+  CustomerDetailsHeader,
+  LocationsList,
+  SubCustomersList,
+} from '@feature/customers/components';
 import { Info, MapPin, Users } from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { serverCustomersService } from '@/lib/api/server-customers.service';
-
-import { CustomerDetailsHeader } from '../_components/customer-details-header';
-import { LocationsList } from '../_components/locations-list';
-import { SubCustomersList } from '../_components/sub-customers-list';
 
 interface PageProps {
   params: Promise<{ id: string }>;

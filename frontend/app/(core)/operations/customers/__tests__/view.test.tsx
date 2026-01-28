@@ -29,10 +29,10 @@ jest.mock('next/link', () => ({
   __esModule: true,
   default: ({ children, href }: any) => <a href={href}>{children}</a>,
 }));
-jest.mock('../_components/sub-customers-list', () => ({
+jest.mock('@/feature/customers/components/sub-customers-list', () => ({
   SubCustomersList: () => <div data-testid="sub-customers-list" />,
 }));
-jest.mock('../_components/locations-list', () => ({
+jest.mock('@/feature/customers/components/locations-list', () => ({
   LocationsList: () => <div data-testid="locations-list" />,
 }));
 

@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { CustomerPOM } from './customer.pom';
-import { CreateCustomerFormData } from '@/app/(core)/operations/customers/types';
+import { CreateCustomerFormData } from '@feature/customers/types';
 
 test.describe.serial('Customer Management Flow', () => {
   let customerPOM: CustomerPOM;

@@ -4,7 +4,7 @@ import { CustomerDto, CustomerState } from '@sgcv2/shared';
 
 // Mock delete action
 const mockDeleteAction = jest.fn();
-jest.mock('../actions', () => ({
+jest.mock('@/feature/customers/actions/customers.actions', () => ({
   deleteCustomerAction: (id: string) => mockDeleteAction(id),
 }));
 

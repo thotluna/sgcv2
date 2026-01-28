@@ -5,10 +5,9 @@ import { redirect } from 'next/navigation';
 
 import { CreateCustomerLocationSchema, CreateSubCustomerWithLocationSchema } from '@sgcv2/shared';
 
+import { ActionState } from '@/feature/customers/types';
 import { serverLocationsService } from '@/lib/api/server-locations.service';
 import { serverSubCustomersService } from '@/lib/api/server-subcustomers.service';
-
-import { ActionState } from '../types';
 
 export async function createSubCustomerWithLocationAction(
   parentId: string,
@@ -46,6 +45,8 @@ export async function createSubCustomerWithLocationAction(
     subCustomerId,
     name: validated.data.locationName,
     address: validated.data.locationAddress,
+    city: validated.data.locationCity,
+    isMain: true,
   });
 
   if (!locationResponse.success) {

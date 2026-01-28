@@ -1,13 +1,12 @@
 import Link from 'next/link';
 
+import { handleCustomerFilters } from '@feature/customers/actions/customers.actions';
 import { Plus, Search } from 'lucide-react';
 
 import { CustomerState } from '@sgcv2/shared';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-
-import { handleCustomerFilters } from './actions';
 
 interface CustomersFiltersProps {
   search?: string;
