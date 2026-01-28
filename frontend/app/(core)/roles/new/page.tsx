@@ -1,5 +1,5 @@
+import { getAllPermissions } from '@feature/permissions/service';
 import { RoleForm } from '@feature/roles/components';
-import { getAllPermissions } from '@feature/roles/service';
 
 export default async function NewRolePage() {
   const permissionsRes = await getAllPermissions();

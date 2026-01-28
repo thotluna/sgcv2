@@ -1,8 +1,8 @@
 import { prisma } from '@config/prisma';
-import { PermissionFilterInput } from '@roles/domain/inputs/permission.input';
-import { PermissionRepository } from '@roles/domain/permission.repository';
-import { PermissionEntity } from '@roles/domain/roles.entity';
-import { RoleEntityModelMapper } from '@roles/infrastructure/persist/role-entity-model.mapper';
+import { PermissionFilterInput } from '@permissions/domain/inputs/permission.input';
+import { PermissionRepository } from '@permissions/domain/permission.repository';
+import { PermissionEntity } from '@permissions/domain/permissions.entity';
+import { PermissionEntityModelMapper } from '@permissions/infrastructure/persist/permission-entity-model.mapper';
 import { injectable } from 'inversify';
 
 @injectable()
@@ -25,7 +25,7 @@ export class PermissionsPrismaRepository implements PermissionRepository {
       orderBy: [{ resource: 'asc' }, { action: 'asc' }],
     });
 
-    return permissions.map(p => RoleEntityModelMapper.toPermissionEntity(p));
+    return permissions.map(p => PermissionEntityModelMapper.toPermissionEntity(p));
   }
 
   async findById(id: number): Promise<PermissionEntity | null> {
@@ -33,6 +33,6 @@ export class PermissionsPrismaRepository implements PermissionRepository {
       where: { id },
     });
 
-    return permission ? RoleEntityModelMapper.toPermissionEntity(permission) : null;
+    return permission ? PermissionEntityModelMapper.toPermissionEntity(permission) : null;
   }
 }

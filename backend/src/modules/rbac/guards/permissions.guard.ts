@@ -1,3 +1,5 @@
+import { TYPES } from '@modules/rbac/di/types';
+import { RbacService } from '@modules/rbac/rbac.service';
 import {
   ForbiddenException,
   InternalServerErrorException,
@@ -5,7 +7,7 @@ import {
 } from '@shared/exceptions';
 import { NextFunction, Request, Response } from 'express';
 
-import { rbacService } from '../rbac.service';
+import { container } from '../../../container';
 
 export const requirePermission = (resource: string, action: string) => {
   return async (req: Request, _res: Response, next: NextFunction): Promise<void> => {
@@ -24,6 +26,7 @@ export const requirePermission = (resource: string, action: string) => {
       }
 
       // 2. Fallback to database check (real-time)
+      const rbacService = container.get<RbacService>(TYPES.RbacService);
       const id = Number(user.id);
       const hasPerm = await rbacService.hasPermission(id, resource, action);
       if (!hasPerm) {

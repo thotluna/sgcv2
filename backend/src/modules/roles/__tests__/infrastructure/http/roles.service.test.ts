@@ -1,5 +1,4 @@
-import { mockPermission, mockRole } from '@roles/__tests__/helpers';
-import { PermissionRepository } from '@roles/domain/permission.repository';
+import { mockRole } from '@roles/__tests__/helpers';
 import { RoleRepository } from '@roles/domain/role.repository';
 import { RolesService } from '@roles/infrastructure/http/roles.service';
 
@@ -7,29 +6,20 @@ const mockRoleRepository = {
   findByName: jest.fn(),
   create: jest.fn(),
   getAll: jest.fn(),
-} as unknown as jest.Mocked<RoleRepository>;
-
-const mockPermissionRepository = {
   findById: jest.fn(),
-} as unknown as jest.Mocked<PermissionRepository>;
+  update: jest.fn(),
+  delete: jest.fn(),
+  addPermissions: jest.fn(),
+  removePermissions: jest.fn(),
+  countUsersWithRole: jest.fn(),
+} as unknown as jest.Mocked<RoleRepository>;
 
 describe('RolesService', () => {
   let service: RolesService;
 
   beforeEach(() => {
-    service = new RolesService(mockRoleRepository, mockPermissionRepository);
+    service = new RolesService(mockRoleRepository);
     jest.clearAllMocks();
-  });
-
-  describe('findPermissionById', () => {
-    it('should call permissionRepository.findById', async () => {
-      mockPermissionRepository.findById.mockResolvedValue(mockPermission);
-
-      const result = await service.findPermissionById(1);
-
-      expect(mockPermissionRepository.findById).toHaveBeenCalledWith(1);
-      expect(result).toEqual(mockPermission);
-    });
   });
 
   describe('findByName', () => {
@@ -65,6 +55,14 @@ describe('RolesService', () => {
 
       expect(mockRoleRepository.getAll).toHaveBeenCalledWith(filter);
       expect(result).toEqual(mockResult);
+    });
+  });
+
+  describe('addPermissions', () => {
+    it('should call roleRepository.addPermissions', async () => {
+      mockRoleRepository.addPermissions.mockResolvedValue();
+      await service.addPermissions(1, [1, 2]);
+      expect(mockRoleRepository.addPermissions).toHaveBeenCalledWith(1, [1, 2]);
     });
   });
 });

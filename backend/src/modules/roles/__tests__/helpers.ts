@@ -1,4 +1,5 @@
-import { PermissionEntity, RoleEntity } from '@roles/domain/roles.entity';
+import { PermissionEntity } from '@permissions/domain/permissions.entity';
+import { RoleEntity } from '@roles/domain/roles.entity';
 
 export const mockPermission: PermissionEntity = {
   id: 1,

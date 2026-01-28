@@ -1,5 +1,6 @@
+import { PermissionEntity } from '@permissions/domain/permissions.entity';
 import { Permission, Role } from '@prisma/client';
-import { PermissionEntity, RoleEntity } from '@roles/domain/roles.entity';
+import { RoleEntity } from '@roles/domain/roles.entity';
 import { RoleWithPermissionsModel } from '@roles/infrastructure/persist/include';
 
 export class RoleEntityModelMapper {

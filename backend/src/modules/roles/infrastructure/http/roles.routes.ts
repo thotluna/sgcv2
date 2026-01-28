@@ -35,13 +35,6 @@ export class RolesRoutes {
     );
 
     this.router.get(
-      '/permissions',
-      authenticate,
-      Permission(PERMISSIONS.PERMISSIONS.READ.resource, PERMISSIONS.PERMISSIONS.READ.action),
-      (req, res) => this.rolesController.getAllPermissions(req, res)
-    );
-
-    this.router.get(
       '/:id',
       authenticate,
       Permission(PERMISSIONS.ROLES.READ.resource, PERMISSIONS.ROLES.READ.action),

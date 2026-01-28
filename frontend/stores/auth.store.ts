@@ -41,7 +41,7 @@ export const useAuthStore = create<AuthState>()(
           }
           // Cookie is set by backend (HttpOnly)
 
-          set({ user, isAuthenticated: true });
+          set({ user: user || null, isAuthenticated: true });
         } catch (error) {
           console.error('Login failed:', error);
           set({ user: null, isAuthenticated: false });
@@ -77,6 +77,7 @@ export const useAuthStore = create<AuthState>()(
             lastName: userWithRole.lastName || '',
             status: userWithRole.status || 'ACTIVE',
             roles: userWithRole.roles?.map((role: { name: string }) => role.name),
+            permissions: userWithRole.permissions || [],
           };
 
           set({ user, isAuthenticated: true });

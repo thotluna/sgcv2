@@ -9,11 +9,9 @@ import {
   UpdateRoleInput,
 } from '@roles/domain/inputs/roles.input';
 import { ListService } from '@roles/domain/list.service';
-import { ListPermissionsService } from '@roles/domain/list-permissions.service';
-import { PermissionRepository } from '@roles/domain/permission.repository';
 import { PermissionAssignmentService } from '@roles/domain/permission-assignment.service';
 import { RoleRepository } from '@roles/domain/role.repository';
-import { PermissionEntity, RoleEntity } from '@roles/domain/roles.entity';
+import { RoleEntity } from '@roles/domain/roles.entity';
 import { UpdateRoleService } from '@roles/domain/update.role.service';
 import { inject, injectable } from 'inversify';
 
@@ -25,23 +23,18 @@ export class RolesService
     GetRoleService,
     UpdateRoleService,
     DeleteRoleService,
-    ListPermissionsService,
     PermissionAssignmentService
 {
-  constructor(
-    @inject(TYPES.RoleRepository) private readonly roleRepository: RoleRepository,
-    @inject(TYPES.PermissionRepository) private readonly permissionRepository: PermissionRepository
-  ) {}
+  constructor(@inject(TYPES.RoleRepository) private readonly roleRepository: RoleRepository) {}
 
   getListRoles(filter: RoleFilterInput): Promise<PaginatedRoles> {
     return this.roleRepository.getAll(filter);
   }
-  async findPermissionById(id: number): Promise<PermissionEntity | null> {
-    return await this.permissionRepository.findById(id);
-  }
+
   async findByName(name: string): Promise<RoleEntity | null> {
     return await this.roleRepository.findByName(name);
   }
+
   async create(data: CreateRoleInput): Promise<RoleEntity> {
     return await this.roleRepository.create(data);
   }
@@ -68,9 +61,5 @@ export class RolesService
 
   async countUsersWithRole(roleId: number): Promise<number> {
     return this.roleRepository.countUsersWithRole(roleId);
-  }
-
-  async getAllPermissions(): Promise<PermissionEntity[]> {
-    return this.permissionRepository.getAll();
   }
 }

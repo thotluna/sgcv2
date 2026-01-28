@@ -1,5 +1,8 @@
+import { TYPES as PERMISSION_TYPES } from '@permissions/di/types';
+import { PermissionNotFoundException } from '@permissions/domain/exceptions/permission-not-found-exception';
+import { GetPermissions } from '@permissions/domain/get-permissions.service';
+import { PermissionEntity } from '@permissions/domain/permissions.entity';
 import { TYPES } from '@roles/di/types';
-import { PermissionNotFoundException } from '@roles/domain/exceptions/permission-not-found-exception';
 import { RoleAlreadyExistsException } from '@roles/domain/exceptions/role-already-exists-exception';
 import { RoleNotFoundException } from '@roles/domain/exceptions/role-not-found-exception';
 import { GetRoleService } from '@roles/domain/get.role.service';
@@ -12,7 +15,9 @@ import { inject, injectable } from 'inversify';
 export class UpdateRoleUseCase {
   constructor(
     @inject(TYPES.UpdateRoleService) private readonly service: UpdateRoleService,
-    @inject(TYPES.GetRoleService) private readonly getService: GetRoleService
+    @inject(TYPES.GetRoleService) private readonly getService: GetRoleService,
+    @inject(PERMISSION_TYPES.GetPermissionsService)
+    private readonly getPermissionsService: GetPermissions
   ) {}
 
   async execute(id: number, data: UpdateRoleInput): Promise<RoleEntity> {
@@ -30,9 +35,9 @@ export class UpdateRoleUseCase {
 
     if (data.permissionIds && data.permissionIds.length > 0) {
       const permissionsResults = await Promise.all(
-        data.permissionIds.map(pid => this.service.findPermissionById(pid))
+        data.permissionIds.map(pid => this.getPermissionsService.findPermissionById(pid))
       );
-      const missingIndex = permissionsResults.findIndex(p => p === null);
+      const missingIndex = permissionsResults.findIndex((p: PermissionEntity | null) => p === null);
       if (missingIndex !== -1) {
         throw new PermissionNotFoundException(data.permissionIds[missingIndex]);
       }

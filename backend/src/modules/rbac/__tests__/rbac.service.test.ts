@@ -1,41 +1,26 @@
 // src/modules/rbac/__tests__/rbac.service.test.ts
+import { RbacRepository } from '../domain/rbac.repository';
 import { RbacService } from '../rbac.service';
-
-jest.mock('../../../config/prisma', () => {
-  const mockUser = {
-    id: 1,
-    roles: [
-      {
-        role: {
-          name: 'admin',
-          permissions: [
-            { permission: { resource: 'ODS', action: 'CREATE' } },
-            { permission: { resource: 'ODS', action: 'READ' } },
-          ],
-        },
-      },
-      {
-        role: {
-          name: 'manager',
-          permissions: [{ permission: { resource: 'REPORT', action: 'VIEW' } }],
-        },
-      },
-    ],
-  };
-  return {
-    prisma: {
-      user: {
-        findUnique: jest.fn().mockResolvedValue(mockUser),
-      },
-    },
-  };
-});
 
 describe('RbacService', () => {
   let rbacService: RbacService;
+  let mockRbacRepository: jest.Mocked<RbacRepository>;
+
+  const mockPermissions = [
+    { resource: 'ODS', action: 'CREATE' },
+    { resource: 'ODS', action: 'READ' },
+    { resource: 'REPORT', action: 'VIEW' },
+  ];
 
   beforeEach(() => {
-    rbacService = new RbacService();
+    mockRbacRepository = {
+      getUserPermissions: jest.fn().mockResolvedValue(mockPermissions),
+      hasRole: jest.fn().mockImplementation((_userId, roleNames) => {
+        const userRoles = ['admin', 'manager'];
+        return Promise.resolve(roleNames.some((r: string) => userRoles.includes(r)));
+      }),
+    };
+    rbacService = new RbacService(mockRbacRepository);
   });
 
   it('should return unique permissions for a user', async () => {
@@ -47,7 +32,7 @@ describe('RbacService', () => {
         { resource: 'REPORT', action: 'VIEW' },
       ])
     );
-    // No duplicates
+    // No duplicates (though mock already provides unique)
     const keys = perms.map(
       (p: { resource: string; action: string }) => `${p.resource}.${p.action}`
     );

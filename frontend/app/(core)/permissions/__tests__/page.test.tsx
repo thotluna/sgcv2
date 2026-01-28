@@ -1,39 +1,29 @@
 import { render, screen } from '@testing-library/react';
 import PermissionsPage from '../page';
-import { serverRolesService } from '@/lib/api/server-roles.service';
 import '@testing-library/jest-dom';
 
-jest.mock('@/lib/api/server-roles.service');
+jest.mock('@feature/permissions/components', () => ({
+  PermissionsFilters: () => <div data-testid="permissions-filters">Filters</div>,
+  PermissionsTableContent: () => <div data-testid="permissions-table-content">Table Content</div>,
+}));
 
 describe('PermissionsPage', () => {
-  const mockPermissions = [{ id: 1, resource: 'users', action: 'read', description: 'Read users' }];
-
-  it('should fetch and display permissions', async () => {
-    (serverRolesService.getAllPermissions as jest.Mock).mockResolvedValue({
-      success: true,
-      data: mockPermissions,
-    });
-
-    // Since PermissionsPage is an async component, we render its result
-    const Page = await PermissionsPage();
+  it('should render the page title and children components', async () => {
+    const Page = await PermissionsPage({ searchParams: Promise.resolve({}) });
     render(Page);
 
-    expect(screen.getByText('Permisos del Sistema')).toBeInTheDocument();
-    expect(screen.getByText('users')).toBeInTheDocument();
-    expect(screen.getByText('read')).toBeInTheDocument();
+    expect(screen.getByText('Permisos')).toBeInTheDocument();
+    expect(screen.getByTestId('permissions-filters')).toBeInTheDocument();
+    expect(screen.getByTestId('permissions-table-content')).toBeInTheDocument();
   });
 
-  it('should handle error when fetching permissions', async () => {
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-    (serverRolesService.getAllPermissions as jest.Mock).mockRejectedValue(
-      new Error('Fetch failed')
-    );
-
-    const Page = await PermissionsPage();
+  it('should handle searchParams correctly', async () => {
+    const searchParams = Promise.resolve({ search: 'test', offset: '10', limit: '20' });
+    const Page = await PermissionsPage({ searchParams });
     render(Page);
 
-    expect(screen.getByText('No se encontraron permisos.')).toBeInTheDocument();
-    expect(consoleSpy).toHaveBeenCalled();
-    consoleSpy.mockRestore();
+    expect(screen.getByText('Permisos')).toBeInTheDocument();
+    // Since we mock the component, we just verify it renders without crashing with params
+    expect(screen.getByTestId('permissions-table-content')).toBeInTheDocument();
   });
 });
