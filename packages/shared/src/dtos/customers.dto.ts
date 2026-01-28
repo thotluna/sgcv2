@@ -219,6 +219,9 @@ export class CustomerLocationDto {
   subCustomerId?: string | null;
   name!: string;
   address!: string;
+  city!: string;
+  zipCode?: string | null;
+  isMain!: boolean;
   createdAt!: Date;
   updatedAt!: Date;
 }
@@ -246,6 +249,9 @@ export class CreateCustomerLocationDto {
   subCustomerId?: string | null;
   name!: string;
   address!: string;
+  city!: string;
+  zipCode?: string | null;
+  isMain?: boolean;
 }
 
 /**
@@ -268,4 +274,7 @@ export class UpdateCustomerLocationDto {
   subCustomerId?: string | null;
   name?: string;
   address?: string;
+  city?: string;
+  zipCode?: string | null;
+  isMain?: boolean;
 }

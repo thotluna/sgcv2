@@ -73,6 +73,10 @@ export const CreateSubCustomerWithLocationSchema = CreateSubCustomerSchema.exten
     .string()
     .min(1, 'Location address is required')
     .max(255, 'Location address must be at most 255 characters'),
+  locationCity: z
+    .string()
+    .min(1, 'City is required')
+    .max(100, 'City must be at most 100 characters'),
 });
 
 export type CreateSubCustomerWithLocationSchemaType = z.infer<
@@ -111,6 +115,9 @@ export const CreateCustomerLocationSchema = z.object({
     .string()
     .min(1, 'Address is required')
     .max(255, 'Address must be at most 255 characters'),
+  city: z.string().min(1, 'City is required').max(100, 'City must be at most 100 characters'),
+  zipCode: z.string().max(20).optional().nullable(),
+  isMain: z.boolean().optional(),
 });
 
 export type CreateCustomerLocationSchemaType = z.infer<typeof CreateCustomerLocationSchema>;
@@ -119,6 +126,9 @@ export const UpdateCustomerLocationSchema = z.object({
   subCustomerId: z.string().uuid().optional().nullable(),
   name: z.string().min(1, 'Name must not be empty').max(100).optional(),
   address: z.string().min(1, 'Address must not be empty').max(255).optional(),
+  city: z.string().min(1, 'City must not be empty').max(100).optional(),
+  zipCode: z.string().max(20).optional().nullable(),
+  isMain: z.boolean().optional(),
 });
 
 export type UpdateCustomerLocationSchemaType = z.infer<typeof UpdateCustomerLocationSchema>;
