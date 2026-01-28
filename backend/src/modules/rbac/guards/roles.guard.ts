@@ -1,4 +1,6 @@
 // src/modules/rbac/guards/roles.guard.ts
+import { TYPES } from '@modules/rbac/di/types';
+import { RbacService } from '@modules/rbac/rbac.service';
 import {
   ForbiddenException,
   InternalServerErrorException,
@@ -6,7 +8,7 @@ import {
 } from '@shared/exceptions';
 import { NextFunction, Request, Response } from 'express';
 
-import { rbacService } from '../rbac.service';
+import { container } from '../../../container';
 
 /**
  * Middleware to ensure the user has at least one of the specified roles.
@@ -23,6 +25,7 @@ export const requireRoles = (...allowedRoles: string[]) => {
       }
 
       const userId = Number(user.id);
+      const rbacService = container.get<RbacService>(TYPES.RbacService);
       const hasRole = await rbacService.hasRole(userId, ...allowedRoles);
 
       if (!hasRole) {

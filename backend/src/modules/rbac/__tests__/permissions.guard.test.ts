@@ -1,16 +1,22 @@
 import { ForbiddenException } from '@shared/exceptions';
 import { NextFunction, Request, Response } from 'express';
 
+import { TYPES } from '../di/types';
 import { requirePermission } from '../guards/permissions.guard';
 
-// Mock the entire rbac.service module
-jest.mock('../rbac.service', () => ({
-  rbacService: {
-    hasPermission: jest.fn(),
+// Mock the container
+const mockRbacService = {
+  hasPermission: jest.fn(),
+};
+
+jest.mock('../../../container', () => ({
+  container: {
+    get: jest.fn().mockImplementation(type => {
+      if (type === TYPES.RbacService) return mockRbacService;
+      return null;
+    }),
   },
 }));
-
-import { rbacService } from '../rbac.service';
 
 const mockRes = {
   status: jest.fn().mockReturnThis(),
@@ -31,7 +37,7 @@ describe('Permissions Guard', () => {
     await requirePermission('ODS', 'CREAR')(reqWithPerms, mockRes, nextFn);
 
     expect(nextFn).toHaveBeenCalledWith();
-    expect(rbacService.hasPermission).not.toHaveBeenCalled();
+    expect(mockRbacService.hasPermission).not.toHaveBeenCalled();
   });
 
   it('allows request when permission exists in database (fallback)', async () => {
@@ -39,11 +45,11 @@ describe('Permissions Guard', () => {
       user: { id: 1, permissions: [] },
     } as unknown as Request;
 
-    (rbacService.hasPermission as jest.Mock).mockResolvedValue(true);
+    mockRbacService.hasPermission.mockResolvedValue(true);
 
     await requirePermission('ODS', 'CREAR')(reqWithoutPerms, mockRes, nextFn);
 
-    expect(rbacService.hasPermission).toHaveBeenCalledWith(1, 'ODS', 'CREAR');
+    expect(mockRbacService.hasPermission).toHaveBeenCalledWith(1, 'ODS', 'CREAR');
     expect(nextFn).toHaveBeenCalledWith();
   });
 
@@ -52,7 +58,7 @@ describe('Permissions Guard', () => {
       user: { id: 1, permissions: [] },
     } as unknown as Request;
 
-    (rbacService.hasPermission as jest.Mock).mockResolvedValue(false);
+    mockRbacService.hasPermission.mockResolvedValue(false);
 
     await requirePermission('ODS', 'ELIMINAR')(reqWithoutPerms, mockRes, nextFn);
 

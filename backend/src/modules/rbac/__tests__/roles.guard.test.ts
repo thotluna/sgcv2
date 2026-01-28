@@ -1,16 +1,22 @@
 // src/modules/rbac/__tests__/roles.guard.test.ts
+import { ForbiddenException } from '@shared/exceptions';
 import { NextFunction, Request, Response } from 'express';
-
 import { requireRoles } from '../guards/roles.guard';
+import { TYPES } from '../di/types';
 
-// Mock the entire rbac.service module
-jest.mock('../rbac.service', () => ({
-  rbacService: {
-    hasRole: jest.fn(),
+// Mock the container
+const mockRbacService = {
+  hasRole: jest.fn(),
+};
+
+jest.mock('../../../container', () => ({
+  container: {
+    get: jest.fn().mockImplementation(type => {
+      if (type === TYPES.RbacService) return mockRbacService;
+      return null;
+    }),
   },
 }));
-
-import { rbacService } from '../rbac.service';
 
 const mockReq = { user: { id: 1 } } as unknown as Request;
 const mockRes = {
@@ -19,23 +25,19 @@ const mockRes = {
 } as unknown as Response;
 const nextFn = jest.fn() as NextFunction;
 
-import { ForbiddenException } from '@shared/exceptions';
-
-// ... (existing imports and mock setup)
-
 describe('Roles Guard', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   it('allows request when role matches', async () => {
-    (rbacService.hasRole as jest.Mock).mockResolvedValue(true);
+    mockRbacService.hasRole.mockResolvedValue(true);
     await requireRoles('Administrador')(mockReq, mockRes, nextFn);
     expect(nextFn).toHaveBeenCalled();
   });
 
   it('rejects request when role does not match', async () => {
-    (rbacService.hasRole as jest.Mock).mockResolvedValue(false);
+    mockRbacService.hasRole.mockResolvedValue(false);
     await requireRoles('Gerente')(mockReq, mockRes, nextFn);
 
     expect(nextFn).toHaveBeenCalledWith(expect.any(ForbiddenException));
