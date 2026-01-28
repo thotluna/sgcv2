@@ -22,8 +22,9 @@ describe('PermissionsPage', () => {
     const Page = await PermissionsPage({ searchParams });
     render(Page);
 
+    // We can't easily check props of mocked async RSCs in this setup without more complex mocking,
+    // but we verify the page renders with these params.
     expect(screen.getByText('Permisos')).toBeInTheDocument();
-    // Since we mock the component, we just verify it renders without crashing with params
     expect(screen.getByTestId('permissions-table-content')).toBeInTheDocument();
   });
 });

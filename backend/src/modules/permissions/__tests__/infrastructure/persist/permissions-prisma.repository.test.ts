@@ -48,6 +48,39 @@ describe('PermissionsPrismaRepository', () => {
       expect(result[0].id).toBe(1);
       expect(result[1].resource).toBe('res2');
     });
+
+    it('should apply search filter correctly', async () => {
+      mockPrismaPermission.findMany.mockResolvedValue([]);
+      const filter = { search: 'test' };
+
+      await repository.getAll(filter);
+
+      expect(mockPrismaPermission.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: {
+            OR: [
+              { resource: { contains: 'test', mode: 'insensitive' } },
+              { action: { contains: 'test', mode: 'insensitive' } },
+              { description: { contains: 'test', mode: 'insensitive' } },
+            ],
+          },
+        })
+      );
+    });
+
+    it('should apply pagination correctly', async () => {
+      mockPrismaPermission.findMany.mockResolvedValue([]);
+      const filter = { page: 2, limit: 5 };
+
+      await repository.getAll(filter);
+
+      expect(mockPrismaPermission.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          skip: 5,
+          take: 5,
+        })
+      );
+    });
   });
 
   describe('findById', () => {

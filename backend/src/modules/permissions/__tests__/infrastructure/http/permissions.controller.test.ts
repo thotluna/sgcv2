@@ -79,5 +79,12 @@ describe('PermissionsController', () => {
         ])
       );
     });
+
+    it('should propagate errors from useCase', async () => {
+      const error = new Error('UseCase error');
+      useCase.execute.mockRejectedValue(error);
+
+      await expect(controller.getAll(req as Request, res as Response)).rejects.toThrow(error);
+    });
   });
 });
