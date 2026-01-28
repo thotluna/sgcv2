@@ -3,15 +3,14 @@ import { PrismaPg } from '@prisma/adapter-pg';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { Pool } from 'pg';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const globalForPrisma = global as any as { prisma: PrismaClient; pool: Pool };
+const globalForPrisma = global as unknown as { prisma: PrismaClient; pool: Pool };
 
 const pool = globalForPrisma.pool || new Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new PrismaPg(pool);
 
 function setupPrismaLogging(client: PrismaClient) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const prismaAny = client as any;
+  const prismaAny = client as unknown as Record<string, any>; // Used for internal events
 
   // Queries (solo en desarrollo)
   if (process.env.NODE_ENV !== 'production') {

@@ -8,7 +8,7 @@ import {
   UpdateUserPersistenceInput,
   UserFilterInput,
 } from '@modules/users/domain/dtos/user.dtos';
-import { Prisma } from '@prisma/client';
+import { Prisma, user_state } from '@prisma/client';
 import { UserEntity, UserWithRolesEntity } from '@users/domain/user-entity';
 import { UserRepository } from '@users/domain/user-repository';
 import { UsersMapper } from '@users/infrastructure/mappers/users';
@@ -69,12 +69,11 @@ export class UsersPrismaRepository
   async getAll(filter: UserFilterInput): Promise<PaginatedUsers> {
     const { search, status, pagination } = filter;
 
-    const where: any = {
-      AND: [],
-    };
+    const where: Prisma.UserWhereInput = {};
+    const conditions: Prisma.UserWhereInput[] = [];
 
     if (search) {
-      where.AND.push({
+      conditions.push({
         OR: [
           { username: { contains: search, mode: 'insensitive' } },
           { email: { contains: search, mode: 'insensitive' } },
@@ -92,12 +91,11 @@ export class UsersPrismaRepository
     }
 
     if (status) {
-      where.AND.push({ status: status });
+      conditions.push({ status: status as user_state });
     }
 
-    // If AND is empty, remove it to avoid empty filter issues
-    if (where.AND.length === 0) {
-      delete where.AND;
+    if (conditions.length > 0) {
+      where.AND = conditions;
     }
 
     const [users, total] = await Promise.all([
