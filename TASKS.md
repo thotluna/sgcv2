@@ -32,7 +32,7 @@
 
 - CRUD completo de Customers
 - CRUD completo de SubCustomers
-- **Backend de Locations (100%):**
+- **Backend de Locations (100%): ✅ Corregido error de Null constraint city**
   - ✅ Domain Layer (Entity, Repository, Services, Exceptions)
   - ✅ Application Layer (5 Use Cases: Create, Update, Delete, Get, List)
   - ✅ Infrastructure Layer (Repository Prisma, Service, Mapper)
@@ -151,7 +151,7 @@
   - [ ] Indicador visual de contacto primario
   - [x] Validaciones de formulario con Zod (Unificado en @sgcv2/shared)
   - [x] Manejo de errores con toast notifications (Integrado con Server Actions y useActionState)
-  - [x] Soporte para No-JS y Server Actions en CustomerForm
+  - [x] Soporte para No-JS y Server Actions en CustomerForm (Corregido error de tipos en useActionState y error de restricción NULL en Ciudad)
 
 **Estimación:** 1 semana
 
@@ -172,10 +172,13 @@
   - [ ] Agregar vista de "Servicios Prestados" (placeholder)
   - [ ] Preparar relación con ODS (para fase futura)
 
+- [x] **Estandarización de Tablas**
+  - [x] Refactorizar `LocationsList` para usar el componente `DataTable`.
+  - [x] Refactorizar `SubCustomersList` para usar el componente `DataTable`.
+
 **Estimación:** 3 días
 
 ---
-
 
 ## 🔴 FASE 3: Workflow Engine (CRÍTICA)
 
