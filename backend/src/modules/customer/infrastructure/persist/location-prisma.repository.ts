@@ -14,13 +14,18 @@ import { injectable } from 'inversify';
 @injectable()
 export class LocationPrismaRepository implements LocationRepository {
   async create(data: CreateLocationInput): Promise<CustomerLocationEntity> {
+    const createData: Prisma.CustomerLocationUncheckedCreateInput = {
+      customerId: data.customerId,
+      name: data.name,
+      address: data.address,
+      city: data.city,
+      subCustomerId: data.subCustomerId ?? undefined,
+      zipCode: data.zipCode ?? undefined,
+      isMain: data.isMain ?? false,
+    };
+
     const location = await prisma.customerLocation.create({
-      data: {
-        customerId: data.customerId,
-        subCustomerId: data.subCustomerId,
-        name: data.name,
-        address: data.address,
-      },
+      data: createData,
     });
     return LocationMapper.toEntity(location);
   }
@@ -37,6 +42,7 @@ export class LocationPrismaRepository implements LocationRepository {
       where.OR = [
         { name: { contains: search, mode: 'insensitive' } },
         { address: { contains: search, mode: 'insensitive' } },
+        { city: { contains: search, mode: 'insensitive' } },
       ];
     }
 
@@ -64,12 +70,17 @@ export class LocationPrismaRepository implements LocationRepository {
   }
 
   async update(id: string, data: UpdateLocationInput): Promise<CustomerLocationEntity> {
+    const updateData: Prisma.CustomerLocationUncheckedUpdateInput = {
+      name: data.name,
+      address: data.address,
+      city: data.city,
+      zipCode: data.zipCode ?? undefined,
+      isMain: data.isMain ?? undefined,
+    };
+
     const location = await prisma.customerLocation.update({
       where: { id },
-      data: {
-        name: data.name,
-        address: data.address,
-      },
+      data: updateData,
     });
     return LocationMapper.toEntity(location);
   }

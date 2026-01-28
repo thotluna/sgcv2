@@ -1,56 +1,59 @@
 model Customer {
-    id           String        @id @default(uuid())
-    code         String        @unique @db.VarChar(5)
-    businessName String?       @unique @db.VarChar(50)
-    legalName    String        @db.VarChar(100)
-    taxId        String        @unique @db.VarChar(20)
-    address      String?       @db.VarChar(255)
-    phone        String?       @db.VarChar(20)
-    state        CustomerState @default(ACTIVE) @map("customer_state")
-    createdAt    DateTime      @default(now()) @map("created_at")
-    updatedAt    DateTime      @updatedAt @map("updated_at")
+  id           String        @id @default(uuid())
+  code         String        @unique @db.VarChar(5)
+  businessName String?       @unique @db.VarChar(50)
+  legalName    String        @db.VarChar(100)
+  taxId        String        @unique @db.VarChar(20)
+  address      String?       @db.VarChar(255)
+  phone        String?       @db.VarChar(20)
+  state        CustomerState @default(ACTIVE) @map("customer_state")
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
 
-    // Relations
-    subCustomers SubCustomer[]
-    locations    CustomerLocation[]
+  // Relations
+  subCustomers SubCustomer[]
+  locations    CustomerLocation[]
 
-    @@map("customers")
+  @@map("customers")
 }
 
 model SubCustomer {
-    id           String        @id @default(uuid())
-    customerId   String        @map("customer_id")
-    businessName String        @map("business_name") @db.VarChar(100)
-    externalCode String        @map("external_code") @db.VarChar(10)
-    createdAt    DateTime      @default(now()) @map("created_at")
-    updatedAt    DateTime      @updatedAt @map("updated_at")
+  id           String   @id @default(uuid())
+  customerId   String   @map("customer_id")
+  businessName String   @map("business_name") @db.VarChar(100)
+  externalCode String   @map("external_code") @db.VarChar(10)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
 
-    // Relations
-    customer  Customer           @relation(fields: [customerId], references: [id], onDelete: Cascade)
-    locations CustomerLocation[]
+  // Relations
+  customer  Customer           @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  locations CustomerLocation[]
 
-    @@unique([customerId, externalCode])
-    @@map("sub_customers")
+  @@unique([customerId, externalCode])
+  @@map("sub_customers")
 }
 
 model CustomerLocation {
-    id            String   @id @default(uuid())
-    customerId    String   @map("customer_id")
-    subCustomerId String?  @map("sub_customer_id")
-    name          String   @db.VarChar(100)
-    address       String   @db.VarChar(255)
-    createdAt     DateTime @default(now()) @map("created_at")
-    updatedAt     DateTime @updatedAt @map("updated_at")
+  id            String   @id @default(uuid())
+  customerId    String   @map("customer_id")
+  subCustomerId String?  @map("sub_customer_id")
+  name          String   @db.VarChar(100)
+  address       String   @db.VarChar(255)
+  city          String   @db.VarChar(100)
+  zipCode       String?  @map("zip_code") @db.VarChar(20)
+  isMain        Boolean  @default(false) @map("is_main")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
 
-    // Relations
-    customer    Customer     @relation(fields: [customerId], references: [id], onDelete: Cascade)
-    subCustomer SubCustomer? @relation(fields: [subCustomerId], references: [id], onDelete: Cascade)
+  // Relations
+  customer    Customer     @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  subCustomer SubCustomer? @relation(fields: [subCustomerId], references: [id], onDelete: Cascade)
 
-    @@map("customer_locations")
+  @@map("customer_locations")
 }
 
 enum CustomerState {
-    ACTIVE
-    INACTIVE
-    SUSPENDED
+  ACTIVE
+  INACTIVE
+  SUSPENDED
 }

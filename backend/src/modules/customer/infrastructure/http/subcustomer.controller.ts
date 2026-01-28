@@ -68,7 +68,7 @@ export class SubCustomerController {
       const input = SubCustomerMapper.toCreateInput(dto, customerId);
       const subCustomer = await this.createUseCase.execute(input);
       return ResponseHelper.success(res, SubCustomerMapper.toDto(subCustomer), 201);
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof CustomerNotFoundException) {
         throw new NotFoundException(error.message);
       }
@@ -153,7 +153,7 @@ export class SubCustomerController {
       const id = String(req.params.id);
       const subCustomer = await this.getUseCase.execute(id);
       return ResponseHelper.success(res, SubCustomerMapper.toDto(subCustomer));
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof SubCustomerNotFoundException) {
         throw new NotFoundException(error.message);
       }
@@ -191,7 +191,7 @@ export class SubCustomerController {
       const input = SubCustomerMapper.toUpdateInput(dto);
       const subCustomer = await this.updateUseCase.execute(id, input);
       return ResponseHelper.success(res, SubCustomerMapper.toDto(subCustomer));
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof SubCustomerNotFoundException) {
         throw new NotFoundException(error.message);
       }
@@ -224,7 +224,7 @@ export class SubCustomerController {
       const id = String(req.params.id);
       const subCustomer = await this.deleteUseCase.execute(id);
       return ResponseHelper.success(res, SubCustomerMapper.toDto(subCustomer));
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof SubCustomerNotFoundException) {
         throw new NotFoundException(error.message);
       }

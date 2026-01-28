@@ -16,6 +16,9 @@ export class LocationMapper {
       subCustomerId: model.subCustomerId,
       name: model.name,
       address: model.address,
+      city: model.city,
+      zipCode: model.zipCode,
+      isMain: model.isMain,
       createdAt: model.createdAt,
       updatedAt: model.updatedAt,
     };
@@ -27,6 +30,9 @@ export class LocationMapper {
       subCustomerId: dto.subCustomerId,
       name: dto.name,
       address: dto.address,
+      city: dto.city,
+      zipCode: dto.zipCode,
+      isMain: dto.isMain,
     };
   }
 
@@ -34,6 +40,9 @@ export class LocationMapper {
     return {
       name: dto.name,
       address: dto.address,
+      city: dto.city,
+      zipCode: dto.zipCode,
+      isMain: dto.isMain,
     };
   }
 
@@ -44,6 +53,9 @@ export class LocationMapper {
       subCustomerId: entity.subCustomerId,
       name: entity.name,
       address: entity.address,
+      city: entity.city,
+      zipCode: entity.zipCode,
+      isMain: entity.isMain,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
     };

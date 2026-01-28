@@ -17,25 +17,33 @@ describe('LocationService', () => {
       findById: jest.fn(),
       update: jest.fn(),
       delete: jest.fn(),
-    } as any;
+    } as unknown as jest.Mocked<LocationRepository>;
 
     mockCustomerRepo = {
       findById: jest.fn(),
-    } as any;
+    } as unknown as jest.Mocked<CustomerRepository>;
 
     mockSubCustomerRepo = {
       findById: jest.fn(),
-    } as any;
+    } as unknown as jest.Mocked<SubCustomerRepository>;
 
     service = new LocationService(mockLocationRepo, mockCustomerRepo, mockSubCustomerRepo);
   });
 
   describe('create', () => {
     it('should delegate to locationRepository', async () => {
-      const input = { customerId: 'c1', subCustomerId: null, name: 'Office', address: 'Addr' };
+      const input = {
+        customerId: 'c1',
+        subCustomerId: null,
+        name: 'Office',
+        address: 'Addr',
+        city: 'Caracas',
+      };
       const mockLocation: CustomerLocationEntity = {
         id: '1',
         ...input,
+        zipCode: null,
+        isMain: false,
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -69,6 +77,9 @@ describe('LocationService', () => {
         subCustomerId: null,
         name: 'Office',
         address: 'Addr',
+        city: 'Caracas',
+        zipCode: null,
+        isMain: false,
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -90,6 +101,9 @@ describe('LocationService', () => {
         subCustomerId: null,
         name: 'Updated Office',
         address: 'Addr',
+        city: 'Caracas',
+        zipCode: null,
+        isMain: false,
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -110,6 +124,9 @@ describe('LocationService', () => {
         subCustomerId: null,
         name: 'Office',
         address: 'Addr',
+        city: 'Caracas',
+        zipCode: null,
+        isMain: false,
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -124,7 +141,7 @@ describe('LocationService', () => {
 
   describe('findCustomerById', () => {
     it('should delegate to customerRepository', async () => {
-      mockCustomerRepo.findById.mockResolvedValue({ id: 'c1' } as any);
+      mockCustomerRepo.findById.mockResolvedValue({ id: 'c1' } as never);
 
       const result = await service.findCustomerById('c1');
 
@@ -135,7 +152,7 @@ describe('LocationService', () => {
 
   describe('findSubCustomerById', () => {
     it('should delegate to subCustomerRepository', async () => {
-      mockSubCustomerRepo.findById.mockResolvedValue({ id: 's1' } as any);
+      mockSubCustomerRepo.findById.mockResolvedValue({ id: 's1' } as never);
 
       const result = await service.findSubCustomerById('s1');
 

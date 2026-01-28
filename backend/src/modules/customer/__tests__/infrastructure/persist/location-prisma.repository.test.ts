@@ -1,5 +1,6 @@
 import { prisma } from '@config/prisma';
 import { LocationPrismaRepository } from '@customer/infrastructure/persist/location-prisma.repository';
+import { CustomerLocation } from '@prisma/client';
 
 jest.mock('@config/prisma', () => ({
   prisma: {
@@ -31,13 +32,16 @@ describe('LocationPrismaRepository', () => {
         subCustomerId: null,
         name: 'Office',
         address: '123 Main St',
+        city: 'Caracas',
+        zipCode: '1010',
+        isMain: false,
       };
       mockPrismaLocation.create.mockResolvedValue({
         id: '1',
         ...input,
         createdAt: new Date(),
         updatedAt: new Date(),
-      } as any);
+      } as CustomerLocation);
 
       const result = await repository.create(input);
 
@@ -83,7 +87,7 @@ describe('LocationPrismaRepository', () => {
 
   describe('findById', () => {
     it('should return location if found', async () => {
-      mockPrismaLocation.findUnique.mockResolvedValue({ id: '1' } as any);
+      mockPrismaLocation.findUnique.mockResolvedValue({ id: '1' } as CustomerLocation);
       const result = await repository.findById('1');
       expect(result?.id).toBe('1');
     });
@@ -97,7 +101,7 @@ describe('LocationPrismaRepository', () => {
 
   describe('update', () => {
     it('should update location', async () => {
-      mockPrismaLocation.update.mockResolvedValue({ id: '1', name: 'New' } as any);
+      mockPrismaLocation.update.mockResolvedValue({ id: '1', name: 'New' } as CustomerLocation);
       const result = await repository.update('1', { name: 'New' });
       expect(result.name).toBe('New');
     });
@@ -105,7 +109,7 @@ describe('LocationPrismaRepository', () => {
 
   describe('delete', () => {
     it('should delete location', async () => {
-      mockPrismaLocation.delete.mockResolvedValue({ id: '1' } as any);
+      mockPrismaLocation.delete.mockResolvedValue({ id: '1' } as CustomerLocation);
       const result = await repository.delete('1');
       expect(result.id).toBe('1');
     });

@@ -3,11 +3,17 @@ export interface CreateLocationInput {
   subCustomerId?: string | null;
   name: string;
   address: string;
+  city: string;
+  zipCode?: string | null;
+  isMain?: boolean;
 }
 
 export interface UpdateLocationInput {
   name?: string;
   address?: string;
+  city?: string;
+  zipCode?: string | null;
+  isMain?: boolean;
 }
 
 export interface LocationFilterInput {
