@@ -173,13 +173,28 @@
   - [ ] Preparar relación con ODS (para fase futura)
 
 - [x] **Estandarización de Tablas**
-  - [x] Crear componente genérico `ServerTable` para unificar lógica de orquestación.
-  - [x] Refactorizar `CustomersList` para usar el componente `ServerTable`.
-  - [x] Refactorizar `RolesList` para usar el componente `ServerTable`.
-  - [x] Refactorizar `PermissionsList` para usar el componente `ServerTable`.
-  - [x] Refactorizar `UsersList` para usar el componente `ServerTable`.
+  - [x] Crear componente genérico `ServerTable` para unificar lógica de orquestación. (Migrado a `DataTable`)
+  - [x] Refactorizar `CustomersList` para usar el componente `DataTable`.
+  - [x] Refactorizar `RolesList` para usar el componente `DataTable`.
+  - [x] Refactorizar `PermissionsList` para usar el componente `DataTable`.
+  - [x] Refactorizar `UsersList` para usar el componente `DataTable`.
 
 **Estado:** ✅ Completado (Reducción de ~70% de boilerplate en tablas)
+
+---
+
+### 2.5 Re-arquitectura de Localidades (Página Global) 🟡 EN PROGRESO
+
+**Objetivo:** Migrar de una pestaña jerárquica dentro de Clientes a una gestión global de sedes/localidades para mayor eficiencia operativa.
+
+- [ ] **Backend**
+  - [ ] Habilitar búsqueda global de sedes (hacer `customerId` opcional en la búsqueda)
+  - [ ] Añadir filtro opcional por `subCustomerId` en el endpoint de sedes
+- [ ] **Frontend**
+  - [ ] Crear página global `/operations/locations` con `DataTable`
+  - [ ] Implementar filtros globales (search, sub-customer, city)
+  - [ ] Eliminar pestaña "Sedes" de `CustomerDetailPage`
+  - [ ] Vincular tabla de Sub-clientes con la nueva página global mediante filtros en la URL
 
 ---
 
