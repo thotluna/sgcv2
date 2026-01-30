@@ -1,9 +1,6 @@
-import { Home, MapPin, Plus, Trash2 } from 'lucide-react';
+import { MapPin, Plus } from 'lucide-react';
 
-import { CustomerLocationDto } from '@sgcv2/shared';
-
-import { Column, DataTable } from '@/components/table/data-table';
-import { Badge } from '@/components/ui/badge';
+import { DataTable } from '@/components/table-generic';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -14,47 +11,34 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { serverLocationsService } from '@/lib/api/server-locations.service';
+import { getAllLocations } from '@/feature/customers/services/locations.service';
 
 import { LocationForm } from './location-form';
+import { getLocationsColumns } from './locations-columns';
 
 interface LocationsListProps {
   customerId: string;
+  searchParams: { [key: string]: string | string[] | undefined };
 }
 
-export async function LocationsList({ customerId }: LocationsListProps) {
-  const response = await serverLocationsService.getAll(customerId);
-  const locations = response.success ? response.data || [] : [];
+export async function LocationsList({ customerId, searchParams }: LocationsListProps) {
+  const columns = getLocationsColumns();
 
-  const columns: Column<CustomerLocationDto>[] = [
-    {
-      header: 'Nombre Sede',
-      accessor: loc => (
-        <div className="flex items-center gap-2">
-          {loc.subCustomerId ? (
-            <MapPin className="h-3 w-3 text-muted-foreground" />
-          ) : (
-            <Home className="h-3 w-3 text-primary" />
-          )}
-          {loc.name}
-        </div>
-      ),
-      className: 'font-medium',
-    },
-    {
-      header: 'Dirección',
-      accessor: loc => <div className="max-w-[300px] truncate">{loc.address}</div>,
-    },
-    {
-      header: 'Asignación',
-      accessor: loc =>
-        loc.subCustomerId ? (
-          <Badge variant="secondary">Sub-cliente</Badge>
-        ) : (
-          <Badge variant="outline">Principal</Badge>
-        ),
-    },
-  ];
+  const fetchLocations = async (
+    page: number,
+    perPage: number,
+    sortBy?: string,
+    sortOrder?: 'asc' | 'desc',
+    filters?: Record<string, string | number | boolean | undefined>
+  ) => {
+    return getAllLocations(customerId, {
+      page,
+      perPage,
+      sortBy,
+      sortOrder,
+      ...filters,
+    });
+  };
 
   return (
     <Card>
@@ -90,14 +74,10 @@ export async function LocationsList({ customerId }: LocationsListProps) {
       </CardHeader>
       <CardContent>
         <DataTable
-          data={locations}
-          columns={columns}
+          fetchData={fetchLocations}
+          headers={columns}
+          searchParams={searchParams}
           emptyMessage="No se han registrado sedes o puntos de servicio aún."
-          rowActions={() => (
-            <Button variant="ghost" size="icon" className="text-destructive">
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          )}
         />
       </CardContent>
     </Card>

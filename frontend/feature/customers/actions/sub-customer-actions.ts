@@ -5,9 +5,12 @@ import { redirect } from 'next/navigation';
 
 import { CreateCustomerLocationSchema, CreateSubCustomerWithLocationSchema } from '@sgcv2/shared';
 
+import { createLocation, deleteLocation } from '@/feature/customers/services/locations.service';
+import {
+  createSubCustomer,
+  deleteSubCustomer,
+} from '@/feature/customers/services/sub-customers.service';
 import { ActionState } from '@/feature/customers/types';
-import { serverLocationsService } from '@/lib/api/server-locations.service';
-import { serverSubCustomersService } from '@/lib/api/server-subcustomers.service';
 
 export async function createSubCustomerWithLocationAction(
   parentId: string,
@@ -26,7 +29,7 @@ export async function createSubCustomerWithLocationAction(
   }
 
   // 1. Create SubCustomer
-  const subCustomerResponse = await serverSubCustomersService.create(parentId, {
+  const subCustomerResponse = await createSubCustomer(parentId, {
     businessName: validated.data.businessName,
     externalCode: validated.data.externalCode,
   });
@@ -41,7 +44,7 @@ export async function createSubCustomerWithLocationAction(
   const subCustomerId = subCustomerResponse.data.id;
 
   // 2. Create Initial Location
-  const locationResponse = await serverLocationsService.create(parentId, {
+  const locationResponse = await createLocation(parentId, {
     subCustomerId,
     name: validated.data.locationName,
     address: validated.data.locationAddress,
@@ -77,7 +80,7 @@ export async function createLocationAction(
     };
   }
 
-  const response = await serverLocationsService.create(parentId, {
+  const response = await createLocation(parentId, {
     ...validated.data,
     subCustomerId,
   });
@@ -94,7 +97,7 @@ export async function createLocationAction(
 }
 
 export async function deleteLocationAction(id: string, parentId: string): Promise<ActionState> {
-  const response = await serverLocationsService.delete(id);
+  const response = await deleteLocation(id);
 
   if (!response.success) {
     return {
@@ -112,7 +115,7 @@ export async function deleteSubCustomerAction(
   parentId: string,
   customerId: string
 ): Promise<ActionState> {
-  const response = await serverSubCustomersService.delete(customerId, id);
+  const response = await deleteSubCustomer(customerId, id);
 
   if (!response.success) {
     return {

@@ -14,19 +14,27 @@ interface DataTableProps<T> {
     perPage: number,
     sortBy?: string,
     sortOrder?: 'asc' | 'desc',
-    filters?: { state?: string; search?: string }
+    filters?: Record<string, string | number | boolean | undefined>
   ) => Promise<AppResponse<T[]>>;
 
   headers: TableColumn<T>[];
   searchParams: { [key: string]: string | string[] | undefined };
+  emptyMessage?: string;
 }
 
-export async function DataTable<T>({ fetchData, headers, searchParams }: DataTableProps<T>) {
+export async function DataTable<T>({
+  fetchData,
+  headers,
+  searchParams,
+  emptyMessage = 'No hay datos disponibles',
+}: DataTableProps<T>) {
   const page = Number(searchParams.page) || 1;
   const pageSize = Number(searchParams.pageSize) || 10;
   const sortBy = searchParams.sortBy as string | undefined;
   const sortOrder = (searchParams.sortOrder as 'asc' | 'desc') || 'asc';
-  const filters = searchParams.filters as { state?: string; search?: string } | undefined;
+  const filters = searchParams.filters as
+    | Record<string, string | number | boolean | undefined>
+    | undefined;
 
   const response = await fetchData(page, pageSize, sortBy, sortOrder, filters);
 
@@ -48,7 +56,7 @@ export async function DataTable<T>({ fetchData, headers, searchParams }: DataTab
   if (!data.length) {
     return (
       <div className="rounded-md border p-8 text-center">
-        <p className="text-muted-foreground">No hay datos disponibles</p>
+        <p className="text-muted-foreground">{emptyMessage}</p>
       </div>
     );
   }
