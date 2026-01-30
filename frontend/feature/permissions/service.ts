@@ -1,20 +1,29 @@
 import { fetchClient } from '@lib/api/fetch-client';
 
-import { AppResponse, PermissionDto, PermissionFilterDto } from '@sgcv2/shared';
+import { AppResponse, PermissionDto } from '@sgcv2/shared';
 
 export async function getAllPermissions(
-  filter?: PermissionFilterDto
+  page: number = 1,
+  perPage: number = 10,
+  sortBy?: string,
+  sortOrder?: 'asc' | 'desc',
+  filters?: Record<string, string | number | boolean | undefined>
 ): Promise<AppResponse<PermissionDto[]>> {
   const params = new URLSearchParams();
 
-  if (filter?.search) {
-    params.append('search', filter.search);
+  params.append('page', page.toString());
+  params.append('limit', perPage.toString());
+
+  if (filters?.search) {
+    params.append('search', String(filters.search));
   }
 
-  if (filter?.pagination) {
-    const page = Math.floor(filter.pagination.offset / filter.pagination.limit) + 1;
-    params.append('page', page.toString());
-    params.append('limit', filter.pagination.limit.toString());
+  if (sortBy) {
+    params.append('sortBy', sortBy);
+  }
+
+  if (sortOrder) {
+    params.append('sortOrder', sortOrder);
   }
 
   const queryString = params.toString();

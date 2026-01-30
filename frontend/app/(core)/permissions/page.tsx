@@ -1,11 +1,11 @@
 import { Suspense } from 'react';
 import { Metadata } from 'next';
 
-import { PermissionsFilters, PermissionsTableContent } from '@feature/permissions/components';
+import { PermissionsFilters } from '@feature/permissions/components';
+import { columns } from '@feature/permissions/components/permissions-columns';
+import { getAllPermissions } from '@feature/permissions/service';
 
-import { PermissionFilterDto } from '@sgcv2/shared';
-
-import { Skeleton } from '@/components/ui/skeleton';
+import { DataTable, TableSkeleton } from '@/components/table-generic';
 
 export const metadata: Metadata = {
   title: 'Permisos | SGCV2',
@@ -15,24 +15,15 @@ export const metadata: Metadata = {
 interface PermissionsPageProps {
   searchParams: Promise<{
     search?: string;
-    offset?: string;
-    limit?: string;
+    page?: string;
+    perPage?: string;
+    sortBy?: string;
+    sortOrder?: 'asc' | 'desc';
   }>;
 }
 
 export default async function PermissionsPage({ searchParams }: PermissionsPageProps) {
   const params = await searchParams;
-  const search = params.search;
-  const offset = params.offset ? parseInt(params.offset) : 0;
-  const limit = params.limit ? parseInt(params.limit) : 10;
-
-  const filter: PermissionFilterDto = {
-    search,
-    pagination: {
-      offset,
-      limit,
-    },
-  };
 
   return (
     <div className="flex flex-col gap-6 p-6">
@@ -44,28 +35,11 @@ export default async function PermissionsPage({ searchParams }: PermissionsPageP
       </div>
 
       <div className="flex flex-col gap-4">
-        <PermissionsFilters search={search} />
+        <PermissionsFilters search={params.search} />
 
-        <Suspense fallback={<PermissionsTableSkeleton />}>
-          <PermissionsTableContent limit={limit} offset={offset} filter={filter} />
+        <Suspense key={JSON.stringify(params)} fallback={<TableSkeleton columns={3} />}>
+          <DataTable fetchData={getAllPermissions} headers={columns} searchParams={params} />
         </Suspense>
-      </div>
-    </div>
-  );
-}
-
-function PermissionsTableSkeleton() {
-  return (
-    <div className="space-y-4">
-      <div className="rounded-md border">
-        <div className="h-10 border-b px-4 py-2">
-          <Skeleton className="h-6 w-[200px]" />
-        </div>
-        {[...Array(5)].map((_, i) => (
-          <div key={i} className="h-12 border-b px-4 py-3">
-            <Skeleton className="h-5 w-full" />
-          </div>
-        ))}
       </div>
     </div>
   );
