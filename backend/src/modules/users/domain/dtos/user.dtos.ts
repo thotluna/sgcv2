@@ -38,6 +38,8 @@ export interface UserFilterInput {
     limit: number;
     offset: number;
   };
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
 }
 
 export type PaginatedUsers = PaginationResult<UserEntity>;

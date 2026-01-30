@@ -12,6 +12,8 @@ export const userFilterSchema = z.object({
       offset: z.coerce.number().min(0).default(0),
     })
     .optional(),
+  sortBy: z.string().optional(),
+  sortOrder: z.enum(['asc', 'desc']).optional(),
 });
 
 export const createUserSchema = z.object({

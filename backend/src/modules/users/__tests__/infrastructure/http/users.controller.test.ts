@@ -163,9 +163,11 @@ describe('UserController', () => {
       expect(mockShowAllUseCase.execute).toHaveBeenCalledWith({
         search: 'user1',
         status: undefined,
+        sortBy: undefined,
+        sortOrder: undefined,
         pagination: {
-          limit: '10',
-          offset: '0',
+          limit: 10,
+          offset: 0,
         },
       });
 
