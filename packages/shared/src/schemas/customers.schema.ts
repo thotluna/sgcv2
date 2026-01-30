@@ -104,6 +104,8 @@ export const SubCustomerFilterSchema = z.object({
   search: z.string().optional(),
   page: z.coerce.number().int().positive().default(1),
   perPage: z.coerce.number().int().positive().default(10),
+  sortBy: z.string().optional(),
+  sortOrder: z.enum(['asc', 'desc']).optional(),
 });
 
 export type SubCustomerFilterSchemaType = z.infer<typeof SubCustomerFilterSchema>;
@@ -139,6 +141,8 @@ export const CustomerLocationFilterSchema = z.object({
   search: z.string().max(255).optional(),
   page: z.coerce.number().int().positive().default(1),
   perPage: z.coerce.number().int().positive().default(10),
+  sortBy: z.string().optional(),
+  sortOrder: z.enum(['asc', 'desc']).optional(),
 });
 
 export type CustomerLocationFilterSchemaType = z.infer<typeof CustomerLocationFilterSchema>;
