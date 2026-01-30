@@ -9,13 +9,22 @@ export async function getCustomerById(id: string): Promise<AppResponse<CustomerD
 export async function getAllCustomers(
   page: number,
   perPage: number,
+  sortBy?: string,
+  sortOrder?: 'asc' | 'desc',
   filters?: { state?: string; search?: string }
 ): Promise<AppResponse<CustomerDto[]>> {
   const searchParams = new URLSearchParams({
     page: page.toString(),
     perPage: perPage.toString(),
   });
-
+  if (sortBy) {
+    searchParams.append('sortBy', sortBy);
+    if (sortOrder) {
+      searchParams.append('sortOrder', sortOrder);
+    } else {
+      searchParams.append('sortOrder', 'asc');
+    }
+  }
   if (filters?.state) searchParams.append('state', filters.state);
   if (filters?.search) searchParams.append('search', filters.search);
 
