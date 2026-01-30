@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import CustomersPage from '../page';
 
 // Mocks
-jest.mock('@/lib/api/server-customers.service');
+jest.mock('@/feature/customers/services/customers.service');
 jest.mock('@/feature/customers/components/filters', () => ({
   CustomersFilters: ({ search, status }: any) => (
     <div data-testid="filters">

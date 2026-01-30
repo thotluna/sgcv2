@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import UpdateCustomerPage from '../[id]/update/page';
-import { serverCustomersService } from '@/lib/api/server-customers.service';
+import { getCustomerById } from '@/feature/customers/services/customers.service';
 import { notFound } from 'next/navigation';
 
 // Mocks
-jest.mock('@/lib/api/server-customers.service');
+jest.mock('@/feature/customers/services/customers.service');
 jest.mock('next/navigation', () => ({
   notFound: jest.fn(() => {
     throw new Error('NEXT_NOT_FOUND');
@@ -34,7 +34,7 @@ describe('UpdateCustomerPage', () => {
   });
 
   it('renders update form with customer data', async () => {
-    (serverCustomersService.getOne as jest.Mock).mockResolvedValue({
+    (getCustomerById as jest.Mock).mockResolvedValue({
       data: mockCustomer,
     });
 
@@ -46,7 +46,7 @@ describe('UpdateCustomerPage', () => {
   });
 
   it('calls notFound when customer not found', async () => {
-    (serverCustomersService.getOne as jest.Mock).mockResolvedValue({
+    (getCustomerById as jest.Mock).mockResolvedValue({
       data: null,
       error: 'Not found',
     });
