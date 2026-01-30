@@ -16,7 +16,7 @@ export class PermissionsController {
     const filter = {
       search: rawQuery.search,
       page: rawQuery.page ? parseInt(rawQuery.page) : 1,
-      limit: rawQuery.limit ? parseInt(rawQuery.limit) : 10,
+      limit: rawQuery.limit ? parseInt(rawQuery.limit) : 5,
       sortBy: rawQuery.sortBy,
       sortOrder: rawQuery.sortOrder as 'asc' | 'desc',
     };

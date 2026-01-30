@@ -41,7 +41,7 @@ describe('PermissionsController', () => {
       expect(useCase.execute).toHaveBeenCalledWith({
         search: undefined,
         page: 1,
-        limit: 10,
+        limit: 5,
       });
     });
 
