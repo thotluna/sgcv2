@@ -32,9 +32,10 @@ export async function DataTable<T>({
   const pageSize = Number(searchParams.pageSize) || 10;
   const sortBy = searchParams.sortBy as string | undefined;
   const sortOrder = (searchParams.sortOrder as 'asc' | 'desc') || 'asc';
-  const filters = searchParams.filters as
-    | Record<string, string | number | boolean | undefined>
-    | undefined;
+  const filters = (searchParams.filters || searchParams) as Record<
+    string,
+    string | number | boolean | undefined
+  >;
 
   const response = await fetchData(page, pageSize, sortBy, sortOrder, filters);
 

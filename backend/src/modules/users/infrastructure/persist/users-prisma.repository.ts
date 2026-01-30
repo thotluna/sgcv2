@@ -67,7 +67,7 @@ export class UsersPrismaRepository
   }
 
   async getAll(filter: UserFilterInput): Promise<PaginatedUsers> {
-    const { search, status, pagination } = filter;
+    const { search, status, pagination, sortBy, sortOrder } = filter;
 
     const where: Prisma.UserWhereInput = {};
     const conditions: Prisma.UserWhereInput[] = [];
@@ -103,7 +103,7 @@ export class UsersPrismaRepository
         where,
         skip: pagination?.offset,
         take: pagination?.limit,
-        orderBy: { createdAt: 'desc' },
+        orderBy: sortBy ? { [sortBy]: sortOrder || 'desc' } : { createdAt: 'desc' },
       }),
       prisma.user.count({ where }),
     ]);

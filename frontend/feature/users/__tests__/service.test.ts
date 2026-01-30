@@ -1,7 +1,7 @@
 import { fetchClient } from '@/lib/api/fetch-client';
 import { CreateUserDto, UpdateUserDto } from '@sgcv2/shared';
 
-import { create, getAll, getMe, getUserById, updateMe, updateUser } from '../service';
+import { create, getAllUsers, getMe, getUserById, updateMe, updateUser } from '../service';
 
 jest.mock('@/lib/api/fetch-client');
 
@@ -40,17 +40,17 @@ describe('Users Service', () => {
     });
   });
 
-  describe('getAll', () => {
+  describe('getAllUsers', () => {
     it('should fetch users with pagination and filters', async () => {
       mockFetchClient.mockResolvedValue({ success: true });
-      await getAll({ search: 'john', pagination: { offset: 0, limit: 10 } });
-      expect(mockFetchClient).toHaveBeenCalledWith('/users?search=john&offset=0&limit=10');
+      await getAllUsers(2, 10, undefined, undefined, { search: 'john' });
+      expect(mockFetchClient).toHaveBeenCalledWith('/users?offset=10&limit=10&search=john');
     });
 
-    it('should fetch users without params', async () => {
+    it('should fetch users with default params', async () => {
       mockFetchClient.mockResolvedValue({ success: true });
-      await getAll();
-      expect(mockFetchClient).toHaveBeenCalledWith('/users');
+      await getAllUsers();
+      expect(mockFetchClient).toHaveBeenCalledWith('/users?offset=0&limit=10');
     });
   });
 

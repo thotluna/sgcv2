@@ -1,3 +1,8 @@
+import { CreateUseCase } from '@modules/users/application/create.use-case';
+import { GetUseCase } from '@modules/users/application/get.use-case';
+import { ListUseCase } from '@modules/users/application/list.use-case';
+import { UpdateUseCase } from '@modules/users/application/update.use-case';
+import { UpdateMeUseCase } from '@modules/users/application/update-me.use-case';
 import { UserNotFoundException } from '@modules/users/domain/exceptions/user-not-found.exception';
 import { UsersController } from '@modules/users/infrastructure/http/users.controller';
 import { NotFoundException, UnauthorizedException } from '@shared/exceptions';
@@ -37,11 +42,11 @@ describe('UserController', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     userController = new UsersController(
-      mockGetUseCase as any,
-      mockUpdateMeUseCase as any,
-      mockShowAllUseCase as any,
-      mockCreateUserUseCase as any,
-      mockUpdateUserUseCase as any
+      mockGetUseCase as unknown as GetUseCase,
+      mockUpdateMeUseCase as unknown as UpdateMeUseCase,
+      mockShowAllUseCase as unknown as ListUseCase,
+      mockCreateUserUseCase as unknown as CreateUseCase,
+      mockUpdateUserUseCase as unknown as UpdateUseCase
     );
 
     mockJson = jest.fn();
@@ -163,9 +168,11 @@ describe('UserController', () => {
       expect(mockShowAllUseCase.execute).toHaveBeenCalledWith({
         search: 'user1',
         status: undefined,
+        sortBy: undefined,
+        sortOrder: undefined,
         pagination: {
-          limit: '10',
-          offset: '0',
+          limit: 10,
+          offset: 0,
         },
       });
 

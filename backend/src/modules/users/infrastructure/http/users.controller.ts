@@ -10,7 +10,12 @@ import { TYPES } from '@users/di/types';
 import { Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
 
-import { CreateUserDto as SharedCreateUserDto, UpdateUserDto, UserFilterDto } from '@sgcv2/shared';
+import {
+  CreateUserDto as SharedCreateUserDto,
+  UpdateUserDto,
+  UserFilterDto,
+  UserStatus,
+} from '@sgcv2/shared';
 
 import { UsersMapper } from '../mappers/users';
 
@@ -161,14 +166,16 @@ export class UsersController {
    *                       $ref: '#/components/schemas/Pagination'
    */
   async showAll(req: Request, res: Response): Promise<Response> {
-    const rawQuery: any = req.query;
+    const rawQuery = req.query as Record<string, string | undefined>;
     const filter: UserFilterDto = {
       search: rawQuery.search,
-      status: rawQuery.status,
+      status: rawQuery.status as UserStatus | undefined,
       pagination: {
-        limit: rawQuery.limit,
-        offset: rawQuery.offset,
+        limit: rawQuery.limit ? parseInt(rawQuery.limit) : 10,
+        offset: rawQuery.offset ? parseInt(rawQuery.offset) : 0,
       },
+      sortBy: rawQuery.sortBy,
+      sortOrder: rawQuery.sortOrder as 'asc' | 'desc',
     };
     const { items: users, total } = await this.showAllUseCase.execute(filter);
     const limit = Number(filter.pagination?.limit) || 10;

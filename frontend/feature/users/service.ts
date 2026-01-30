@@ -3,7 +3,6 @@ import {
   CreateUserDto,
   UpdateUserDto,
   UserDto,
-  UserFilterDto,
   UserWithRolesDto,
 } from '@sgcv2/shared';
 
@@ -26,19 +25,39 @@ export async function getUserById(id: number): Promise<AppResponse<UserDto>> {
   return fetchClient(`/users/${id}`);
 }
 
-export async function getAll(filter?: UserFilterDto): Promise<AppResponse<UserDto[]>> {
-  const { pagination, ...rest } = filter || {};
+export async function getAllUsers(
+  page: number = 1,
+  perPage: number = 10,
+  sortBy?: string,
+  sortOrder?: 'asc' | 'desc',
+  filters?: Record<string, string | number | boolean | undefined>
+): Promise<AppResponse<UserDto[]>> {
   const params = new URLSearchParams();
 
-  if (rest) {
-    Object.entries(rest).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) params.append(key, String(value));
-    });
+  const offset = (page - 1) * perPage;
+  params.append('offset', offset.toString());
+  params.append('limit', perPage.toString());
+
+  if (sortBy) {
+    params.append('sortBy', sortBy);
+    if (sortOrder) {
+      params.append('sortOrder', sortOrder);
+    }
   }
 
-  if (pagination) {
-    Object.entries(pagination).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) params.append(key, String(value));
+  if (filters) {
+    Object.entries(filters).forEach(([key, value]) => {
+      if (
+        value !== undefined &&
+        value !== null &&
+        key !== 'page' &&
+        key !== 'limit' &&
+        key !== 'offset' &&
+        key !== 'sortBy' &&
+        key !== 'sortOrder'
+      ) {
+        params.append(key, String(value));
+      }
     });
   }
 
