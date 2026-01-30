@@ -8,4 +8,4 @@ export const permissionFilterSchema = z.object({
   limit: z.coerce.number().min(1).default(10),
 });
 
-export type PermissionFilterDto = z.infer<typeof permissionFilterSchema>;
+export type PermissionFilterSchemaDto = z.infer<typeof permissionFilterSchema>;
