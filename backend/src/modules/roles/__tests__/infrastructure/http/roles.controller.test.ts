@@ -93,6 +93,26 @@ describe('RolesController', () => {
 
       expect(mockStatus).toHaveBeenCalledWith(200);
     });
+
+    it('should pass sorting parameters to use case', async () => {
+      mockReq = {
+        query: {
+          sortBy: 'name',
+          sortOrder: 'desc',
+          page: '1',
+          limit: '10',
+        },
+      };
+
+      await controller.getAll(mockReq as Request, mockRes as Response);
+
+      expect(mockListRolesUseCase.execute).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sortBy: 'name',
+          sortOrder: 'desc',
+        })
+      );
+    });
   });
 
   describe('getById', () => {

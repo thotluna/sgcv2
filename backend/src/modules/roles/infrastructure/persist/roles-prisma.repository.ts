@@ -1,4 +1,5 @@
 import { prisma } from '@config/prisma';
+import { Prisma } from '@prisma/client';
 import {
   CreateRoleInput,
   PaginatedRoles,
@@ -14,7 +15,7 @@ import { injectable } from 'inversify';
 @injectable()
 export class RolesPrismaRepository implements RoleRepository {
   async getAll(filter: RoleFilterInput): Promise<PaginatedRoles> {
-    const { search, page, limit } = filter;
+    const { search, page, limit, sortBy, sortOrder } = filter;
 
     const where = search
       ? {
@@ -25,13 +26,17 @@ export class RolesPrismaRepository implements RoleRepository {
         }
       : {};
 
+    const orderBy: Prisma.RoleOrderByWithRelationInput = sortBy
+      ? { [sortBy]: sortOrder || 'asc' }
+      : { name: 'asc' };
+
     const [roles, total] = await Promise.all([
       prisma.role.findMany({
         where,
         skip: page && limit ? (page - 1) * limit : undefined,
         take: limit,
         include: roleInclude,
-        orderBy: { name: 'asc' },
+        orderBy,
       }),
       prisma.role.count({ where }),
     ]);
@@ -82,7 +87,7 @@ export class RolesPrismaRepository implements RoleRepository {
   }
 
   async update(id: number, data: UpdateRoleInput): Promise<RoleEntity> {
-    const updateData: any = {
+    const updateData: Prisma.RoleUncheckedUpdateInput = {
       name: data.name,
       description: data.description,
     };

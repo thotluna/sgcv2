@@ -14,6 +14,8 @@ export const updateRoleSchema = z.object({
 
 export const roleFilterSchema = z.object({
   search: z.string().optional(),
+  sortBy: z.string().optional(),
+  sortOrder: z.enum(['asc', 'desc']).optional(),
   pagination: z
     .object({
       limit: z.coerce.number().min(1).default(10),

@@ -10,8 +10,25 @@ import {
   UpdateRoleDto,
 } from '@sgcv2/shared';
 
-export async function getAllRoles(filter?: RoleFilterDto): Promise<AppResponse<RoleDto[]>> {
+export async function getAllRoles(
+  page: number,
+  perPage: number,
+  sortBy?: string,
+  sortOrder?: 'asc' | 'desc',
+  filter?: RoleFilterDto
+): Promise<AppResponse<RoleDto[]>> {
   const params = new URLSearchParams();
+
+  params.append('page', page.toString() || '1');
+  params.append('limit', perPage.toString() || '5');
+
+  if (sortBy) {
+    params.append('sortBy', sortBy);
+
+    if (sortOrder) {
+      params.append('sortOrder', sortOrder);
+    }
+  }
 
   if (filter?.search) {
     params.append('search', filter.search);

@@ -11,8 +11,8 @@ export async function getAllPermissions(
 ): Promise<AppResponse<PermissionDto[]>> {
   const params = new URLSearchParams();
 
-  params.append('page', page.toString());
-  params.append('limit', perPage.toString());
+  params.append('page', page.toString() || '1');
+  params.append('limit', perPage.toString() || '5');
 
   if (filters?.search) {
     params.append('search', String(filters.search));

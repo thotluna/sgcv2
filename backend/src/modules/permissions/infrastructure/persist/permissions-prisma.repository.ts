@@ -3,12 +3,19 @@ import { PermissionFilterInput } from '@permissions/domain/inputs/permission.inp
 import { PermissionRepository } from '@permissions/domain/permission.repository';
 import { PermissionEntity } from '@permissions/domain/permissions.entity';
 import { PermissionEntityModelMapper } from '@permissions/infrastructure/persist/permission-entity-model.mapper';
+import { Prisma } from '@prisma/client';
 import { injectable } from 'inversify';
 
 @injectable()
 export class PermissionsPrismaRepository implements PermissionRepository {
   async getAll(filter?: PermissionFilterInput): Promise<PermissionEntity[]> {
-    const { search, page, limit } = filter || {};
+    const { search, page, limit, sortBy, sortOrder } = filter || {};
+
+    const orderBy:
+      | Prisma.PermissionOrderByWithRelationInput
+      | Prisma.PermissionOrderByWithRelationInput[] = sortBy
+      ? { [sortBy]: sortOrder || 'asc' }
+      : [{ resource: 'asc' }, { action: 'asc' }];
 
     const permissions = await prisma.permission.findMany({
       where: search
@@ -22,7 +29,7 @@ export class PermissionsPrismaRepository implements PermissionRepository {
         : {},
       skip: page && limit ? (page - 1) * limit : undefined,
       take: limit,
-      orderBy: [{ resource: 'asc' }, { action: 'asc' }],
+      orderBy,
     });
 
     return permissions.map(p => PermissionEntityModelMapper.toPermissionEntity(p));

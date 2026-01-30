@@ -59,7 +59,26 @@ describe('PermissionsController', () => {
         search: 'test',
         page: 2,
         limit: 20,
+        sortBy: undefined,
+        sortOrder: undefined,
       });
+    });
+
+    it('should include sorting parameters in filters', async () => {
+      req.query = {
+        sortBy: 'resource',
+        sortOrder: 'asc',
+      };
+      useCase.execute.mockResolvedValue([]);
+
+      await controller.getAll(req as Request, res as Response);
+
+      expect(useCase.execute).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sortBy: 'resource',
+          sortOrder: 'asc',
+        })
+      );
     });
 
     it('should return mapped permissions through ResponseHelper', async () => {

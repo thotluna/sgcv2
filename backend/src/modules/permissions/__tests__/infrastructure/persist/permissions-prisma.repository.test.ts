@@ -81,6 +81,30 @@ describe('PermissionsPrismaRepository', () => {
         })
       );
     });
+
+    it('should apply default sorting if no sortBy is provided', async () => {
+      mockPrismaPermission.findMany.mockResolvedValue([]);
+      await repository.getAll();
+
+      expect(mockPrismaPermission.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          orderBy: [{ resource: 'asc' }, { action: 'asc' }],
+        })
+      );
+    });
+
+    it('should apply dynamic sorting correctly', async () => {
+      mockPrismaPermission.findMany.mockResolvedValue([]);
+      const filter = { sortBy: 'description', sortOrder: 'desc' as const };
+
+      await repository.getAll(filter);
+
+      expect(mockPrismaPermission.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          orderBy: { description: 'desc' },
+        })
+      );
+    });
   });
 
   describe('findById', () => {

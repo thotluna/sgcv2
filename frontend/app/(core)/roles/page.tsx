@@ -1,7 +1,10 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
 
-import { RolesFilters, RolesTableContent } from '@feature/roles/components';
+import { DataTable } from '@components/table-generic';
+import { RolesFilters } from '@feature/roles/components';
+import { columns } from '@feature/roles/components/columns';
+import { getAllRoles } from '@feature/roles/service';
 
 import { RoleFilterDto } from '@sgcv2/shared';
 
@@ -43,7 +46,7 @@ export default async function RolesPage({ searchParams }: RolesPageProps) {
         <RolesFilters search={filter.search} />
 
         <Suspense key={JSON.stringify(params)} fallback={<TableSkeleton columnCount={3} />}>
-          <RolesTableContent limit={limit} offset={offset} filter={filter} />
+          <DataTable fetchData={getAllRoles} headers={columns} searchParams={params} />
         </Suspense>
       </main>
     </div>

@@ -175,8 +175,8 @@
 - [x] **Estandarización de Tablas**
   - [x] Crear componente genérico `ServerTable` para unificar lógica de orquestación. (Migrado a `DataTable`)
   - [x] Refactorizar `CustomersList` para usar el componente `DataTable`.
-  - [x] Refactorizar `RolesList` para usar el componente `DataTable`.
-  - [x] Refactorizar `PermissionsList` para usar el componente `DataTable`.
+  - [x] Refactorizar `RolesList` para usar el componente `DataTable` (incluye backend sorting).
+  - [x] Refactorizar `PermissionsList` para usar el componente `DataTable` (incluye backend sorting).
   - [x] Refactorizar `UsersList` para usar el componente `DataTable`.
 
 **Estado:** ✅ Completado (Reducción de ~70% de boilerplate en tablas)
