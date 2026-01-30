@@ -45,6 +45,8 @@ export const CustomerFilterSchema = z.object({
   perPage: z.string().regex(/^\d+$/).transform(Number).optional(),
   state: z.nativeEnum(CustomerState).optional(),
   search: z.string().max(255).optional(),
+  sortBy: z.string().optional(),
+  sortOrder: z.enum(['asc', 'desc']).optional(),
 });
 
 export type CustomerFilterSchemaType = z.infer<typeof CustomerFilterSchema>;

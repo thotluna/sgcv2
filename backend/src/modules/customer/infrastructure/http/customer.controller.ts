@@ -110,13 +110,15 @@ export class CustomerController {
    */
   async findAll(req: Request, res: Response): Promise<Response> {
     const query = req.query as CustomerFilterSchemaType;
-    const { page = 1, perPage = 10, state, search } = query;
+    const { page = 1, perPage = 10, state, search, sortBy, sortOrder } = query;
 
     const { items, total } = await this.listUseCase.execute({
       state,
       search,
       page,
       limit: perPage,
+      sortBy,
+      sortOrder,
     });
 
     return ResponseHelper.paginated(
