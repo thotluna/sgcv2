@@ -4,7 +4,11 @@ import '@testing-library/jest-dom';
 
 jest.mock('@feature/permissions/components', () => ({
   PermissionsFilters: () => <div data-testid="permissions-filters">Filters</div>,
-  PermissionsTableContent: () => <div data-testid="permissions-table-content">Table Content</div>,
+}));
+
+jest.mock('@/components/table-generic', () => ({
+  DataTable: () => <div data-testid="data-table">DataTable</div>,
+  TableSkeleton: () => <div data-testid="skeleton">Loading...</div>,
 }));
 
 describe('PermissionsPage', () => {
@@ -14,17 +18,15 @@ describe('PermissionsPage', () => {
 
     expect(screen.getByText('Permisos')).toBeInTheDocument();
     expect(screen.getByTestId('permissions-filters')).toBeInTheDocument();
-    expect(screen.getByTestId('permissions-table-content')).toBeInTheDocument();
+    expect(screen.getByTestId('data-table')).toBeInTheDocument();
   });
 
   it('should handle searchParams correctly', async () => {
-    const searchParams = Promise.resolve({ search: 'test', offset: '10', limit: '20' });
+    const searchParams = Promise.resolve({ search: 'test', page: '1', perPage: '20' });
     const Page = await PermissionsPage({ searchParams });
     render(Page);
 
-    // We can't easily check props of mocked async RSCs in this setup without more complex mocking,
-    // but we verify the page renders with these params.
     expect(screen.getByText('Permisos')).toBeInTheDocument();
-    expect(screen.getByTestId('permissions-table-content')).toBeInTheDocument();
+    expect(screen.getByTestId('data-table')).toBeInTheDocument();
   });
 });

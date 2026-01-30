@@ -13,7 +13,7 @@ describe('CreateLocationUseCase', () => {
       findCustomerById: jest.fn(),
       findSubCustomerById: jest.fn(),
       create: jest.fn(),
-    } as any;
+    } as unknown as jest.Mocked<CreateLocationService>;
     useCase = new CreateLocationUseCase(mockService);
   });
 
@@ -24,15 +24,16 @@ describe('CreateLocationUseCase', () => {
         subCustomerId: null,
         name: 'Main Office',
         address: '123 Main St',
+        city: 'Caracas',
       };
 
-      mockService.findCustomerById.mockResolvedValue({ id: 'cust-1' } as any);
+      mockService.findCustomerById.mockResolvedValue({ id: 'cust-1' } as never);
       mockService.create.mockResolvedValue({
         id: 'loc-1',
         ...input,
         createdAt: new Date(),
         updatedAt: new Date(),
-      } as any);
+      } as never);
 
       const result = await useCase.execute(input);
 
@@ -48,6 +49,7 @@ describe('CreateLocationUseCase', () => {
         subCustomerId: null,
         name: 'test',
         address: 'test',
+        city: 'test',
       };
 
       await expect(useCase.execute(input)).rejects.toThrow(CustomerNotFoundException);
@@ -59,11 +61,12 @@ describe('CreateLocationUseCase', () => {
         subCustomerId: 'sub-1',
         name: 'Branch',
         address: '456 Branch Ave',
+        city: 'Caracas',
       };
 
-      mockService.findCustomerById.mockResolvedValue({ id: 'cust-1' } as any);
-      mockService.findSubCustomerById.mockResolvedValue({ id: 'sub-1' } as any);
-      mockService.create.mockResolvedValue({ id: 'loc-1' } as any);
+      mockService.findCustomerById.mockResolvedValue({ id: 'cust-1' } as never);
+      mockService.findSubCustomerById.mockResolvedValue({ id: 'sub-1' } as never);
+      mockService.create.mockResolvedValue({ id: 'loc-1' } as never);
 
       await useCase.execute(input);
 
@@ -71,13 +74,14 @@ describe('CreateLocationUseCase', () => {
     });
 
     it('should throw SubCustomerNotFoundException if subcustomer does not exist', async () => {
-      mockService.findCustomerById.mockResolvedValue({ id: 'cust-1' } as any);
+      mockService.findCustomerById.mockResolvedValue({ id: 'cust-1' } as never);
       mockService.findSubCustomerById.mockResolvedValue(null);
       const input: CreateLocationInput = {
         customerId: 'cust-1',
         subCustomerId: 'non-existent',
         name: 'test',
         address: 'test',
+        city: 'test',
       };
 
       await expect(useCase.execute(input)).rejects.toThrow(SubCustomerNotFoundException);

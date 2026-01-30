@@ -61,7 +61,7 @@ export class CustomerController {
       const input = CustomerMapper.toCreateInput(dto);
       const customer = await this.createUseCase.execute(input);
       return ResponseHelper.success(res, CustomerMapper.toDto(customer), 201);
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof CustomerAlreadyExistsException) {
         throw new ConflictException(error.message);
       }
@@ -110,13 +110,15 @@ export class CustomerController {
    */
   async findAll(req: Request, res: Response): Promise<Response> {
     const query = req.query as CustomerFilterSchemaType;
-    const { page = 1, perPage = 10, state, search } = query;
+    const { page = 1, perPage = 10, state, search, sortBy, sortOrder } = query;
 
     const { items, total } = await this.listUseCase.execute({
       state,
       search,
       page,
       limit: perPage,
+      sortBy,
+      sortOrder,
     });
 
     return ResponseHelper.paginated(
@@ -164,7 +166,7 @@ export class CustomerController {
       const id = String(req.params.id);
       const customer = await this.getUseCase.execute(id);
       return ResponseHelper.success(res, CustomerMapper.toDto(customer));
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof CustomerNotFoundException) {
         throw new NotFoundException(error.message);
       }
@@ -215,7 +217,7 @@ export class CustomerController {
       const input = CustomerMapper.toUpdateInput(dto);
       const customer = await this.updateUseCase.execute(id, input);
       return ResponseHelper.success(res, CustomerMapper.toDto(customer));
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof CustomerNotFoundException) {
         throw new NotFoundException(error.message);
       }
@@ -259,7 +261,7 @@ export class CustomerController {
       const id = String(req.params.id);
       const customer = await this.deleteUseCase.execute(id);
       return ResponseHelper.success(res, CustomerMapper.toDto(customer));
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof CustomerNotFoundException) {
         throw new NotFoundException(error.message);
       }

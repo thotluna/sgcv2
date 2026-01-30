@@ -59,7 +59,7 @@ export class LocationController {
       const input = LocationMapper.toCreateInput(dto, customerId);
       const location = await this.createUseCase.execute(input);
       return ResponseHelper.success(res, LocationMapper.toDto(location), 201);
-    } catch (error) {
+    } catch (error: unknown) {
       if (
         error instanceof CustomerNotFoundException ||
         error instanceof SubCustomerNotFoundException
@@ -99,13 +99,15 @@ export class LocationController {
   async findAll(req: Request, res: Response): Promise<Response> {
     const customerId = String(req.params.customerId);
     const query = req.query as unknown as CustomerLocationFilterSchemaType;
-    const { page = 1, perPage = 10, search } = query;
+    const { page = 1, perPage = 10, search, sortBy, sortOrder } = query;
 
     const { items, total } = await this.listUseCase.execute(
       {
         search,
         page,
         limit: perPage,
+        sortBy,
+        sortOrder,
       },
       customerId
     );
@@ -144,7 +146,7 @@ export class LocationController {
       const id = String(req.params.id);
       const location = await this.getUseCase.execute(id);
       return ResponseHelper.success(res, LocationMapper.toDto(location));
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof LocationNotFoundException) {
         throw new NotFoundException(error.message);
       }
@@ -182,7 +184,7 @@ export class LocationController {
       const input = LocationMapper.toUpdateInput(dto);
       const location = await this.updateUseCase.execute(id, input);
       return ResponseHelper.success(res, LocationMapper.toDto(location));
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof LocationNotFoundException) {
         throw new NotFoundException(error.message);
       }
@@ -212,7 +214,7 @@ export class LocationController {
       const id = String(req.params.id);
       const location = await this.deleteUseCase.execute(id);
       return ResponseHelper.success(res, LocationMapper.toDto(location));
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof LocationNotFoundException) {
         throw new NotFoundException(error.message);
       }

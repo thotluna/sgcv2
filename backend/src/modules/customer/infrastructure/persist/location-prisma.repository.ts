@@ -14,19 +14,24 @@ import { injectable } from 'inversify';
 @injectable()
 export class LocationPrismaRepository implements LocationRepository {
   async create(data: CreateLocationInput): Promise<CustomerLocationEntity> {
+    const createData: Prisma.CustomerLocationUncheckedCreateInput = {
+      customerId: data.customerId,
+      name: data.name,
+      address: data.address,
+      city: data.city,
+      subCustomerId: data.subCustomerId ?? undefined,
+      zipCode: data.zipCode ?? undefined,
+      isMain: data.isMain ?? false,
+    };
+
     const location = await prisma.customerLocation.create({
-      data: {
-        customerId: data.customerId,
-        subCustomerId: data.subCustomerId,
-        name: data.name,
-        address: data.address,
-      },
+      data: createData,
     });
     return LocationMapper.toEntity(location);
   }
 
   async findAll(filters: LocationFilterInput, customerId?: string): Promise<PaginatedLocations> {
-    const { page = 1, limit = 10, search } = filters;
+    const { page = 1, limit = 10, search, sortBy, sortOrder } = filters;
     const where: Prisma.CustomerLocationWhereInput = {};
 
     if (customerId) {
@@ -37,15 +42,20 @@ export class LocationPrismaRepository implements LocationRepository {
       where.OR = [
         { name: { contains: search, mode: 'insensitive' } },
         { address: { contains: search, mode: 'insensitive' } },
+        { city: { contains: search, mode: 'insensitive' } },
       ];
     }
+
+    const orderBy: Prisma.CustomerLocationOrderByWithRelationInput = sortBy
+      ? { [sortBy]: sortOrder || 'asc' }
+      : { createdAt: 'desc' };
 
     const [items, total] = await Promise.all([
       prisma.customerLocation.findMany({
         where,
         skip: (page - 1) * limit,
         take: limit,
-        orderBy: { createdAt: 'desc' },
+        orderBy,
       }),
       prisma.customerLocation.count({ where }),
     ]);
@@ -64,12 +74,17 @@ export class LocationPrismaRepository implements LocationRepository {
   }
 
   async update(id: string, data: UpdateLocationInput): Promise<CustomerLocationEntity> {
+    const updateData: Prisma.CustomerLocationUncheckedUpdateInput = {
+      name: data.name,
+      address: data.address,
+      city: data.city,
+      zipCode: data.zipCode ?? undefined,
+      isMain: data.isMain ?? undefined,
+    };
+
     const location = await prisma.customerLocation.update({
       where: { id },
-      data: {
-        name: data.name,
-        address: data.address,
-      },
+      data: updateData,
     });
     return LocationMapper.toEntity(location);
   }

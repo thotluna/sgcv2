@@ -1,9 +1,5 @@
+import { CreateCustomerFormData, UpdateCustomerFormData } from '@feature/customers/types';
 import { expect, Page } from '@playwright/test';
-
-import {
-  CreateCustomerFormData,
-  UpdateCustomerFormData,
-} from '@/app/(core)/operations/customers/types';
 
 export class CustomerPOM {
   constructor(private page: Page) {}

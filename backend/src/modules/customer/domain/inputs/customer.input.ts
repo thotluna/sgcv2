@@ -23,6 +23,8 @@ export interface CustomerFilterInput {
   search?: string;
   page?: number;
   limit?: number;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
 }
 
 export interface PaginatedCustomers {

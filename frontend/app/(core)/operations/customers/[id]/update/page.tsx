@@ -1,14 +1,14 @@
 import { notFound } from 'next/navigation';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { serverCustomersService } from '@/lib/api/server-customers.service';
+import { getCustomerById } from '@/feature/customers/services/customers.service';
 
 import { UpdateCustomerForm } from './_components/update-customer-form';
 
 export default async function UpdateCustomerPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
-  const response = await serverCustomersService.getOne(id);
+  const response = await getCustomerById(id);
 
   if (response.error || !response.data) {
     notFound();

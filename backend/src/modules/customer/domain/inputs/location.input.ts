@@ -3,17 +3,25 @@ export interface CreateLocationInput {
   subCustomerId?: string | null;
   name: string;
   address: string;
+  city: string;
+  zipCode?: string | null;
+  isMain?: boolean;
 }
 
 export interface UpdateLocationInput {
   name?: string;
   address?: string;
+  city?: string;
+  zipCode?: string | null;
+  isMain?: boolean;
 }
 
 export interface LocationFilterInput {
   search?: string;
   page: number;
   limit: number;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
 }
 
 export interface PaginatedLocations {

@@ -17,6 +17,8 @@ export class PermissionsController {
       search: rawQuery.search,
       page: rawQuery.page ? parseInt(rawQuery.page) : 1,
       limit: rawQuery.limit ? parseInt(rawQuery.limit) : 10,
+      sortBy: rawQuery.sortBy,
+      sortOrder: rawQuery.sortOrder as 'asc' | 'desc',
     };
 
     const permissions = await this.listPermissionsUseCase.execute(filter);

@@ -28,7 +28,7 @@ export class CustomerPrismaRepository implements CustomerRepository {
   }
 
   async findAll(filters: CustomerFilterInput): Promise<PaginatedCustomers> {
-    const { page = 1, limit = 10, state, search } = filters;
+    const { page = 1, limit = 10, state, search, sortBy, sortOrder } = filters;
     const where: Prisma.CustomerWhereInput = {};
 
     if (state) {
@@ -44,12 +44,20 @@ export class CustomerPrismaRepository implements CustomerRepository {
       ];
     }
 
+    const orderBy: Prisma.CustomerOrderByWithRelationInput = {};
+    if (sortBy) {
+      orderBy[sortBy as keyof Prisma.CustomerOrderByWithRelationInput] =
+        (sortOrder as Prisma.SortOrder) || 'asc';
+    } else {
+      orderBy.createdAt = 'desc';
+    }
+
     const [items, total] = await Promise.all([
       prisma.customer.findMany({
         where,
         skip: (page - 1) * limit,
         take: limit,
-        orderBy: { createdAt: 'desc' },
+        orderBy,
       }),
       prisma.customer.count({ where }),
     ]);

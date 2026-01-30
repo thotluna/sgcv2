@@ -32,7 +32,7 @@
 
 - CRUD completo de Customers
 - CRUD completo de SubCustomers
-- **Backend de Locations (100%):**
+- **Backend de Locations (100%): ✅ Corregido error de Null constraint city**
   - ✅ Domain Layer (Entity, Repository, Services, Exceptions)
   - ✅ Application Layer (5 Use Cases: Create, Update, Delete, Get, List)
   - ✅ Infrastructure Layer (Repository Prisma, Service, Mapper)
@@ -151,7 +151,7 @@
   - [ ] Indicador visual de contacto primario
   - [x] Validaciones de formulario con Zod (Unificado en @sgcv2/shared)
   - [x] Manejo de errores con toast notifications (Integrado con Server Actions y useActionState)
-  - [x] Soporte para No-JS y Server Actions en CustomerForm
+  - [x] Soporte para No-JS y Server Actions en CustomerForm (Corregido error de tipos en useActionState y error de restricción NULL en Ciudad)
 
 **Estimación:** 1 semana
 
@@ -172,10 +172,31 @@
   - [ ] Agregar vista de "Servicios Prestados" (placeholder)
   - [ ] Preparar relación con ODS (para fase futura)
 
-**Estimación:** 3 días
+- [x] **Estandarización de Tablas**
+  - [x] Crear componente genérico `ServerTable` para unificar lógica de orquestación. (Migrado a `DataTable`)
+  - [x] Refactorizar `CustomersList` para usar el componente `DataTable`.
+  - [x] Refactorizar `RolesList` para usar el componente `DataTable` (incluye backend sorting).
+  - [x] Refactorizar `PermissionsList` para usar el componente `DataTable` (incluye backend sorting).
+  - [x] Refactorizar `UsersList` para usar el componente `DataTable`.
+
+**Estado:** ✅ Completado (Reducción de ~70% de boilerplate en tablas)
 
 ---
 
+### 2.5 Re-arquitectura de Localidades (Página Global) 🟡 EN PROGRESO
+
+**Objetivo:** Migrar de una pestaña jerárquica dentro de Clientes a una gestión global de sedes/localidades para mayor eficiencia operativa.
+
+- [ ] **Backend**
+  - [ ] Habilitar búsqueda global de sedes (hacer `customerId` opcional en la búsqueda)
+  - [ ] Añadir filtro opcional por `subCustomerId` en el endpoint de sedes
+- [ ] **Frontend**
+  - [ ] Crear página global `/operations/locations` con `DataTable`
+  - [ ] Implementar filtros globales (search, sub-customer, city)
+  - [ ] Eliminar pestaña "Sedes" de `CustomerDetailPage`
+  - [ ] Vincular tabla de Sub-clientes con la nueva página global mediante filtros en la URL
+
+---
 
 ## 🔴 FASE 3: Workflow Engine (CRÍTICA)
 

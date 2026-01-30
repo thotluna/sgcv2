@@ -132,10 +132,25 @@ describe('RolesPrismaRepository', () => {
           where: expect.any(Object),
           skip: 0,
           take: 10,
+          orderBy: { name: 'asc' },
         })
       );
       expect(result.items).toHaveLength(1);
       expect(result.total).toBe(1);
+    });
+
+    it('should apply dynamic sorting correctly', async () => {
+      mockPrismaRole.findMany.mockResolvedValue([]);
+      mockPrismaRole.count.mockResolvedValue(0);
+
+      const filter = { page: 1, limit: 10, sortBy: 'description', sortOrder: 'desc' as const };
+      await repository.getAll(filter);
+
+      expect(mockPrismaRole.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          orderBy: { description: 'desc' },
+        })
+      );
     });
   });
 

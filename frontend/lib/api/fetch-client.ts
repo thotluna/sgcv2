@@ -21,14 +21,15 @@ export async function fetchClient(endpoint: string, options: RequestInit = {}) {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${endpoint}`, {
     ...options,
     headers,
-    // Importante para que las cookies fluyan en el cliente
     credentials: isServer ? undefined : 'include',
   });
 
-  // Manejo de error global (como hacía Axios)
   if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.message || 'API Error');
+    const errorData = await response.json().catch(() => null);
+    if (errorData) {
+      return errorData;
+    }
+    throw new Error(response.statusText || 'API Error');
   }
 
   return response.json();

@@ -1,24 +1,27 @@
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 
+import {
+  CustomerDetailsHeader,
+  LocationsList,
+  SubCustomersList,
+} from '@feature/customers/components';
 import { Info, MapPin, Users } from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { serverCustomersService } from '@/lib/api/server-customers.service';
-
-import { CustomerDetailsHeader } from '../_components/customer-details-header';
-import { LocationsList } from '../_components/locations-list';
-import { SubCustomersList } from '../_components/sub-customers-list';
+import { getCustomerById } from '@/feature/customers/services/customers.service';
 
 interface PageProps {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default async function CustomerDetailPage({ params }: PageProps) {
+export default async function CustomerDetailPage({ params, searchParams }: PageProps) {
   const { id } = await params;
+  const sParams = await searchParams;
 
-  const response = await serverCustomersService.getOne(id);
+  const response = await getCustomerById(id);
 
   if (response.error || !response.data) {
     notFound();
@@ -92,13 +95,13 @@ export default async function CustomerDetailPage({ params }: PageProps) {
 
         <TabsContent value="subcustomers" className="mt-6">
           <Suspense fallback={<div>Cargando sub-clientes...</div>}>
-            <SubCustomersList customerId={id} />
+            <SubCustomersList customerId={id} searchParams={sParams} />
           </Suspense>
         </TabsContent>
 
         <TabsContent value="locations" className="mt-6">
           <Suspense fallback={<div>Cargando sedes...</div>}>
-            <LocationsList customerId={id} />
+            <LocationsList customerId={id} searchParams={sParams} />
           </Suspense>
         </TabsContent>
       </Tabs>

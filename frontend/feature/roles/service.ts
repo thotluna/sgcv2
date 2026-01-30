@@ -5,22 +5,32 @@ import {
   CreateRoleDto,
   PermissionDto,
   RoleDto,
-  RoleFilterDto,
   RoleWithPermissionsDto,
   UpdateRoleDto,
 } from '@sgcv2/shared';
 
-export async function getAllRoles(filter?: RoleFilterDto): Promise<AppResponse<RoleDto[]>> {
+export async function getAllRoles(
+  page: number = 1,
+  perPage: number = 10,
+  sortBy?: string,
+  sortOrder?: 'asc' | 'desc',
+  filters?: Record<string, string | number | boolean | undefined>
+): Promise<AppResponse<RoleDto[]>> {
   const params = new URLSearchParams();
 
-  if (filter?.search) {
-    params.append('search', filter.search);
+  params.append('page', page.toString());
+  params.append('limit', perPage.toString());
+
+  if (sortBy) {
+    params.append('sortBy', sortBy);
+
+    if (sortOrder) {
+      params.append('sortOrder', sortOrder);
+    }
   }
 
-  if (filter?.pagination) {
-    const page = Math.floor(filter.pagination.offset / filter.pagination.limit) + 1;
-    params.append('page', page.toString());
-    params.append('limit', filter.pagination.limit.toString());
+  if (filters?.search) {
+    params.append('search', String(filters.search));
   }
 
   const queryString = params.toString();

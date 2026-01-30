@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import CustomerViewPage from '../[id]/page';
-import { serverCustomersService } from '@/lib/api/server-customers.service';
+import { getCustomerById } from '@/feature/customers/services/customers.service';
 import { notFound } from 'next/navigation';
 
 // Mocks
-jest.mock('@/lib/api/server-customers.service');
+jest.mock('@/feature/customers/services/customers.service');
 jest.mock('next/navigation', () => ({
   notFound: jest.fn(() => {
     throw new Error('NEXT_NOT_FOUND');
@@ -29,10 +29,10 @@ jest.mock('next/link', () => ({
   __esModule: true,
   default: ({ children, href }: any) => <a href={href}>{children}</a>,
 }));
-jest.mock('../_components/sub-customers-list', () => ({
+jest.mock('@/feature/customers/components/sub-customers-list', () => ({
   SubCustomersList: () => <div data-testid="sub-customers-list" />,
 }));
-jest.mock('../_components/locations-list', () => ({
+jest.mock('@/feature/customers/components/locations-list', () => ({
   LocationsList: () => <div data-testid="locations-list" />,
 }));
 
@@ -54,11 +54,14 @@ describe('CustomerViewPage', () => {
   });
 
   it('renders customer details successfully', async () => {
-    (serverCustomersService.getOne as jest.Mock).mockResolvedValue({
+    (getCustomerById as jest.Mock).mockResolvedValue({
       data: mockCustomer,
     });
 
-    const jsx = await CustomerViewPage({ params: Promise.resolve({ id: '1' }) });
+    const jsx = await CustomerViewPage({
+      params: Promise.resolve({ id: '1' }),
+      searchParams: Promise.resolve({}),
+    });
     render(jsx);
 
     expect(screen.getByText('Datos Generales')).toBeInTheDocument();
@@ -69,14 +72,17 @@ describe('CustomerViewPage', () => {
   });
 
   it('calls notFound when error occurs', async () => {
-    (serverCustomersService.getOne as jest.Mock).mockResolvedValue({
+    (getCustomerById as jest.Mock).mockResolvedValue({
       error: 'Not found',
     });
 
     // notFound mock throws error to stop execution
-    await expect(CustomerViewPage({ params: Promise.resolve({ id: '999' }) })).rejects.toThrow(
-      'NEXT_NOT_FOUND'
-    );
+    await expect(
+      CustomerViewPage({
+        params: Promise.resolve({ id: '999' }),
+        searchParams: Promise.resolve({}),
+      })
+    ).rejects.toThrow('NEXT_NOT_FOUND');
 
     expect(notFound).toHaveBeenCalled();
   });

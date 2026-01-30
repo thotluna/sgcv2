@@ -23,19 +23,19 @@ describe('Roles Service', () => {
     it('should call fetchClient with correct params', async () => {
       mockFetchClient.mockResolvedValue({ success: true, data: [] });
 
-      await getAllRoles({ search: 'admin', pagination: { limit: 10, offset: 0 } });
+      await getAllRoles(1, 10, undefined, undefined, { search: 'admin' });
 
-      expect(mockFetchClient).toHaveBeenCalledWith('/roles?search=admin&page=1&limit=10', {
+      expect(mockFetchClient).toHaveBeenCalledWith('/roles?page=1&limit=10&search=admin', {
         method: 'GET',
       });
     });
 
-    it('should call fetchClient without params when filter is empty', async () => {
+    it('should call fetchClient with default params when called without arguments', async () => {
       mockFetchClient.mockResolvedValue({ success: true, data: [] });
 
       await getAllRoles();
 
-      expect(mockFetchClient).toHaveBeenCalledWith('/roles', {
+      expect(mockFetchClient).toHaveBeenCalledWith('/roles?page=1&limit=10', {
         method: 'GET',
       });
     });

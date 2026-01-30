@@ -7,6 +7,7 @@ import { TYPES } from '@roles/di/types';
 import { RoleAlreadyExistsException } from '@roles/domain/exceptions/role-already-exists-exception';
 import { RoleInUseException } from '@roles/domain/exceptions/role-in-use-exception';
 import { RoleNotFoundException } from '@roles/domain/exceptions/role-not-found-exception';
+import { RoleFilterInput } from '@roles/domain/inputs/roles.input';
 import { RolesMapper } from '@roles/infrastructure/mappers/roles.mapper';
 import {
   BadRequestException,
@@ -118,10 +119,12 @@ export class RolesController {
    */
   async getAll(req: Request, res: Response): Promise<Response> {
     const rawQuery = req.query as Record<string, string | undefined>;
-    const filter = {
+    const filter: RoleFilterInput = {
       search: rawQuery.search,
       page: rawQuery.page ? parseInt(rawQuery.page) : 1,
       limit: rawQuery.limit ? parseInt(rawQuery.limit) : 10,
+      sortBy: rawQuery.sortBy,
+      sortOrder: rawQuery.sortOrder as 'asc' | 'desc',
     };
 
     const { items, total } = await this.getAllRolesUseCase.execute(filter);

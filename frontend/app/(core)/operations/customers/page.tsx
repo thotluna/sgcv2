@@ -1,11 +1,12 @@
 import { Suspense } from 'react';
 
+import { CustomersFilters } from '@feature/customers/components';
+import { columns } from '@feature/customers/components/columns';
+import { getAllCustomers } from '@feature/customers/services/customers.service';
+
 import { CustomerState } from '@sgcv2/shared';
 
-import { TableSkeleton } from '@/components/table/table-skeleton';
-
-import { CustomersFilters } from './_components/filters';
-import { CustomersTableContent } from './_components/table-content';
+import { DataTable, TableSkeleton } from '@/components/table-generic';
 
 interface CustomersPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -13,13 +14,6 @@ interface CustomersPageProps {
 
 export default async function CustomersPage({ searchParams }: CustomersPageProps) {
   const params = await searchParams;
-  const page = typeof params.page === 'string' ? parseInt(params.page) : 1;
-  const perPage = typeof params.perPage === 'string' ? parseInt(params.perPage) : 5;
-
-  const filters = {
-    search: typeof params.search === 'string' ? params.search : undefined,
-    state: typeof params.status === 'string' ? (params.status as CustomerState) : undefined,
-  };
 
   return (
     <div className="p-6 space-y-4">
@@ -27,10 +21,13 @@ export default async function CustomersPage({ searchParams }: CustomersPageProps
         <h1 className="text-3xl font-bold tracking-tight">Clientes</h1>
       </div>
 
-      <CustomersFilters search={filters.search} status={filters.state} />
+      <CustomersFilters
+        search={typeof params.search === 'string' ? params.search : undefined}
+        status={typeof params.status === 'string' ? (params.status as CustomerState) : undefined}
+      />
 
-      <Suspense key={JSON.stringify(params)} fallback={<TableSkeleton columnCount={5} />}>
-        <CustomersTableContent page={page} perPage={perPage} filters={filters} />
+      <Suspense key={JSON.stringify(params)} fallback={<TableSkeleton columns={6} />}>
+        <DataTable fetchData={getAllCustomers} headers={columns} searchParams={params} />
       </Suspense>
     </div>
   );
