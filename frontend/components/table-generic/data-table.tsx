@@ -1,5 +1,5 @@
 import {
-  type HeaderType,
+  type TableColumn,
   TableHeader as CustomTableHeader,
   TablePagination,
 } from '@components/table-generic';
@@ -16,7 +16,8 @@ interface DataTableProps<T> {
     sortOrder?: 'asc' | 'desc',
     filters?: { state?: string; search?: string }
   ) => Promise<AppResponse<T[]>>;
-  headers: HeaderType[];
+
+  headers: TableColumn<T>[];
   searchParams: { [key: string]: string | string[] | undefined };
 }
 
@@ -62,7 +63,11 @@ export async function DataTable<T>({ fetchData, headers, searchParams }: DataTab
               {headers.map(header => (
                 <CustomTableHeader
                   key={header.id}
-                  header={header}
+                  header={{
+                    id: header.id,
+                    label: header.label,
+                    isOrderable: header.isOrderable,
+                  }}
                   currentSortBy={sortBy}
                   currentSortOrder={sortOrder}
                 />
@@ -75,7 +80,9 @@ export async function DataTable<T>({ fetchData, headers, searchParams }: DataTab
                 <TableRow key={id}>
                   {headers.map(header => (
                     <TableCell key={header.id}>
-                      {items[header.id as keyof T] as React.ReactNode}
+                      {header.cell
+                        ? header.cell(items)
+                        : (items[header.id as keyof T] as React.ReactNode)}
                     </TableCell>
                   ))}
                 </TableRow>

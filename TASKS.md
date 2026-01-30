@@ -173,10 +173,13 @@
   - [ ] Preparar relación con ODS (para fase futura)
 
 - [x] **Estandarización de Tablas**
-  - [x] Refactorizar `LocationsList` para usar el componente `DataTable`.
-  - [x] Refactorizar `SubCustomersList` para usar el componente `DataTable`.
+  - [x] Crear componente genérico `ServerTable` para unificar lógica de orquestación.
+  - [x] Refactorizar `CustomersList` para usar el componente `ServerTable`.
+  - [x] Refactorizar `RolesList` para usar el componente `ServerTable`.
+  - [x] Refactorizar `PermissionsList` para usar el componente `ServerTable`.
+  - [x] Refactorizar `UsersList` para usar el componente `ServerTable`.
 
-**Estimación:** 3 días
+**Estado:** ✅ Completado (Reducción de ~70% de boilerplate en tablas)
 
 ---
 

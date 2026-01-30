@@ -4,4 +4,8 @@ export interface HeaderType {
   isOrderable: boolean;
 }
 
+export interface TableColumn<T> extends HeaderType {
+  cell?: (item: T) => React.ReactNode;
+}
+
 export type SortOrder = 'asc' | 'desc';
