@@ -5,5 +5,3 @@ export * from './location-form';
 export * from './locations-list';
 export * from './sub-customer-form';
 export * from './sub-customers-list';
-export * from './table';
-export * from './table-content';
