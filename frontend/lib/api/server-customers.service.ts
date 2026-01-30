@@ -43,10 +43,7 @@ export const serverCustomersService = {
       const response = await client.get('/customers', {
         params: { page, perPage, ...filters },
       });
-      return {
-        success: true,
-        data: response.data.data,
-      };
+      return response.data;
     } catch (error) {
       console.error('Error fetching customers:', error);
       const isAxiosError = error instanceof AxiosError;
@@ -64,10 +61,7 @@ export const serverCustomersService = {
     try {
       const client = await createServerApiClient();
       const response = await client.post('/customers', data);
-      return {
-        success: true,
-        data: response.data.data,
-      };
+      return response.data;
     } catch (error) {
       console.error('Error creating customer:', error);
       const isAxiosError = error instanceof AxiosError;
@@ -85,10 +79,7 @@ export const serverCustomersService = {
     try {
       const client = await createServerApiClient();
       const response = await client.put(`/customers/${id}`, data);
-      return {
-        success: true,
-        data: response.data.data,
-      };
+      return response.data;
     } catch (error) {
       console.error('Error updating customer:', error);
       const isAxiosError = error instanceof AxiosError;

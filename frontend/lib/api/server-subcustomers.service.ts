@@ -41,10 +41,7 @@ export const serverSubCustomersService = {
       const response = await client.get(`/customers/${customerId}/sub-customers`, {
         params: filters,
       });
-      return {
-        success: true,
-        data: response.data.data,
-      };
+      return response.data;
     } catch (error) {
       console.error('Error fetching sub-customers:', error);
       const isAxiosError = error instanceof AxiosError;
@@ -67,10 +64,7 @@ export const serverSubCustomersService = {
     try {
       const client = await createServerApiClient();
       const response = await client.post(`/customers/${customerId}/sub-customers`, data);
-      return {
-        success: true,
-        data: response.data.data,
-      };
+      return response.data;
     } catch (error) {
       console.error('Error creating sub-customer:', error);
       const isAxiosError = error instanceof AxiosError;
@@ -92,10 +86,7 @@ export const serverSubCustomersService = {
     try {
       const client = await createServerApiClient();
       const response = await client.put(`/customers/${customerId}/sub-customers/${id}`, data);
-      return {
-        success: true,
-        data: response.data.data,
-      };
+      return response.data;
     } catch (error) {
       console.error('Error updating sub-customer:', error);
       const isAxiosError = error instanceof AxiosError;

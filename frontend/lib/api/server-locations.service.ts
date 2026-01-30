@@ -41,10 +41,7 @@ export const serverLocationsService = {
       const response = await client.get(`/customers/${customerId}/locations`, {
         params: filters,
       });
-      return {
-        success: true,
-        data: response.data.data,
-      };
+      return response.data;
     } catch (error) {
       console.error('Error fetching locations:', error);
       const isAxiosError = error instanceof AxiosError;
@@ -65,10 +62,7 @@ export const serverLocationsService = {
     try {
       const client = await createServerApiClient();
       const response = await client.post(`/customers/${customerId}/locations`, data);
-      return {
-        success: true,
-        data: response.data.data,
-      };
+      return response.data;
     } catch (error) {
       console.error('Error creating location:', error);
       const isAxiosError = error instanceof AxiosError;
@@ -89,10 +83,7 @@ export const serverLocationsService = {
     try {
       const client = await createServerApiClient();
       const response = await client.put(`/locations/${id}`, data);
-      return {
-        success: true,
-        data: response.data.data,
-      };
+      return response.data;
     } catch (error) {
       console.error('Error updating location:', error);
       const isAxiosError = error instanceof AxiosError;
