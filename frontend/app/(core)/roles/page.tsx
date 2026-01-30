@@ -1,14 +1,13 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
 
-import { DataTable } from '@components/table-generic';
+import { DataTable, TableSkeleton } from '@components/table-generic';
 import { RolesFilters } from '@feature/roles/components';
 import { columns } from '@feature/roles/components/columns';
 import { getAllRoles } from '@feature/roles/service';
 
 import { RoleFilterDto } from '@sgcv2/shared';
 
-import { TableSkeleton } from '@/components/table/table-skeleton';
 import { Button } from '@/components/ui/button';
 
 interface RolesPageProps {
@@ -45,7 +44,7 @@ export default async function RolesPage({ searchParams }: RolesPageProps) {
       <main className="flex w-full flex-col gap-4">
         <RolesFilters search={filter.search} />
 
-        <Suspense key={JSON.stringify(params)} fallback={<TableSkeleton columnCount={3} />}>
+        <Suspense key={JSON.stringify(params)} fallback={<TableSkeleton columns={3} />}>
           <DataTable fetchData={getAllRoles} headers={columns} searchParams={params} />
         </Suspense>
       </main>

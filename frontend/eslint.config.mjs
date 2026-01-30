@@ -1,8 +1,8 @@
-import { defineConfig, globalIgnores } from "eslint/config";
-import nextVitals from "eslint-config-next/core-web-vitals";
-import nextTs from "eslint-config-next/typescript";
-import prettierConfig from "eslint-config-prettier";
-import simpleImportSort from "eslint-plugin-simple-import-sort";
+import { defineConfig, globalIgnores } from 'eslint/config';
+import nextVitals from 'eslint-config-next/core-web-vitals';
+import nextTs from 'eslint-config-next/typescript';
+import prettierConfig from 'eslint-config-prettier';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
 
 const eslintConfig = defineConfig([
   nextVitals,
@@ -11,10 +11,10 @@ const eslintConfig = defineConfig([
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:
-    ".next/**",
-    "out/**",
-    "build/**",
-    "next-env.d.ts",
+    '.next/**',
+    'out/**',
+    'build/**',
+    'next-env.d.ts',
     'node_modules/**',
     'dist/**',
     '.swc/**',
@@ -31,31 +31,31 @@ const eslintConfig = defineConfig([
   ]),
   {
     plugins: {
-      "simple-import-sort": simpleImportSort,
+      'simple-import-sort': simpleImportSort,
     },
     rules: {
-      "simple-import-sort/imports": [
-        "error",
+      'simple-import-sort/imports': [
+        'error',
         {
           groups: [
             // React and Next.js
-            ["^react", "^next"],
+            ['^react', '^next'],
             // External packages
-            ["^@?\\w"],
+            ['^@?\\w'],
             // Shared package
-            ["^@sgcv2/shared"],
+            ['^@sgcv2/shared'],
             // Internal aliases
-            ["^@/"],
+            ['^@/'],
             // Relative imports
-            ["^\\.\\.(?!/?$)", "^\\.\\./?$", "^\\./(?=[^/]*$)", "^\\.(?!/?$)", "^\\./?$"],
+            ['^\\.\\.(?!/?$)', '^\\.\\./?$', '^\\./(?=[^/]*$)', '^\\.(?!/?$)', '^\\./?$'],
             // Side effect imports
-            ["^\\u0000"],
+            ['^\\u0000'],
             // Styles and assets
-            ["^.+\\.s?css$", "^.+\\.(png|jpg|jpeg|gif|svg)$"],
+            ['^.+\\.s?css$', '^.+\\.(png|jpg|jpeg|gif|svg)$'],
           ],
         },
       ],
-      "simple-import-sort/exports": "error",
+      'simple-import-sort/exports': 'error',
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-restricted-types': [
         'error',
