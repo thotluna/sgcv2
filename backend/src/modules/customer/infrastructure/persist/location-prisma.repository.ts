@@ -31,7 +31,7 @@ export class LocationPrismaRepository implements LocationRepository {
   }
 
   async findAll(filters: LocationFilterInput, customerId?: string): Promise<PaginatedLocations> {
-    const { page = 1, limit = 10, search } = filters;
+    const { page = 1, limit = 10, search, sortBy, sortOrder } = filters;
     const where: Prisma.CustomerLocationWhereInput = {};
 
     if (customerId) {
@@ -46,12 +46,16 @@ export class LocationPrismaRepository implements LocationRepository {
       ];
     }
 
+    const orderBy: Prisma.CustomerLocationOrderByWithRelationInput = sortBy
+      ? { [sortBy]: sortOrder || 'asc' }
+      : { createdAt: 'desc' };
+
     const [items, total] = await Promise.all([
       prisma.customerLocation.findMany({
         where,
         skip: (page - 1) * limit,
         take: limit,
-        orderBy: { createdAt: 'desc' },
+        orderBy,
       }),
       prisma.customerLocation.count({ where }),
     ]);

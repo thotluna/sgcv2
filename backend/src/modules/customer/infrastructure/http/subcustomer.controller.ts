@@ -108,13 +108,15 @@ export class SubCustomerController {
   async findAll(req: Request, res: Response): Promise<Response> {
     const customerId = String(req.params.customerId);
     const query = req.query as unknown as SubCustomerFilterSchemaType;
-    const { page = 1, perPage = 10, search } = query;
+    const { page = 1, perPage = 10, search, sortBy, sortOrder } = query;
 
     const { items, total } = await this.listUseCase.execute(
       {
         search,
         page,
         limit: perPage,
+        sortBy,
+        sortOrder,
       },
       customerId
     );

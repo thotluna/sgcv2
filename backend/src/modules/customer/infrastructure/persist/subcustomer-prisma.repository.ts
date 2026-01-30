@@ -29,7 +29,7 @@ export class SubCustomerPrismaRepository implements SubCustomerRepository {
     filters: SubCustomerFilterInput,
     customerId?: string
   ): Promise<PaginatedSubCustomers> {
-    const { page = 1, limit = 10, search } = filters;
+    const { page = 1, limit = 10, search, sortBy, sortOrder } = filters;
     const where: Prisma.SubCustomerWhereInput = {};
 
     if (customerId) {
@@ -51,13 +51,17 @@ export class SubCustomerPrismaRepository implements SubCustomerRepository {
       ];
     }
 
+    const orderBy: Prisma.SubCustomerOrderByWithRelationInput = sortBy
+      ? { [sortBy]: sortOrder || 'asc' }
+      : { createdAt: 'desc' };
+
     const [items, total] = await Promise.all([
       prisma.subCustomer.findMany({
         where,
         include: { customer: true },
         skip: (page - 1) * limit,
         take: limit,
-        orderBy: { createdAt: 'desc' },
+        orderBy,
       }),
       prisma.subCustomer.count({ where }),
     ]);
