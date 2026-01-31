@@ -195,6 +195,7 @@
   - [x] Crear página global `/operations/customers/locations` con `DataTable`
   - [x] Implementar filtros globales (search)
   - [x] Integrar en Sidebar bajo menú Clientes
+- [x] Limpiezas de código: Eliminar uso de `any` y `as never` en los tests (Backend & Frontend)
   - [ ] Eliminar pestaña "Sedes" de `CustomerDetailPage` (Pendiente por definir si se mantiene como vista rápida)
 
 ---
