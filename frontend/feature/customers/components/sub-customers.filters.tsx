@@ -16,6 +16,7 @@ export function SubCustomersFilters({ customerId, search }: SubCustomersFiltersP
     <div className="flex flex-col sm:flex-row gap-4 justify-between items-center mb-6">
       <form
         action={handleSubCustomerFilters}
+        aria-label="Filtros de sub-clientes"
         className="flex flex-1 w-full sm:w-auto gap-2 items-center"
       >
         <div className="relative flex-1 max-w-sm">

@@ -22,11 +22,11 @@ describe('SubCustomerService', () => {
       findByExternalCode: jest.fn(),
       update: jest.fn(),
       delete: jest.fn(),
-    } as any;
+    } as unknown as jest.Mocked<SubCustomerRepository>;
 
     mockCustRepo = {
       findById: jest.fn(),
-    } as any;
+    } as unknown as jest.Mocked<CustomerRepository>;
 
     service = new SubCustomerService(mockSubRepo, mockCustRepo);
   });
@@ -81,6 +81,17 @@ describe('SubCustomerService', () => {
       const result = await service.findAll(filters, 'cust-1');
 
       expect(mockSubRepo.findAll).toHaveBeenCalledWith(filters, 'cust-1');
+      expect(result).toEqual(mockResult);
+    });
+
+    it('should delegate to subCustomerRepository without customerId', async () => {
+      const filters: SubCustomerFilterInput = { page: 1, limit: 10 };
+      const mockResult = { items: [], total: 0 };
+      mockSubRepo.findAll.mockResolvedValue(mockResult);
+
+      const result = await service.findAll(filters);
+
+      expect(mockSubRepo.findAll).toHaveBeenCalledWith(filters, undefined);
       expect(result).toEqual(mockResult);
     });
   });
