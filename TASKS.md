@@ -145,6 +145,7 @@
   - [x] Crear formulario `SubCustomerForm` (Creación unificada con Sede)
   - [x] Integrar en página de detalle de cliente
   - [x] Implementar Server Actions para SubCustomers (incluye creación combinada)
+  - [x] Refactorizar Sidebar para soportar submenús (Clientes -> Listado/Sub Clientes)
 
 - [ ] **Mejoras UX**
   - [x] Tabs para separar Locations y Contacts (Implementado en Layout Base)
