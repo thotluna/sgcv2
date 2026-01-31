@@ -100,6 +100,11 @@ export default async function SidebarApp() {
               href: '/operations/customers/sub-customers',
               permissions: [],
             },
+            {
+              title: 'Sedes',
+              href: '/operations/customers/locations',
+              permissions: [],
+            },
           ],
         },
         {
