@@ -102,6 +102,7 @@ export type UpdateSubCustomerSchemaType = z.infer<typeof UpdateSubCustomerSchema
 
 export const SubCustomerFilterSchema = z.object({
   search: z.string().optional(),
+  customerId: z.string().uuid().optional(),
   page: z.coerce.number().int().positive().default(1),
   perPage: z.coerce.number().int().positive().default(10),
   sortBy: z.string().optional(),

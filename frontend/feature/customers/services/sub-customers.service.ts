@@ -15,7 +15,7 @@ export async function getSubCustomerById(
 }
 
 export async function getAllSubCustomers(
-  customerId: string,
+  customerId?: string,
   filters?: {
     search?: string;
     page?: number;
@@ -30,9 +30,10 @@ export async function getAllSubCustomers(
   if (filters?.search) searchParams.append('search', filters.search);
   if (filters?.sortBy) searchParams.append('sortBy', filters.sortBy);
   if (filters?.sortOrder) searchParams.append('sortOrder', filters.sortOrder);
+  if (customerId) searchParams.append('customerId', customerId);
 
   const queryString = searchParams.toString();
-  const url = `/customers/${customerId}/sub-customers${queryString ? `?${queryString}` : ''}`;
+  const url = `/sub-customers${queryString ? `?${queryString}` : ''}`;
   return fetchClient(url);
 }
 

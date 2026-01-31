@@ -106,8 +106,8 @@ export class SubCustomerController {
    *         description: Paginated sub-customer list
    */
   async findAll(req: Request, res: Response): Promise<Response> {
-    const customerId = String(req.params.customerId);
     const query = req.query as unknown as SubCustomerFilterSchemaType;
+    const customerId = (req.params.customerId as string) || query.customerId;
     const { page = 1, perPage = 10, search, sortBy, sortOrder } = query;
 
     const { items, total } = await this.listUseCase.execute(
