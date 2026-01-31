@@ -97,7 +97,9 @@ export class LocationController {
    *         description: Paginated location list
    */
   async findAll(req: Request, res: Response): Promise<Response> {
-    const query = req.query as unknown as CustomerLocationFilterSchemaType;
+    const query = req.query as unknown as CustomerLocationFilterSchemaType & {
+      customerId?: string;
+    };
     const customerId = (req.params.customerId as string) || query.customerId;
     const { page = 1, perPage = 10, search, sortBy, sortOrder } = query;
 
