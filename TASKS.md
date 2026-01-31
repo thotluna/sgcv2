@@ -145,6 +145,7 @@
   - [x] Crear formulario `SubCustomerForm` (Creación unificada con Sede)
   - [x] Integrar en página de detalle de cliente
   - [x] Implementar Server Actions para SubCustomers (incluye creación combinada)
+  - [x] Refactorizar Sidebar para soportar submenús (Clientes -> Listado/Sub Clientes)
 
 - [ ] **Mejoras UX**
   - [x] Tabs para separar Locations y Contacts (Implementado en Layout Base)
@@ -183,18 +184,19 @@
 
 ---
 
-### 2.5 Re-arquitectura de Localidades (Página Global) 🟡 EN PROGRESO
+### 2.5 Re-arquitectura de Localidades (Página Global) ✅ COMPLETADO
 
 **Objetivo:** Migrar de una pestaña jerárquica dentro de Clientes a una gestión global de sedes/localidades para mayor eficiencia operativa.
 
-- [ ] **Backend**
-  - [ ] Habilitar búsqueda global de sedes (hacer `customerId` opcional en la búsqueda)
-  - [ ] Añadir filtro opcional por `subCustomerId` en el endpoint de sedes
-- [ ] **Frontend**
-  - [ ] Crear página global `/operations/locations` con `DataTable`
-  - [ ] Implementar filtros globales (search, sub-customer, city)
-  - [ ] Eliminar pestaña "Sedes" de `CustomerDetailPage`
-  - [ ] Vincular tabla de Sub-clientes con la nueva página global mediante filtros en la URL
+- [x] **Backend**
+  - [x] Habilitar búsqueda global de sedes (hacer `customerId` opcional en la búsqueda)
+  - [x] Añadir filtro opcional por `subCustomerId` en el endpoint de sedes
+- [x] **Frontend**
+  - [x] Crear página global `/operations/customers/locations` con `DataTable`
+  - [x] Implementar filtros globales (search)
+  - [x] Integrar en Sidebar bajo menú Clientes
+- [x] Limpiezas de código: Eliminar uso de `any` y `as never` en los tests (Backend & Frontend)
+  - [ ] Eliminar pestaña "Sedes" de `CustomerDetailPage` (Pendiente por definir si se mantiene como vista rápida)
 
 ---
 

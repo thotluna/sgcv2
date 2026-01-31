@@ -3,6 +3,8 @@ import { AuthRoutes } from '@auth/infrastructure/http/auth.routes';
 import logger from '@config/logger';
 import { TYPES as CustomerTypes } from '@modules/customer/di/types';
 import { CustomerRoutes } from '@modules/customer/infrastructure/http/customer.routes';
+import { LocationRoutes } from '@modules/customer/infrastructure/http/location.routes';
+import { SubCustomerRoutes } from '@modules/customer/infrastructure/http/subcustomer.routes';
 import { TYPES as PermissionsTypes } from '@modules/permissions/di/types';
 import { PermissionsRoutes } from '@modules/permissions/infrastructure/http/permissions.routes';
 import { TYPES as RolesTypes } from '@modules/roles/di/types';
@@ -21,14 +23,18 @@ export function loadRoutes(app: Application, prefix: string = '') {
     const usersRoutes = container.get<UsersRoutes>(UsersTypes.UsersRoutes);
     const rolesRoutes = container.get<RolesRoutes>(RolesTypes.RolesRoutes);
     const customersRoutes = container.get<CustomerRoutes>(CustomerTypes.CustomerRoutes);
+    const subCustomerRoutes = container.get<SubCustomerRoutes>(CustomerTypes.SubCustomerRoutes);
     const supportRoutes = container.get<SupportRoutes>(SupportTypes.SupportRoutes);
     const permissionsRoutes = container.get<PermissionsRoutes>(PermissionsTypes.PermissionsRoutes);
+    const locationRoutes = container.get<LocationRoutes>(CustomerTypes.LocationRoutes);
 
     app.use(`${prefix}/auth`, authRoutes.getRouter());
     app.use(`${prefix}/users`, usersRoutes.getRouter());
     app.use(`${prefix}/roles`, rolesRoutes.getRouter());
     app.use(`${prefix}/permissions`, permissionsRoutes.getRouter());
     app.use(`${prefix}/customers`, customersRoutes.getRouter());
+    app.use(`${prefix}/sub-customers`, subCustomerRoutes.getRouter());
+    app.use(`${prefix}/locations`, locationRoutes.getRouter());
     app.use(`${prefix}/`, supportRoutes.getRouter());
   } catch (error) {
     logger.error('Error loading routes', {

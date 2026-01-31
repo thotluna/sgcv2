@@ -12,7 +12,7 @@ export async function getLocationById(id: string): Promise<AppResponse<CustomerL
 }
 
 export async function getAllLocations(
-  customerId: string,
+  customerId?: string,
   filters?: {
     search?: string;
     page?: number;
@@ -29,7 +29,9 @@ export async function getAllLocations(
   if (filters?.sortOrder) searchParams.append('sortOrder', filters.sortOrder || 'asc');
 
   const queryString = searchParams.toString();
-  const url = `/customers/${customerId}/locations${queryString ? `?${queryString}` : ''}`;
+  const url = customerId
+    ? `/customers/${customerId}/locations${queryString ? `?${queryString}` : ''}`
+    : `/locations${queryString ? `?${queryString}` : ''}`;
   return fetchClient(url);
 }
 

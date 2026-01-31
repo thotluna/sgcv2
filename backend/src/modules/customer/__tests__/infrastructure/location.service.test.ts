@@ -1,6 +1,8 @@
+import { CustomerEntity } from '@customer/domain/customer.entity';
 import { CustomerRepository } from '@customer/domain/customer.repository';
 import { CustomerLocationEntity } from '@customer/domain/location.entity';
 import { LocationRepository } from '@customer/domain/location.repository';
+import { SubCustomerEntity } from '@customer/domain/subcustomer.entity';
 import { SubCustomerRepository } from '@customer/domain/subcustomer.repository';
 import { LocationService } from '@customer/infrastructure/http/location.service';
 
@@ -65,6 +67,17 @@ describe('LocationService', () => {
       const result = await service.findAll(filters, 'cust-1');
 
       expect(mockLocationRepo.findAll).toHaveBeenCalledWith(filters, 'cust-1');
+      expect(result).toEqual(mockResult);
+    });
+
+    it('should delegate to locationRepository without customerId', async () => {
+      const filters = { page: 1, limit: 10 };
+      const mockResult = { items: [], total: 0 };
+      mockLocationRepo.findAll.mockResolvedValue(mockResult);
+
+      const result = await service.findAll(filters);
+
+      expect(mockLocationRepo.findAll).toHaveBeenCalledWith(filters, undefined);
       expect(result).toEqual(mockResult);
     });
   });
@@ -141,7 +154,7 @@ describe('LocationService', () => {
 
   describe('findCustomerById', () => {
     it('should delegate to customerRepository', async () => {
-      mockCustomerRepo.findById.mockResolvedValue({ id: 'c1' } as never);
+      mockCustomerRepo.findById.mockResolvedValue({ id: 'c1' } as unknown as CustomerEntity);
 
       const result = await service.findCustomerById('c1');
 
@@ -152,7 +165,7 @@ describe('LocationService', () => {
 
   describe('findSubCustomerById', () => {
     it('should delegate to subCustomerRepository', async () => {
-      mockSubCustomerRepo.findById.mockResolvedValue({ id: 's1' } as never);
+      mockSubCustomerRepo.findById.mockResolvedValue({ id: 's1' } as unknown as SubCustomerEntity);
 
       const result = await service.findSubCustomerById('s1');
 

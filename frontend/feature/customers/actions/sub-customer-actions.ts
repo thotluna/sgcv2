@@ -12,6 +12,19 @@ import {
 } from '@/feature/customers/services/sub-customers.service';
 import { ActionState } from '@/feature/customers/types';
 
+export async function handleSubCustomerFilters(formData: FormData) {
+  const search = formData.get('search') as string;
+
+  const params = new URLSearchParams();
+
+  if (search && search.trim() !== '') {
+    params.set('search', search.trim());
+  }
+
+  const queryString = params.toString();
+  redirect(`/operations/customers/sub-customers${queryString ? `?${queryString}` : ''}`);
+}
+
 export async function createSubCustomerWithLocationAction(
   parentId: string,
   _prevState: ActionState,
